@@ -212,7 +212,7 @@ button {
 
 .layout_padding {
      padding-top: 90px;
-     padding-bottom: 0px;
+     padding-bottom: 80px;
 }
 .padding_0{
     padding: 0px;
@@ -830,7 +830,7 @@ button {
 .footer_section{
     width: 100%;
     float: left;
-    background-color: #121212;
+    background-color: rgb(190, 10, 7);
     height: auto;
 }
 .about_text{
@@ -876,8 +876,8 @@ button {
     width: 170px;
     float: left;
     font-size: 18px;
-    color: #ffffff;
-    background-color: #ff5a58;
+    color: black;
+    background-color:white;
     height: auto;
     padding: 5px 0px;
     text-align: center;
