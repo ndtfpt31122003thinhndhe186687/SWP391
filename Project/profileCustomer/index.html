@@ -36,78 +36,76 @@ Bootstrap 5 Dashboard Admin Template
     </head>
     
     <body>
-        <header class="navbar sticky-top flex-md-nowrap">
-            <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand" href="index.html">
-                    <i class="bi-box"></i>
-                    Mini Finance
-                </a>
+<body>
+    <header class="navbar sticky-top flex-md-nowrap bg-danger">
+        <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
+            <a class="navbar-brand text-white" href="index.html">
+                <i class="bi-box"></i>
+                Mini Finance
+            </a>
+        </div>
+
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="#" method="get" role="form">
+            <input class="form-control bg-white text-danger" name="search" type="text" placeholder="Search" aria-label="Search">
+        </form>
+
+        <div class="navbar-nav me-lg-2">
+            <div class="nav-item text-nowrap d-flex align-items-center">
+                <div class="dropdown ps-3">
+                    <a class="nav-link dropdown-toggle text-center text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="navbarLightDropdownMenuLink">
+                        <i class="bi-bell"></i>
+                        <span class="position-absolute start-100 translate-middle p-1 bg-white border border-danger rounded-circle">
+                            <span class="visually-hidden">New alerts</span>
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-lg-end notifications-block-wrap bg-white text-danger shadow" aria-labelledby="navbarLightDropdownMenuLink">
+                        <small class="text-danger">Notifications</small>
+                    
+                        <li class="notifications-block border-bottom border-danger pb-2 mb-2">
+                            <a class="dropdown-item d-flex align-items-center text-danger" href="#">
+                                <div class="notifications-icon-wrap bg-danger text-white">
+                                    <i class="notifications-icon bi-check-circle-fill"></i>
+                                </div>
+                                <div>
+                                    <span>Your account has been created successfully.</span>
+                                    <p>12 days ago</p>
+                                </div>
+                            </a>
+                        </li>
+                    
+                        <li class="notifications-block border-bottom border-danger pb-2 mb-2">
+                            <a class="dropdown-item d-flex align-items-center text-danger" href="#">
+                                <div class="notifications-icon-wrap bg-danger text-white">
+                                    <i class="notifications-icon bi-folder"></i>
+                                </div>
+                                <div>
+                                    <span>Please check. We have sent a Daily report.</span>
+                                    <p>10 days ago</p>
+                                </div>
+                            </a>
+                        </li>
+                    
+                        <li class="notifications-block">
+                            <a class="dropdown-item d-flex align-items-center text-danger" href="#">
+                                <div class="notifications-icon-wrap bg-danger text-white">
+                                    <i class="notifications-icon bi-question-circle"></i>
+                                </div>
+                                <div>
+                                    <span>Account verification failed.</span>
+                                    <p>1 hour ago</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                </div>
             </div>
-
-            <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="#" method="get" role="form">
-                <input class="form-control" name="search" type="text" placeholder="Search" aria-label="Search">
-            </form>
-
-            <div class="navbar-nav me-lg-2">
-                <div class="nav-item text-nowrap d-flex align-items-center">
-                    <div class="dropdown ps-3">
-                        <a class="nav-link dropdown-toggle text-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="navbarLightDropdownMenuLink">
-                            <i class="bi-bell"></i>
-                            <span class="position-absolute start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                                <span class="visually-hidden">New alerts</span>
-                            </span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-lg-end notifications-block-wrap bg-white shadow" aria-labelledby="navbarLightDropdownMenuLink">
-                            <small>Notifications</small>
-
-                            <li class="notifications-block border-bottom pb-2 mb-2">
-                                <a class="dropdown-item d-flex  align-items-center" href="#">
-                                    <div class="notifications-icon-wrap bg-success">
-                                        <i class="notifications-icon bi-check-circle-fill"></i>
-                                    </div>
-
-                                    <div>
-                                        <span>Your account has been created successfuly.</span>
-
-                                        <p>12 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block border-bottom pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="notifications-icon-wrap bg-info">
-                                        <i class="notifications-icon bi-folder"></i>
-                                    </div>
-
-                                    <div>
-                                        <span>Please check. We have sent a Daily report.</span>
-
-                                        <p>10 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block">
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="notifications-icon-wrap bg-danger">
-                                        <i class="notifications-icon bi-question-circle"></i>
-                                    </div>
-
-                                    <div>
-                                        <span>Account verification failed.</span>
-
-                                        <p>1 hour ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+        </div>
 
                     <div class="dropdown ps-1">
                         <a class="nav-link dropdown-toggle text-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -174,7 +172,7 @@ Bootstrap 5 Dashboard Admin Template
 
                                     <div class="d-flex flex-column">
                                         <small>Thomas</small>
-                                        <a href="#">thomas@site.com</a>
+                                        <small>thomas@site.com</small>
                                     </div>
                                 </div>
                             </li>
@@ -219,7 +217,7 @@ Bootstrap 5 Dashboard Admin Template
                         <ul class="nav flex-column h-100">
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="index.html">
-                                    <i class="bi-house-fill me-2"></i>
+                                    <i class="bi-house-fill me-2 text"></i>
                                     Overview
                                 </a>
                             </li>
@@ -245,17 +243,12 @@ Bootstrap 5 Dashboard Admin Template
                                 </a>
                             </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link" href="help-center.html">
-                                    <i class="bi-question-circle me-2"></i>
-                                    Help Center
-                                </a>
-                            </li>
+                            
 
                             <li class="nav-item featured-box mt-lg-5 mt-4 mb-4">
                                 <img src="images/credit-card.png" class="img-fluid" alt="">
 
-                                <a class="btn custom-btn" href="#">Upgrade</a>
+                                <a class="btn custom-btn text-bg-danger" href="#">Upgrade</a>
                             </li>
 
                             <li class="nav-item border-top mt-auto pt-2">
@@ -270,7 +263,7 @@ Bootstrap 5 Dashboard Admin Template
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Overview</h1>
+                        <h1 class="h2 mb-0 text-danger">Overview</h1>
 
                         <small class="text-muted">Hello Thomas, welcome back!</small>
                     </div>
@@ -303,7 +296,7 @@ Bootstrap 5 Dashboard Admin Template
                             </div>
 
                             <div class="custom-block bg-white">
-                                <h5 class="mb-4">History</h5>
+                                <h5 class="mb-4 text-danger">History</h5>
 
                                 <div id="pie-chart"></div>
                             </div>
@@ -313,7 +306,7 @@ Bootstrap 5 Dashboard Admin Template
                             </div>
 
                             <div class="custom-block custom-block-exchange">
-                                <h5 class="mb-4">Exchange Rate</h5>
+                                <h5 class="mb-4 text-danger">Exchange Rate</h5>
 
                                 <div class="d-flex align-items-center border-bottom pb-3 mb-3">
                                     <div class="d-flex align-items-center">
@@ -488,7 +481,7 @@ Bootstrap 5 Dashboard Admin Template
                             </div>
 
                             <div class="custom-block custom-block-transations">
-                                <h5 class="mb-4">Recent Transations</h5>
+                                <h5 class="mb-4 text-danger">Recent Transations</h5>
 
                                 <div class="d-flex flex-wrap align-items-center mb-4">
                                     <div class="d-flex align-items-center">
