@@ -159,46 +159,36 @@
                     <input class="form-attribute" type="date" name="dob"  required>
                 </div>
 
-                 <div class="form-group">
-                    <label>User Type</label>
-                    <select class="form-attribute" name="usertype" required>
-                        <option value="USER">User</option>
-                         <option value="ADMIN">Admin</option>
-                         <option value="GUEST">Guest</option>
-                    </select>
-                </div>
 
                 <div class="form-group">
                     <label>Username</label>
                     <input class="form-attribute" type="text" name="user" placeholder="Username" required>
                 </div>
 
-                 <div class="form-group">
-                    <label>Status</label>
-                    <select class="form-attribute" name="status" required>
-                       <option value="ACTIVE">Active</option>
-                         <option value="INACTIVE">Inactive</option>
-                         <option value="PENDING">Pending</option>
-                    </select>
-                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Password</label>
                         <input class="form-attribute" type="password" name="pass" placeholder="Password" required>
                     </div>
                 </div>
+
                  <div class="form-group">
-                    <label>Gender</label>
-                    <select class="form-attribute" name="gender" required>
+                     <label>Gender</label>
+                     <select class="form-attribute" name="gender" required>
                         <option value="MALE">Male</option>
                         <option value="FEMALE">Female</option>
-                         <option value="OTHER">Other</option>
-                    </select>
+                        <option value="OTHER">Other</option>
+                     </select>
+                 </div>
+                  <div class="form-group">
+                    <label>Profile Picture</label>
+                    <input class="form-attribute" type="text" name="profilePicture" placeholder="Profile Picture URL" required>
                 </div>
 
                 <input id="submit" type="submit" value="SUBMIT"></input>
 
-                <p>Do you already have an account? 
+                <p>Do you already have an account?
                     <a href="login" style="font-family: arial; font-weight: bold">Login</a>
                 </p>
             </form>
