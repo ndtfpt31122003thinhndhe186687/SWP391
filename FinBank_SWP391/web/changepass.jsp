@@ -84,10 +84,7 @@
              <p style="color: red">${requestScope.error}</p>
               <p style="color: green">${requestScope.ms1}</p>
             <form action="ChangePassServlets" method="post" onsubmit="return validatePassword()">
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input class="form-attribute" type="email" name="email" placeholder="Enter your Email" required>
-                </div>
+               
                  <div class="form-group">
                     <label for="oldPass">Old Password:</label>
 <input class="form-attribute" type="password" name="opass" placeholder="Enter your old password" required>
