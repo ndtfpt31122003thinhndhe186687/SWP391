@@ -99,9 +99,7 @@
                    <p style="color: red" id="confirmPassError"></p>
                  </div>
                 <input type="submit" value="Change Password">
-                 <p>
-                    <a href="login.jsp" style="font-family: arial; font-weight: bold">Login</a>
-                </p>
+                 
             </form>
         </div>
         <script>
