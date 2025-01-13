@@ -10,7 +10,6 @@ public class User {
     private String password;
     private String phoneNumber;
     private String address;
-    private String status;
     private String createdAt;
     private String gender;
     private String profilePicture;
@@ -19,15 +18,13 @@ public class User {
     public User() {
     }
 
-    public User(int userId, String fullName, String email, String password, String phoneNumber, String address,
-             String status, String createdAt, String gender, String profilePicture, Date dateOfBirth) {
+    public User(int userId, String fullName, String email, String password, String phoneNumber, String address, String createdAt, String gender, Date dateOfBirth, String profilePicture) {
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.status = status;
         this.createdAt = createdAt;
         this.gender = gender;
         this.profilePicture = profilePicture;
@@ -82,14 +79,6 @@ public class User {
         this.address = address;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getCreatedAt() {
         return createdAt;
     }
@@ -131,7 +120,6 @@ public class User {
                 .append(", password='").append(password).append('\'')
                 .append(", phoneNumber='").append(phoneNumber).append('\'')
                 .append(", address='").append(address).append('\'')
-                .append(", status='").append(status).append('\'')
                 .append(", createdAt='").append(createdAt).append('\'')
                 .append(", gender='").append(gender).append('\'')
                 .append(", profilePicture='").append(profilePicture).append('\'')
