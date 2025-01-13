@@ -1,4 +1,4 @@
-USE [master]
+﻿USE [master]
 GO
 
 /*******************************************************************************
@@ -60,6 +60,22 @@ CREATE TABLE users (
     profile_picture NVARCHAR(255) NULL
 );
 
+CREATE TABLE guest_requests (
+    request_id INT IDENTITY(1,1) PRIMARY KEY,
+    full_name NVARCHAR(255) NOT NULL,
+    email NVARCHAR(255) NOT NULL,
+	password NVARCHAR(255) NOT NULL,
+    phone_number NVARCHAR(20),
+	address NVARCHAR(MAX),
+	gender NVARCHAR(20) CHECK (gender IN ('male', 'female')),
+    request_date DATETIME DEFAULT GETDATE(),
+	date_of_birth DATE,
+    status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
+	user_id INT NULL,  -- Optional reference to users table if the guest becomes a registered user
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
+
+);
+
 CREATE TABLE customer ( 
     customer_id INT,
     user_type NVARCHAR(20) CHECK (user_type IN ('customer')) NOT NULL,
@@ -79,18 +95,6 @@ CREATE TABLE bank_teller (
 	user_type NVARCHAR(20) CHECK (user_type IN ('staff')) NOT NULL,
 	FOREIGN KEY (bankteller_id) REFERENCES users(user_id),
     PRIMARY KEY (bankteller_id)
-);
-
-CREATE TABLE guest_requests (
-    request_id INT IDENTITY(1,1) PRIMARY KEY,
-    full_name NVARCHAR(255) NOT NULL,
-    email NVARCHAR(255) NOT NULL,
-    phone_number NVARCHAR(20),
-    request_date DATETIME DEFAULT GETDATE(),
-    status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
-	user_id INT NULL,  -- Optional reference to users table if the guest becomes a registered user
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
-
 );
 
 CREATE TABLE services (
@@ -146,6 +150,17 @@ CREATE TABLE request (
     FOREIGN KEY (service_id) REFERENCES services(service_id),
 
 );
+
+CREATE TABLE feedback (
+    feedback_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã phản hồi duy nhất
+    customer_id INT NOT NULL, -- ID của khách hàng (customer)
+    service_id INT NULL, -- Dịch vụ liên quan đến phản hồi (nếu có)
+    feedback_content NVARCHAR(MAX) NOT NULL, -- Nội dung phản hồi
+    feedback_date DATETIME DEFAULT GETDATE(), -- Ngày gửi phản hồi
+    FOREIGN KEY (customer_id) REFERENCES users(user_id), -- Khóa ngoại đến bảng users
+    FOREIGN KEY (service_id) REFERENCES services(service_id) -- Khóa ngoại đến bảng services
+);
+
 
 CREATE TABLE transactions (
     transaction_id INT IDENTITY(1,1) PRIMARY KEY,
