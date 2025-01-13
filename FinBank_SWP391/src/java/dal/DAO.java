@@ -141,47 +141,60 @@ public class DAO extends DBContext {
         }
         return false;
     }
-public User check(String username, String password) {
-         String sql = "SELECT [userId],\n"
-                 + "      [fullName],\n"
-                + "      [email],\n"
-                + "      [phoneNumber],\n"
-                + "      [password],\n"
-                + "      [address],\n"
-                 + "      [createdAt],\n"
-                 + "      [gender],\n"
-                + "      [profilePicture],\n"
-                + "      [dateOfBirth]\n"
-                + "  FROM [dbo].[Users] where email = ? and password = ?";
+    public User check(String username, String password) {
+           String sql = "SELECT [id]\n"
+                    + "      ,[name]\n"
+                    + "      ,[fullname]\n"
+                    + "      ,[email]\n"
+                    + "      ,[phonenum]\n"
+                      + "      ,[address]\n"
+                       + "     ,[gender]\n"
+                    + "      ,[password]\n"
 
-        try (PreparedStatement st = con.prepareStatement(sql)) {
+                    + "  FROM [dbo].[User] where name = ?";
+
+            try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, username);
-            st.setString(2, password);
-            try(ResultSet rs = st.executeQuery()){
-                 if (rs.next()) {
-                   return new User(rs.getInt("userId"), rs.getString("fullName"), rs.getString("email"),
-                            rs.getString("password"), rs.getString("phoneNumber"), rs.getString("address"),
-                           rs.getString("createdAt"), rs.getString("gender"), rs.getDate("dateOfBirth"), rs.getString("profilePicture"));
-                }
+
+            try (ResultSet rs = st.executeQuery()) {
+            if (rs.next()) {
+              //get the hash password from database
+              String hashedDbPassword = rs.getString("password");
+             //check if entered pass matches to the hashed one in db
+              if (BCrypt.checkpw(password, hashedDbPassword)) {
+                   return new User(rs.getInt("id"), rs.getString("fullname"), rs.getString("email"), rs.getString("phonenum"), rs.getString("address"), rs.getString("gender"),hashedDbPassword);
+
+
+              }
+             }
+
+              }
             }
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
+            catch (SQLException e) {
+             // log the exception
+               System.out.println("Database error occurred during authentication: " + e);
+                // You can throw custom exception
+                return null;
+            }
+            return null;
+      }
 
     public void change(User a) {
-         String sql = "UPDATE [dbo].[Users]\n"
-                + "   SET [password] = ?\n"
-                + " WHERE [email]=?";
-        try (PreparedStatement st = con.prepareStatement(sql)) {
-            st.setString(1, a.getPassword());
-            st.setString(2, a.getEmail());
-            st.executeUpdate();
-        } catch (SQLException e) {
-           System.out.println(e);
+          String sql = "UPDATE [dbo].[User]\n"
+                    + "   SET [password] = ?\n"
+                    + " WHERE [email]=?"; // using email to identify the user for update
+
+            try (PreparedStatement st = connection.prepareStatement(sql)) {
+                //hash the user provided password before saving to database
+                 String hashedPassword = BCrypt.hashpw(a.getPassword(),BCrypt.gensalt());
+                st.setString(1, hashedPassword);
+                st.setString(2, a.getEmail());//using user email as an identifier for update
+                st.executeUpdate();
+            } catch (SQLException e) {
+                // Log the exception properly
+                System.out.println("Database error occurred while changing password: " + e);
+               // You can throw custom exception
+
+            }
         }
-    }
 }
