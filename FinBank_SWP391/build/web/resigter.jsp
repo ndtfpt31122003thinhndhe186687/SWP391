@@ -20,7 +20,7 @@
                 background-color: #FFB6C1;
                 font-family: sans-serif;
             }
-            .form {
+            .form { 
                 max-width: 500px;
                 margin: -20px auto;
                 padding: 20px;
