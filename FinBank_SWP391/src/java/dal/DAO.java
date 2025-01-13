@@ -141,4 +141,47 @@ public class DAO extends DBContext {
         }
         return false;
     }
+public User check(String username, String password) {
+         String sql = "SELECT [userId],\n"
+                 + "      [fullName],\n"
+                + "      [email],\n"
+                + "      [phoneNumber],\n"
+                + "      [password],\n"
+                + "      [address],\n"
+                 + "      [createdAt],\n"
+                 + "      [gender],\n"
+                + "      [profilePicture],\n"
+                + "      [dateOfBirth]\n"
+                + "  FROM [dbo].[Users] where email = ? and password = ?";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setString(1, username);
+            st.setString(2, password);
+            try(ResultSet rs = st.executeQuery()){
+                 if (rs.next()) {
+                   return new User(rs.getInt("userId"), rs.getString("fullName"), rs.getString("email"),
+                            rs.getString("password"), rs.getString("phoneNumber"), rs.getString("address"),
+                           rs.getString("createdAt"), rs.getString("gender"), rs.getDate("dateOfBirth"), rs.getString("profilePicture"));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+
+    public void change(User a) {
+         String sql = "UPDATE [dbo].[Users]\n"
+                + "   SET [password] = ?\n"
+                + " WHERE [email]=?";
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setString(1, a.getPassword());
+            st.setString(2, a.getEmail());
+            st.executeUpdate();
+        } catch (SQLException e) {
+           System.out.println(e);
+        }
+    }
 }
