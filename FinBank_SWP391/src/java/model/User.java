@@ -3,13 +3,13 @@ package model;
 import java.util.Date;
 
 public class User {
+
     private int userId;
     private String fullName;
     private String email;
     private String password;
     private String phoneNumber;
     private String address;
-    private String userType;
     private String status;
     private String createdAt;
     private String gender;
@@ -20,19 +20,18 @@ public class User {
     }
 
     public User(int userId, String fullName, String email, String password, String phoneNumber, String address,
-                String userType, String status, String createdAt, String gender, String profilePicture, Date dateOfBirth) {
+             String status, String createdAt, String gender, String profilePicture, Date dateOfBirth) {
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.userType = userType;
         this.status = status;
         this.createdAt = createdAt;
         this.gender = gender;
         this.profilePicture = profilePicture;
-         this.dateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public int getUserId() {
@@ -83,14 +82,6 @@ public class User {
         this.address = address;
     }
 
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -99,7 +90,7 @@ public class User {
         this.status = status;
     }
 
-   public String getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
@@ -107,8 +98,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
-
-     public String getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -123,6 +113,7 @@ public class User {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
+
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
@@ -131,7 +122,7 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-   @Override
+    @Override
     public String toString() {
         return new StringBuilder("User{")
                 .append("userId=").append(userId)
@@ -140,9 +131,8 @@ public class User {
                 .append(", password='").append(password).append('\'')
                 .append(", phoneNumber='").append(phoneNumber).append('\'')
                 .append(", address='").append(address).append('\'')
-                .append(", userType='").append(userType).append('\'')
                 .append(", status='").append(status).append('\'')
-                 .append(", createdAt='").append(createdAt).append('\'')
+                .append(", createdAt='").append(createdAt).append('\'')
                 .append(", gender='").append(gender).append('\'')
                 .append(", profilePicture='").append(profilePicture).append('\'')
                 .append(", dateOfBirth=").append(dateOfBirth)
