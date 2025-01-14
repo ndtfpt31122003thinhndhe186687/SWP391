@@ -4,16 +4,14 @@ import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import model.User;
 
-@WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
 public class RegisterServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -35,7 +33,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 
     @Override
@@ -53,12 +51,12 @@ public class RegisterServlet extends HttpServlet {
         String profilePicture = request.getParameter("profilePicture");
 
         // Validate input
-        if (fname == null || fname.isEmpty() || email == null || email.isEmpty() || phone == null || phone.isEmpty()
+       if (fname == null || fname.isEmpty() || email == null || email.isEmpty() || phone == null || phone.isEmpty()
                 || username == null || username.isEmpty() || password == null || password.isEmpty()
                 || address == null || address.isEmpty() || dobString == null || dobString.isEmpty()
                  || genderString == null || genderString.isEmpty() || profilePicture == null || profilePicture.isEmpty()) {
              request.setAttribute("error", "Please fill all fields!");
-            request.getRequestDispatcher("Views/register.jsp").forward(request, response);
+            request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
@@ -68,8 +66,8 @@ public class RegisterServlet extends HttpServlet {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             dob = dateFormat.parse(dobString);
         } catch (ParseException e) {
-             request.setAttribute("error", "Invalid date format (yyyy-MM-dd)!");
-            request.getRequestDispatcher("Views/register.jsp").forward(request, response);
+            request.setAttribute("error", "Invalid date format (yyyy-MM-dd)!");
+             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
         Date createdAt = new Date();
@@ -78,20 +76,20 @@ public class RegisterServlet extends HttpServlet {
 
 
         if (DAO.INSTANCE.existedAcc(username)) {
-           request.setAttribute("error", "Username existed!");
+            request.setAttribute("error", "Username existed!");
             request.getRequestDispatcher("Views/register.jsp").forward(request, response);
         } else if (DAO.INSTANCE.existedEmail(email)) {
-             request.setAttribute("error", "Email existed!");
-            request.getRequestDispatcher("Views/register.jsp").forward(request, response);
+            request.setAttribute("error", "Email existed!");
+             request.getRequestDispatcher("register.jsp").forward(request, response);
         } else if (DAO.INSTANCE.existedPhoneNum(phone)) {
               request.setAttribute("error", "Phone existed!");
-            request.getRequestDispatcher("Views/register.jsp").forward(request, response);
+            request.getRequestDispatcher("register.jsp").forward(request, response);
         } else {
 
             User us = new User(0, fname, email, password, phone, address,createdAtString, genderString, dob, profilePicture);
             DAO.INSTANCE.register(us);
            request.setAttribute("ms1", "Account successfully created!");
-            request.getRequestDispatcher("Views/login.jsp").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
 

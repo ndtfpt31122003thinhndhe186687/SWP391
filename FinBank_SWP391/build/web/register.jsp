@@ -1,9 +1,3 @@
-<%-- 
-    Document   : register
-    Created on : Oct 18, 2023, 7:24:34 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +14,7 @@
                 background-color: #FFB6C1;
                 font-family: sans-serif;
             }
-            .form { 
+            .form {
                 max-width: 500px;
                 margin: -20px auto;
                 padding: 20px;
@@ -97,7 +91,7 @@
                 font-size: 15px;
                 color: #fff;
                 border: none;
-                 margin-top: 20px; /* Added margin-top here */
+                 margin-top: 20px;
                 border-radius: 10px;
                 cursor: pointer;
                 background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
@@ -189,7 +183,7 @@
                 <input id="submit" type="submit" value="SUBMIT"></input>
 
                 <p>Do you already have an account?
-                    <a href="login" style="font-family: arial; font-weight: bold">Login</a>
+                    <a href="login.jsp" style="font-family: arial; font-weight: bold">Login</a>
                 </p>
             </form>
         </div>
