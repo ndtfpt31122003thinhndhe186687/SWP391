@@ -184,4 +184,19 @@ String sql = "UPDATE [dbo].[Users]\n"
            System.out.println(e);
         }
     }
+    
+    public void changeInfor(String full_name, String email, String phone_number,String address,Date dob,int user_id){
+        String sql = "UPDATE [dbo].[Users] set full_name=?, email=?,phone_number=?,address=?,date_of_birth=? where user_id=?";
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setString(1, full_name);
+            st.setString(2, email);
+            st.setString(3, phone_number);
+            st.setString(4, address);
+            st.setDate(5, dob);
+            st.setInt(6, user_id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+           System.out.println(e);
+        }
+    }
 }
