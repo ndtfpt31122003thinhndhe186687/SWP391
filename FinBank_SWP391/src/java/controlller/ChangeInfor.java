@@ -63,7 +63,7 @@ public class ChangeInfor extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
     }
 
     /**
@@ -86,16 +86,16 @@ public class ChangeInfor extends HttpServlet {
         HttpSession session = request.getSession();
         User c = (User) session.getAttribute("account");
         DAO d = new DAO();
-        try {        
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");      
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date parsedDate = dateFormat.parse(dob_raw);
             java.sql.Date dob = new java.sql.Date(parsedDate.getTime());
-            d.changeInfor(fullname, email, phone, address, dob, 0);
+            d.changeInfor(fullname, email, phone, address, dob, c.getUserId());
             request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
-        } catch (Exception e) {   
-            e.printStackTrace();  
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-            request.getRequestDispatcher("changeInfor").forward(request, response);
+        request.getRequestDispatcher("changeInfor").forward(request, response);
     }
 
     /**

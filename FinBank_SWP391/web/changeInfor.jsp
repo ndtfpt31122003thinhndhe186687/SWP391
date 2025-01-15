@@ -231,11 +231,6 @@
                                 </form>
                             </div>
 
-
-
-
-
-
                             <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
                                 <h6 class="mb-4 text-danger">Password</h6>
 

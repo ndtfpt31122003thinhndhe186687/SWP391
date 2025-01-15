@@ -1,6 +1,7 @@
 package dal;
 
 import java.sql.*;
+import java.time.LocalDate;
 import model.User;
 
 public class DAO extends DBContext {
@@ -198,5 +199,17 @@ String sql = "UPDATE [dbo].[Users]\n"
         } catch (SQLException e) {
            System.out.println(e);
         }
+    }
+    
+    public static void main(String[] args) {
+        String full_name="o";
+        String email="a";
+        String phone_number="099";
+        String address="456";
+        Date dob = Date.valueOf("2020-01-05");
+        int user_id=1;
+        DAO d=new DAO();
+        d.changeInfor(full_name, email, phone_number, address, dob, user_id);
+        System.out.println("");
     }
 }
