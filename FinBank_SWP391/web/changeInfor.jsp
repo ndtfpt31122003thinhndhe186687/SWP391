@@ -122,7 +122,7 @@
                         </a>
                     </li>
                     <li class="border-top mt-3 pt-2 mx-4">
-                        <a class="dropdown-item ms-0 me-0" href="#">
+                        <a class="dropdown-item ms-0 me-0" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
                             Logout
                         </a>
@@ -167,7 +167,7 @@
                         </a>
                     </li>
                     <li class="nav-item border-top mt-auto pt-2">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
                             Logout
                         </a>
