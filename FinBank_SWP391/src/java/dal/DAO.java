@@ -200,6 +200,24 @@ String sql = "UPDATE [dbo].[Users]\n"
            System.out.println(e);
         }
     }
+    public User login(String email, String pass) {
+        String sql = "select * from users\n"
+                + "where email = ?\n"
+                + "and password = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, email);
+            pre.setString(2, pass);
+            ResultSet rs = pre.executeQuery();
+            while(rs.next()){
+            String Email = rs.getString("email");
+            String password = rs.getString("password");     
+            return new User(Email, password);
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
     
     public static void main(String[] args) {
         String full_name="o";
