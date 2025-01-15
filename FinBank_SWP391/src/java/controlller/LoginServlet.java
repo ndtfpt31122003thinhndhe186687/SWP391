@@ -83,7 +83,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             HttpSession session = request.getSession();
             session.setAttribute("account", acc);
-            response.sendRedirect("index.html");  // Điều hướng đến trang chính sau khi đăng nhập thành công
+            response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
         }    }
 
     /** 
