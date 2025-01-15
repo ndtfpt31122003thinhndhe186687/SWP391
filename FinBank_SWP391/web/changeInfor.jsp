@@ -104,8 +104,8 @@
                             <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
 
                             <div class="d-flex flex-column">
-                                <small>Thomas</small>
-                                <small>thomas@site.com</small>
+                                <small>${sessionScope.account.customer_id}</small>
+                                <small>${sessionScope.account.email}</small>
                             </div>
                         </div>
                     </li>
@@ -203,14 +203,13 @@
                                 <h6 class="mb-4 text-danger">User Profile</h6>
 
                                 <form class="custom-form profile-form" action="changeInfor" method="post" >
-                                    <input class="form-control" type="text" name="profile-name" placeholder="">
-                                    <input class="form-control" type="email" name="profile-email" placeholder="">
-                                    <input class="form-control" type="number" name="profile-phone" placeholder=""> 
-                                    <input class="form-control" type="text" name="profile-date" placeholder="">
-                                    <input class="form-control" type="text" name="profile-address" placeholder="">
+                                    <input class="form-control" type="text" name="profile-name" placeholder="Name">
+                                    <input class="form-control" type="email" name="profile-email" placeholder="Email">
+                                    <input class="form-control" type="number" name="profile-phone" placeholder="Phone"> 
+                                    <input class="form-control" type="text" name="profile-address" placeholder="Address">
 
                                     <div class="input-group mb-1">
-                                        <img src="images/profile/senior-man-white-sweater-eyeglasses.jpg" class="profile-image img-fluid" alt="">
+                                        <img src="" class="profile-image img-fluid" alt="">
                                         <input type="file" class="form-control" name="profile-image">
                                     </div>
 
@@ -223,23 +222,17 @@
                                             Update
                                         </button>
                                     </div> 
-                                    <c:if test="${not empty successMessage}">
-                                        <div class="alert alert-success">
-                                            ${successMessage}
-                                        </div>
-                                    </c:if>
                                 </form>
                             </div>
 
                             <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
                                 <h6 class="mb-4 text-danger">Password</h6>
+                                <form class="custom-form password-form" action="changepass" method="post" role="form">
+                                    <input type="password" name="password" id="password"  class="form-control" placeholder="Current Password" required="">
 
-                                <form class="custom-form password-form" action="#" method="post" role="form">
-                                    <input type="password" name="password" id="password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Current Password" required="">
+                                    <input type="password" name="confirm_password" id="confirm_password"  class="form-control" placeholder="New Password" required="">
 
-                                    <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="New Password" required="">
-
-                                    <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Confirm Password" required="">
+                                    <input type="password" name="confirm_password" id="confirm_password"  class="form-control" placeholder="Confirm Password" required="">
 
                                     <div class="d-flex">
                                         <button type="button" class="form-control me-3 text-bg-danger">

@@ -124,7 +124,7 @@
         <div class="form">
             <h2>Register</h2>
              <p style="color: red">${requestScope.error}</p>
-            <form action="RegisterServlet" method="post">
+            <form action="register" method="post">
                 <div class="form-row">
                     <div class="form-group">
                         <label>Fullname</label>

@@ -4,16 +4,16 @@ import java.util.Date;
 
 public class User {
 
-    private int userId;
-    private String fullName;
-    private String email;
-    private String password;
-    private String phoneNumber;
-    private String address;
-    private String createdAt;
-    private String gender;
-    private String profilePicture;
-    private Date dateOfBirth;
+    public int userId;
+    public String fullName;
+    public String email;
+    public String password;
+    public String phoneNumber;
+    public String address;
+    public String createdAt;
+    public String gender;
+    public String profilePicture;
+    Date dateOfBirth;
 
     public User() {
     }

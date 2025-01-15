@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.sql.Date;
 import model.Customer;
 import model.User;
 
@@ -80,22 +79,13 @@ public class ChangeInfor extends HttpServlet {
         String fullname = request.getParameter("profile-name");
         String email = request.getParameter("profile-email");
         String phone = request.getParameter("profile-phone");
-        String dob_raw = request.getParameter("profile-date");
         String address = request.getParameter("profile-address");
         String url_image = request.getParameter("profile-image");
         HttpSession session = request.getSession();
-        User c = (User) session.getAttribute("account");
+        Customer c = (Customer) session.getAttribute("account");
         DAO d = new DAO();
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date parsedDate = dateFormat.parse(dob_raw);
-            java.sql.Date dob = new java.sql.Date(parsedDate.getTime());
-            d.changeInfor(fullname, email, phone, address, dob, c.getUserId());
-            request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        request.getRequestDispatcher("changeInfor").forward(request, response);
+        d.changeInfor(fullname, email, phone, address, c.getCustomer_id());
+        response.sendRedirect("changeInfor");
     }
 
     /**

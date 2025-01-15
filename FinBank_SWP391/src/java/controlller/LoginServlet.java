@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Customer;
 import model.User;
 
 /**
@@ -73,10 +74,8 @@ public class LoginServlet extends HttpServlet {
     throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("pass");
-
         DAO dao = new DAO();
-        User acc = dao.login(email, password);
-
+        Customer acc = dao.login(email, password);
         if (acc == null) {
             request.setAttribute("mess", "Wrong username or password");
             request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -84,7 +83,8 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("account", acc);
             response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-        }    }
+        }   
+    }
 
     /** 
      * Returns a short description of the servlet.

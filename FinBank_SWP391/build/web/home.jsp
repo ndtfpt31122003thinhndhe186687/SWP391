@@ -78,6 +78,7 @@
                     <button type="submit" class="site-btn">SEARCH</button>
                 </form>
             </div>
+
             <!-- Login/logout-->
             <c:if test="${sessionScope.account != null}">
                 <li class="nav-item">
@@ -89,6 +90,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="changeInfor">View profile</a>
                 </li>
+
             </c:if>
             <c:if test="${sessionScope.account == null}">
                 <li class="nav-item">
