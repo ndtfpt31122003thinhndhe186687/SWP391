@@ -3,8 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Acer%20Nitro%20Tiger/Documents/GitHub/SWP391/FinBank_SWP391/web/changepass.jsp</file>
-            <file>file:/C:/Users/Acer%20Nitro%20Tiger/Documents/GitHub/SWP391/FinBank_SWP391/web/changeInfor.jsp</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/css/apexcharts.css</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/src/java/controlller/ChangePassServlet.java</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/src/java/controlller/RegisterServlet.java</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/css/style.css</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/css/boostrap.css</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/changepass.jsp</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/changeInfor.jsp</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/src/java/controlller/CookieServlet.java</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/WEB-INF/web.xml</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/src/java/controlller/ChangeInfor.java</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/css/tooplate-mini-finance.css</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/css/bootstrap-icons.css</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/css/bootstrap.min.css</file>
+            <file>file:/D:/github/SWP391/FinBank_SWP391/web/index.html</file>
         </group>
     </open-files>
 </project-private>

@@ -32,7 +32,7 @@ public class ChangePassServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-           request.getRequestDispatcher("changepass.jsp").forward(request, response);
+           request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ChangePassServlet extends HttpServlet {
         // Validate Input
           if (email == null || email.isEmpty() || oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
               request.setAttribute("error", "Please fill all fields!");
-               request.getRequestDispatcher("changepass.jsp").forward(request, response);
+               request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
               return;
         }
 
@@ -57,7 +57,7 @@ public class ChangePassServlet extends HttpServlet {
         if (user == null) {
             //Incorrect User or Old password
              request.setAttribute("error", "Incorrect email or old password!");
-            request.getRequestDispatcher("changepass.jsp").forward(request, response);
+            request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
             return;
         } else {
              //Change the password
