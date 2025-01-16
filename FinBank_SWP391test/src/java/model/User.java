@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class User {
 
@@ -17,6 +17,19 @@ public class User {
 
     public User() {
     }
+
+    public User(String fullName, String email, String password, String phoneNumber, String address, String gender, String profilePicture, Date dateOfBirth) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.gender = gender;
+        this.profilePicture = profilePicture;
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    
 
     public User(String email, String password) {
         this.email = email;

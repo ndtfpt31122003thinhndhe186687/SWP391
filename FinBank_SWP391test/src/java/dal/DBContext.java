@@ -30,7 +30,7 @@ public class DBContext{
     private final String dbName = "FinBank_SWP391";
     private final String portNumber = "1433";
     private final String userID = "sa";
-    private final String password = "123";
+    private final String password = "123456789";
     
     public static void main(String[] args) {
         DBContext dbContext = new DBContext();

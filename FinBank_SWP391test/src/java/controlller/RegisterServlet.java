@@ -8,12 +8,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import model.Customer;
 import model.User;
 
-@WebServlet(name="RegisterServlet", urlPatterns={"/register"})
+@WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
 public class RegisterServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -45,53 +47,53 @@ public class RegisterServlet extends HttpServlet {
         String fname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
-        String username = request.getParameter("user");
         String password = request.getParameter("pass");
         String address = request.getParameter("address");
+        //String cardType=request.getParameter("cardType");
         String dobString = request.getParameter("dob");
         String genderString = request.getParameter("gender");
         String profilePicture = request.getParameter("profilePicture");
 
         // Validate input
-       if (fname == null || fname.isEmpty() || email == null || email.isEmpty() || phone == null || phone.isEmpty()
-                || username == null || username.isEmpty() || password == null || password.isEmpty()
+        if (fname == null || fname.isEmpty() || email == null || email.isEmpty() || phone == null || phone.isEmpty()
+                || password == null || password.isEmpty()
                 || address == null || address.isEmpty() || dobString == null || dobString.isEmpty()
-                 || genderString == null || genderString.isEmpty() || profilePicture == null || profilePicture.isEmpty()) {
-             request.setAttribute("error", "Please fill all fields!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+                || genderString == null || genderString.isEmpty() || profilePicture == null || profilePicture.isEmpty()) {
+            request.setAttribute("error", "Please fill all fields!");
+            request.getRequestDispatcher("register").forward(request, response);
             return;
         }
 
         // Convert date string to java.util.Date
         Date dob = null;
+        java.sql.Date sqlDob=null;
         try {
+            // Chuyển chuỗi thành java.util.Date
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             dob = dateFormat.parse(dobString);
+
+            // Chuyển từ java.util.Date sang java.sql.Date
+            sqlDob = new java.sql.Date(dob.getTime());
+
+           
+            // Sử dụng sqlDob để lưu vào cơ sở dữ liệu (nếu cần)
         } catch (ParseException e) {
             request.setAttribute("error", "Invalid date format (yyyy-MM-dd)!");
-             request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("register").forward(request, response);
             return;
         }
-        Date createdAt = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String createdAtString = dateFormat.format(createdAt);
-
-
-        if (DAO.INSTANCE.existedAcc(username)) {
-            request.setAttribute("error", "Username existed!");
-            request.getRequestDispatcher("Views/register.jsp").forward(request, response);
-        } else if (DAO.INSTANCE.existedEmail(email)) {
-            request.setAttribute("error", "Email existed!");
-             request.getRequestDispatcher("register.jsp").forward(request, response);
-        } else if (DAO.INSTANCE.existedPhoneNum(phone)) {
-              request.setAttribute("error", "Phone existed!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+        DAO d = new DAO();
+        HttpSession session = request.getSession();
+        Customer c = (Customer) session.getAttribute("account");
+        //check sdt
+        if (d.existedPhoneNum(phone)) {
+            request.setAttribute("error", "Phone existed!");
+            request.getRequestDispatcher("register").forward(request, response);
         } else {
-
-            User us = new User(0, fname, email, password, phone, address,createdAtString, genderString, dob, profilePicture);
-            DAO.INSTANCE.register(us);
-           request.setAttribute("ms1", "Account successfully created!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            User u = new User(fname, email, password, phone, address, genderString, profilePicture, sqlDob);
+            d.register(u);
+            request.setAttribute("ms1", "Account successfully created!");
+            request.getRequestDispatcher("login").forward(request, response);
         }
     }
 

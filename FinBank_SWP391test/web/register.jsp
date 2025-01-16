@@ -76,7 +76,7 @@
                 width: 90%;
             }
 
-             .form-group select {
+            .form-group select {
                 width: 95%;
             }
 
@@ -91,7 +91,7 @@
                 font-size: 15px;
                 color: #fff;
                 border: none;
-                 margin-top: 20px;
+                margin-top: 20px;
                 border-radius: 10px;
                 cursor: pointer;
                 background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
@@ -123,7 +123,7 @@
     <body>
         <div class="form">
             <h2>Register</h2>
-             <p style="color: red">${requestScope.error}</p>
+            <p style="color: red">${requestScope.error}</p>
             <form action="register" method="post">
                 <div class="form-row">
                     <div class="form-group">
@@ -142,40 +142,41 @@
                         <input type="email" name="email" placeholder="Email" required>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Address</label>
-                    <input class="form-attribute" type="text" name="address" placeholder="Address" required>
-                </div>
-
-                  <div class="form-group">
-                    <label>Date of Birth</label>
-                    <input class="form-attribute" type="date" name="dob"  required>
-                </div>
-
-
-                <div class="form-group">
-                    <label>Username</label>
-                    <input class="form-attribute" type="text" name="user" placeholder="Username" required>
-                </div>
-
-
                 <div class="form-row">
                     <div class="form-group">
                         <label>Password</label>
                         <input class="form-attribute" type="password" name="pass" placeholder="Password" required>
                     </div>
                 </div>
+                <!--                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Card type</label>
+                                        <select class="form-attribute" name="cardType" required>
+                                            <option value="credtit">Credit card</option>
+                                            <option value="debit">Debit card</option>
+                                        </select>
+                                    </div>
+                                </div>-->
 
-                 <div class="form-group">
-                     <label>Gender</label>
-                     <select class="form-attribute" name="gender" required>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input class="form-attribute" type="text" name="address" placeholder="Address" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input class="form-attribute" type="date" name="dob"  required>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select class="form-attribute" name="gender" required>
                         <option value="MALE">Male</option>
                         <option value="FEMALE">Female</option>
                         <option value="OTHER">Other</option>
-                     </select>
-                 </div>
-                  <div class="form-group">
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Profile Picture</label>
                     <input class="form-attribute" type="text" name="profilePicture" placeholder="Profile Picture URL" required>
                 </div>
@@ -183,7 +184,7 @@
                 <input id="submit" type="submit" value="SUBMIT"></input>
 
                 <p>Do you already have an account?
-                    <a href="login.jsp" style="font-family: arial; font-weight: bold">Login</a>
+                    <a href="login" style="font-family: arial; font-weight: bold">Login</a>
                 </p>
             </form>
         </div>

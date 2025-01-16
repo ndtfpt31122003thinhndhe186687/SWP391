@@ -14,9 +14,19 @@ public class Customer {
      public String email;
     public String password;
         public String fullName;
+        public String cardType;
 
     public Customer() {
     }
+
+    public Customer(String user_type, String email, String password, String fullName, String cardType) {
+        this.user_type = user_type;
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.cardType = cardType;
+    }
+
 
     public Customer(int customer_id,String user_type, String email, String password, String fullName) {
         this.customer_id = customer_id;

@@ -22,7 +22,7 @@ import model.User;
  * @author Acer Nitro Tiger
  */
 @WebServlet(name = "ChangeInfor", urlPatterns = {"/changeInfor"})
-public class ChangeInfor extends HttpServlet {
+public class ChangeInforServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
