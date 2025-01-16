@@ -90,7 +90,7 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("error", "Phone existed!");
             request.getRequestDispatcher("register").forward(request, response);
         } else {
-            User u = new User(fname, email, password, phone, address, genderString, profilePicture, sqlDob);
+            User u = new User(0, fname, email, password, phone, address, fname, phone, dob, profilePicture);
             d.register(u);
             request.setAttribute("ms1", "Account successfully created!");
             request.getRequestDispatcher("login").forward(request, response);

@@ -1,68 +1,50 @@
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class User {
 
-    public int userId;
-    public String fullName;
+    public int user_id;
+    public String full_name;
     public String email;
     public String password;
-    public String phoneNumber;
+    public String phone_number;
     public String address;
-    public String createdAt;
+    public String created_at;
     public String gender;
-    public String profilePicture;
-    Date dateOfBirth;
+    public Date  date_of_birth;
+    public String profile_picture;
 
     public User() {
     }
 
-    public User(String fullName, String email, String password, String phoneNumber, String address, String gender, String profilePicture, Date dateOfBirth) {
-        this.fullName = fullName;
+    public User(int user_id, String full_name, String email, String password, String phone_number, String address, String created_at, String gender, Date date_of_birth, String profile_picture) {
+        this.user_id = user_id;
+        this.full_name = full_name;
         this.email = email;
         this.password = password;
-        this.phoneNumber = phoneNumber;
+        this.phone_number = phone_number;
         this.address = address;
+        this.created_at = created_at;
         this.gender = gender;
-        this.profilePicture = profilePicture;
-        this.dateOfBirth = dateOfBirth;
+        this.date_of_birth = date_of_birth;
+        this.profile_picture = profile_picture;
     }
 
-    
-
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public User(int userId, String fullName, String email, String password, String phoneNumber, String address, String createdAt, String gender, Date dateOfBirth, String profilePicture) {
-        this.userId = userId;
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.createdAt = createdAt;
-        this.gender = gender;
-        this.profilePicture = profilePicture;
-        this.dateOfBirth = dateOfBirth;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getFull_name() {
+        return full_name;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
     public String getEmail() {
@@ -81,12 +63,12 @@ public class User {
         this.password = password;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone_number() {
+        return phone_number;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 
     public String getAddress() {
@@ -97,12 +79,12 @@ public class User {
         this.address = address;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
     public String getGender() {
@@ -113,35 +95,24 @@ public class User {
         this.gender = gender;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public Date getDate_of_birth() {
+        return date_of_birth;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setDate_of_birth(Date date_of_birth) {
+        this.date_of_birth = date_of_birth;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getProfile_picture() {
+        return profile_picture;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
     }
 
     @Override
     public String toString() {
-        return new StringBuilder("User{")
-                .append("userId=").append(userId)
-                .append(", fullName='").append(fullName).append('\'')
-                .append(", email='").append(email).append('\'')
-                .append(", password='").append(password).append('\'')
-                .append(", phoneNumber='").append(phoneNumber).append('\'')
-                .append(", address='").append(address).append('\'')
-                .append(", createdAt='").append(createdAt).append('\'')
-                .append(", gender='").append(gender).append('\'')
-                .append(", profilePicture='").append(profilePicture).append('\'')
-                .append(", dateOfBirth=").append(dateOfBirth)
-                .append('}').toString();
+        return "User{" + "user_id=" + user_id + ", full_name=" + full_name + ", email=" + email + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", created_at=" + created_at + ", gender=" + gender + ", date_of_birth=" + date_of_birth + ", profile_picture=" + profile_picture + '}';
     }
 }

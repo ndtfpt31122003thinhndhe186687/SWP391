@@ -55,14 +55,14 @@ public class DAO extends DBContext {
                 + "     VALUES( ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, us.getFullName());
+            ps.setString(1, us.getFull_name());
             ps.setString(2, us.getEmail());
-            ps.setString(3, us.getPhoneNumber());
+            ps.setString(3, us.getPhone_number());
             ps.setString(4, us.getPassword());
             ps.setString(5, us.getAddress());
             ps.setString(6, us.getGender());
-            ps.setDate(7, us.getDateOfBirth());
-            ps.setString(8, us.getProfilePicture());
+            ps.setDate(7, us.getDate_of_birth());
+            ps.setString(8, us.getProfile_picture());
             ps.executeUpdate();
         } catch (SQLException e) {
             status = "Error at register " + e.getMessage();
@@ -178,8 +178,7 @@ public class DAO extends DBContext {
     public static void main(String[] args) {
         DAO d = new DAO();
         Date sqlDate = Date.valueOf("2004-03-03"); // Yêu cầu định dạng chuỗi "yyyy-MM-dd"
-        User u =new User("a", "a", "b", "c", "a", "male", 
-                "a", sqlDate);
+        User u =new User(0, "a", "a", "a", "a", "a", "a", "male", sqlDate, "a");
         d.register(u);
     }
 }
