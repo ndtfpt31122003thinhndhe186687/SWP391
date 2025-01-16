@@ -68,7 +68,6 @@ public class DAO extends DBContext {
             ps.executeUpdate();
         } catch (SQLException e) {
             status = "Error at register " + e.getMessage();
-            e.printStackTrace();
         }
     }
 
