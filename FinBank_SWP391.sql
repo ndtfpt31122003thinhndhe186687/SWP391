@@ -4,7 +4,7 @@ GO
 /*******************************************************************************
    Drop database if it exists
 ********************************************************************************/
-IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'AssignmentPRJ301')
+IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'FinBank_SWP391')
 BEGIN
 	ALTER DATABASE FinBank_SWP391 SET OFFLINE WITH ROLLBACK IMMEDIATE;
 	ALTER DATABASE FinBank_SWP391 SET ONLINE;
@@ -57,7 +57,7 @@ CREATE TABLE users (
     created_at DATETIME DEFAULT GETDATE(),
     gender NVARCHAR(20) CHECK (gender IN ('male', 'female')),
     date_of_birth DATE,
-    profile_picture NVARCHAR(255) NULL
+    profile_picture NVARCHAR(255) 
 );
 
 CREATE TABLE guest_requests (
@@ -77,11 +77,16 @@ CREATE TABLE guest_requests (
 );
 
 CREATE TABLE customer ( 
-    customer_id INT,
+    customer_id INT,  
+    card_type NVARCHAR(20) CHECK (card_type IN ('credit', 'debit')) NOT NULL, 
     user_type NVARCHAR(20) CHECK (user_type IN ('customer')) NOT NULL,
-	FOREIGN KEY (customer_id) REFERENCES users(user_id),
-	PRIMARY KEY (customer_id)
+    amount DECIMAL(15, 2) DEFAULT 0.00,  -- Số dư tài khoản cho thẻ debit
+    credit_limit DECIMAL(15, 2) DEFAULT 0.00,  -- Hạn mức tín dụng cho thẻ credit
+    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active',  
+    FOREIGN KEY (customer_id) REFERENCES users(user_id),  
+    PRIMARY KEY (customer_id)
 );
+
 
 CREATE TABLE admin (
     admin_id INT, 
@@ -97,11 +102,75 @@ CREATE TABLE bank_teller (
     PRIMARY KEY (bankteller_id)
 );
 
+CREATE TABLE marketer (
+    marketer_id INT,
+    user_type NVARCHAR(20) CHECK (user_type IN ('marketer')) NOT NULL,   
+    FOREIGN KEY (marketer_id) REFERENCES users(user_id),
+	PRIMARY KEY (marketer_id)
+);
+
+CREATE TABLE accountant (
+    accountant_id INT,
+    user_type NVARCHAR(20) CHECK (user_type IN ('accountant')) NOT NULL,    
+    FOREIGN KEY (accountant_id) REFERENCES users(user_id),
+	PRIMARY KEY (accountant_id)
+);
+
+
+-- Bảng service_providers
+CREATE TABLE service_providers (
+    provider_id INT IDENTITY(1,1) PRIMARY KEY, 
+    provider_name NVARCHAR(255) NOT NULL,
+    description NVARCHAR(MAX),
+    email NVARCHAR(255) NOT NULL UNIQUE,
+    phone_number NVARCHAR(20),
+    address NVARCHAR(MAX),
+    created_at DATETIME DEFAULT GETDATE(),
+    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active',
+	username NVARCHAR(255) NOT NULL UNIQUE,  -- Tên người dùng cho service provider
+    password NVARCHAR(255) NOT NULL -- Mật khẩu của service provider
+);
+
+-- Bảng provider_services
+CREATE TABLE provider_services (
+    provider_service_id INT IDENTITY(1,1) PRIMARY KEY,
+    provider_id INT NOT NULL,
+    price DECIMAL(15, 2) NOT NULL,
+    description NVARCHAR(MAX),
+    FOREIGN KEY (provider_id) REFERENCES service_providers(provider_id) ON DELETE CASCADE, 
+);
+
+-- Bảng bills
+CREATE TABLE bills (
+    bill_id INT IDENTITY(1,1) PRIMARY KEY,
+    provider_service_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    bill_date DATETIME DEFAULT GETDATE(),
+    due_date DATETIME NOT NULL,
+    amount DECIMAL(15, 2) NOT NULL,
+    status NVARCHAR(20) CHECK (status IN ('pending', 'paid', 'overdue', 'canceled')) DEFAULT 'pending',
+    FOREIGN KEY (provider_service_id) REFERENCES provider_services(provider_service_id) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Bảng provider_transactions
+CREATE TABLE provider_transactions (
+    transaction_id INT IDENTITY(1,1) PRIMARY KEY,
+    bill_id INT not null,
+    customer_id INT not null,
+    transaction_date DATETIME DEFAULT GETDATE(),
+    amount DECIMAL(15, 2) NOT NULL,
+    FOREIGN KEY (bill_id) REFERENCES bills(bill_id) ON DELETE NO ACTION, -- Thay đổi thành NO ACTION
+    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE NO ACTION -- Thay đổi thành NO ACTION
+);
+
+
+
 CREATE TABLE services (
     service_id INT IDENTITY(1,1) PRIMARY KEY,
     service_name NVARCHAR(255) NOT NULL,
     description NVARCHAR(MAX),
-    service_type NVARCHAR(20) CHECK (service_type IN ('savings', 'loan', 'other')) NOT NULL,
+    service_type NVARCHAR(20) CHECK (service_type IN ('savings', 'loan')) NOT NULL,
     status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active'
 );
 
@@ -181,4 +250,19 @@ CREATE TABLE user_services (
     FOREIGN KEY (service_id) REFERENCES services(service_id)
 );
 
+--CREATE TRIGGER trg_set_card_limits
+--ON customer
+--AFTER INSERT, UPDATE
+--AS
+--BEGIN
+--    -- Nếu loại thẻ là debit, set credit_limit = 0 và amount có giá trị
+--    UPDATE customer
+--    SET credit_limit = 0
+--    WHERE card_type = 'debit' AND customer_id IN (SELECT customer_id FROM inserted);
+    
+--    -- Nếu loại thẻ là credit, set amount = 0 và credit_limit có giá trị
+--    UPDATE customer
+--    SET amount = 0
+--    WHERE card_type = 'credit' AND customer_id IN (SELECT customer_id FROM inserted);
+--END;
 
