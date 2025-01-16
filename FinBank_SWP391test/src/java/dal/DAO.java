@@ -70,6 +70,7 @@ public class DAO extends DBContext {
             status = "Error at register " + e.getMessage();
             e.printStackTrace();
         }
+        
     }
 
     public boolean existedAcc(String username) {
