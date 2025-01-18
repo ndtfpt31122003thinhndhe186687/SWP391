@@ -47,73 +47,46 @@ WHERE  TABLE_TYPE = 'BASE TABLE'
 
 Exec Sp_executesql @sql2 
 GO
-CREATE TABLE users (
-    user_id INT IDENTITY(1,1) PRIMARY KEY,  
+CREATE TABLE customer (
+    customer_id INT IDENTITY(1,1) PRIMARY KEY,  
     full_name NVARCHAR(255) NOT NULL,
     email NVARCHAR(255) NOT NULL UNIQUE,
+	username NVARCHAR(255) NOT NULL UNIQUE, -- Tên người dùng duy nhất
     password NVARCHAR(255) NOT NULL,
     phone_number NVARCHAR(20),
     address NVARCHAR(MAX),
-    created_at DATETIME DEFAULT GETDATE(),
+	card_type NVARCHAR(20) CHECK (card_type IN ('credit', 'debit')) NOT NULL, 
+	amount DECIMAL(15, 2) DEFAULT 0.00,  -- Số dư tài khoản cho thẻ debit
+    credit_limit DECIMAL(15, 2) DEFAULT 0.00,  -- Hạn mức tín dụng cho thẻ credit
+    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active',  
     gender NVARCHAR(20) CHECK (gender IN ('male', 'female')),
     date_of_birth DATE,
+	created_at DATETIME DEFAULT GETDATE(),
     profile_picture NVARCHAR(255) 
 );
 
-CREATE TABLE guest_requests (
-    request_id INT IDENTITY(1,1) PRIMARY KEY,
-    full_name NVARCHAR(255) NOT NULL,
-    email NVARCHAR(255) NOT NULL,
-	password NVARCHAR(255) NOT NULL,
-    phone_number NVARCHAR(20),
-	address NVARCHAR(MAX),
-	gender NVARCHAR(20) CHECK (gender IN ('male', 'female')),
-    request_date DATETIME DEFAULT GETDATE(),
-	date_of_birth DATE,
-    status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
-	user_id INT NULL,  -- Optional reference to users table if the guest becomes a registered user
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 
-);
 
-CREATE TABLE customer ( 
-    customer_id INT,  
-    card_type NVARCHAR(20) CHECK (card_type IN ('credit', 'debit')) NOT NULL, 
-    user_type NVARCHAR(20) CHECK (user_type IN ('customer')) NOT NULL,
-    amount DECIMAL(15, 2) DEFAULT 0.00,  -- Số dư tài khoản cho thẻ debit
-    credit_limit DECIMAL(15, 2) DEFAULT 0.00,  -- Hạn mức tín dụng cho thẻ credit
-    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active',  
-    FOREIGN KEY (customer_id) REFERENCES users(user_id),  
-    PRIMARY KEY (customer_id)
+CREATE TABLE role (
+    role_id INT IDENTITY(1,1) PRIMARY KEY, 
+    role_name NVARCHAR(50) NOT NULL UNIQUE, -- Tên vai trò (vd: admin, bank_teller, ...)
 );
 
 
-CREATE TABLE admin (
-    admin_id INT, 
-    user_type NVARCHAR(20) CHECK (user_type IN ('admin')) NOT NULL,
-	FOREIGN KEY (admin_id) REFERENCES users(user_id),
-    PRIMARY KEY (admin_id)
-);
-
-CREATE TABLE bank_teller (
-    bankteller_id INT, 
-	user_type NVARCHAR(20) CHECK (user_type IN ('staff')) NOT NULL,
-	FOREIGN KEY (bankteller_id) REFERENCES users(user_id),
-    PRIMARY KEY (bankteller_id)
-);
-
-CREATE TABLE marketer (
-    marketer_id INT,
-    user_type NVARCHAR(20) CHECK (user_type IN ('marketer')) NOT NULL,   
-    FOREIGN KEY (marketer_id) REFERENCES users(user_id),
-	PRIMARY KEY (marketer_id)
-);
-
-CREATE TABLE accountant (
-    accountant_id INT,
-    user_type NVARCHAR(20) CHECK (user_type IN ('accountant')) NOT NULL,    
-    FOREIGN KEY (accountant_id) REFERENCES users(user_id),
-	PRIMARY KEY (accountant_id)
+CREATE TABLE staff (
+    staff_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất cho mỗi nhân viên
+    full_name NVARCHAR(255) NOT NULL, -- Họ và tên
+    email NVARCHAR(255) NOT NULL UNIQUE, -- Email duy nhất
+    password NVARCHAR(255) NOT NULL, -- Mật khẩu
+    username NVARCHAR(255) NOT NULL UNIQUE, -- Tên người dùng duy nhất
+    phone_number NVARCHAR(20), -- Số điện thoại
+    gender NVARCHAR(20) CHECK (gender IN ('male', 'female')), -- Giới tính
+    date_of_birth DATE, -- Ngày sinh (tùy chọn)
+    address NVARCHAR(MAX), -- Địa chỉ
+    role_id INT NOT NULL, -- Liên kết với bảng role
+    created_at DATETIME DEFAULT GETDATE(), -- Ngày tạo bản ghi
+    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active', -- Trạng thái nhân viên
+    FOREIGN KEY (role_id) REFERENCES role(role_id) -- Khóa ngoại tham chiếu bảng role
 );
 
 
@@ -137,7 +110,7 @@ CREATE TABLE provider_services (
     provider_id INT NOT NULL,
     price DECIMAL(15, 2) NOT NULL,
     description NVARCHAR(MAX),
-    FOREIGN KEY (provider_id) REFERENCES service_providers(provider_id) ON DELETE CASCADE, 
+    FOREIGN KEY (provider_id) REFERENCES service_providers(provider_id) 
 );
 
 -- Bảng bills
@@ -149,8 +122,8 @@ CREATE TABLE bills (
     due_date DATETIME NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
     status NVARCHAR(20) CHECK (status IN ('pending', 'paid', 'overdue', 'canceled')) DEFAULT 'pending',
-    FOREIGN KEY (provider_service_id) REFERENCES provider_services(provider_service_id) ON DELETE CASCADE,
-    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE
+    FOREIGN KEY (provider_service_id) REFERENCES provider_services(provider_service_id) ,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) 
 );
 
 -- Bảng provider_transactions
@@ -160,8 +133,8 @@ CREATE TABLE provider_transactions (
     customer_id INT not null,
     transaction_date DATETIME DEFAULT GETDATE(),
     amount DECIMAL(15, 2) NOT NULL,
-    FOREIGN KEY (bill_id) REFERENCES bills(bill_id) ON DELETE NO ACTION, -- Thay đổi thành NO ACTION
-    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE NO ACTION -- Thay đổi thành NO ACTION
+    FOREIGN KEY (bill_id) REFERENCES bills(bill_id) ,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) 
 );
 
 
@@ -176,27 +149,27 @@ CREATE TABLE services (
 
 CREATE TABLE savings (
     savings_id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT,
-    service_id INT,
+    customer_id INT NOT NULL,
+    service_id INT NOT NULL,
     amount DECIMAL(15, 2),
     interest_rate DECIMAL(5, 2),
     start_date DATETIME DEFAULT GETDATE(),
     end_date DATETIME NULL,  -- Nullable to accommodate ongoing savings accounts
     status NVARCHAR(20) CHECK (status IN ('active', 'completed', 'closed')) DEFAULT 'active',
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id)
 );
 
 CREATE TABLE loan (
     loan_id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT,
-    service_id INT,
+    customer_id INT NOT NULL,
+    service_id INT NOT NULL,
     amount DECIMAL(15, 2),
     interest_rate DECIMAL(5, 2),
     loan_term INT,
     request_date DATETIME DEFAULT GETDATE(),
     status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected', 'disbursed')) DEFAULT 'pending',
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id)
 );
 
@@ -209,13 +182,13 @@ CREATE TABLE loan_disbursements (
 );
 
 CREATE TABLE request (
-    customer_id INT,
-    bankteller_id INT,
-    service_id INT,  
+    customer_id INT NOT NULL,
+    staff_id INT NOT NULL,
+    service_id INT NOT NULL,  
     request_date DATETIME DEFAULT GETDATE(),
 	status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
-    FOREIGN KEY (customer_id) REFERENCES users(user_id),
-	FOREIGN KEY (bankteller_id) REFERENCES users(user_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+	FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id),
 
 );
@@ -226,27 +199,27 @@ CREATE TABLE feedback (
     service_id INT NULL, -- Dịch vụ liên quan đến phản hồi (nếu có)
     feedback_content NVARCHAR(MAX) NOT NULL, -- Nội dung phản hồi
     feedback_date DATETIME DEFAULT GETDATE(), -- Ngày gửi phản hồi
-    FOREIGN KEY (customer_id) REFERENCES users(user_id), -- Khóa ngoại đến bảng users
-    FOREIGN KEY (service_id) REFERENCES services(service_id) -- Khóa ngoại đến bảng services
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id), 
+    FOREIGN KEY (service_id) REFERENCES services(service_id) 
 );
 
 
 CREATE TABLE transactions (
     transaction_id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT,
-    service_id INT,
+    customer_id INT NOT NULL,
+    service_id INT NOT NULL,
     amount DECIMAL(15, 2),
     transaction_date DATETIME DEFAULT GETDATE(),
     transaction_type NVARCHAR(20) CHECK (transaction_type IN ('deposit', 'withdrawal', 'payment')) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id)
 );
 
 CREATE TABLE user_services (
-    user_id INT,
-    service_id INT,
-    PRIMARY KEY (user_id, service_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    customer_id INT NOT NULL,
+    service_id INT NOT NULL,
+    PRIMARY KEY (customer_id, service_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id)
 );
 
