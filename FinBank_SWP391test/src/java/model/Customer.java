@@ -9,55 +9,23 @@ package model;
  * @author default
  */
 public class Customer {
+
     public int customer_id;
+    public String card_type;
     public String user_type;
-     public String email;
-    public String password;
-        public String fullName;
-        public String cardType;
+    double amount, credit_limit;
+    String status;
 
     public Customer() {
     }
 
-    public Customer(String user_type, String email, String password, String fullName, String cardType) {
-        this.user_type = user_type;
-        this.email = email;
-        this.password = password;
-        this.fullName = fullName;
-        this.cardType = cardType;
-    }
-
-
-    public Customer(int customer_id,String user_type, String email, String password, String fullName) {
+    public Customer(int customer_id, String card_type, String user_type, double amount, double credit_limit, String status) {
         this.customer_id = customer_id;
+        this.card_type = card_type;
         this.user_type = user_type;
-        this.email = email;
-        this.password = password;
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+        this.amount = amount;
+        this.credit_limit = credit_limit;
+        this.status = status;
     }
 
     public int getCustomer_id() {
@@ -68,6 +36,14 @@ public class Customer {
         this.customer_id = customer_id;
     }
 
+    public String getCard_type() {
+        return card_type;
+    }
+
+    public void setCard_type(String card_type) {
+        this.card_type = card_type;
+    }
+
     public String getUser_type() {
         return user_type;
     }
@@ -76,10 +52,33 @@ public class Customer {
         this.user_type = user_type;
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" + "customer_id=" + customer_id + ", user_type=" + user_type + ", email=" + email + ", password=" + password + ", fullName=" + fullName + '}';
+    public double getAmount() {
+        return amount;
     }
 
-    
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public double getCredit_limit() {
+        return credit_limit;
+    }
+
+    public void setCredit_limit(double credit_limit) {
+        this.credit_limit = credit_limit;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "customer_id=" + customer_id + ", card_type=" + card_type + ", user_type=" + user_type + ", amount=" + amount + ", credit_limit=" + credit_limit + ", status=" + status + '}';
+    }
+
 }
