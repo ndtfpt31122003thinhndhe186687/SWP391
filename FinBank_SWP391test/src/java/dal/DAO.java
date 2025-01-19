@@ -3,7 +3,7 @@ package dal;
 import java.sql.*;
 import java.time.LocalDate;
 import model.Customer;
-import model.User;
+
 
 public class DAO extends DBContext {
 
@@ -95,44 +95,14 @@ public class DAO extends DBContext {
         return false;
     }
 
-    public User check(String username, String password) {
-        String sql = "SELECT [user_id],\n"
-                + "      [full_name],\n"
-                + "      [email],\n"
-                + "      [phone_number],\n"
-                + "      [password],\n"
-                + "      [address],\n" + "      [created_at],\n"
-                + "      [gender],\n"
-                + "      [profile_picture],\n"
-                + "      [date_of_birth]\n"
-                + "  FROM [dbo].[Users] where email = ? and password = ?";
-
-        try (PreparedStatement st = con.prepareStatement(sql)) {
-            st.setString(1, username);
-            st.setString(2, password);
-            try (ResultSet rs = st.executeQuery()) {
-                if (rs.next()) {
-                    return new User(rs.getInt("user_id"), rs.getString("full_name"), rs.getString("email"),
-                            rs.getString("password"), rs.getString("phone_number"), rs.getString("address"),
-                            rs.getString("created_at"), rs.getString("gender"), rs.getDate("date_of_birth"), rs.getString("profile_picture"));
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    public void change(int Customer_id, String password) {
+    public void change(String Customer_id, String password) {
         String sql = "UPDATE u\n"
                 + "                 SET password=?\n"
-                + "                 FROM customer c\n"
-                + "                 JOIN users u ON c.customer_id = u.user_id\n"
+                + "                 FROM customer c\n"             
                 + "                 WHERE customer_id=?";
         try (PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, password);
-            st.setInt(2, Customer_id);
+            st.setString(2, Customer_id);
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
