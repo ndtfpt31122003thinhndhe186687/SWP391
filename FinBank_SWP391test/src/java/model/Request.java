@@ -11,16 +11,16 @@ import java.util.Date;
  * @author default
  */
 public class Request {
-    public int customer_id,bankteller_id,service_id;
+    public int customer_id,staff_id,service_id;
     public Date request_date;
     public String status;
 
     public Request() {
     }
 
-    public Request(int customer_id, int bankteller_id, int service_id, Date request_date, String status) {
+    public Request(int customer_id, int staff_id, int service_id, Date request_date, String status) {
         this.customer_id = customer_id;
-        this.bankteller_id = bankteller_id;
+        this.staff_id = staff_id;
         this.service_id = service_id;
         this.request_date = request_date;
         this.status = status;
@@ -34,12 +34,12 @@ public class Request {
         this.customer_id = customer_id;
     }
 
-    public int getBankteller_id() {
-        return bankteller_id;
+    public int getStaff_id() {
+        return staff_id;
     }
 
-    public void setBankteller_id(int bankteller_id) {
-        this.bankteller_id = bankteller_id;
+    public void setStaff_id(int staff_id) {
+        this.staff_id = staff_id;
     }
 
     public int getService_id() {
@@ -68,6 +68,6 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request{" + "customer_id=" + customer_id + ", bankteller_id=" + bankteller_id + ", service_id=" + service_id + ", request_date=" + request_date + ", status=" + status + '}';
+        return "Request{" + "customer_id=" + customer_id + ", bankteller_id=" + staff_id + ", service_id=" + service_id + ", request_date=" + request_date + ", status=" + status + '}';
     }
 }
