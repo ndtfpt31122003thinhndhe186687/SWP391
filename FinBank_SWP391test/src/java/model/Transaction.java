@@ -9,7 +9,7 @@ import java.util.Date;
  * @author default
  */
 public class Transaction {
-    public int transaction_id,user_id,service_id;
+    public int transaction_id,customer_id,service_id;
     public double amount;
     public Date transaction_date;
     public String transaction_type;
@@ -17,9 +17,9 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(int transaction_id, int user_id, int service_id, double amount, Date transaction_date, String transaction_type) {
+    public Transaction(int transaction_id, int customer_id, int service_id, double amount, Date transaction_date, String transaction_type) {
         this.transaction_id = transaction_id;
-        this.user_id = user_id;
+        this.customer_id = customer_id;
         this.service_id = service_id;
         this.amount = amount;
         this.transaction_date = transaction_date;
@@ -34,12 +34,12 @@ public class Transaction {
         this.transaction_id = transaction_id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getCustomer_id() {
+        return customer_id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setCustomer_id(int customer_id) {
+        this.customer_id = customer_id;
     }
 
     public int getService_id() {
@@ -76,6 +76,8 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "transaction_id{" + "transaction_id=" + transaction_id + ", user_id=" + user_id + ", service_id=" + service_id + ", amount=" + amount + ", transaction_date=" + transaction_date + ", transaction_type=" + transaction_type + '}';
+        return "Transaction{" + "transaction_id=" + transaction_id + ", customer_id=" + customer_id + ", service_id=" + service_id + ", amount=" + amount + ", transaction_date=" + transaction_date + ", transaction_type=" + transaction_type + '}';
     }
+
+   
 }

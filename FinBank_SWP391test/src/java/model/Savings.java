@@ -9,7 +9,7 @@ import java.util.Date;
  * @author default
  */
 public class Savings {
-    public int savings_id,user_id,service_id;
+    public int savings_id,customer_id,service_id;
     public double amount,interest_rate;
     public Date start_date,end_date;
     public String status;
@@ -17,9 +17,9 @@ public class Savings {
     public Savings() {
     }
 
-    public Savings(int savings_id, int user_id, int service_id, double amount, double interest_rate, Date start_date, Date end_date, String status) {
+    public Savings(int savings_id, int customer_id, int service_id, double amount, double interest_rate, Date start_date, Date end_date, String status) {
         this.savings_id = savings_id;
-        this.user_id = user_id;
+        this.customer_id = customer_id;
         this.service_id = service_id;
         this.amount = amount;
         this.interest_rate = interest_rate;
@@ -34,14 +34,6 @@ public class Savings {
 
     public void setSavings_id(int savings_id) {
         this.savings_id = savings_id;
-    }
-
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
     }
 
     public int getService_id() {
@@ -92,8 +84,16 @@ public class Savings {
         this.status = status;
     }
 
+    public int getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(int customer_id) {
+        this.customer_id = customer_id;
+    }
+
     @Override
     public String toString() {
-        return "Savings{" + "savings_id=" + savings_id + ", user_id=" + user_id + ", service_id=" + service_id + ", amount=" + amount + ", interest_rate=" + interest_rate + ", start_date=" + start_date + ", end_date=" + end_date + ", status=" + status + '}';
+        return "Savings{" + "savings_id=" + savings_id + ", user_id=" + customer_id + ", service_id=" + service_id + ", amount=" + amount + ", interest_rate=" + interest_rate + ", start_date=" + start_date + ", end_date=" + end_date + ", status=" + status + '}';
     }
 }
