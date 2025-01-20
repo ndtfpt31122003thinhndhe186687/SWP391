@@ -59,7 +59,7 @@
                                             <form class="form-signin" action="login" method="post">
                                                 <p class="text-danger">${mess}</p>
                                                 <div class="form-group">
-                                                    <input name="email"  type="text"  id="inputEmail" class="form-control" placeholder="Tên" required="" autofocus="">
+                                                    <input name="username"  type="text"  id="inputEmail" class="form-control" placeholder="Tên" required="" autofocus="">
                                                 </div>
                                                 <div class="form-group">
                                                     <input name="pass"  type="password"  id="inputPassword" class="form-control" placeholder="Mật khẩu" required="">

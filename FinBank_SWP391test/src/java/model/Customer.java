@@ -11,29 +11,22 @@ import java.util.Date;
  * @author default
  */
 public class Customer {
-    public String customer_id,full_name,email,username,password,phone_number,address,card_type,status,gender,created_at,profile_picture;
+    public String full_name,email,username,password,phone_number,address,card_type,status,gender,profile_picture;
+    int customer_id;
     double amount,credit_limit;
-    Date date_of_birth;
+    Date date_of_birth,created_at;
 
     public Customer() {
     }
 
-    public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String gender, String profile_picture, Date date_of_birth) {
-        this.full_name = full_name;
-        this.email = email;
+    public Customer(String username, String password) {
         this.username = username;
         this.password = password;
-        this.phone_number = phone_number;
-        this.address = address;
-        this.card_type = card_type;
-        this.gender = gender;
-        this.profile_picture = profile_picture;
-        this.date_of_birth = date_of_birth;
     }
 
-
-    public Customer(String customer_id, String full_name, String email, String username, String password, String phone_number, String address, String card_type,double amount,  double credit_limit, String status, String gender, Date date_of_birth, String created_at, String profile_picture) {
-        this.customer_id = customer_id;
+   
+    
+    public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
         this.full_name = full_name;
         this.email = email;
         this.username = username;
@@ -43,21 +36,35 @@ public class Customer {
         this.card_type = card_type;
         this.status = status;
         this.gender = gender;
-        this.created_at = created_at;
         this.profile_picture = profile_picture;
+        this.customer_id = customer_id;
         this.amount = amount;
         this.credit_limit = credit_limit;
         this.date_of_birth = date_of_birth;
+        this.created_at = created_at;
     }
 
-    public String getCustomer_id() {
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    
+
+    
+
+    public int getCustomer_id() {
         return customer_id;
     }
 
-    public void setCustomer_id(String customer_id) {
+    public void setCustomer_id(int customer_id) {
         this.customer_id = customer_id;
     }
 
+      
     public String getFull_name() {
         return full_name;
     }
@@ -130,13 +137,7 @@ public class Customer {
         this.gender = gender;
     }
 
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
+   
 
     public String getProfile_picture() {
         return profile_picture;
@@ -172,6 +173,8 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" + "customer_id=" + customer_id + ", full_name=" + full_name + ", email=" + email + ", username=" + username + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", card_type=" + card_type + ", status=" + status + ", gender=" + gender + ", created_at=" + created_at + ", profile_picture=" + profile_picture + ", amount=" + amount + ", credit_limit=" + credit_limit + ", date_of_birth=" + date_of_birth + '}';
+        return "Customer{" + "full_name=" + full_name + ", email=" + email + ", username=" + username + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", card_type=" + card_type + ", status=" + status + ", gender=" + gender + ", profile_picture=" + profile_picture + ", customer_id=" + customer_id + ", amount=" + amount + ", credit_limit=" + credit_limit + ", date_of_birth=" + date_of_birth + ", created_at=" + created_at + '}';
     }
+
+
 }

@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Customer;
-import model.User;
+import model.Customer;
 
 /**
  *
@@ -72,10 +72,10 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String email = request.getParameter("email");
+        String username = request.getParameter("username");
         String password = request.getParameter("pass");
         DAO dao = new DAO();
-        Customer acc = dao.login(email, password);
+        Customer acc = dao.login(username, password);
         if (acc == null) {
             request.setAttribute("mess", "Wrong username or password");
             request.getRequestDispatcher("login.jsp").forward(request, response);

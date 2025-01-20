@@ -79,42 +79,7 @@ public class DAO extends DBContext {
         }
         return false;
     }
-
-    // Check login credentials
-    public Customer check(String email, String password) {
-        String sql = "SELECT [user_id], [full_name], [email], [phone_number], [password], [address], " +
-                "[created_at], [gender], [profile_picture], [date_of_birth] " +
-                "FROM [dbo].[customer] WHERE email = ? AND password = ?";
-        try (PreparedStatement st = con.prepareStatement(sql)) {
-            st.setString(1, email);
-            st.setString(2, password);
-            try (ResultSet rs = st.executeQuery()) {
-                if (rs.next()) {
-                    return new Customer(
-                            rs.getString("user_id"),
-                            rs.getString("full_name"),
-                            rs.getString("email"),
-                            rs.getString("email"), // Username is treated as email in this case
-                            rs.getString("password"),
-                            rs.getString("phone_number"),
-                            rs.getString("address"),
-                            null, // card_type is not fetched from this query
-                            0.0,  // amount is not fetched
-                            0.0,  // credit_limit is not fetched
-                            null, // status is not fetched
-                            rs.getString("gender"),
-                            rs.getDate("date_of_birth"),
-                            rs.getString("created_at"),
-                            rs.getString("profile_picture")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error at check: " + e.getMessage());
-        }
-        return null;
-    }
-
+  
     // Update password
     public void changePassword(int customer_id, String password) {
         String sql = "UPDATE customer SET password = ? WHERE user_id = ?";
@@ -143,44 +108,45 @@ public class DAO extends DBContext {
     }
 
     // Login method
-    public Customer login(String email, String password) {
-        String sql = "SELECT * FROM Users u JOIN Customer c ON u.user_id = c.customer_id " +
-                "WHERE u.email = ? AND u.password = ?";
-        try (PreparedStatement pre = con.prepareStatement(sql)) {
-            pre.setString(1, email);
-            pre.setString(2, password);
-            try (ResultSet rs = pre.executeQuery()) {
-                if (rs.next()) {
-                    return new Customer(
-                            rs.getString("customer_id"),
-                            rs.getString("full_name"),
-                            email,
-                            email, // Username is treated as email in this case
-                            password,
-                            rs.getString("phone_number"),
-                            rs.getString("address"),
-                            rs.getString("card_type"),
-                            rs.getDouble("amount"),
-                            rs.getDouble("credit_limit"),
-                            rs.getString("status"),
-                            rs.getString("gender"),
-                            rs.getDate("date_of_birth"),
-                            rs.getString("created_at"),
-                            rs.getString("profile_picture")
-                    );
-                }
+   public Customer login(String username, String pass) {
+        String sql = "select * from customer\n"
+                + "where username = ?\n"
+                + "and password = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, username);
+            pre.setString(2, pass);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int customer_id = rs.getInt("customer_id");
+                String fullname = rs.getString("full_name");
+                String email = rs.getString("email");
+                String userName = rs.getString("username");
+                String password = rs.getString("password");
+                String phone_number = rs.getString("phone_number");
+                String address = rs.getString("address");
+                String card_type = rs.getString("card_type");
+                String status = rs.getString("status");
+                String gender = rs.getString("gender");
+                Date created_at = rs.getDate("created_at");
+                String profile_picture = rs.getString("profile_picture");
+                double amount = rs.getDouble("amount");
+                double credit_limit = rs.getDouble("credit_limit");
+                Date date_of_birth = rs.getDate("date_of_birth");
+                Customer acc = new Customer(fullname, email, userName, password, phone_number, address, card_type, status, gender, profile_picture, customer_id, amount, credit_limit, date_of_birth, created_at);               
+                return acc;
             }
-        } catch (SQLException e) {
-            System.out.println("Error at login: " + e.getMessage());
+        } catch (Exception e) { 
         }
         return null;
     }
 
     // Main method for testing
     public static void main(String[] args) {
-        DAO dao = new DAO();
-        java.sql.Date sqlDate = java.sql.Date.valueOf("2004-03-03");
-        Customer customer = new Customer("abcd", "abcd@gmail.com", "abcd", "1234", "0213456789", "hn", "debit", "male", "profile.jpg", sqlDate);
-        dao.register(customer);
+        DAO d = new DAO();
+        Customer c = d.login("nguyenvana", "password123");
+        System.out.println(c);
+        
+        
     }
 }

@@ -82,7 +82,7 @@
             <!-- Login/logout-->
             <c:if test="${sessionScope.account != null}">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Hello ${sessionScope.account.fullName}</a>
+                    <a class="nav-link" href="#">Hello ${sessionScope.account.full_name}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="logout">Logout</a>

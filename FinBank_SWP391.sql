@@ -239,3 +239,8 @@ CREATE TABLE user_services (
 --    WHERE card_type = 'credit' AND customer_id IN (SELECT customer_id FROM inserted);
 --END;
 
+INSERT INTO customer (full_name, email, username, password, phone_number, address, card_type, amount, credit_limit, status, gender, date_of_birth, profile_picture)  
+VALUES 
+('Nguyen Van A', 'nguyenvana@example.com', 'nguyenvana', 'password123', '0987654321', '123 Đường ABC, Hà Nội', 'debit', 5000000.00, 0.00, 'active', 'male', '1990-05-15', 'profile_a.jpg'),  
+('Tran Thi B', 'tranthib@example.com', 'tranthib', 'securepass', '0912345678', '456 Đường XYZ, Hồ Chí Minh', 'credit', 0.00, 20000000.00, 'active', 'female', '1995-09-22', 'profile_b.jpg');  
+select * from customer
