@@ -144,6 +144,12 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
+                        <label>Username</label>
+                        <input class="form-attribute" type="username" name="username" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label>Password</label>
                         <input class="form-attribute" type="password" name="pass" placeholder="Password" required>
                     </div>
@@ -179,6 +185,13 @@
                 <div class="form-group">
                     <label>Profile Picture</label>
                     <input class="form-attribute" type="text" name="profilePicture" placeholder="Profile Picture URL" required>
+                </div>
+                <div class="form-group">
+                    <label>Card Type</label>
+                    <select class="form-attribute" name="card_type" required>
+                        <option value="Credit">Credit</option>
+                        <option value="Debit">Debit</option>
+                    </select>
                 </div>
 
                 <input id="submit" type="submit" value="SUBMIT"></input>

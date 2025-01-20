@@ -1,20 +1,20 @@
 package dal;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.util.Date;
 import model.Customer;
-import model.User;
 
 public class DAO extends DBContext {
 
     public static DAO INSTANCE = new DAO();
     private Connection con;
     private String status = "OK";
+
     public DAO() {
         try {
             con = new DBContext().getConnection();
         } catch (Exception e) {
-            status = "Error at connection" + e.getMessage();
+            status = "Error at connection: " + e.getMessage();
         }
     }
 
@@ -42,109 +42,94 @@ public class DAO extends DBContext {
         this.status = status;
     }
 
-    public void register(User us) {
-        String sql = "INSERT INTO [dbo].[Users]\n"
-                + "           ([full_name]\n"
-                + "           ,[email]\n"
-                + "           ,[phone_number]\n"
-                + "           ,[password]\n"
-                + "           ,[address]\n"
-                + "           ,[gender]\n"
-                + "           ,[date_of_birth]\n"
-                + "           ,[profile_picture])\n"
-                + "     VALUES( ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Register a new customer
+    public void register(Customer c) {
+        String sql = "INSERT INTO [dbo].[customer] " +
+                "([full_name],[email], [username], [phone_number], [password], [address],[card_type], [gender], [date_of_birth], [profile_picture]) " +
+                "VALUES (?,?, ?, ?, ?, ?,?, ?, ?, ?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, us.getFull_name());
-            ps.setString(2, us.getEmail());
-            ps.setString(3, us.getPhone_number());
-            ps.setString(4, us.getPassword());
-            ps.setString(5, us.getAddress());
-            ps.setString(6, us.getGender());
-            ps.setDate(7, us.getDate_of_birth());
-            ps.setString(8, us.getProfile_picture());
+            ps.setString(1, c.getFull_name());
+            ps.setString(2, c.getUsername());
+            ps.setString(3, c.getEmail());
+            ps.setString(4, c.getPhone_number());
+            ps.setString(5, c.getPassword());
+            ps.setString(6, c.getAddress());
+            ps.setString(7, c.getCard_type());            
+            ps.setString(8, c.getGender());
+            ps.setDate(9, new java.sql.Date(c.getDate_of_birth().getTime())); // Convert java.util.Date to java.sql.Date
+            ps.setString(10, c.getProfile_picture());
             ps.executeUpdate();
         } catch (SQLException e) {
-            status = "Error at register " + e.getMessage();
+            status = "Error at register: " + e.getMessage();
             e.printStackTrace();
         }
-
     }
 
+    // Check if a phone number already exists
     public boolean existedPhoneNum(String phoneNum) {
-        String sql = "SELECT [userId]\n"
-                + "      ,[fullName]\n"
-                + "      ,[email]\n"
-                + "      ,[phoneNumber]\n"
-                + "      ,[password]\n"
-                + "      ,[address]\n"
-                + "      ,[createdAt]\n"
-                + "      ,[gender]\n"
-                + "      ,[profilePicture]\n"
-                + "  FROM [dbo].[Users] WHERE phoneNumber = ?";
+        String sql = "SELECT [user_id] FROM [dbo].[customer] WHERE phone_number = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, phoneNum);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return true;
-                }
+                return rs.next(); // If a record exists, return true
             }
         } catch (SQLException e) {
-            status = "Error at existedPhoneNum " + e.getMessage();
+            status = "Error at existedPhoneNum: " + e.getMessage();
         }
         return false;
     }
 
-    public User check(String username, String password) {
-        String sql = "SELECT [user_id],\n"
-                + "      [full_name],\n"
-                + "      [email],\n"
-                + "      [phone_number],\n"
-                + "      [password],\n"
-                + "      [address],\n" + "      [created_at],\n"
-                + "      [gender],\n"
-                + "      [profile_picture],\n"
-                + "      [date_of_birth]\n"
-                + "  FROM [dbo].[Users] where email = ? and password = ?";
-
+    // Check login credentials
+    public Customer check(String email, String password) {
+        String sql = "SELECT [user_id], [full_name], [email], [phone_number], [password], [address], " +
+                "[created_at], [gender], [profile_picture], [date_of_birth] " +
+                "FROM [dbo].[customer] WHERE email = ? AND password = ?";
         try (PreparedStatement st = con.prepareStatement(sql)) {
-            st.setString(1, username);
+            st.setString(1, email);
             st.setString(2, password);
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
-                    return new User(rs.getInt("user_id"), rs.getString("full_name"), rs.getString("email"),
-                            rs.getString("password"), rs.getString("phone_number"), rs.getString("address"),
-                            rs.getString("created_at"), rs.getString("gender"), rs.getDate("date_of_birth"), rs.getString("profile_picture"));
+                    return new Customer(
+                            rs.getString("user_id"),
+                            rs.getString("full_name"),
+                            rs.getString("email"),
+                            rs.getString("email"), // Username is treated as email in this case
+                            rs.getString("password"),
+                            rs.getString("phone_number"),
+                            rs.getString("address"),
+                            null, // card_type is not fetched from this query
+                            0.0,  // amount is not fetched
+                            0.0,  // credit_limit is not fetched
+                            null, // status is not fetched
+                            rs.getString("gender"),
+                            rs.getDate("date_of_birth"),
+                            rs.getString("created_at"),
+                            rs.getString("profile_picture")
+                    );
                 }
             }
-
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("Error at check: " + e.getMessage());
         }
         return null;
     }
 
-    public void change(int Customer_id, String password) {
-        String sql = "UPDATE u\n"
-                + "                 SET password=?\n"
-                + "                 FROM customer c\n"
-                + "                 JOIN users u ON c.customer_id = u.user_id\n"
-                + "                 WHERE customer_id=?";
+    // Update password
+    public void changePassword(int customer_id, String password) {
+        String sql = "UPDATE customer SET password = ? WHERE user_id = ?";
         try (PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, password);
-            st.setInt(2, Customer_id);
+            st.setInt(2, customer_id);
             st.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("Error at changePassword: " + e.getMessage());
         }
     }
 
-    public void changeInfor(String full_name, String email, String phone_number, String address, int customer_id) {
-        String sql = "UPDATE u\n"
-                + "SET full_name=?,email=?,phone_number=?,address=?\n"
-                + "FROM customer c\n"
-                + "JOIN users u ON c.customer_id = u.user_id\n"
-                + "WHERE customer_id=?;";
+    // Update customer information
+    public void changeInfo(String full_name, String email, String phone_number, String address, int customer_id) {
+        String sql = "UPDATE customer SET full_name = ?, email = ?, phone_number = ?, address = ? WHERE user_id = ?";
         try (PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, full_name);
             st.setString(2, email);
@@ -153,32 +138,49 @@ public class DAO extends DBContext {
             st.setInt(5, customer_id);
             st.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("Error at changeInfo: " + e.getMessage());
         }
     }
 
-    public Customer login(String email, String pass) {
-        String sql = "select * from users u join customer c on u.user_id=c.customer_id\n"
-                + "where u.email = ?\n"
-                + "and u.password = ?";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
+    // Login method
+    public Customer login(String email, String password) {
+        String sql = "SELECT * FROM Users u JOIN Customer c ON u.user_id = c.customer_id " +
+                "WHERE u.email = ? AND u.password = ?";
+        try (PreparedStatement pre = con.prepareStatement(sql)) {
             pre.setString(1, email);
-            pre.setString(2, pass);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                return new Customer(rs.getInt("customer_id"), rs.getString("user_type"),
-                        email, pass, rs.getString("full_name"));
+            pre.setString(2, password);
+            try (ResultSet rs = pre.executeQuery()) {
+                if (rs.next()) {
+                    return new Customer(
+                            rs.getString("customer_id"),
+                            rs.getString("full_name"),
+                            email,
+                            email, // Username is treated as email in this case
+                            password,
+                            rs.getString("phone_number"),
+                            rs.getString("address"),
+                            rs.getString("card_type"),
+                            rs.getDouble("amount"),
+                            rs.getDouble("credit_limit"),
+                            rs.getString("status"),
+                            rs.getString("gender"),
+                            rs.getDate("date_of_birth"),
+                            rs.getString("created_at"),
+                            rs.getString("profile_picture")
+                    );
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            System.out.println("Error at login: " + e.getMessage());
         }
         return null;
     }
 
+    // Main method for testing
     public static void main(String[] args) {
-        DAO d = new DAO();
-        Date sqlDate = Date.valueOf("2004-03-03"); // Yêu cầu định dạng chuỗi "yyyy-MM-dd"
-        User u =new User(0, "a", "a", "a", "a", "a", "a", "male", sqlDate, "a");
-        d.register(u);
+        DAO dao = new DAO();
+        java.sql.Date sqlDate = java.sql.Date.valueOf("2004-03-03");
+        Customer customer = new Customer("abcd", "abcd@gmail.com", "abcd", "1234", "0213456789", "hn", "debit", "male", "profile.jpg", sqlDate);
+        dao.register(customer);
     }
 }
