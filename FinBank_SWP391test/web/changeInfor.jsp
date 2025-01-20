@@ -207,6 +207,7 @@
                                     <input class="form-control" type="email" name="profile-email" placeholder="Email">
                                     <input class="form-control" type="number" name="profile-phone" placeholder="Phone"> 
                                     <input class="form-control" type="text" name="profile-address" placeholder="Address">
+                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth">
 
                                     <div class="input-group mb-1">
                                         <img src="" class="profile-image img-fluid" alt="">

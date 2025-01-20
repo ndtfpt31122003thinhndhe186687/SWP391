@@ -13,9 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import model.Customer;
-import model.User;
+
 
 /**
  *
@@ -76,15 +78,28 @@ public class ChangeInforServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fullname = request.getParameter("profile-name");
+       String fullname = request.getParameter("profile-name");
         String email = request.getParameter("profile-email");
         String phone = request.getParameter("profile-phone");
         String address = request.getParameter("profile-address");
         String url_image = request.getParameter("profile-image");
+        String dob_raw=request.getParameter("dob");
+        Date dob=null;
+        java.sql.Date sqlDob=null;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dob = dateFormat.parse(dob_raw);
+            // Chuyển từ java.util.Date sang java.sql.Date
+            sqlDob = new java.sql.Date(dob.getTime());
+        } catch (ParseException e) {
+            request.setAttribute("error", "Invalid date format");
+            request.getRequestDispatcher("changeInfor").forward(request, response);
+            return;
+        }
         HttpSession session = request.getSession();
         Customer c = (Customer) session.getAttribute("account");
         DAO d = new DAO();
-        d.changeInfor(fullname, email, phone, address, c.getCustomer_id());
+        d.changeInfor(fullname, email, phone, address, sqlDob, url_image, c.getCustomer_id());
         response.sendRedirect("changeInfor");
     }
 

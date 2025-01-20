@@ -93,17 +93,19 @@ public class DAO extends DBContext {
     }
 
     // Update customer information
-    public void changeInfo(String full_name, String email, String phone_number, String address, int customer_id) {
-        String sql = "UPDATE customer SET full_name = ?, email = ?, phone_number = ?, address = ? WHERE user_id = ?";
+     public void changeInfor(String full_name, String email, String phone_number, String address,java.sql.Date dob,String profilePicture, int customer_id) {
+        String sql = "update customer set full_name=?,email=?,phone_number=?,address=?,date_of_birth=?,profile_picture=? where customer_id=?";
         try (PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, full_name);
             st.setString(2, email);
             st.setString(3, phone_number);
             st.setString(4, address);
-            st.setInt(5, customer_id);
+            st.setDate(5, dob);
+            st.setString(6, profilePicture);
+            st.setInt(7, customer_id);
             st.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error at changeInfo: " + e.getMessage());
+            System.out.println(e);
         }
     }
 

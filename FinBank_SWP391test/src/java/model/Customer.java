@@ -24,6 +24,19 @@ public class Customer {
         this.password = password;
     }
 
+    public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String gender, String profile_picture, Date date_of_birth) {
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.card_type = card_type;
+        this.gender = gender;
+        this.profile_picture = profile_picture;
+        this.date_of_birth = date_of_birth;
+    }
+
    
     
     public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
