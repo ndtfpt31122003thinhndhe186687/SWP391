@@ -82,7 +82,7 @@ public class DAO extends DBContext {
   
     // Update password
     public void changePassword(int customer_id, String password) {
-        String sql = "UPDATE customer SET password = ? WHERE user_id = ?";
+        String sql = "UPDATE customer SET password = ? WHERE customer_id = ?";
         try (PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, password);
             st.setInt(2, customer_id);

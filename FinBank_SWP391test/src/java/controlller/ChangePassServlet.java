@@ -81,7 +81,7 @@ public class ChangePassServlet extends HttpServlet {
         DAO dao = new DAO();
         
 
-        if (dao.login(c.getEmail(), oldPass)==null) {
+        if (dao.login(c.getUsername(), oldPass)==null) {
             //Incorrect User or Old password
              request.setAttribute("error", "Incorrect old password!");
             request.getRequestDispatcher("changepass").forward(request, response);
@@ -89,7 +89,7 @@ public class ChangePassServlet extends HttpServlet {
         } else {
              //Change the password
              c.setPassword(newPass);
-            dao.change(c.getCustomer_id(), newPass);
+            dao.changePassword(c.getCustomer_id(), newPass);
              request.setAttribute("ms1", "Successfully changed password!");
              
              response.sendRedirect("login");
