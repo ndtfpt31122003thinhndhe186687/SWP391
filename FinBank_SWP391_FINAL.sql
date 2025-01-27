@@ -64,12 +64,14 @@ CREATE TABLE customer (
 	created_at DATETIME DEFAULT GETDATE(),
     profile_picture NVARCHAR(255) 
 );
+--them thuoc tinh no xau hay khong : đã có bảng riêng
 
 CREATE TABLE asset (
 	asset_id INT IDENTITY(1,1) PRIMARY KEY,  
-	description NVARCHAR(MAX), 
+	description NVARCHAR(MAX),
 	Value DECIMAL(15, 2) NOT NULL,
 	customer_id INT NOT NULL,
+	[status] NVARCHAR(20) CHECK ([status] IN ('verified', 'unverified')) DEFAULT 'unverified',
 	FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
 );
 
@@ -107,12 +109,18 @@ CREATE TABLE news (
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id), -- Khóa ngoại tham chiếu bảng staff
 );
 
+CREATE TABLE term (
+    term_id INT IDENTITY(1,1) PRIMARY KEY,
+    term_name NVARCHAR(50) NOT NULL, -- Tên kỳ hạn (vd: "Monthly", "Quarterly", "Yearly")
+    duration INT NOT NULL, -- Số tháng, quý, năm (vd: 6 tháng, 12 tháng, 24 tháng)
+    term_type NVARCHAR(20) CHECK (term_type IN ('monthly', 'quarterly', 'annually')) NOT NULL -- Loại kỳ hạn
+);
 
 CREATE TABLE services (
     service_id INT IDENTITY(1,1) PRIMARY KEY,
     service_name NVARCHAR(255) NOT NULL,
     description NVARCHAR(MAX),
-    service_type NVARCHAR(20) CHECK (service_type IN ('savings', 'loan')) NOT NULL,
+    service_type NVARCHAR(20) CHECK (service_type IN ('savings', 'loan','deposit','withdrawal')) NOT NULL,
     status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active'
 );
 
@@ -120,47 +128,37 @@ CREATE TABLE savings (
     savings_id INT IDENTITY(1,1) PRIMARY KEY,
     customer_id INT NOT NULL,
     service_id INT NOT NULL,
+	term_id INT NOT NULL,
     amount DECIMAL(15, 2),
     interest_rate DECIMAL(5, 2),
     start_date DATETIME DEFAULT GETDATE(),
-    end_date DATETIME NULL,  -- Nullable to accommodate ongoing savings accounts
-    status NVARCHAR(20) CHECK (status IN ('active', 'completed', 'closed')) DEFAULT 'active',
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-    FOREIGN KEY (service_id) REFERENCES services(service_id)
-);
-
-CREATE TABLE service_contract (
-    contract_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất của hợp đồng
-    customer_id INT NOT NULL, -- ID khách hàng
-    service_id INT NOT NULL, -- ID dịch vụ (loan hoặc savings)
-    contract_type NVARCHAR(20) CHECK (contract_type IN ('loan', 'savings')) NOT NULL, -- Loại hợp đồng
-    start_date DATE NOT NULL, -- Ngày bắt đầu hiệu lực
-    end_date DATE NULL, -- Ngày kết thúc hiệu lực (nullable để xử lý các hợp đồng đang hoạt động)
-    terms NVARCHAR(MAX) NOT NULL, -- Điều khoản hợp đồng
-    amount DECIMAL(15, 2) NOT NULL, -- Số tiền trong hợp đồng
-    interest_rate DECIMAL(5, 2), -- Lãi suất áp dụng (nếu có)
-    payment_schedule NVARCHAR(MAX), -- Lịch trình thanh toán
-    status NVARCHAR(20) CHECK (status IN ('active', 'completed', 'terminated')) DEFAULT 'active', -- Trạng thái
-    created_at DATETIME DEFAULT GETDATE(), -- Ngày tạo hợp đồng
-    updated_at DATETIME DEFAULT GETDATE(), -- Ngày cập nhật cuối cùng
+    end_date DATETIME NULL,
+	terms NVARCHAR(MAX), -- Điều khoản hợp đồng
     notes NVARCHAR(MAX), -- Ghi chú thêm
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-    FOREIGN KEY (service_id) REFERENCES services(service_id)
+    FOREIGN KEY (service_id) REFERENCES services(service_id),
+	FOREIGN KEY (term_id) REFERENCES term(term_id)
 );
 
+--Loan type(Neu ma la vay tin chap thi bat nhap luong, neu ma la vay the chap thi nhap tai san) : ok
 CREATE TABLE loan (
     loan_id INT IDENTITY(1,1) PRIMARY KEY,
     customer_id INT NOT NULL,
     service_id INT NOT NULL,
+	term_id INT NOT NULL,
     amount DECIMAL(15, 2),
     interest_rate DECIMAL(5, 2),
-    loan_term INT,
-    request_date DATETIME DEFAULT GETDATE(),
-    status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected', 'disbursed')) DEFAULT 'pending',
+	start_date DATETIME DEFAULT GETDATE(),
+	terms NVARCHAR(MAX), -- Điều khoản hợp đồng
+    notes NVARCHAR(MAX), -- Ghi chú thêm
+	loan_type NVARCHAR(20) CHECK (loan_type IN ('secured', 'unsecured')) NOT NULL, -- Phân biệt thế chấp/tín chấp
+    asset_id INT NOT NULL, -- Tham chiếu đến bảng asset (nếu là thế chấp)
+	FOREIGN KEY (asset_id) REFERENCES asset(asset_id),
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-    FOREIGN KEY (service_id) REFERENCES services(service_id)
+    FOREIGN KEY (service_id) REFERENCES services(service_id),
+	FOREIGN KEY (term_id) REFERENCES term(term_id)
 );
-
+--bang tra no
 CREATE TABLE loan_disbursements (
     disbursement_id INT IDENTITY(1,1) PRIMARY KEY,
     loan_id INT NOT NULL,
@@ -169,16 +167,30 @@ CREATE TABLE loan_disbursements (
     FOREIGN KEY (loan_id) REFERENCES loan(loan_id)
 );
 
+CREATE TABLE debt_management (
+    debt_id INT IDENTITY(1,1) PRIMARY KEY,
+    customer_id INT NOT NULL, -- ID của khách hàng
+    loan_id INT, -- ID khoản vay 
+    debt_status NVARCHAR(20) CHECK (debt_status IN ('good', 'bad')) DEFAULT 'good', -- Trạng thái nợ
+	-- Điểm tín dụng : 1000 - ( tỉ lệ nợ thu nhập )x100  - ( overdue_days)*100    > 600 good
+	-- tỉ lệ nợ thu nhập : tổng nợ / tổng thu nhập 10/40=0.25
+    overdue_days INT DEFAULT 0, -- Số ngày quá hạn 3 
+    notes NVARCHAR(MAX), -- Ghi chú về nợ xấu
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (loan_id) REFERENCES loan(loan_id)
+);
+
+
 CREATE TABLE request (
     customer_id INT NOT NULL,
     staff_id INT NOT NULL,
     service_id INT NOT NULL,  
     request_date DATETIME DEFAULT GETDATE(),
 	status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
+	PRIMARY KEY(customer_id,staff_id,service_id),
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
 	FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id),
-
 );
 
 CREATE TABLE feedback (
@@ -191,14 +203,13 @@ CREATE TABLE feedback (
     FOREIGN KEY (service_id) REFERENCES services(service_id) 
 );
 
-
 CREATE TABLE transactions (
     transaction_id INT IDENTITY(1,1) PRIMARY KEY,
     customer_id INT NOT NULL,
     service_id INT NOT NULL,
     amount DECIMAL(15, 2),
     transaction_date DATETIME DEFAULT GETDATE(),
-    transaction_type NVARCHAR(20) CHECK (transaction_type IN ('deposit', 'withdrawal', 'payment')) NOT NULL,
+    transaction_type NVARCHAR(20) CHECK (transaction_type IN ('deposit', 'withdrawal')) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id)
 );
@@ -214,6 +225,7 @@ CREATE TABLE customer_services (
 -- Bảng để quản lý bên thứ ba (insurance)
 CREATE TABLE insurance (
     insurance_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất của bên bảo hiểm
+	 role_id INT NOT NULL, -- Liên kết với bảng role
 	username NVARCHAR(255) NOT NULL UNIQUE, -- Tên người dùng duy nhất
     password NVARCHAR(255) NOT NULL,
     insurance_name NVARCHAR(255) NOT NULL, -- Tên bên bảo hiểm
@@ -221,7 +233,7 @@ CREATE TABLE insurance (
     phone_number NVARCHAR(20)  UNIQUE, -- Số điện thoại
     address NVARCHAR(MAX), -- Địa chỉ
     status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active', -- Trạng thái
-    created_at DATETIME DEFAULT GETDATE() -- Thời điểm thêm vào hệ thống
+	FOREIGN KEY (role_id) REFERENCES role(role_id)
 );
 
 -- Bảng để quản lý các loại bảo hiểm của bên bảo hiểm
@@ -280,28 +292,165 @@ CREATE TABLE insurance_transactions (
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id) -- Khóa ngoại tới khách hàng
 );
 
+INSERT INTO customer (full_name, email, username, password, phone_number, address, card_type, amount, credit_limit, status, gender, date_of_birth, profile_picture)
+VALUES 
+('Nguyen Van A', 'a@example.com', 'a', '123', '0123456789', '123 Street, City', 'credit', 1000.00, 5000.00, 'active', 'male', '1990-01-01', 'profile_a.jpg'),
+('Tran Thi B', 'b@example.com', 'b', '123', '0987654321', '456 Avenue, City', 'debit', 2000.00, 0.00, 'active', 'female', '1992-02-02', 'profile_b.jpg'),
+('Le Van C', 'c@example.com', 'c', '123', '0123456780', '789 Boulevard, City', 'credit', 1500.00, 3000.00, 'active', 'male', '1985-03-03', 'profile_c.jpg'),
+('Pham Thi D', 'd@example.com', 'd', '123', '0987654312', '321 Road, City', 'debit', 2500.00, 0.00, 'active', 'female', '1995-04-04', 'profile_d.jpg'),
+('Vo Van E', 'e@example.com', 'e', '123', '0123456790', '654 Lane, City', 'credit', 3000.00, 8000.00, 'active', 'male', '1988-05-05', 'profile_e.jpg');
 
--- asset , news , transaction_insurance
+INSERT INTO asset (description, Value, customer_id, [status])
+VALUES 
+('Car', 20000.00, 1, 'verified'),
+('House', 150000.00, 2, 'unverified'),
+('Laptop', 1500.00, 3, 'verified'),
+('Smartphone', 800.00, 4, 'unverified'),
+('Boat', 30000.00, 5, 'verified');
 
+INSERT INTO role (role_name)
+VALUES 
+('admin'),
+('banker'),
+('marketer'),
+('accountant'),
+('insurance');
 
---CREATE TRIGGER trg_set_card_limits
---ON customer
---AFTER INSERT, UPDATE
---AS
---BEGIN
---    -- Nếu loại thẻ là debit, set credit_limit = 0 và amount có giá trị
---    UPDATE customer
---    SET credit_limit = 0
---    WHERE card_type = 'debit' AND customer_id IN (SELECT customer_id FROM inserted);
-    
---    -- Nếu loại thẻ là credit, set amount = 0 và credit_limit có giá trị
---    UPDATE customer
---    SET amount = 0
---    WHERE card_type = 'credit' AND customer_id IN (SELECT customer_id FROM inserted);
---END;
+INSERT INTO staff (full_name, email, password, username, phone_number, gender, date_of_birth, address, role_id, status)
+VALUES 
+('Nguyen Van F', 'f@example.com', '123', 'a', '0123456781', 'male', '1980-06-06', '111 Staff St, City', 1, 'active'),
+('Tran Thi G', 'g@example.com', '123', 'b1', '0987654322', 'female', '1983-07-07', '222 Staff Ave, City', 2, 'active'),
+('Le Van H', 'h@example.com', '123', 'm', '0123456782', 'male', '1978-08-08', '333 Staff Blvd, City', 3, 'active'),
+('Pham Thi I', 'i@example.com', '123', 'acc', '0987654323', 'female', '1990-09-09', '444 Staff Rd, City', 4, 'active'),
+('Vo Van J', 'j@example.com', '123', 'b2', '0123456783', 'male', '1985-10-10', '555 Staff Lane, City', 2, 'active');
 
---INSERT INTO customer (full_name, email, username, password, phone_number, address, card_type, amount, credit_limit, status, gender, date_of_birth, profile_picture)  
---VALUES 
---('Nguyen Van A', 'nguyenvana@example.com', 'nguyenvana', 'password123', '0987654321', N'123 Đường ABC, Hà Nội', 'debit', 5000000.00, 0.00, 'active', 'male', '1990-05-15', 'profile_a.jpg'),  
---('Tran Thi B', 'tranthib@example.com', 'tranthib', 'securepass', '0912345678', N'456 Đường XYZ, Hồ Chí Minh', 'credit', 0.00, 20000000.00, 'active', 'female', '1995-09-22', 'profile_b.jpg');  
---select * from customer
+INSERT INTO news (title, content, staff_id, status)
+VALUES 
+('Tin tức 1', 'Nội dung tin tức 1', 1, 'approved'),
+('Tin tức 2', 'Nội dung tin tức 2', 2, 'pending'),
+('Tin tức 3', 'Nội dung tin tức 3', 3, 'draft'),
+('Tin tức 4', 'Nội dung tin tức 4', 4, 'approved'),
+('Tin tức 5', 'Nội dung tin tức 5', 5, 'rejected');
+
+INSERT INTO term (term_name, duration, term_type)
+VALUES 
+('Monthly', 1, 'monthly'),
+('Quarterly', 3, 'quarterly'),
+('Yearly', 12, 'annually'),
+('Semi-Annual', 6, 'annually'),
+('Bi-Monthly', 2, 'monthly');
+
+INSERT INTO services (service_name, description, service_type, status)
+VALUES 
+('Savings ', 'saving money.', 'savings', 'active'),
+('Loan', ' loan.', 'loan', 'active'),
+('Deposit', 'Fixed deposit account.', 'deposit', 'active'),
+('Withdrawal e', 'Service for withdrawing funds.', 'withdrawal', 'active');
+
+INSERT INTO savings (customer_id, service_id, term_id, amount, interest_rate, terms, notes)
+VALUES 
+(1, 1, 1, 5000.00, 2.5, '1 year', 'No special notes.'),
+(2, 1, 2, 10000.00, 3.0, '2 years', 'No special notes.'),
+(3, 1, 3, 7500.00, 4.0, '3 years', 'No special notes.'),
+(4, 1, 4, 3000.00, 2.0, '6 months', 'No special notes.'),
+(5, 1, 1, 2000.00, 1.5, '1 year', 'No special notes.');
+
+INSERT INTO loan (customer_id, service_id, term_id, amount, interest_rate, loan_type, asset_id, terms, notes)
+VALUES 
+(1, 2, 1, 10000.00, 5.0, 'unsecured', NULL, 'No special terms.', 'No special notes.'),
+(2, 3, 2, 50000.00, 4.5, 'secured', 2, 'Secured by house.', 'No special notes.'),
+(3, 2, 3, 15000.00, 6.0, 'unsecured', NULL, 'No special terms.', 'No special notes.'),
+(4, 3, 4, 80000.00, 3.5, 'secured', 1, 'Secured by car.', 'No special notes.'),
+(5, 2, 1, 20000.00, 5.5, 'unsecured', NULL, 'No special terms.', 'No special notes.');
+
+INSERT INTO loan_disbursements (loan_id, amount)
+VALUES 
+(1, 1000.00),
+(2, 5000.00),
+(3, 1500.00),
+(4, 8000.00),
+(5, 2000.00);
+
+INSERT INTO debt_management (customer_id, loan_id, debt_status, overdue_days, notes)
+VALUES 
+(1, 1, 'good', 0, 'No issues.'),
+(2, 2, 'bad', 10, 'Late payment.'),
+(3, NULL, 'good', 0, 'No debts.'),
+(4, 4, 'bad', 5, 'Payment overdue.'),
+(5, 5, 'good', 0, 'No issues.');
+
+INSERT INTO request (customer_id, staff_id, service_id, status)
+VALUES 
+(1, 1, 1, 'approved'),
+(2, 2, 2, 'pending'),
+(3, 3, 1, 'approved'),
+(4, 4, 3, 'rejected'),
+(5, 5, 4, 'approved');
+
+INSERT INTO feedback (customer_id, service_id, feedback_content)
+VALUES 
+(1, 1, 'Great service!'),
+(2, 2, 'Could be better.'),
+(3, 1, 'Very satisfied.'),
+(4, 3, 'Not happy with the experience.'),
+(5, 4, 'Excellent support!');
+
+INSERT INTO transactions (customer_id, service_id, amount, transaction_type)
+VALUES 
+(1, 1, 500.00, 'deposit'),
+(2, 2, 300.00, 'withdrawal'),
+(3, 1, 200.00, 'deposit'),
+(4, 3, 1000.00, 'withdrawal'),
+(5, 4, 1500.00, 'deposit');
+
+INSERT INTO customer_services (customer_id, service_id)
+VALUES 
+(1, 1),
+(2, 2),
+(3, 1),
+(4, 3),
+(5, 4);
+
+INSERT INTO insurance (username, password, insurance_name, email, phone_number, address, status,role_id)
+VALUES 
+('insure_a', '123', 'Insurance Co A', 'insure_a@example.com', '0123456784', 'Insurance St, City', 'active',5),
+('insure_b', '123', 'Insurance Co B', 'insure_b@example.com', '0987654325', 'Insurance Ave, City', 'active',5),
+('insure_c', '123', 'Insurance Co C', 'insure_c@example.com', '0123456785', 'Insurance Blvd, City', 'active',5),
+('insure_d', '123', 'Insurance Co D', 'insure_d@example.com', '0987654326', 'Insurance Rd, City', 'active',5),
+('insure_e', '123', 'Insurance Co E', 'insure_e@example.com', '0123456786', 'Insurance Lane, City', 'active',5);
+
+INSERT INTO insurance_policy (insurance_id, policy_name, description, coverage_amount, premium_amount, status)
+VALUES 
+(1, 'Health Insurance', 'Comprehensive health insurance.', 100000.00, 5000.00, 'active'),
+(2, 'Life Insurance', 'Life insurance policy.', 200000.00, 7000.00, 'active'),
+(3, 'Car Insurance', 'Insurance for vehicles.', 15000.00, 2500.00, 'active'),
+(4, 'Home Insurance', 'Insurance for homes.', 300000.00, 6000.00, 'active'),
+(5, 'Travel Insurance', 'Insurance for travelers.', 50000.00, 3000.00, 'active');
+
+INSERT INTO insurance_contract (customer_id, service_id, policy_id, start_date, end_date, payment_frequency, status)
+VALUES 
+(1, 1, 1, '2023-01-01', '2024-01-01', 'monthly', 'active'),
+(2, 2, 2, '2023-02-01', '2024-02-01', 'quarterly', 'active'),
+(3, 1, 3, '2023-03-01', '2024-03-01', 'annually', 'active'),
+(4, 3, 4, '2023-04-01', '2024-04-01', 'monthly', 'active'),
+(5, 4, 5, '2023-05-01', '2024-05-01', 'annually', 'active');
+
+INSERT INTO insurance_contract_detail (contract_id, insurance_id, CoverageAmount, PremiumAmount, StartDate, EndDate)
+VALUES 
+(1, 1, 100000.00, 5000.00, '2023-01-01', '2024-01-01'),
+(2, 2, 200000.00, 7000.00, '2023-02-01', '2024-02-01'),
+(3, 3, 15000.00, 2500.00, '2023-03-01', '2024-03-01'),
+(4, 4, 300000.00, 6000.00, '2023-04-01', '2024-04-01'),
+(5, 5, 50000.00, 3000.00, '2023-05-01', '2024-05-01');
+
+INSERT INTO insurance_transactions (contract_id, customer_id, amount, transaction_type, notes)
+VALUES 
+(1, 1, 5000.00, 'premium_payment', 'Monthly premium payment.'),
+(2, 2, 7000.00, 'premium_payment', 'Quarterly premium payment.'),
+(3, 3, 2500.00, 'claim_payment', 'Claim payment for accident.'),
+(4, 4, 6000.00, 'premium_payment', 'Monthly premium payment.'),
+(5, 5, 3000.00, 'premium_payment', 'Annual premium payment.');
+
+select * from customer
+select * from staff
+select * from insurance
