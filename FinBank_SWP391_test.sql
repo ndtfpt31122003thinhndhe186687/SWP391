@@ -47,6 +47,12 @@ WHERE  TABLE_TYPE = 'BASE TABLE'
 
 Exec Sp_executesql @sql2 
 GO
+
+CREATE TABLE role (
+    role_id INT IDENTITY(1,1) PRIMARY KEY, 
+    role_name NVARCHAR(50) NOT NULL UNIQUE, -- Tên vai trò (vd: admin, bank_teller, ...)
+);
+
 CREATE TABLE customer (
     customer_id INT IDENTITY(1,1) PRIMARY KEY,  
     full_name NVARCHAR(255) NOT NULL,
@@ -61,8 +67,10 @@ CREATE TABLE customer (
     status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active',  
     gender NVARCHAR(20) CHECK (gender IN ('male', 'female')),
     date_of_birth DATE,
+	role_id INT NOT NULL, -- Liên kết với bảng role
 	created_at DATETIME DEFAULT GETDATE(),
-    profile_picture NVARCHAR(255) 
+    profile_picture NVARCHAR(255),
+	FOREIGN KEY (role_id) REFERENCES role(role_id) -- Khóa ngoại tham chiếu bảng role
 );
 --them thuoc tinh no xau hay khong : đã có bảng riêng
 
@@ -75,19 +83,12 @@ CREATE TABLE asset (
 	FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
 );
 
-
-CREATE TABLE role (
-    role_id INT IDENTITY(1,1) PRIMARY KEY, 
-    role_name NVARCHAR(50) NOT NULL UNIQUE, -- Tên vai trò (vd: admin, bank_teller, ...)
-);
-
-
 CREATE TABLE staff (
     staff_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất cho mỗi nhân viên
     full_name NVARCHAR(255) NOT NULL, -- Họ và tên
     email NVARCHAR(255) NOT NULL UNIQUE, -- Email duy nhất
-    password NVARCHAR(255) NOT NULL, -- Mật khẩu
-    username NVARCHAR(255) NOT NULL UNIQUE, -- Tên người dùng duy nhất
+	username NVARCHAR(255) NOT NULL UNIQUE, -- Tên người dùng duy nhất
+    password NVARCHAR(255) NOT NULL, -- Mật khẩu 
     phone_number NVARCHAR(20) UNIQUE, -- Số điện thoại
     gender NVARCHAR(20) CHECK (gender IN ('male', 'female')), -- Giới tính
     date_of_birth DATE, -- Ngày sinh (tùy chọn)
@@ -111,16 +112,21 @@ CREATE TABLE news (
 
 CREATE TABLE term (
     term_id INT IDENTITY(1,1) PRIMARY KEY,
-    term_name NVARCHAR(50) NOT NULL, -- Tên kỳ hạn (vd: "Monthly", "Quarterly", "Yearly")
+    term_name NVARCHAR(50) NOT NULL UNIQUE, -- Tên kỳ hạn (vd: "Monthly", "Quarterly", "Yearly")
     duration INT NOT NULL, -- Số tháng, quý, năm (vd: 6 tháng, 12 tháng, 24 tháng)
-    term_type NVARCHAR(20) CHECK (term_type IN ('monthly', 'quarterly', 'annually')) NOT NULL -- Loại kỳ hạn
+    term_type NVARCHAR(20) CHECK (term_type IN ('monthly', 'quarterly', 'annually')) NOT NULL, -- Loại kỳ hạn
+	status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active'
+	-- monthly: 1,2,3...
+	-- quarterly: 3,6,9...
+	-- annually : 12,24...
 );
 
 CREATE TABLE services (
     service_id INT IDENTITY(1,1) PRIMARY KEY,
-    service_name NVARCHAR(255) NOT NULL,
+    service_name NVARCHAR(255) NOT NULL UNIQUE,
     description NVARCHAR(MAX),
-    service_type NVARCHAR(20) CHECK (service_type IN ('savings', 'loan','deposit','withdrawal')) NOT NULL,
+    service_type NVARCHAR(20) NOT NULL,
+	-- 'savings', 'loan','deposit','withdrawal'
     status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active'
 );
 
@@ -292,13 +298,22 @@ CREATE TABLE insurance_transactions (
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id) -- Khóa ngoại tới khách hàng
 );
 
-INSERT INTO customer (full_name, email, username, password, phone_number, address, card_type, amount, credit_limit, status, gender, date_of_birth, profile_picture)
+INSERT INTO role (role_name)
 VALUES 
-('Nguyen Van A', 'a@example.com', 'a', '123', '0123456789', '123 Street, City', 'credit', 1000.00, 5000.00, 'active', 'male', '1990-01-01', 'profile_a.jpg'),
-('Tran Thi B', 'b@example.com', 'b', '123', '0987654321', '456 Avenue, City', 'debit', 2000.00, 0.00, 'active', 'female', '1992-02-02', 'profile_b.jpg'),
-('Le Van C', 'c@example.com', 'c', '123', '0123456780', '789 Boulevard, City', 'credit', 1500.00, 3000.00, 'active', 'male', '1985-03-03', 'profile_c.jpg'),
-('Pham Thi D', 'd@example.com', 'd', '123', '0987654312', '321 Road, City', 'debit', 2500.00, 0.00, 'active', 'female', '1995-04-04', 'profile_d.jpg'),
-('Vo Van E', 'e@example.com', 'e', '123', '0123456790', '654 Lane, City', 'credit', 3000.00, 8000.00, 'active', 'male', '1988-05-05', 'profile_e.jpg');
+('admin'),
+('banker'),
+('marketer'),
+('accountant'),
+('insurance'),
+('customer'); 
+
+INSERT INTO customer (full_name, email, username, password, phone_number, address, card_type, amount, credit_limit, status, gender, date_of_birth, profile_picture,role_id)
+VALUES 
+('Nguyen Van A', 'a@example.com', 'a', '123', '0123456789', '123 Street, City', 'credit', 1000.00, 5000.00, 'active', 'male', '1990-01-01', 'profile_a.jpg',6),
+('Tran Thi B', 'b@example.com', 'b', '123', '0987654321', '456 Avenue, City', 'debit', 2000.00, 0.00, 'active', 'female', '1992-02-02', 'profile_b.jpg',6),
+('Le Van C', 'c@example.com', 'c', '123', '0123456780', '789 Boulevard, City', 'credit', 1500.00, 3000.00, 'active', 'male', '1985-03-03', 'profile_c.jpg',6),
+('Pham Thi D', 'd@example.com', 'd', '123', '0987654312', '321 Road, City', 'debit', 2500.00, 0.00, 'active', 'female', '1995-04-04', 'profile_d.jpg',6),
+('Vo Van E', 'e@example.com', 'e', '123', '0123456790', '654 Lane, City', 'credit', 3000.00, 8000.00, 'active', 'male', '1988-05-05', 'profile_e.jpg',6);
 
 INSERT INTO asset (description, Value, customer_id, [status])
 VALUES 
@@ -308,21 +323,13 @@ VALUES
 ('Smartphone', 800.00, 4, 'unverified'),
 ('Boat', 30000.00, 5, 'verified');
 
-INSERT INTO role (role_name)
+INSERT INTO staff (full_name, email,username,password, phone_number, gender, date_of_birth, address, role_id, status)
 VALUES 
-('admin'),
-('banker'),
-('marketer'),
-('accountant'),
-('insurance');
-
-INSERT INTO staff (full_name, email, password, username, phone_number, gender, date_of_birth, address, role_id, status)
-VALUES 
-('Nguyen Van F', 'f@example.com', '123', 'a', '0123456781', 'male', '1980-06-06', '111 Staff St, City', 1, 'active'),
-('Tran Thi G', 'g@example.com', '123', 'b1', '0987654322', 'female', '1983-07-07', '222 Staff Ave, City', 2, 'active'),
-('Le Van H', 'h@example.com', '123', 'm', '0123456782', 'male', '1978-08-08', '333 Staff Blvd, City', 3, 'active'),
-('Pham Thi I', 'i@example.com', '123', 'acc', '0987654323', 'female', '1990-09-09', '444 Staff Rd, City', 4, 'active'),
-('Vo Van J', 'j@example.com', '123', 'b2', '0123456783', 'male', '1985-10-10', '555 Staff Lane, City', 2, 'active');
+('Nguyen Van F', 'f@example.com', 'a', '123', '0123456781', 'male', '1980-06-06', '111 Staff St, City', 1, 'active'),
+('Tran Thi G', 'g@example.com', 'b', '123', '0987654322', 'female', '1983-07-07', '222 Staff Ave, City', 2, 'active'),
+('Le Van H', 'h@example.com', 'c', '123', '0123456782', 'male', '1978-08-08', '333 Staff Blvd, City', 3, 'active'),
+('Pham Thi I', 'i@example.com', 'd', '123', '0987654323', 'female', '1990-09-09', '444 Staff Rd, City', 4, 'active'),
+('Vo Van J', 'j@example.com', 'e', '123', '0123456783', 'male', '1985-10-10', '555 Staff Lane, City', 2, 'active');
 
 INSERT INTO news (title, content, staff_id, status)
 VALUES 
@@ -332,13 +339,13 @@ VALUES
 ('Tin tức 4', 'Nội dung tin tức 4', 4, 'approved'),
 ('Tin tức 5', 'Nội dung tin tức 5', 5, 'rejected');
 
-INSERT INTO term (term_name, duration, term_type)
+INSERT INTO term (term_name, duration, term_type,status)
 VALUES 
-('Monthly', 1, 'monthly'),
-('Quarterly', 3, 'quarterly'),
-('Yearly', 12, 'annually'),
-('Semi-Annual', 6, 'annually'),
-('Bi-Monthly', 2, 'monthly');
+('Monthly', 1, 'monthly', 'active'),
+('Quarterly', 3, 'quarterly', 'active'),
+('Yearly', 12, 'annually', 'active'),
+('Semi-Annual', 6, 'quarterly', 'active'),
+('Bi-Monthly', 2, 'monthly', 'active');
 
 INSERT INTO services (service_name, description, service_type, status)
 VALUES 
@@ -357,11 +364,11 @@ VALUES
 
 INSERT INTO loan (customer_id, service_id, term_id, amount, interest_rate, loan_type, asset_id, terms, notes)
 VALUES 
-(1, 2, 1, 10000.00, 5.0, 'unsecured', NULL, 'No special terms.', 'No special notes.'),
+(1, 2, 1, 10000.00, 5.0, 'unsecured', 1, 'No special terms.', 'No special notes.'),
 (2, 3, 2, 50000.00, 4.5, 'secured', 2, 'Secured by house.', 'No special notes.'),
-(3, 2, 3, 15000.00, 6.0, 'unsecured', NULL, 'No special terms.', 'No special notes.'),
-(4, 3, 4, 80000.00, 3.5, 'secured', 1, 'Secured by car.', 'No special notes.'),
-(5, 2, 1, 20000.00, 5.5, 'unsecured', NULL, 'No special terms.', 'No special notes.');
+(3, 2, 3, 15000.00, 6.0, 'unsecured', 3, 'No special terms.', 'No special notes.'),
+(4, 3, 4, 80000.00, 3.5, 'secured', 4, 'Secured by car.', 'No special notes.'),
+(5, 2, 1, 20000.00, 5.5, 'unsecured', 5, 'No special terms.', 'No special notes.');
 
 INSERT INTO loan_disbursements (loan_id, amount)
 VALUES 
@@ -451,6 +458,16 @@ VALUES
 (4, 4, 6000.00, 'premium_payment', 'Monthly premium payment.'),
 (5, 5, 3000.00, 'premium_payment', 'Annual premium payment.');
 
-select * from customer
-select * from staff
-select * from insurance
+--select * from customer
+--select * from staff 
+select * from role
+--select * from insurance
+select * from staff 
+select * from news
+select * from request
+select * from services
+select * from term 
+select * from transactions
+--delete from news where staff_id= 2;
+--delete from request where staff_id=2;
+--delete from staff where staff_id= 2;
