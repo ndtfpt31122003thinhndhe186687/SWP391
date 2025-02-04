@@ -334,7 +334,7 @@ INSERT INTO news (title, content, staff_id, status) VALUES
  Moreover, the rise of remote work will compel organizations to rethink their operational strategies. \
  This transformation will require a workforce that is agile and equipped with digital skills. \
  Overall, the future promises exciting opportunities for those willing to embrace change.', 
- 3, 'draft'),
+ 3, 'approved'),
 
 ('Health and Wellness Trends', 
  'As we navigate through the complexities of modern life, health and wellness trends are gaining traction. \
@@ -344,7 +344,7 @@ INSERT INTO news (title, content, staff_id, status) VALUES
  Additionally, mental health awareness is on the rise, leading to more open discussions and resources. \
  The pandemic has highlighted the importance of a balanced lifestyle, prompting many to reassess their priorities. \
  This shift towards holistic well-being is likely to shape future health initiatives and policies.', 
- 3, 'draft'),
+ 3, 'approved'),
 
 ('Exploring Renewable Energy', 
  'Renewable energy sources are transforming the global energy landscape. \
@@ -354,7 +354,7 @@ INSERT INTO news (title, content, staff_id, status) VALUES
  Innovations in energy storage are enhancing the efficiency of renewable sources, making them more viable. \
  As awareness grows, public support for renewable initiatives is increasing, driving further investments. \
  The future of energy is bright, with a significant shift towards sustainability and environmental responsibility.', 
- 3, 'draft');
+ 3, 'approved');
 
 
 INSERT INTO term (term_name, duration, term_type)

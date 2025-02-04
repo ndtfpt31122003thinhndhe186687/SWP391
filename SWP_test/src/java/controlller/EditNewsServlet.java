@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controlller;
 
 import dal.DAO;
@@ -12,48 +13,42 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Customer;
-import model.Customer;
-import model.Staff;
+import model.News;
 
 /**
  *
- * @author Windows
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
-public class LoginServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+@WebServlet(name="EditNewsServlet", urlPatterns={"/editNews"})
+public class EditNewsServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet EditNewsServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditNewsServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -61,13 +56,22 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
-    }
+    throws ServletException, IOException {
+         String newsId_raw = request.getParameter("news_id");
+        DAO d = new DAO();
+        int news_id;
+        try {
+            news_id = Integer.parseInt(newsId_raw);
+            News n = d.getNewsByID(news_id);
+            request.setAttribute("news", n);
+            request.getRequestDispatcher("editNews.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+    } 
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -75,38 +79,26 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("pass");
-        String role = request.getParameter("role");
-        DAO dao = new DAO();
-        if ("customer".equals(role)) {
-            Customer acc = dao.login(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
-        } else if ("staff".equals(role)) {
-            Staff acc = dao.login_admin(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                session.setAttribute("role", acc.getRole_id());
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
+    throws ServletException, IOException {
+        String title=request.getParameter("title");
+        String content=request.getParameter("content");
+        String newsId_raw=request.getParameter("news_id");
+        String staffId_raw=request.getParameter("staff_id");
+         try {
+            int news_id = Integer.parseInt(newsId_raw);
+            int staff_id = Integer.parseInt(staffId_raw);
+            DAO d=new DAO();
+            d.editNews(title, content, news_id, staff_id);
+            String redirectUrl = "newsManage?staff_id=" +staff_id;
+        response.sendRedirect(redirectUrl);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
         }
+        
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

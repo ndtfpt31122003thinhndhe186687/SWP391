@@ -12,17 +12,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Customer;
-import model.Customer;
-import model.Staff;
+import model.News;
 
 /**
  *
- * @author Windows
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "NewsDetailServlet", urlPatterns = {"/newsDetail"})
+public class NewsDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +38,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet NewsDetailServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet NewsDetailServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,7 +59,16 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        DAO d = new DAO();
+        String news_raw = request.getParameter("news_id");
+        try {
+            int news_id = Integer.parseInt(news_raw);
+            News newsDetail = d.getNewsDetail(news_id);
+            request.setAttribute("newsDetail", newsDetail);
+        } catch (Exception e) {
+        }
+        request.getRequestDispatcher("newsDetail.jsp").forward(request, response);
+
     }
 
     /**
@@ -76,32 +82,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("pass");
-        String role = request.getParameter("role");
-        DAO dao = new DAO();
-        if ("customer".equals(role)) {
-            Customer acc = dao.login(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
-        } else if ("staff".equals(role)) {
-            Staff acc = dao.login_admin(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                session.setAttribute("role", acc.getRole_id());
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
-        }
+        processRequest(request, response);
     }
 
     /**

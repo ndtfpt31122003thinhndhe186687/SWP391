@@ -64,6 +64,10 @@
                                                 <div class="form-group">
                                                     <input name="pass"  type="password"  id="inputPassword" class="form-control" placeholder="Mật khẩu" required="">
                                                 </div>
+                                                <select name="role">
+                                                    <option value="customer">Customer</option>
+                                                    <option value="staff">Staff</option>
+                                                </select>
                                                 <div class="form-group">
                                                     <div class="custom-control custom-checkbox small">
                                                         <input type="checkbox" class="custom-control-input" id="customCheck">

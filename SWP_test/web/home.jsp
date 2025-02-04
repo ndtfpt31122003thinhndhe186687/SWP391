@@ -57,6 +57,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="contact.html">Contact Us</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="news">News</a>
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -81,23 +84,28 @@
 
             <!-- Login/logout-->
             <div clas="login">
-            <c:if test="${sessionScope.account != null}">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Hello ${sessionScope.account.full_name}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="logout">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="changeInfor">View profile</a>
-                </li>
+                <c:if test="${sessionScope.account != null}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Hello ${sessionScope.account.full_name}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="changeInfor">View profile</a>
+                    </li>
+                    <c:if test="${sessionScope.role==3}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="newsManage?staff_id=${sessionScope.account.staff_id}">Manage news</a>
+                        </li>
+                    </c:if>
 
-            </c:if>
-            <c:if test="${sessionScope.account == null}">
-                <li class="nav-item">
-                    <a class="nav-link" href="login">Login</a>
-                </li>
-            </c:if>
+                </c:if>
+                <c:if test="${sessionScope.account == null}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login">Login</a>
+                    </li>
+                </c:if>
             </div>    
 
 

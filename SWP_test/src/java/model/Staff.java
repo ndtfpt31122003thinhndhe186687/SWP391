@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-
+import java.sql.*;
 import java.util.Date;
 
 /**
@@ -11,13 +11,33 @@ import java.util.Date;
  * @author default
  */
 public class Staff {
-    public String staff_id,full_name,email,password,username,phone_number,gender,address,role_id,created_at,status;
-   Date date_of_birth;
+    public int staff_id;
+    public String full_name,email,username,password,
+            phone_number,gender;
+    public Date date_of_birth;
+    public String address;
+    public int role_id;
+    public String status;
 
     public Staff() {
     }
 
-    public Staff(String staff_id, String full_name, String email, String password, String username, String phone_number, String gender, Date date_of_birth, String address, String role_id, String created_at, String status) {
+    public Staff(String full_name, String email, String username, String password, String phone_number, String gender, Date date_of_birth, String address, int role_id, String status) {
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.phone_number = phone_number;
+        this.gender = gender;
+        this.date_of_birth = date_of_birth;
+        this.address = address;
+        this.role_id = role_id;
+        this.status = status;
+    }
+    
+    
+
+    public Staff(int staff_id, String full_name, String email, String password, String username, String phone_number, String gender, Date date_of_birth, String address, int role_id, String status) {
         this.staff_id = staff_id;
         this.full_name = full_name;
         this.email = email;
@@ -25,18 +45,17 @@ public class Staff {
         this.username = username;
         this.phone_number = phone_number;
         this.gender = gender;
+        this.date_of_birth = date_of_birth;
         this.address = address;
         this.role_id = role_id;
-        this.created_at = created_at;
         this.status = status;
-        this.date_of_birth = date_of_birth;
     }
 
-    public String getStaff_id() {
+    public int getStaff_id() {
         return staff_id;
     }
 
-    public void setStaff_id(String staff_id) {
+    public void setStaff_id(int staff_id) {
         this.staff_id = staff_id;
     }
 
@@ -88,6 +107,14 @@ public class Staff {
         this.gender = gender;
     }
 
+    public Date getDate_of_birth() {
+        return date_of_birth;
+    }
+
+    public void setDate_of_birth(Date date_of_birth) {
+        this.date_of_birth = date_of_birth;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -96,20 +123,12 @@ public class Staff {
         this.address = address;
     }
 
-    public String getRole_id() {
+    public int getRole_id() {
         return role_id;
     }
 
-    public void setRole_id(String role_id) {
+    public void setRole_id(int role_id) {
         this.role_id = role_id;
-    }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
     }
 
     public String getStatus() {
@@ -120,16 +139,10 @@ public class Staff {
         this.status = status;
     }
 
-    public Date getDate_of_birth() {
-        return date_of_birth;
-    }
-
-    public void setDate_of_birth(Date date_of_birth) {
-        this.date_of_birth = date_of_birth;
-    }
-
     @Override
     public String toString() {
-        return "Staff{" + "staff_id=" + staff_id + ", full_name=" + full_name + ", email=" + email + ", password=" + password + ", username=" + username + ", phone_number=" + phone_number + ", gender=" + gender + ", address=" + address + ", role_id=" + role_id + ", created_at=" + created_at + ", status=" + status + ", date_of_birth=" + date_of_birth + '}';
+        return "Staff{" + "staff_id=" + staff_id + ", full_name=" + full_name + ", email=" + email + ", password=" + password + ", username=" + username + ", phone_number=" + phone_number + ", gender=" + gender + ", date_of_birth=" + date_of_birth + ", address=" + address + ", role_id=" + role_id + ", status=" + status + '}';
     }
+    
+    
 }
