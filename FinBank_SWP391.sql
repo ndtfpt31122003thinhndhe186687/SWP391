@@ -108,6 +108,12 @@ CREATE TABLE news (
     status NVARCHAR(20) CHECK (status IN ('draft', 'pending', 'approved', 'rejected')) DEFAULT 'draft', -- Trạng thái bài viết
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id), -- Khóa ngoại tham chiếu bảng staff
 );
+CREATE TABLE news_views (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    news_id INT NOT NULL,
+    view_date  DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (news_id) REFERENCES news(news_id)
+);
 
 CREATE TABLE term (
     term_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -291,6 +297,7 @@ CREATE TABLE insurance_transactions (
     FOREIGN KEY (contract_id) REFERENCES insurance_contract(contract_id), -- Khóa ngoại tới hợp đồng bảo hiểm
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id) -- Khóa ngoại tới khách hàng
 );
+
 
 INSERT INTO customer (full_name, email, username, password, phone_number, address, card_type, amount, credit_limit, status, gender, date_of_birth, profile_picture)
 VALUES 

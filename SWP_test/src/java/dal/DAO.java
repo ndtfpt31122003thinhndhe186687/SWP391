@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import model.Customer;
 import model.News;
+import model.NewsView;
 import model.Staff;
 
 public class DAO extends DBContext {
@@ -345,10 +346,45 @@ public class DAO extends DBContext {
         }
     }
 
+    //get views when view news detail
+    public void getView(int news_id) {
+        String sql = "insert into news_views(news_id) values (?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, news_id);
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    //view new statistic
+    public List<NewsView> countNews() {
+        List<NewsView> list = new ArrayList<>();
+        String sql = "select n.title,nv.news_id,count(*) as newsAmount from news_views nv join news n on n.news_id=nv.news_id \n"
+                + "group by n.title,nv.news_id ";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                NewsView n = new NewsView();
+                n.setNews_id(rs.getInt("news_id"));
+                n.setTitle(rs.getString("title"));
+                n.setNewsAmount(rs.getInt("newsAmount"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
     // Main method for testing
     public static void main(String[] args) {
         DAO d = new DAO();
-        d.sendNews(6);
+        List<NewsView> list=d.countNews();
+        System.out.println(list);
+        
     }
 
 }

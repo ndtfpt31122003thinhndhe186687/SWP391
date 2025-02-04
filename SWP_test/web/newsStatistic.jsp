@@ -77,7 +77,7 @@
             <a href="newsStatistic">Statistic of news</a>
         </div>
         <div class="content">
-            <h1>News Management</h1>
+            <h1>News Statistic</h1>
             <div class="search-bar">
                 <input type="text" placeholder="Search news...">
                 <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
@@ -86,41 +86,16 @@
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Content</th>
-                        <th>Created at</th>
-                        <th>Updated at</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>Number of views</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${requestScope.listN}" var="news">
+                    <c:forEach items="${newsView}" var="newsView">
                         <tr>
-                            <td>${news.title}</td>
-                            <td class="news-content">${news.content}</td>
-                            <td>${news.created_at}</td>
-                            <td>${news.updated_at}</td>
-                            <td>${news.status}</td>  
-                            <td>
-                                <a href="editNews?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Edit</a>
-                                <a onclick="doDelete('${news.news_id}')" href="#" style="background-color: #b71c1c; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;" >Delete</a>
-                                <c:if test="${news.status=='draft'}">
-                                <a href="sendNews?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Send</a>
-                                </c:if>
-                                <c:if test="${news.status!='approved' && news.status!='draft'}">
-                                <a href="cancelSend?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Cancel sending</a>
-                                </c:if>
-                            </td>
+                            <td>${newsView.title}</td>
+                            <td>${newsView.newsAmount}</td>
                         </tr>
                     </c:forEach>
-                <script type="text/javascript">
-                    function doDelete(id) {
-                        if (confirm("Are you sure to delete this news ?")) {
-                            window.location = "deleteNews?news_id=" + id;
-                        }
-                    }
-                </script>  
-
                 </tbody>
             </table>
         </div>
