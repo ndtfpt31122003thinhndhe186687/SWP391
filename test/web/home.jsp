@@ -91,7 +91,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
-                                <c:if test="${sessionScope.role==3}">
+                                <c:if test="${sessionScope.account.role_id==3}">
                                 <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}">Manage news</a></li>
                                 </c:if>
                             <li><a class="dropdown-item" href="logout">Logout</a></li>
