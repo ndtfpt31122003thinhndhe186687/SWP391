@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import model.Customer;
+import model.Debt_management;
 /**
  *
  * @author AD
@@ -64,10 +65,13 @@ public class CustomerDetailsServlet extends HttpServlet {
 
         DBContext db = new DBContext();
         Customer customer = null;
+        String debtStatus = null;
 
         try {
             Connection conn = db.getConnection();
-            String sql = "SELECT * FROM customer WHERE customer_id = ?";
+            String sql = "SELECT c.*, d.debt_status FROM customer c " +
+                     "JOIN debt_management d ON c.customer_id = d.customer_id " +
+                     "WHERE c.customer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, customerId);
             ResultSet rs = pstmt.executeQuery();
@@ -88,12 +92,14 @@ public class CustomerDetailsServlet extends HttpServlet {
                 customer.setCredit_limit(rs.getDouble("credit_limit"));
                 customer.setDate_of_birth(rs.getDate("date_of_birth"));
                 customer.setCreated_at(rs.getTimestamp("created_at"));
+                debtStatus = rs.getString("debt_status");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        request.setAttribute("customer", customer);
+        request.setAttribute("customer", customer); 
+        request.setAttribute("debtStatus", debtStatus);
         request.getRequestDispatcher("customerDetails.jsp").forward(request, response);
     }
 

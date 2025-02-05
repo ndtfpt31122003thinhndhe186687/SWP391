@@ -1,4 +1,5 @@
 <%@ page import="model.Customer" %>
+<%@ page import="model.Debt_management" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,6 +9,7 @@
     <h1>CustomerDetails</h1>
     <%
         Customer customer = (Customer) request.getAttribute("customer");
+        String debtStatus = (String) request.getAttribute("debtStatus");
         if (customer != null) {
     %>
         <p>ID: <%= customer.getCustomer_id() %></p>
@@ -24,6 +26,7 @@
         <p>Creditlimit: <%= customer.getCredit_limit() %></p>
         <p>DateOfBirth: <%= customer.getDate_of_birth() %></p>
         <p>Createdat: <%= customer.getCreated_at() %></p>
+        <p>Debt Status: <%= debtStatus != null ? debtStatus : "No debt information" %></p> 
     <%
         } else {
     %>

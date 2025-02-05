@@ -64,12 +64,30 @@ public class CustomerListServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        DBContext db = new DBContext();
-        List<Customer> customers = new ArrayList<>();
+    DBContext db = new DBContext();
+    List<Customer> customers = new ArrayList<>();
+    String search = request.getParameter("search");
 
-        try {
-            Connection conn = db.getConnection();
-            String sql = "SELECT customer_id, full_name FROM customer";
+    try {
+        Connection conn = db.getConnection();
+        String sql;
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql = "SELECT customer_id, full_name FROM customer WHERE full_name LIKE ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + search + "%");  // Sử dụng wildcard cho tìm kiếm
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int customerId = rs.getInt("customer_id");
+                String fullName = rs.getString("full_name");
+                Customer customer = new Customer();
+                customer.setCustomer_id(customerId);
+                customer.setFull_name(fullName);
+                customers.add(customer);
+            }
+        } else {
+            sql = "SELECT customer_id, full_name FROM customer";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
@@ -81,13 +99,14 @@ public class CustomerListServlet extends HttpServlet {
                 customer.setFull_name(fullName);
                 customers.add(customer);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        request.setAttribute("customerList", customers);
-        request.getRequestDispatcher("customerList.jsp").forward(request, response);
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    request.setAttribute("customerList", customers);
+    request.getRequestDispatcher("customerList.jsp").forward(request, response);
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.

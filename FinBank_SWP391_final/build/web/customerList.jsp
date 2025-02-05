@@ -21,10 +21,10 @@
 </head>
 <body>
     <h1>CustomerList</h1>
-    <form action="customerList" method="get" class="search-box">
-        <input type="text" name="search" placeholder="search" required>
-        <button type="submit" class="button">search</button>
-    </form>
+<form action="customerList" method="get" class="search-box">
+    <input type="text" name="search" placeholder="search" required>
+    <button type="submit" class="button">search</button>
+</form>
     <table>
         <tr>
             <th>ID</th>
