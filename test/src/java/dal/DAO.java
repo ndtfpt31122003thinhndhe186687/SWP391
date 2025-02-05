@@ -94,6 +94,20 @@ public class DAO extends DBContext {
         }
         return false;
     }
+    
+    // Check if a emali already exists
+    public boolean existedEmail(String email) {
+        String sql = "SELECT [user_id] FROM [dbo].[customer] WHERE email = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next(); // If a record exists, return true
+            }
+        } catch (SQLException e) {
+            status = "Error at existedPhoneNum: " + e.getMessage();
+        }
+        return false;
+    }
 
     // Update password
     public void changePassword(int customer_id, String password) {
