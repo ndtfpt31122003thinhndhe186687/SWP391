@@ -2,11 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
-package controller_Admin;
+package controlller_Marketer;
 
 import dal.DAO;
-import dal.DAO_Admin;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,43 +13,46 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Date;
+import jakarta.servlet.http.HttpSession;
 import model.Staff;
 
 /**
  *
- * @author DELL
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name="updateBankerServlet", urlPatterns={"/updateStaff"})
-public class updateStaffServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+@WebServlet(name = "SendNewsServlet", urlPatterns = {"/sendNews"})
+public class SendNewsServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateBankerServlet</title>");  
+            out.println("<title>Servlet SendNewsServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateBankerServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet SendNewsServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -58,21 +60,25 @@ public class updateStaffServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String id_raw = request.getParameter("id");
-        int id;
+            throws ServletException, IOException {
+        String newsId_raw = request.getParameter("news_id");
+        HttpSession session = request.getSession();
+        Staff staff = (Staff) session.getAttribute("account");
         try {
-            id=Integer.parseInt(id_raw);
-            DAO_Admin d = new DAO_Admin();
-            Staff s = d.get_Staff_By_StaffId(id);
-            request.setAttribute("staff", s);
-            request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
-        } catch (Exception e) {
-        }
-    } 
+            int news_id = Integer.parseInt(newsId_raw);
+                        DAO_Marketer d = new DAO_Marketer();
 
-    /** 
+            d.sendNews(news_id);
+            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id();
+            response.sendRedirect(redirectUrl);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -80,35 +86,13 @@ public class updateStaffServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String staff_id_raw = request.getParameter("staff_id");
-        String full_name = request.getParameter("full_name");
-        String email = request.getParameter("email");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String phone_number = request.getParameter("phone_number");
-        String gender = request.getParameter("gender");
-        String date_of_birth_raw = request.getParameter("date_of_birth");
-        String address = request.getParameter("address");
-        String role_id_raw = request.getParameter("role_id");
-        String status = request.getParameter("status");
-        int staff_id,role_id;
-        try {
-            staff_id=Integer.parseInt(staff_id_raw);
-            role_id=Integer.parseInt(role_id_raw);
-            var date_of_birth = java.sql.Date.valueOf(date_of_birth_raw);
-            DAO_Admin dao = new DAO_Admin();
-            Staff s = new Staff(staff_id, full_name, email, password, username,
-                    phone_number, gender, date_of_birth, address, role_id, status);
-            dao.updateBanker(s);
-            response.sendRedirect("staff_management");
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        }
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

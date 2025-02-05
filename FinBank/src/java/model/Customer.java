@@ -11,11 +11,10 @@ import java.util.Date;
  * @author default
  */
 public class Customer {
-
-    public String full_name, email, username, password, phone_number, address, card_type, status, gender, profile_picture;
-    int customer_id, role_id;
-    double amount, credit_limit;
-    Date date_of_birth, created_at;
+    public String full_name,email,username,password,phone_number,address,card_type,status,gender,profile_picture;
+    int customer_id;
+    double amount,credit_limit;
+    Date date_of_birth,created_at;
 
     public Customer() {
     }
@@ -38,7 +37,9 @@ public class Customer {
         this.date_of_birth = date_of_birth;
     }
 
-    public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, int role_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
+   
+    
+    public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
         this.full_name = full_name;
         this.email = email;
         this.username = username;
@@ -50,7 +51,6 @@ public class Customer {
         this.gender = gender;
         this.profile_picture = profile_picture;
         this.customer_id = customer_id;
-        this.role_id = role_id;
         this.amount = amount;
         this.credit_limit = credit_limit;
         this.date_of_birth = date_of_birth;
@@ -65,13 +65,9 @@ public class Customer {
         this.created_at = created_at;
     }
 
-    public int getRole_id() {
-        return role_id;
-    }
+    
 
-    public void setRole_id(int role_id) {
-        this.role_id = role_id;
-    }
+    
 
     public int getCustomer_id() {
         return customer_id;
@@ -81,6 +77,7 @@ public class Customer {
         this.customer_id = customer_id;
     }
 
+      
     public String getFull_name() {
         return full_name;
     }
@@ -153,6 +150,8 @@ public class Customer {
         this.gender = gender;
     }
 
+   
+
     public String getProfile_picture() {
         return profile_picture;
     }
@@ -187,7 +186,8 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" + "full_name=" + full_name + ", email=" + email + ", username=" + username + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", card_type=" + card_type + ", status=" + status + ", gender=" + gender + ", profile_picture=" + profile_picture + ", customer_id=" + customer_id + ", role_id=" + role_id + ", amount=" + amount + ", credit_limit=" + credit_limit + ", date_of_birth=" + date_of_birth + ", created_at=" + created_at + '}';
+        return "Customer{" + "full_name=" + full_name + ", email=" + email + ", username=" + username + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", card_type=" + card_type + ", status=" + status + ", gender=" + gender + ", profile_picture=" + profile_picture + ", customer_id=" + customer_id + ", amount=" + amount + ", credit_limit=" + credit_limit + ", date_of_birth=" + date_of_birth + ", created_at=" + created_at + '}';
     }
+
 
 }

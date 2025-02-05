@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller_Admin;
+package controlller_Marketer;
 
 import dal.DAO;
-import dal.DAO_Admin;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,14 +13,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Term;
+import model.News;
 
 /**
  *
- * @author DELL
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name = "addTermServlet", urlPatterns = {"/addTerm"})
-public class addTermServlet extends HttpServlet {
+@WebServlet(name = "EditNewsServlet", urlPatterns = {"/editNews"})
+public class EditNewsServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class addTermServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet addTermServlet</title>");
+            out.println("<title>Servlet EditNewsServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet addTermServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditNewsServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,26 +60,17 @@ public class addTermServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String term_name = request.getParameter("term_name");
-        String duration_raw = request.getParameter("duration");
-        String term_type = request.getParameter("term_type");
-        String status = request.getParameter("status");
-        int duration;
-        DAO_Admin d = new DAO_Admin();
-        Term test = d.get_Term_BY_Term_name(term_name);
+        String newsId_raw = request.getParameter("news_id");
+        DAO_Marketer d = new DAO_Marketer();
+        int news_id;
         try {
-            duration = Integer.parseInt(duration_raw);
-            if (test != null) {
-                request.setAttribute("error", "term name" + term_name + " existed!!");
-                request.getRequestDispatcher("addTerm.jsp").forward(request, response);
-            } else {
-                Term t = new Term(term_name, duration, term_type, status);
-                d.InsertTerm(t);
-                response.sendRedirect("service_management");
-            }
-        } catch (Exception e) {
+            news_id = Integer.parseInt(newsId_raw);
+            News n = d.getNewsByID(news_id);
+            request.setAttribute("news", n);
+            request.getRequestDispatcher("editNews.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
         }
-
     }
 
     /**
@@ -93,7 +84,21 @@ public class addTermServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        String newsId_raw = request.getParameter("news_id");
+        String staffId_raw = request.getParameter("staff_id");
+        try {
+            int news_id = Integer.parseInt(newsId_raw);
+            int staff_id = Integer.parseInt(staffId_raw);
+            DAO_Marketer d = new DAO_Marketer();
+            d.editNews(title, content, news_id, staff_id);
+            String redirectUrl = "newsManage?staff_id=" + staff_id;
+            response.sendRedirect(redirectUrl);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+
     }
 
     /**

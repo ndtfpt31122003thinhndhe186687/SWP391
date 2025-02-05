@@ -243,37 +243,6 @@ button {
     float: left; 
 }
 
-.container{
-    display: flex;
-    justify-content: space-between;  /* Đẩy login/logout sang bên phải */
-    align-items: center;             /* Căn giữa theo chiều dọc */
-    width: 50%;
-    padding: 10px;
-}
-
-.search {
-    flex-grow: 1; /* Cho phép thanh search mở rộng mà không bị đẩy xuống */
-}
-
-.search form {
-    display: flex;
-    align-items: center;
-}
-
-.search input {
-    flex-grow: 1;
-    padding: 8px;
-    font-size: 16px;
-}
-
-.site-btn {
-    padding: 8px 15px;
-    background-color: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
 .login {
     display:inline-block;
     float:right;
@@ -283,8 +252,13 @@ button {
     border-radius:50%;
     
 }
-
-
+.search {
+    position: absolute;
+    top: 5px; /* Vị trí từ phía trên banner */
+    right: 20px; /* Canh lề phải */
+    margin-right:200px;
+  }
+  
   .search input {
     width: 300px;
     padding: 10px 15px;
@@ -318,6 +292,14 @@ button {
     outline: none; /* Remove default focus outline */
     box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Red shadow for focus state */
   }
+ 
+
+  
+
+
+
+
+
 .logo {
     width: 25%;
     float: left;
@@ -518,20 +500,12 @@ button {
     float: left;
     margin-top: 40px;
 }
-.what_we_do_section_2 .row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
 .box_main {
-    width: 100%;  /* Đảm bảo các box chiếm đủ kích thước */
-    max-width: 250px;  /* Giới hạn chiều rộng hợp lý */
-    min-width: 200px;  /* Đảm bảo không bị co quá nhỏ */
-    background-color: #ffffff;
-    padding: 20px;
+    width: 100%;
+    float: left;
+    background-color: #1b5a8d;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    padding: 30px 0px;
 }
 .box_main:hover{
     background-color: #ff5a58;
@@ -544,11 +518,6 @@ button {
     float: left;
     text-align: center;
     min-height: 70px;
-}
-.icon_1 img {
-    width: 50px;  /* Giữ kích thước ảnh nhỏ gọn */
-    height: auto;
-    margin-bottom: 15px;
 }
 .accounting_text{
     width: 100%;
@@ -570,7 +539,7 @@ button {
     width: 170px;
     margin: 0 auto;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 30px;
 }
 
 .moremore_bt_1 a {

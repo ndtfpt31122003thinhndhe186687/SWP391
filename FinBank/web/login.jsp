@@ -54,13 +54,15 @@
                                             <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                         </div>
                                         <div id="logreg-forms">
+
+
                                             <form class="form-signin" action="login" method="post">
                                                 <p class="text-danger">${mess}</p>
                                                 <div class="form-group">
-                                                    <input name="username"  type="text"  id="inputEmail" class="form-control" placeholder="Username" required="" autofocus="">
+                                                    <input name="username"  type="text"  id="inputEmail" class="form-control" placeholder="Tên" required="" autofocus="">
                                                 </div>
                                                 <div class="form-group">
-                                                    <input name="pass"  type="password"  id="inputPassword" class="form-control" placeholder="Password" required="">
+                                                    <input name="pass"  type="password"  id="inputPassword" class="form-control" placeholder="Mật khẩu" required="">
                                                 </div>
                                                 <select name="role">
                                                     <option value="customer">Customer</option>
@@ -75,6 +77,7 @@
                                                 </div>
                                                 <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i>Login</button>
                                                 <hr>
+                                               
                                             </form>
                                             <hr>
                                             <div class="text-center">

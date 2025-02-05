@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller_Admin;
+package controlller_Marketer;
 
 import dal.DAO;
-import dal.DAO_Admin;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,14 +14,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.Staff;
 
 /**
  *
- * @author DELL
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name="addBankerServlet", urlPatterns={"/addStaff"})
-public class addStaffServlet extends HttpServlet {
+@WebServlet(name="DeleteNewsServlet", urlPatterns={"/deleteNews"})
+public class DeleteNewsServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +39,10 @@ public class addStaffServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet addBankerServlet</title>");  
+            out.println("<title>Servlet DeleteNewsServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet addBankerServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet DeleteNewsServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,32 +58,16 @@ public class addStaffServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {     
-        String full_name = request.getParameter("full_name");
-        String email = request.getParameter("email");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String phone_number = request.getParameter("phone_number");
-        String gender = request.getParameter("gender");
-        String date_of_birth_raw = request.getParameter("date_of_birth");
-        String address = request.getParameter("address");
-        String role_id_raw = request.getParameter("role_id");
-        String status = request.getParameter("status");
-        int role_id;
-        try {         
-            role_id=Integer.parseInt(role_id_raw);
-            var date_of_birth = java.sql.Date.valueOf(date_of_birth_raw);
-            DAO_Admin dao = new DAO_Admin();
-            Staff test = dao.get_Staff_By_Username(username);
-            if(test!= null){
-                request.setAttribute("error","username "+ username+" existed!!");
-                request.getRequestDispatcher("addStaff.jsp").forward(request, response);
-            }else{
-                Staff s = new Staff(full_name, email, username, password,
-                        phone_number, gender, date_of_birth, address, role_id, status);
-                dao.insertBanker(s);
-                response.sendRedirect("staff_management");
-            }
+    throws ServletException, IOException {
+       String newsId_raw=request.getParameter("news_id");
+       HttpSession session=request.getSession();
+        Staff staff=(Staff) session.getAttribute("account");
+        try {
+            int news_id = Integer.parseInt(newsId_raw);
+            DAO_Marketer d = new DAO_Marketer();
+            d.deleteNews(news_id);
+            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id();
+        response.sendRedirect(redirectUrl);
         } catch (Exception e) {
         }
     } 

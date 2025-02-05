@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 
-package controller_Admin;
+
+package controlller_Marketer;
 
 import dal.DAO;
-import dal.DAO_Admin;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,14 +11,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Services;
+import java.util.List;
+import model.NewsView;
 
 /**
  *
- * @author DELL
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name="addServiceServlet", urlPatterns={"/addService"})
-public class addServiceServlet extends HttpServlet {
+@WebServlet(name="NewsStatistic", urlPatterns={"/newsStatistic"})
+public class NewsStatisticServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +36,10 @@ public class addServiceServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet addServiceServlet</title>");  
+            out.println("<title>Servlet NewsStatistic</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet addServiceServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet NewsStatistic at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,20 +56,14 @@ public class addServiceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String service_name = request.getParameter("service_name");
-        String description = request.getParameter("description");
-        String service_type = request.getParameter("service_type");
-        String status = request.getParameter("status");
-        DAO_Admin d = new DAO_Admin();
-        Services test = d.get_Service_BY_Service_name(service_name);
-        if(test!=null){
-            request.setAttribute("error","service name"+ service_name+" existed!!");
-            request.getRequestDispatcher("addService.jsp").forward(request, response);
-        }else {
-            Services s = new Services(service_name, description, service_type, status);
-            d.InsertService(s);
-            response.sendRedirect("service_management");
-        }
+            DAO_Marketer d = new DAO_Marketer();
+        List<NewsView> list=d.countNews();
+        request.setAttribute("newsView", list);
+        int totalArticles=d.totalArticle();
+        request.setAttribute("totalArticle", totalArticles);
+        int totalViews=d.totalView();
+        request.setAttribute("totalView", totalViews);
+        request.getRequestDispatcher("newsStatistic.jsp").forward(request, response);
     } 
 
     /** 
