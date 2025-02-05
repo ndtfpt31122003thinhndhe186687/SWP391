@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import model.Customer;
 import model.Debt_management;
 /**
@@ -60,48 +61,75 @@ public class CustomerDetailsServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String customerIdParam = request.getParameter("id");
-        int customerId = Integer.parseInt(customerIdParam);
+    String customerIdParam = request.getParameter("id");
+    int customerId = Integer.parseInt(customerIdParam);
 
-        DBContext db = new DBContext();
-        Customer customer = null;
-        String debtStatus = null;
+    DBContext db = new DBContext();
+    Customer customer = null;
+    String debtStatus = null;
+    List<String> assetStatuses = new ArrayList<>();
+    List<String> serviceNames = new ArrayList<>();
 
-        try {
-            Connection conn = db.getConnection();
-            String sql = "SELECT c.*, d.debt_status FROM customer c " +
-                     "JOIN debt_management d ON c.customer_id = d.customer_id " +
+    try {
+        Connection conn = db.getConnection();
+        
+        // Lấy thông tin khách hàng và trạng thái nợ
+        String sql = "SELECT c.*, d.debt_status FROM customer c " +
+                     "LEFT JOIN debt_management d ON c.customer_id = d.customer_id " +
                      "WHERE c.customer_id = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, customerId);
-            ResultSet rs = pstmt.executeQuery();
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, customerId);
+        ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()) {
-                customer = new Customer();
-                customer.setCustomer_id(rs.getInt("customer_id"));
-                customer.setFull_name(rs.getString("full_name"));
-                customer.setEmail(rs.getString("email"));
-                customer.setUsername(rs.getString("username"));
-                customer.setPhone_number(rs.getString("phone_number"));
-                customer.setAddress(rs.getString("address"));
-                customer.setCard_type(rs.getString("card_type"));
-                customer.setStatus(rs.getString("status"));
-                customer.setGender(rs.getString("gender"));
-                customer.setProfile_picture(rs.getString("profile_picture"));
-                customer.setAmount(rs.getDouble("amount"));
-                customer.setCredit_limit(rs.getDouble("credit_limit"));
-                customer.setDate_of_birth(rs.getDate("date_of_birth"));
-                customer.setCreated_at(rs.getTimestamp("created_at"));
-                debtStatus = rs.getString("debt_status");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            customer = new Customer();
+            customer.setCustomer_id(rs.getInt("customer_id"));
+            customer.setFull_name(rs.getString("full_name"));
+            customer.setEmail(rs.getString("email"));
+            customer.setUsername(rs.getString("username"));
+            customer.setPhone_number(rs.getString("phone_number"));
+            customer.setAddress(rs.getString("address"));
+            customer.setCard_type(rs.getString("card_type"));
+            customer.setStatus(rs.getString("status"));
+            customer.setGender(rs.getString("gender"));
+            customer.setProfile_picture(rs.getString("profile_picture"));
+            customer.setAmount(rs.getDouble("amount"));
+            customer.setCredit_limit(rs.getDouble("credit_limit"));
+            customer.setDate_of_birth(rs.getDate("date_of_birth"));
+            customer.setCreated_at(rs.getTimestamp("created_at"));
+            debtStatus = rs.getString("debt_status");
         }
 
-        request.setAttribute("customer", customer); 
-        request.setAttribute("debtStatus", debtStatus);
-        request.getRequestDispatcher("customerDetails.jsp").forward(request, response);
+        // Lấy trạng thái tài sản
+        String assetSql = "SELECT [status] FROM asset WHERE customer_id = ?";
+        PreparedStatement assetPstmt = conn.prepareStatement(assetSql);
+        assetPstmt.setInt(1, customerId);
+        ResultSet assetRs = assetPstmt.executeQuery();
+        while (assetRs.next()) {
+            assetStatuses.add(assetRs.getString("status"));
+        }
+
+        // Lấy tên dịch vụ
+        String serviceSql = "SELECT service_name FROM customer_services cs " +
+                            "JOIN services s ON cs.service_id = s.service_id " +
+                            "WHERE cs.customer_id = ?";
+        PreparedStatement servicePstmt = conn.prepareStatement(serviceSql);
+        servicePstmt.setInt(1, customerId);
+        ResultSet serviceRs = servicePstmt.executeQuery();
+        while (serviceRs.next()) {
+            serviceNames.add(serviceRs.getString("service_name"));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    request.setAttribute("customer", customer);
+    request.setAttribute("debtStatus", debtStatus);
+    request.setAttribute("assetStatuses", assetStatuses);
+    request.setAttribute("serviceNames", serviceNames);
+    request.getRequestDispatcher("customerDetails.jsp").forward(request, response);
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.

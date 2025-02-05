@@ -1,36 +1,73 @@
 <%@ page import="model.Customer" %>
-<%@ page import="model.Debt_management" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Details</title>
+    <title>Customer Details</title>
 </head>
 <body>
-    <h1>CustomerDetails</h1>
+    <h1>Customer Details</h1>
     <%
         Customer customer = (Customer) request.getAttribute("customer");
         String debtStatus = (String) request.getAttribute("debtStatus");
+        List<String> assetStatuses = (List<String>) request.getAttribute("assetStatuses");
+        List<String> serviceNames = (List<String>) request.getAttribute("serviceNames");
+
         if (customer != null) {
     %>
         <p>ID: <%= customer.getCustomer_id() %></p>
-        <p>Fullname: <%= customer.getFull_name() %></p>
+        <p>Full Name: <%= customer.getFull_name() %></p>
         <p>Email: <%= customer.getEmail() %></p>
-        <p>User: <%= customer.getUsername() %></p>
-        <p>PhoneNumber: <%= customer.getPhone_number() %></p>
+        <p>Username: <%= customer.getUsername() %></p>
+        <p>Phone Number: <%= customer.getPhone_number() %></p>
         <p>Address: <%= customer.getAddress() %></p>
-        <p>Cardtype: <%= customer.getCard_type() %></p>
+        <p>Card Type: <%= customer.getCard_type() %></p>
         <p>Status: <%= customer.getStatus() %></p>
         <p>Gender: <%= customer.getGender() %></p>
-        <p>Picture: <img src="<%= customer.getProfile_picture() %>" alt="Profile Picture" /></p>
+        <p>Profile Picture: <img src="<%= customer.getProfile_picture() %>" alt="Profile Picture" /></p>
         <p>Amount: <%= customer.getAmount() %></p>
-        <p>Creditlimit: <%= customer.getCredit_limit() %></p>
-        <p>DateOfBirth: <%= customer.getDate_of_birth() %></p>
-        <p>Createdat: <%= customer.getCreated_at() %></p>
-        <p>Debt Status: <%= debtStatus != null ? debtStatus : "No debt information" %></p> 
+        <p>Credit Limit: <%= customer.getCredit_limit() %></p>
+        <p>Date of Birth: <%= customer.getDate_of_birth() %></p>
+        <p>Created At: <%= customer.getCreated_at() %></p>
+        <p>Debt Status: <%= debtStatus != null ? debtStatus : "No debt information" %></p>
+
+        <h2>Asset Statuses</h2>
+        <ul>
+        <%
+            if (assetStatuses.isEmpty()) {
+        %>
+            <li>No assets found.</li>
+        <%
+            } else {
+                for (String status : assetStatuses) {
+        %>
+            <li><%= status %></li>
+        <%
+                }
+            }
+        %>
+        </ul>
+
+        <h2>Services</h2>
+        <ul>
+        <%
+            if (serviceNames.isEmpty()) {
+        %>
+            <li>No services found.</li>
+        <%
+            } else {
+                for (String serviceName : serviceNames) {
+        %>
+            <li><%= serviceName %></li>
+        <%
+                }
+            }
+        %>
+        </ul>
     <%
         } else {
     %>
-        <p>Err.</p>
+        <p>Error: Customer not found.</p>
     <%
         }
     %>
