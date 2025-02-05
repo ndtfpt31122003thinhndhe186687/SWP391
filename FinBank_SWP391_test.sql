@@ -471,3 +471,5 @@ select * from transactions
 --delete from news where staff_id= 2;
 --delete from request where staff_id=2;
 --delete from staff where staff_id= 2;
+select d.debt_id, c.full_name, c.email,d.loan_id,d.debt_status,d.overdue_days,d.notes,d.updated_at from customer c JOIN debt_management d
+ON c.customer_id=d.customer_id
