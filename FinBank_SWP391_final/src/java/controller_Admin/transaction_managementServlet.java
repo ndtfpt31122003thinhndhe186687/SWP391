@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controlller;
+
+package controller_Admin;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,46 +15,42 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Services;
-import model.Term;
+import model.Transaction;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name = "service_managementServlet", urlPatterns = {"/service_management"})
-public class service_managementServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+@WebServlet(name="transaction_managementServlet", urlPatterns={"/transaction_management"})
+public class transaction_managementServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet service_managementServlet</title>");
+            out.println("<title>Servlet transaction_managementServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet service_managementServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet transaction_managementServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -60,26 +58,15 @@ public class service_managementServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        DAO d = new DAO();
-        String type = request.getParameter("type");
-        if (type == null) {
-            type = "services";
-        }
-        if ("services".equals(type)) {
-            List<Services> list = d.getAllServices();
-            request.setAttribute("service", list);
-        } else if ("term".equals(type)) {
-            List<Term> list = d.getAllTerm();
-            request.setAttribute("term", list);
-        }
-        
-        request.getRequestDispatcher("service management.jsp").forward(request, response);
-    }
+    throws ServletException, IOException {
+        DAO_Admin d = new DAO_Admin();
+        List<Transaction> list = d.getAllTransaction();
+        request.setAttribute("data", list);
+        request.getRequestDispatcher("transaction management.jsp").forward(request, response);
+    } 
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -87,13 +74,12 @@ public class service_managementServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

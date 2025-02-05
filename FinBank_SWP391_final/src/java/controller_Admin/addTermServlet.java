@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
-package controlller;
+package controller_Admin;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,42 +13,45 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Services;
+import model.Term;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="addServiceServlet", urlPatterns={"/addService"})
-public class addServiceServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+@WebServlet(name = "addTermServlet", urlPatterns = {"/addTerm"})
+public class addTermServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet addServiceServlet</title>");  
+            out.println("<title>Servlet addTermServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet addServiceServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet addTermServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -56,25 +59,32 @@ public class addServiceServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String service_name = request.getParameter("service_name");
-        String description = request.getParameter("description");
-        String service_type = request.getParameter("service_type");
+            throws ServletException, IOException {
+        String term_name = request.getParameter("term_name");
+        String duration_raw = request.getParameter("duration");
+        String term_type = request.getParameter("term_type");
         String status = request.getParameter("status");
-        DAO d = new DAO();
-        Services test = d.get_Service_BY_Service_name(service_name);
-        if(test!=null){
-            request.setAttribute("error","service name"+ service_name+" existed!!");
-            request.getRequestDispatcher("addService.jsp").forward(request, response);
-        }else {
-            Services s = new Services(service_name, description, service_type, status);
-            d.InsertService(s);
-            response.sendRedirect("service_management");
+        int duration;
+        DAO_Admin d = new DAO_Admin();
+        Term test = d.get_Term_BY_Term_name(term_name);
+        try {
+            duration = Integer.parseInt(duration_raw);
+            if (test != null) {
+                request.setAttribute("error", "term name" + term_name + " existed!!");
+                request.getRequestDispatcher("addTerm.jsp").forward(request, response);
+            } else {
+                Term t = new Term(term_name, duration, term_type, status);
+                d.InsertTerm(t);
+                response.sendRedirect("service_management");
+            }
+        } catch (Exception e) {
         }
-    } 
 
-    /** 
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -82,12 +92,13 @@ public class addServiceServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

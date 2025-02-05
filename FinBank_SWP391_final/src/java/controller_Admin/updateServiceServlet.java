@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controller_Admin;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,14 +14,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Term;
+import model.Services;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="updateTermServlet", urlPatterns={"/updateTerm"})
-public class updateTermServlet extends HttpServlet {
+@WebServlet(name="updateServiceServlet", urlPatterns={"/updateService"})
+public class updateServiceServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -37,10 +38,10 @@ public class updateTermServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateTermServlet</title>");  
+            out.println("<title>Servlet updateServiceServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateTermServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet updateServiceServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,10 +62,10 @@ public class updateTermServlet extends HttpServlet {
         int id;
         try {
             id=Integer.parseInt(id_raw);
-            DAO d = new DAO();
-            Term t = d.get_Term_BY_Term_id(id);
-            request.setAttribute("term", t);
-            request.getRequestDispatcher("updateTerm.jsp").forward(request, response);
+            DAO_Admin d = new DAO_Admin();
+            Services s = d.get_Service_BY_Service_id(id);
+            request.setAttribute("service", s);
+            request.getRequestDispatcher("updateService.jsp").forward(request, response);
         } catch (Exception e) {
         }
     } 
@@ -79,18 +80,17 @@ public class updateTermServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String term_id_raw = request.getParameter("term_id");
-        String term_name = request.getParameter("term_name");
-        String duration_raw = request.getParameter("duration");
-        String term_type = request.getParameter("term_type");
+        String service_id_raw = request.getParameter("service_id");
+        String service_name = request.getParameter("service_name");
+        String description = request.getParameter("description");
+        String service_type = request.getParameter("service_type");
         String status = request.getParameter("status");
-        int term_id,duration;
-        DAO d = new DAO();
+        DAO_Admin d = new DAO_Admin();
+        int service_id;
         try {
-            term_id=Integer.parseInt(term_id_raw);
-            duration = Integer.parseInt(duration_raw);
-            Term t = new Term(term_id, term_name, duration, term_type, status);
-            d.UpdateTerm(t);
+            service_id = Integer.parseInt(service_id_raw);
+            Services s = new Services(service_id, service_name, description, service_type, status);
+            d.UpdateService(s);
             response.sendRedirect("service_management");
         } catch (Exception e) {
         }

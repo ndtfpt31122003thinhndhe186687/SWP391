@@ -23,6 +23,28 @@
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 
+        <style>
+            .statistic-card {
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .statistic-title {
+                color: #333;
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            .statistic-value {
+                color: #007bff;
+                font-size: 24px;
+                font-weight: bold;
+            }
+            .statistic-section {
+                margin-bottom: 30px;
+            }
+        </style>
     </head>
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
@@ -179,18 +201,118 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Staff Management</h1>
+                <h1 class="h2 mb-0 text-danger">Statistics Dashboard</h1>
             </div>
 
-            
-                            
+            <!-- Total Statistics Section -->
+            <div class="row statistic-section">
+                <div class="col-md-3">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Total Customers</div>
+                        <div class="statistic-value">${totalCustomers}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Total Staff</div>
+                        <div class="statistic-value">${totalStaff}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Total Insurance</div>
+                        <div class="statistic-value">${totalInsurance}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Total Feedback</div>
+                        <div class="statistic-value">${totalFeedback}</div>
+                    </div>
+                </div>
+            </div>
 
-                            
+            <!-- Active Counts Section -->
+            <div class="row statistic-section">
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Active Customers</div>
+                        <div class="statistic-value">${activeCustomers}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Active Staff</div>
+                        <div class="statistic-value">${activeStaff}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Active Services</div>
+                        <div class="statistic-value">${activeServices}</div>
+                    </div>
+                </div>
+            </div>
 
-              
-           
+            <!-- Distribution Statistics -->
+            <div class="row statistic-section">
+                <!-- Gender Distribution -->
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Gender Distribution</div>
+                        <table class="table">
+                            <tr>
+                                <td>Male Customers:</td>
+                                <td class="statistic-value">${maleCustomers}</td>
+                            </tr>
+                            <tr>
+                                <td>Female Customers:</td>
+                                <td class="statistic-value">${femaleCustomers}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
 
-            
+                <!-- Card Type Distribution -->
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Card Type Distribution</div>
+                        <table class="table">
+                            <tr>
+                                <td>Credit Cards:</td>
+                                <td class="statistic-value">${creditCards}</td>
+                            </tr>
+                            <tr>
+                                <td>Debit Cards:</td>
+                                <td class="statistic-value">${debitCards}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Request Status Distribution -->
+            <div class="row statistic-section">
+                <div class="col-12">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Request Status Distribution</div>
+                        <table class="table">
+                            <tr>
+                                <td>Pending Requests:</td>
+                                <td class="statistic-value">${pendingRequests}</td>
+                            </tr>
+                            <tr>
+                                <td>Approved Requests:</td>
+                                <td class="statistic-value">${approvedRequests}</td>
+                            </tr>
+                            <tr>
+                                <td>Rejected Requests:</td>
+                                <td class="statistic-value">${rejectedRequests}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </main>
 
     </div>

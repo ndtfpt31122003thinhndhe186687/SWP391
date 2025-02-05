@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+package controller_Admin;
 
-package controlller;
-
-import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,15 +8,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Services;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="updateServiceServlet", urlPatterns={"/updateService"})
-public class updateServiceServlet extends HttpServlet {
-   
+@WebServlet(name="statistic_managementServlet", urlPatterns={"/statistic_management"})
+public class statistic_managementServlet extends HttpServlet {
+
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,10 +31,10 @@ public class updateServiceServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateServiceServlet</title>");  
+            out.println("<title>Servlet statistic_managementServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateServiceServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet statistic_managementServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,17 +51,41 @@ public class updateServiceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String id_raw = request.getParameter("id");
-        int id;
         try {
-            id=Integer.parseInt(id_raw);
-            DAO d = new DAO();
-            Services s = d.get_Service_BY_Service_id(id);
-            request.setAttribute("service", s);
-            request.getRequestDispatcher("updateService.jsp").forward(request, response);
+            DAO_Admin dao = new DAO_Admin();
+            
+            
+            request.setAttribute("totalCustomers", dao.get_Total_Customers());
+            request.setAttribute("totalStaff", dao.get_Total_Staff());
+            request.setAttribute("totalInsurance", dao.get_Total_Insurance());
+            
+            
+            request.setAttribute("activeCustomers", dao.get_Active_Customers());
+            request.setAttribute("activeStaff", dao.get_Active_Staff());
+            request.setAttribute("activeServices", dao.get_Active_Services());
+            
+            
+            request.setAttribute("maleCustomers", dao.get_Customers_By_Gender("male"));
+            request.setAttribute("femaleCustomers", dao.get_Customers_By_Gender("female"));
+            
+            
+            request.setAttribute("creditCards", dao.get_Customer_By_Card_Type("credit"));
+            request.setAttribute("debitCards", dao.get_Customer_By_Card_Type("debit"));
+            
+            
+            request.setAttribute("pendingRequests", dao.get_Requests_By_Status("pending"));
+            request.setAttribute("approvedRequests", dao.get_Requests_By_Status("approved"));
+            request.setAttribute("rejectedRequests", dao.get_Requests_By_Status("rejected"));
+            
+            
+            request.setAttribute("totalFeedback", dao.get_Total_Feedback());
+            
+            request.getRequestDispatcher("/statistic management.jsp").forward(request, response);
+            
         } catch (Exception e) {
+            System.out.println(e);          
         }
-    } 
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -79,20 +97,7 @@ public class updateServiceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String service_id_raw = request.getParameter("service_id");
-        String service_name = request.getParameter("service_name");
-        String description = request.getParameter("description");
-        String service_type = request.getParameter("service_type");
-        String status = request.getParameter("status");
-        DAO d = new DAO();
-        int service_id;
-        try {
-            service_id = Integer.parseInt(service_id_raw);
-            Services s = new Services(service_id, service_name, description, service_type, status);
-            d.UpdateService(s);
-            response.sendRedirect("service_management");
-        } catch (Exception e) {
-        }
+        processRequest(request, response);
     }
 
     /** 

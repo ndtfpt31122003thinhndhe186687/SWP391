@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controller_Admin;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,13 +14,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Staff;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="deleteBankerServlet", urlPatterns={"/deleteStaff"})
-public class deleteStaffServlet extends HttpServlet {
+@WebServlet(name="staff_managementServlet", urlPatterns={"/staff_management"})
+public class staff_managementServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -36,10 +39,10 @@ public class deleteStaffServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet deleteBankerServlet</title>");  
+            out.println("<title>Servlet staff_managementServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet deleteBankerServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet staff_managementServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,15 +59,17 @@ public class deleteStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String id_raw = request.getParameter("id");
-        int id;
-        try {
-            id = Integer.parseInt(id_raw);
-            DAO d = new DAO();
-            d.deleteBanker(id);
-            response.sendRedirect("staff_management");
-        } catch (Exception e) {
+        DAO_Admin d = new DAO_Admin();
+        String type= request.getParameter("type");
+        int role_id = 2;
+        if("marketers".equals(type)){
+            role_id = 3;
+        }else if ("accountants".equals(type)){
+            role_id = 4;
         }
+        List<Staff> list = d.getAllBanker(role_id);
+        request.setAttribute("data", list);
+        request.getRequestDispatcher("staff management.jsp").forward(request, response);
     } 
 
     /** 
@@ -77,7 +82,7 @@ public class deleteStaffServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /** 

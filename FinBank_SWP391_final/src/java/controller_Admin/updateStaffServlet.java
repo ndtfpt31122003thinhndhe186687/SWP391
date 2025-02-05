@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controller_Admin;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,15 +14,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.Date;
 import model.Staff;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="staff_managementServlet", urlPatterns={"/staff_management"})
-public class staff_managementServlet extends HttpServlet {
+@WebServlet(name="updateBankerServlet", urlPatterns={"/updateStaff"})
+public class updateStaffServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +39,10 @@ public class staff_managementServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet staff_managementServlet</title>");  
+            out.println("<title>Servlet updateBankerServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet staff_managementServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet updateBankerServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,17 +59,16 @@ public class staff_managementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        DAO d = new DAO();
-        String type= request.getParameter("type");
-        int role_id = 2;
-        if("marketers".equals(type)){
-            role_id = 3;
-        }else if ("accountants".equals(type)){
-            role_id = 4;
+        String id_raw = request.getParameter("id");
+        int id;
+        try {
+            id=Integer.parseInt(id_raw);
+            DAO_Admin d = new DAO_Admin();
+            Staff s = d.get_Staff_By_StaffId(id);
+            request.setAttribute("staff", s);
+            request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
+        } catch (Exception e) {
         }
-        List<Staff> list = d.getAllBanker(role_id);
-        request.setAttribute("data", list);
-        request.getRequestDispatcher("staff management.jsp").forward(request, response);
     } 
 
     /** 
@@ -81,7 +81,30 @@ public class staff_managementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
+        String staff_id_raw = request.getParameter("staff_id");
+        String full_name = request.getParameter("full_name");
+        String email = request.getParameter("email");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String phone_number = request.getParameter("phone_number");
+        String gender = request.getParameter("gender");
+        String date_of_birth_raw = request.getParameter("date_of_birth");
+        String address = request.getParameter("address");
+        String role_id_raw = request.getParameter("role_id");
+        String status = request.getParameter("status");
+        int staff_id,role_id;
+        try {
+            staff_id=Integer.parseInt(staff_id_raw);
+            role_id=Integer.parseInt(role_id_raw);
+            var date_of_birth = java.sql.Date.valueOf(date_of_birth_raw);
+            DAO_Admin dao = new DAO_Admin();
+            Staff s = new Staff(staff_id, full_name, email, password, username,
+                    phone_number, gender, date_of_birth, address, role_id, status);
+            dao.updateBanker(s);
+            response.sendRedirect("staff_management");
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
     }
 
     /** 

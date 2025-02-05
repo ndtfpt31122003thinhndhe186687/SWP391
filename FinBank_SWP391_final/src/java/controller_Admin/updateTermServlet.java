@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controller_Admin;
 
+import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +14,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Term;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="statistic_managementServlet", urlPatterns={"/statistic_management"})
-public class statistic_managementServlet extends HttpServlet {
+@WebServlet(name="updateTermServlet", urlPatterns={"/updateTerm"})
+public class updateTermServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +38,10 @@ public class statistic_managementServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet statistic_managementServlet</title>");  
+            out.println("<title>Servlet updateTermServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet statistic_managementServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet updateTermServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +58,16 @@ public class statistic_managementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("statistic management.jsp").forward(request, response);
+        String id_raw = request.getParameter("id");
+        int id;
+        try {
+            id=Integer.parseInt(id_raw);
+            DAO_Admin d = new DAO_Admin();
+            Term t = d.get_Term_BY_Term_id(id);
+            request.setAttribute("term", t);
+            request.getRequestDispatcher("updateTerm.jsp").forward(request, response);
+        } catch (Exception e) {
+        }
     } 
 
     /** 
@@ -68,7 +80,21 @@ public class statistic_managementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String term_id_raw = request.getParameter("term_id");
+        String term_name = request.getParameter("term_name");
+        String duration_raw = request.getParameter("duration");
+        String term_type = request.getParameter("term_type");
+        String status = request.getParameter("status");
+        int term_id,duration;
+        DAO_Admin d = new DAO_Admin();
+        try {
+            term_id=Integer.parseInt(term_id_raw);
+            duration = Integer.parseInt(duration_raw);
+            Term t = new Term(term_id, term_name, duration, term_type, status);
+            d.UpdateTerm(t);
+            response.sendRedirect("service_management");
+        } catch (Exception e) {
+        }
     }
 
     /** 

@@ -79,22 +79,28 @@
                     </form>
                 </div>
 
-                <!-- Login/logout-->
-                <div class="login">
-                    <c:if test="${sessionScope.account != null}">
-                        <li class="">
-                            <a class="" href="changeInfor">Hello ${sessionScope.account.full_name}</a>
-                        </li>
-                        <li class="">
-                            <a class="" href="logout">Logout</a>
-                        </li>                                                                  
-                    </c:if>
-                    <c:if test="${sessionScope.account == null}">
-                        <li >
-                            <a  href="login">Login</a>
-                        </li>
-                    </c:if>
-                </div>   
+                <!-- Login/logout -->
+            <div class="login">
+                <c:if test="${sessionScope.account != null}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hello ${sessionScope.account.full_name}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
+                                <c:if test="${sessionScope.account.role_id==1}">
+                                <li><a class="dropdown-item" href="staff_management">Manage </a></li>
+                                </c:if>
+                            <li><a class="dropdown-item" href="logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </c:if>
+                <c:if test="${sessionScope.account == null}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login">Login</a>
+                    </li>
+                </c:if>
+            </div>
 
             </div> 
 
@@ -268,7 +274,7 @@
                 </div>
                 <!-- copyright section start -->
                 <div class="copyright_section">
-                    <div class="copyright_text">Copyright © Vietnam Technological
+                    <div class="copyright_text">Copyright   Vietnam Technological
                     </div>
                 </div>
                 <!-- copyright section end -->

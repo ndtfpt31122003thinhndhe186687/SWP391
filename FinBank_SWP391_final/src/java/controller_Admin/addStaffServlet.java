@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controller_Admin;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -71,7 +72,7 @@ public class addStaffServlet extends HttpServlet {
         try {         
             role_id=Integer.parseInt(role_id_raw);
             var date_of_birth = java.sql.Date.valueOf(date_of_birth_raw);
-            DAO dao = new DAO();
+            DAO_Admin dao = new DAO_Admin();
             Staff test = dao.get_Staff_By_Username(username);
             if(test!= null){
                 request.setAttribute("error","username "+ username+" existed!!");

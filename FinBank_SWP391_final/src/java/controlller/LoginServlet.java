@@ -5,6 +5,7 @@
 package controlller;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -80,6 +81,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("pass");
         String role = request.getParameter("role");
         DAO dao = new DAO();
+        DAO_Admin daoadmin = new DAO_Admin();
         if ("customer".equals(role)) {
             Customer acc = dao.login(username, password);
             if (acc == null) {
@@ -91,7 +93,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
             }
         } else if ("staff".equals(role)) {
-            Staff acc = dao.login_admin(username, password);
+            Staff acc = daoadmin.login_admin(username, password);
             if (acc == null) {
                 request.setAttribute("mess", "Wrong username or password");
                 request.getRequestDispatcher("login.jsp").forward(request, response);

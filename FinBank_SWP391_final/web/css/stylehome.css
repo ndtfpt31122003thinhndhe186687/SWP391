@@ -275,32 +275,13 @@ button {
 }
 
 .login {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Khoảng cách giữa các phần tử */
-}
-
-.login ul {
-    list-style: none;
-    display: flex;
-    gap: 10px; /* Giúp các mục nằm ngang thay vì dọc */
-    padding: 0;
-    margin: 0;
-}
-
-.login li {
-    display: inline-block;
-}
-
-.login a {
-    color: red;
-    background-color: yellow;
-    padding: 5px 10px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block; /* Giữ form của nút */
-    white-space: nowrap; /* Ngăn chữ bị xuống dòng */
+    display:inline-block;
+    float:right;
+    margin-top : 10px;
+    background-color: red;
+    padding: 10px;
+    border-radius:50%;
+    
 }
 
 

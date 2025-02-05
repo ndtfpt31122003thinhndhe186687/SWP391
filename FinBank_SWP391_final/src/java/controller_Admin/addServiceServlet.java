@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controller_Admin;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,15 +14,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import model.Transaction;
+import model.Services;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="transaction_managementServlet", urlPatterns={"/transaction_management"})
-public class transaction_managementServlet extends HttpServlet {
+@WebServlet(name="addServiceServlet", urlPatterns={"/addService"})
+public class addServiceServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +38,10 @@ public class transaction_managementServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet transaction_managementServlet</title>");  
+            out.println("<title>Servlet addServiceServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet transaction_managementServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet addServiceServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,10 +58,20 @@ public class transaction_managementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        DAO d = new DAO();
-        List<Transaction> list = d.getAllTransaction();
-        request.setAttribute("data", list);
-        request.getRequestDispatcher("transaction management.jsp").forward(request, response);
+        String service_name = request.getParameter("service_name");
+        String description = request.getParameter("description");
+        String service_type = request.getParameter("service_type");
+        String status = request.getParameter("status");
+        DAO_Admin d = new DAO_Admin();
+        Services test = d.get_Service_BY_Service_name(service_name);
+        if(test!=null){
+            request.setAttribute("error","service name"+ service_name+" existed!!");
+            request.getRequestDispatcher("addService.jsp").forward(request, response);
+        }else {
+            Services s = new Services(service_name, description, service_type, status);
+            d.InsertService(s);
+            response.sendRedirect("service_management");
+        }
     } 
 
     /** 
