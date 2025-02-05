@@ -43,7 +43,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="index.html">Home</a>
+                                <a class="nav-link" href="home.jsp">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="about.html">About</a>
@@ -56,6 +56,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="contact.html">Contact Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="news">News</a>
                             </li>
                         </ul>
                     </div>
@@ -71,15 +74,15 @@
                 </div>
             </div>
             <!--search section-->
-            <div class="container"> 
-                <div class="search">
-                    <form action="">
-                        <input type="text" placeholder="What do you need to search??"  name="searchvalue">
-                        <button type="submit" class="site-btn">SEARCH</button>
-                    </form>
-                </div>
 
-                <!-- Login/logout -->
+            <div class="search">
+                <form action="">
+                    <input type="text" placeholder="What do you need to search??"  name="searchvalue">
+                    <button type="submit" class="site-btn">SEARCH</button>
+                </form>
+            </div>
+
+            <!-- Login/logout -->
             <div class="login">
                 <c:if test="${sessionScope.account != null}">
                     <li class="nav-item dropdown">
@@ -88,8 +91,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
-                                <c:if test="${sessionScope.account.role_id==1}">
-                                <li><a class="dropdown-item" href="staff_management">Manage </a></li>
+                                <c:if test="${sessionScope.role==3}">
+                                <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}">Manage news</a></li>
                                 </c:if>
                             <li><a class="dropdown-item" href="logout">Logout</a></li>
                         </ul>
@@ -102,7 +105,7 @@
                 </c:if>
             </div>
 
-            </div> 
+
 
             <div class="header_right">
                 <img src="images/banner-img.png" class="banner_img">
@@ -131,7 +134,7 @@
                 <h1 class="what_taital">WHAT WE DO</h1>
                 <p class="what_text">We provide seamless banking services to help you manage your finances efficiently and securely.</p>
                 <div class="what_we_do_section_2">
-                    <div class="row justify-content-center">
+                    <div class="row">
                         <div class="col-lg-3 col-sm-6">
                             <div class="box_main">
                                 <div class="icon_1"><img src="images/icon-1.png"></div>
@@ -140,7 +143,7 @@
                                 <div class="moremore_bt_1"><a href="#">Read More </a></div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-sm-12">
+                        <div class="col-lg-3 col-sm-6">
                             <div class="box_main">
                                 <div class="icon_1"><img src="images/icon-2.png"></div>
                                 <h3 class="accounting_text">Advisor</h3>
@@ -148,7 +151,7 @@
                                 <div class="moremore_bt_1"><a href="#">Read More </a></div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-sm-12">
+                        <div class="col-lg-3 col-sm-6">
                             <div class="box_main">
                                 <div class="icon_1"><img src="images/icon-3.png"></div>
                                 <h3 class="accounting_text">Investment</h3>
@@ -156,7 +159,7 @@
                                 <div class="moremore_bt_1"><a href="#">Read More </a></div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-sm-12">
+                        <div class="col-lg-3 col-sm-6">
                             <div class="box_main">
                                 <div class="icon_1"><img src="images/icon-4.png"></div>
                                 <h3 class="accounting_text">Financial</h3>
@@ -274,7 +277,7 @@
                 </div>
                 <!-- copyright section start -->
                 <div class="copyright_section">
-                    <div class="copyright_text">Copyright   Vietnam Technological
+                    <div class="copyright_text">Copyright © Vietnam Technological
                     </div>
                 </div>
                 <!-- copyright section end -->
