@@ -357,6 +357,30 @@ public class DAO extends DBContext {
             System.out.println(e);
         }
     }
+    
+    //search news by title
+    public List<News> getSearchNewsByTitle(String title){
+        List<News> list = new ArrayList<>();
+        String sql = "select* from news where title like ? ";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, "%" + title + "%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                News n = new News();
+                n.setNews_id(rs.getInt("news_id"));
+                n.setTitle(rs.getString("title"));
+                n.setContent(rs.getString("content"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setUpdated_at(rs.getDate("updated_at"));
+                n.setStatus(rs.getString("status"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
 
     //view new statistic
     public List<NewsView> countNews() {
@@ -378,11 +402,90 @@ public class DAO extends DBContext {
         }
         return list;
     }
+    
+    //Total article
+    public int totalArticle(){
+        String sql="select count(*) as totalArticle from news where status='approved'";
+        try {
+            PreparedStatement st=con.prepareStatement(sql);
+            ResultSet rs=st.executeQuery();
+            while(rs.next()){
+                return rs.getInt("totalArticle");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+    
+    //Total views
+    public int totalView(){
+        String sql="select count(*) as totalView from news_views";
+        try {
+            PreparedStatement st=con.prepareStatement(sql);
+            ResultSet rs=st.executeQuery();
+            while(rs.next()){
+                return rs.getInt("totalView");
+            }
+        } catch (Exception e) {
+                System.out.println(e);
+        }
+        return 0;
+    }
+    
+    
+    //Get all news sorted
+    public List<News> getAllNewsSorted(int staff_id,String sortBy){
+        List<News> list=new ArrayList<>();
+        String sql="select* from news where staff_id=? order by "+sortBy+" asc";
+        try {
+            PreparedStatement st=con.prepareStatement(sql);
+            st.setInt(1, staff_id);
+            ResultSet rs=st.executeQuery();
+            while(rs.next()){
+                News n = new News();
+                n.setNews_id(rs.getInt("news_id"));
+                n.setTitle(rs.getString("title"));
+                n.setContent(rs.getString("content"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setUpdated_at(rs.getDate("updated_at"));
+                n.setStatus(rs.getString("status"));
+                list.add(n);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+    //Get news sorted by status
+    public List<News> getNewsByStatusSorted(int staff_id,String status, String sortBy){
+        List<News> list=new ArrayList<>();
+        String sql="select* from news where staff_id=? and status=? order by "+sortBy+" asc";
+        try {
+            PreparedStatement st=con.prepareStatement(sql);
+            st.setInt(1, staff_id);
+            st.setString(2, status);
+            ResultSet rs=st.executeQuery();
+            while(rs.next()){
+                News n = new News();
+                n.setNews_id(rs.getInt("news_id"));
+                n.setTitle(rs.getString("title"));
+                n.setContent(rs.getString("content"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setUpdated_at(rs.getDate("updated_at"));
+                n.setStatus(rs.getString("status"));
+                list.add(n);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
 
     // Main method for testing
     public static void main(String[] args) {
         DAO d = new DAO();
-        List<NewsView> list=d.countNews();
+        List<News> list=d.getNewsByStatusSorted(3, "pending", "title");
         System.out.println(list);
         
     }

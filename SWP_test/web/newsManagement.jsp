@@ -45,12 +45,40 @@
                 flex: 1;
                 padding: 20px;
             }
-            .search-bar {
+            .filter-sort-bar {
                 margin-bottom: 20px;
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
+            .filter-sort-bar label {
+                font-weight: bold;
+                color: #333;
+            }
+            .filter-dropdown {
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                font-size: 14px;
+            }
+            .filter-dropdown:focus {
+                border-color: #d32f2f;
+                outline: none;
+            }
+            .filter-dropdown:hover {
+                background-color: #f0f0f0;
+            }
+            .filter-dropdown option:hover {
+                background-color: #d32f2f;
+                color: white;
             }
             .news-table {
                 width: 100%;
                 border-collapse: collapse;
+            }
+            .search-bar{
+                margin-bottom: 15px;
             }
             .news-table th, .news-table td {
                 border: 1px solid #ddd;
@@ -78,9 +106,27 @@
         </div>
         <div class="content">
             <h1>News Management</h1>
+            <div class="filter-sort-bar">
+                <label for="filterStatus">Filter by Status:</label>
+                <select id="filterStatus" class="filter-dropdown" onchange="filterNews()">
+                    <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
+                    <option value="draft" ${requestScope.status == 'draft' ? 'selected' : ''}>Draft</option>
+                    <option value="approved" ${requestScope.status == 'approved' ? 'selected' : ''}>Approved</option>
+                    <option value="pending" ${requestScope.status == 'pending' ? 'selected' : ''}>Pending</option>
+                </select>
+
+                <label for="sortNews">Sort by:</label>
+                <select id="sortNews" class="filter-dropdown">
+                    <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created Date</option>
+                    <option value="title" ${requestScope.sort == 'title' ? 'selected' : ''}>Title</option>
+                </select>
+            </div>
+
             <div class="search-bar">
-                <input type="text" placeholder="Search news...">
-                <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
+                <form action="searchNews">
+                    <input type="text" placeholder="Search news by title" name="searchName">
+                    <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
+                </form>
             </div>
             <table class="news-table">
                 <thead>
@@ -105,10 +151,10 @@
                                 <a href="editNews?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Edit</a>
                                 <a onclick="doDelete('${news.news_id}')" href="#" style="background-color: #b71c1c; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;" >Delete</a>
                                 <c:if test="${news.status=='draft'}">
-                                <a href="sendNews?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Send</a>
+                                    <a href="sendNews?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Send</a>
                                 </c:if>
                                 <c:if test="${news.status!='approved' && news.status!='draft'}">
-                                <a href="cancelSend?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Cancel sending</a>
+                                    <a href="cancelSend?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Cancel sending</a>
                                 </c:if>
                             </td>
                         </tr>
@@ -118,8 +164,23 @@
                         if (confirm("Are you sure to delete this news ?")) {
                             window.location = "deleteNews?news_id=" + id;
                         }
+                    } 
+                    function filterNews() {
+                        var status = document.getElementById("filterStatus").value;
+                        var sort = document.getElementById("sortNews").value; 
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort;
                     }
+
+                    function sortNews() {
+                        var sort = document.getElementById("sortNews").value;
+                        var status = document.getElementById("filterStatus").value; 
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort;
+                    }
+
+                    document.getElementById("sortNews").onchange = sortNews;
                 </script>  
+
+
 
                 </tbody>
             </table>

@@ -43,7 +43,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="index.html">Home</a>
+                                <a class="nav-link" href="home.jsp">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="about.html">About</a>
@@ -82,31 +82,29 @@
                 </form>
             </div>
 
-            <!-- Login/logout-->
-            <div clas="login">
+            <!-- Login/logout -->
+            <div class="login">
                 <c:if test="${sessionScope.account != null}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Hello ${sessionScope.account.full_name}</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hello ${sessionScope.account.full_name}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
+                                <c:if test="${sessionScope.role==3}">
+                                <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}">Manage news</a></li>
+                                </c:if>
+                            <li><a class="dropdown-item" href="logout">Logout</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="changeInfor">View profile</a>
-                    </li>
-                    <c:if test="${sessionScope.role==3}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="newsManage?staff_id=${sessionScope.account.staff_id}">Manage news</a>
-                        </li>
-                    </c:if>
-
                 </c:if>
                 <c:if test="${sessionScope.account == null}">
                     <li class="nav-item">
                         <a class="nav-link" href="login">Login</a>
                     </li>
                 </c:if>
-            </div>    
+            </div>
+
 
 
             <div class="header_right">

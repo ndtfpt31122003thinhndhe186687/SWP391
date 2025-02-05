@@ -19,8 +19,8 @@ import model.News;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "NewsManageServlet", urlPatterns = {"/newsManage"})
-public class NewsManageServlet extends HttpServlet {
+@WebServlet(name = "SearchNewsServlet", urlPatterns = {"/searchNews"})
+public class SearchNewsServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class NewsManageServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NewsManageServlet</title>");
+            out.println("<title>Servlet SearchNewsServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NewsManageServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SearchNewsServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,28 +60,11 @@ public class NewsManageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String staffId_raw = request.getParameter("staff_id");
-        String status = request.getParameter("status");
-        String sortBy=request.getParameter("sort");
-        List<News> list;
-        status=(status==null) ?"all": status;
-        sortBy=(sortBy==null) ?"created_at" : sortBy;
-        try {
-            int staff_id = Integer.parseInt(staffId_raw);
-            DAO d = new DAO();
-            if (status.equals("all")){
-                list=d.getAllNewsSorted(staff_id, sortBy);
-            }else{
-                list = d.getNewsByStatusSorted(staff_id, status, sortBy);
-            }
-            request.setAttribute("listN", list);
-            request.setAttribute("sort", sortBy);
-            request.setAttribute("status", status);
-            request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        }
-
+        DAO d = new DAO();
+        String searchName = request.getParameter("searchName");
+        List<News> list = d.getSearchNewsByTitle(searchName);
+        request.setAttribute("listN", list);
+        request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
     }
 
     /**
@@ -95,7 +78,7 @@ public class NewsManageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**

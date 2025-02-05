@@ -45,9 +45,7 @@
                 flex: 1;
                 padding: 20px;
             }
-            .search-bar {
-                margin-bottom: 20px;
-            }
+
             .news-table {
                 width: 100%;
                 border-collapse: collapse;
@@ -67,6 +65,20 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+            .stats-container {
+                background-color: #f8d7da;
+                padding: 15px;
+                border-radius: 8px;
+                border-left: 5px solid #b71c1c;
+                margin-bottom:15px;
+            }
+
+            .stats-container p {
+                font-size: 18px;
+                font-weight: bold;
+                color: #b71c1c;
+            }
+
         </style>
     </head>
     <body>
@@ -78,10 +90,11 @@
         </div>
         <div class="content">
             <h1>News Statistic</h1>
-            <div class="search-bar">
-                <input type="text" placeholder="Search news...">
-                <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
+            <div class="stats-container">
+                <p><strong>Total Articles: </strong>${requestScope.totalArticle} </p>
+                <p><strong>Total Views: </strong>${requestScope.totalView} </p>
             </div>
+
             <table class="news-table">
                 <thead>
                     <tr>

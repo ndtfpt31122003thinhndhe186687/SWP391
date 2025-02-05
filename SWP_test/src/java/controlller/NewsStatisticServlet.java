@@ -18,7 +18,7 @@ import model.NewsView;
  * @author Acer Nitro Tiger
  */
 @WebServlet(name="NewsStatistic", urlPatterns={"/newsStatistic"})
-public class NewsStatistic extends HttpServlet {
+public class NewsStatisticServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -58,6 +58,10 @@ public class NewsStatistic extends HttpServlet {
         DAO d=new DAO();
         List<NewsView> list=d.countNews();
         request.setAttribute("newsView", list);
+        int totalArticles=d.totalArticle();
+        request.setAttribute("totalArticle", totalArticles);
+        int totalViews=d.totalView();
+        request.setAttribute("totalView", totalViews);
         request.getRequestDispatcher("newsStatistic.jsp").forward(request, response);
     } 
 

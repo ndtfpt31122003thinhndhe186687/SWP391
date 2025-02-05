@@ -71,17 +71,15 @@
     </head>
     <body>
     <c:set var="news" value="${requestScope.news}"/>
-
     <div class="container">
         <h1>Edit Bank News</h1>
         <form action="editNews" method="post">
             <input type="hidden" name="news_id" value="${news.news_id}" />
             <input type="hidden" name="staff_id" value="${news.staff_id}" />
-
             <label for="title">Enter title:</label>
             <input type="text" name="title" id="title" required value="${news.title}"/><br/>
             <label for="content">Enter content:</label>
-            <textarea name="content" id="content" required  value="${news.content}"></textarea><br/>
+            <textarea name="content" id="content" required>${news.content}</textarea><br/>
             <button type="submit">UPDATE</button>
         </form>
     </div>
