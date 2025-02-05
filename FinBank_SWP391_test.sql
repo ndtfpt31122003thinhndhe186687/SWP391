@@ -79,7 +79,7 @@ CREATE TABLE asset (
 	description NVARCHAR(MAX),
 	Value DECIMAL(15, 2) NOT NULL,
 	customer_id INT NOT NULL,
-	[status] NVARCHAR(20) CHECK ([status] IN ('verified', 'unverified')) DEFAULT 'unverified',
+	[status] NVARCHAR(20) CHECK ([status] IN ('verified', 'unverified','pending')) DEFAULT 'pending',
 	FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
 );
 
@@ -110,6 +110,13 @@ CREATE TABLE news (
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id), -- Khóa ngoại tham chiếu bảng staff
 );
 
+CREATE TABLE news_views (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    news_id INT NOT NULL,
+    view_date  DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (news_id) REFERENCES news(news_id)
+);
+
 CREATE TABLE term (
     term_id INT IDENTITY(1,1) PRIMARY KEY,
     term_name NVARCHAR(50) NOT NULL UNIQUE, -- Tên kỳ hạn (vd: "Monthly", "Quarterly", "Yearly")
@@ -125,7 +132,7 @@ CREATE TABLE services (
     service_id INT IDENTITY(1,1) PRIMARY KEY,
     service_name NVARCHAR(255) NOT NULL UNIQUE,
     description NVARCHAR(MAX),
-    service_type NVARCHAR(20) NOT NULL,
+    service_type NVARCHAR(20) NOT NULL UNIQUE,
 	-- 'savings', 'loan','deposit','withdrawal'
     status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active'
 );
@@ -188,12 +195,13 @@ CREATE TABLE debt_management (
 
 
 CREATE TABLE request (
+	request_id INT  IDENTITY(1,1) NOT NULL,
     customer_id INT NOT NULL,
     staff_id INT NOT NULL,
     service_id INT NOT NULL,  
     request_date DATETIME DEFAULT GETDATE(),
 	status NVARCHAR(20) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
-	PRIMARY KEY(customer_id,staff_id,service_id),
+	PRIMARY KEY(customer_id,staff_id,service_id,request_id),
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
 	FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
     FOREIGN KEY (service_id) REFERENCES services(service_id),
@@ -231,7 +239,7 @@ CREATE TABLE customer_services (
 -- Bảng để quản lý bên thứ ba (insurance)
 CREATE TABLE insurance (
     insurance_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất của bên bảo hiểm
-	 role_id INT NOT NULL, -- Liên kết với bảng role
+	role_id INT NOT NULL, -- Liên kết với bảng role
 	username NVARCHAR(255) NOT NULL UNIQUE, -- Tên người dùng duy nhất
     password NVARCHAR(255) NOT NULL,
     insurance_name NVARCHAR(255) NOT NULL, -- Tên bên bảo hiểm
@@ -458,18 +466,65 @@ VALUES
 (4, 4, 6000.00, 'premium_payment', 'Monthly premium payment.'),
 (5, 5, 3000.00, 'premium_payment', 'Annual premium payment.');
 
---select * from customer
+INSERT INTO news (title, content, staff_id, status) VALUES
+('The Future of Technology', 
+ 'In the coming years, technology will continue to evolve at an unprecedented pace. \
+ Innovations in artificial intelligence, blockchain, and quantum computing are set to redefine \
+ the landscape of industries. Companies will need to adapt swiftly to leverage these advancements. \
+ Sustainability will also play a crucial role, as businesses strive to reduce their carbon footprint. \
+ The integration of smart devices in everyday life will enhance user experiences and efficiency. \
+ Moreover, the rise of remote work will compel organizations to rethink their operational strategies. \
+ This transformation will require a workforce that is agile and equipped with digital skills. \
+ Overall, the future promises exciting opportunities for those willing to embrace change.', 
+ 3, 'approved'),
+
+('Health and Wellness Trends', 
+ 'As we navigate through the complexities of modern life, health and wellness trends are gaining traction. \
+ Mindfulness and meditation practices are becoming increasingly popular as people seek to manage stress. \
+ Nutrition is also evolving, with more individuals opting for plant-based diets to improve overall health. \
+ Fitness technology, such as wearable devices, is helping users track their progress and stay motivated. \
+ Additionally, mental health awareness is on the rise, leading to more open discussions and resources. \
+ The pandemic has highlighted the importance of a balanced lifestyle, prompting many to reassess their priorities. \
+ This shift towards holistic well-being is likely to shape future health initiatives and policies.', 
+ 3, 'approved'),
+
+('Exploring Renewable Energy', 
+ 'Renewable energy sources are transforming the global energy landscape. \
+ Solar, wind, and hydroelectric power are at the forefront of this revolution, offering sustainable alternatives. \
+ Governments and corporations are investing heavily in these technologies to combat climate change. \
+ The transition to cleaner energy not only reduces emissions but also creates new job opportunities. \
+ Innovations in energy storage are enhancing the efficiency of renewable sources, making them more viable. \
+ As awareness grows, public support for renewable initiatives is increasing, driving further investments. \
+ The future of energy is bright, with a significant shift towards sustainability and environmental responsibility.', 
+ 3, 'approved');
+ 
+select * from customer
 --select * from staff 
 select * from role
---select * from insurance
+select * from insurance
+select * from insurance_policy
+select * from insurance_contract
 select * from staff 
 select * from news
 select * from request
+select * from asset
 select * from services
 select * from term 
 select * from transactions
 --delete from news where staff_id= 2;
 --delete from request where staff_id=2;
 --delete from staff where staff_id= 2;
-select d.debt_id, c.full_name, c.email,d.loan_id,d.debt_status,d.overdue_days,d.notes,d.updated_at from customer c JOIN debt_management d
-ON c.customer_id=d.customer_id
+
+SELECT COUNT(customer_id) AS total_customers FROM customer; -- tong so khach hang
+SELECT COUNT(staff_id) AS total_staff FROM staff; -- tong so nhan vien
+SELECT COUNT(insurance_id) AS total_insurance_accounts FROM insurance; -- tong so tai khoan bao hiem 
+SELECT COUNT(customer_id) AS active_customers FROM customer WHERE status = 'active'; -- so khach hang dang hoat dong
+SELECT COUNT(staff_id) AS active_staff FROM staff WHERE status = 'active'; -- so  nhan vien dang hoat dong
+SELECT COUNT(service_id) as  active_service from services where status = 'active'; -- so dich vu dang hoat dong
+SELECT gender, COUNT(customer_id) AS total FROM customer GROUP BY gender; -- phan bo khach hang theo gioi tinh 
+SELECT card_type, COUNT(customer_id) AS total FROM customer GROUP BY card_type; -- so tai khoan theo loai the ( credit/debit)
+SELECT status, COUNT(request_id) AS total_requests -- tong so yeu cau cua khang hang theo trang thai 
+FROM request
+GROUP BY status;
+SELECT COUNT(feedback_id) AS total_feedbacks -- so phan hoi tu khach hang
+FROM feedback;
