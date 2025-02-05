@@ -1,4 +1,4 @@
-package controlller_Marketer;
+package controller;
 
 import dal.DAO;
 import java.io.IOException;

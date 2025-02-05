@@ -3,9 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller_Marketer;
+package controller;
 
-import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,14 +13,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Customer;
 
 /**
  *
- * @author default
+ * @author Windows
  */
-@WebServlet(name="ChangePassServlet", urlPatterns={"/changepass"})
-public class ChangePassServlet extends HttpServlet {
+@WebServlet(name="LogoutServlet", urlPatterns={"/logout"})
+public class LogoutServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +36,10 @@ public class ChangePassServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ChangePassServlet</title>");  
+            out.println("<title>Servlet LogoutServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ChangePassServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet LogoutServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,43 +55,23 @@ public class ChangePassServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-           request.getRequestDispatcher("changepass.jsp").forward(request, response);
-    }
+    throws ServletException, IOException {
+                 HttpSession session = request.getSession();
+       session.removeAttribute("account");
+       response.sendRedirect("home.jsp");
+    } 
 
+    /** 
+     * Handles the HTTP <code>POST</code> method.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-           response.setContentType("text/html;charset=UTF-8");
-        String oldPass = request.getParameter("opass");
-        String newPass = request.getParameter("newpass");
-        String confirmPass = request.getParameter("confirmpass");
-
-        // Validate Input
-          if (oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
-              request.setAttribute("error", "Please fill all fields!");
-               response.sendRedirect("changepass");
-              return;
-        }
-
-        HttpSession session = request.getSession();
-        Customer c = (Customer) session.getAttribute("account");
-        DAO dao = new DAO();
-        
-
-        if (dao.login(c.getUsername(), oldPass)==null) {
-            //Incorrect User or Old password
-             request.setAttribute("error", "Incorrect old password!");
-            request.getRequestDispatcher("changepass").forward(request, response);
-            return;
-        } else {
-             //Change the password
-             c.setPassword(newPass);
-            dao.changePassword(c.getCustomer_id(), newPass);
-             request.setAttribute("ms1", "Successfully changed password!");
-             
-             response.sendRedirect("login");
-        }
+    throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /** 

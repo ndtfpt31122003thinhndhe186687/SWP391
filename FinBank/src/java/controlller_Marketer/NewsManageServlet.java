@@ -5,6 +5,7 @@
 package controlller_Marketer;
 
 import dal.DAO;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,18 +13,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import model.Customer;
+import java.util.List;
+import model.News;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "ChangeInfor", urlPatterns = {"/changeInfor"})
-public class ChangeInforServlet extends HttpServlet {
+@WebServlet(name = "NewsManageServlet", urlPatterns = {"/newsManage"})
+public class NewsManageServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +40,10 @@ public class ChangeInforServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ChangeInfor</title>");
+            out.println("<title>Servlet NewsManageServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ChangeInfor at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet NewsManageServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,7 +61,28 @@ public class ChangeInforServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
+        String staffId_raw = request.getParameter("staff_id");
+        String status = request.getParameter("status");
+        String sortBy=request.getParameter("sort");
+        List<News> list;
+        status=(status==null) ?"all": status;
+        sortBy=(sortBy==null) ?"created_at" : sortBy;
+        try {
+            int staff_id = Integer.parseInt(staffId_raw);
+            DAO_Marketer d = new DAO_Marketer();
+            if (status.equals("all")){
+                list=d.getAllNewsSorted(staff_id, sortBy);
+            }else{
+                list = d.getNewsByStatusSorted(staff_id, status, sortBy);
+            }
+            request.setAttribute("listN", list);
+            request.setAttribute("sort", sortBy);
+            request.setAttribute("status", status);
+            request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+
     }
 
     /**
@@ -77,46 +96,6 @@ public class ChangeInforServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fullname = request.getParameter("profile-name");
-        String email = request.getParameter("profile-email");
-        String phone = request.getParameter("profile-phone");
-        String address = request.getParameter("profile-address");
-        String url_image = request.getParameter("profile-image");
-        String dob_raw = request.getParameter("dob");
-        DAO d = new DAO();
-        Date dob = null;
-        java.sql.Date sqlDob = null;
-
-        try {
-            //check email duplicate
-            if (email == null || d.existedEmail(email)) {
-                throw new Exception("Email has been already exists.");
-            }
-            //check phone number duplicate
-            if (phone == null || d.existedPhoneNum(phone)) {
-                throw new Exception("Phone number has been already exists.");
-            }
-            //check day month invalid or not
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");   
-                dateFormat.setLenient(false); // Bật kiểm tra giá trị chặt chẽ
-                dob = dateFormat.parse(dob_raw);
-                sqlDob = new java.sql.Date(dob.getTime());
-            } catch (ParseException e) {
-                throw new Exception("Invalid date format. Please use yyyy-MM-dd.");
-            }
-            //check if the file is image or not
-            if (url_image == null || (!url_image.endsWith(".png") && !url_image.endsWith(".jpg"))) {
-                throw new Exception("Image must be in .png or .jpg format.");
-            }
-            HttpSession session = request.getSession();
-            Customer c = (Customer) session.getAttribute("account");
-            d.changeInfor(fullname, email, phone, address, sqlDob, url_image, c.getCustomer_id());
-            response.sendRedirect("changeInfor");
-        } catch (Exception e) {
-            request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
-        }
 
     }
 

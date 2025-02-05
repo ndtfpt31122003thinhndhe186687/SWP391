@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controlller_Marketer;
+package controller;
 
 import dal.DAO;
 import java.io.IOException;
@@ -12,15 +12,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import model.News;
+import jakarta.servlet.http.HttpSession;
+import model.Customer;
+import model.Customer;
+import model.Staff;
 
 /**
  *
- * @author Acer Nitro Tiger
+ * @author Windows
  */
-@WebServlet(name = "NewsManageServlet", urlPatterns = {"/newsManage"})
-public class NewsManageServlet extends HttpServlet {
+@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
+public class LoginServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +41,10 @@ public class NewsManageServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NewsManageServlet</title>");
+            out.println("<title>Servlet LoginServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NewsManageServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,28 +62,7 @@ public class NewsManageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String staffId_raw = request.getParameter("staff_id");
-        String status = request.getParameter("status");
-        String sortBy=request.getParameter("sort");
-        List<News> list;
-        status=(status==null) ?"all": status;
-        sortBy=(sortBy==null) ?"created_at" : sortBy;
-        try {
-            int staff_id = Integer.parseInt(staffId_raw);
-            DAO d = new DAO();
-            if (status.equals("all")){
-                list=d.getAllNewsSorted(staff_id, sortBy);
-            }else{
-                list = d.getNewsByStatusSorted(staff_id, status, sortBy);
-            }
-            request.setAttribute("listN", list);
-            request.setAttribute("sort", sortBy);
-            request.setAttribute("status", status);
-            request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        }
-
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
     /**
@@ -95,7 +76,32 @@ public class NewsManageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        String username = request.getParameter("username");
+        String password = request.getParameter("pass");
+        String role = request.getParameter("role");
+        DAO dao = new DAO();
+        if ("customer".equals(role)) {
+            Customer acc = dao.login(username, password);
+            if (acc == null) {
+                request.setAttribute("mess", "Wrong username or password");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("account", acc);
+                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
+            }
+        } else if ("staff".equals(role)) {
+            Staff acc = dao.login_admin(username, password);
+            if (acc == null) {
+                request.setAttribute("mess", "Wrong username or password");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("account", acc);
+                session.setAttribute("role", acc.getRole_id());
+                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
+            }
+        }
     }
 
     /**

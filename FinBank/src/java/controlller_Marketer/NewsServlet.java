@@ -1,10 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 
 package controlller_Marketer;
 
+import dal.DAO;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,14 +11,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.News;
 
 /**
  *
- * @author Windows
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name="LogoutServlet", urlPatterns={"/logout"})
-public class LogoutServlet extends HttpServlet {
+@WebServlet(name="NewsServlet", urlPatterns={"/news"})
+public class NewsServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -36,10 +36,10 @@ public class LogoutServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LogoutServlet</title>");  
+            out.println("<title>Servlet NewsServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LogoutServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet NewsServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,9 +56,10 @@ public class LogoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-                 HttpSession session = request.getSession();
-       session.removeAttribute("account");
-       response.sendRedirect("home.jsp");
+        DAO_Marketer d=new DAO_Marketer();
+        List<News> listNews=d.getAllNews();
+        request.setAttribute("listNews", listNews);
+        request.getRequestDispatcher("news.jsp").forward(request, response);
     } 
 
     /** 
