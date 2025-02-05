@@ -1,11 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 
-package controlller;
+
+package controlller_Marketer;
 
 import dal.DAO;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,15 +11,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Staff;
+import java.util.List;
+import model.NewsView;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name="AddNewsServlet", urlPatterns={"/addNews"})
-public class AddNewsServlet extends HttpServlet {
+@WebServlet(name="NewsStatistic", urlPatterns={"/newsStatistic"})
+public class NewsStatisticServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +36,10 @@ public class AddNewsServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddNewsServlet</title>");  
+            out.println("<title>Servlet NewsStatistic</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddNewsServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet NewsStatistic at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,7 +56,14 @@ public class AddNewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-       request.getRequestDispatcher("addNews.jsp").forward(request, response);
+            DAO_Marketer d = new DAO_Marketer();
+        List<NewsView> list=d.countNews();
+        request.setAttribute("newsView", list);
+        int totalArticles=d.totalArticle();
+        request.setAttribute("totalArticle", totalArticles);
+        int totalViews=d.totalView();
+        request.setAttribute("totalView", totalViews);
+        request.getRequestDispatcher("newsStatistic.jsp").forward(request, response);
     } 
 
     /** 
@@ -71,15 +76,7 @@ public class AddNewsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        //processRequest(request, response);
-        String title=request.getParameter("title");
-        String content=request.getParameter("content");
-        HttpSession session=request.getSession();
-        Staff staff=(Staff) session.getAttribute("account");
-        DAO d=new DAO();
-        d.addNews(title, content, staff.getStaff_id());
-        String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id();
-        response.sendRedirect(redirectUrl);
+        processRequest(request, response);
     }
 
     /** 

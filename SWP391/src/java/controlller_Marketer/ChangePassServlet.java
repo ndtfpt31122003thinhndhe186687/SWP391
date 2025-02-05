@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controlller_Marketer;
 
 import dal.DAO;
 import java.io.IOException;
@@ -13,14 +13,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.News;
+import jakarta.servlet.http.HttpSession;
+import model.Customer;
 
 /**
  *
- * @author Acer Nitro Tiger
+ * @author default
  */
-@WebServlet(name="EditNewsServlet", urlPatterns={"/editNews"})
-public class EditNewsServlet extends HttpServlet {
+@WebServlet(name="ChangePassServlet", urlPatterns={"/changepass"})
+public class ChangePassServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -37,10 +38,10 @@ public class EditNewsServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EditNewsServlet</title>");  
+            out.println("<title>Servlet ChangePassServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EditNewsServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ChangePassServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,45 +57,43 @@ public class EditNewsServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-         String newsId_raw = request.getParameter("news_id");
-        DAO d = new DAO();
-        int news_id;
-        try {
-            news_id = Integer.parseInt(newsId_raw);
-            News n = d.getNewsByID(news_id);
-            request.setAttribute("news", n);
-            request.getRequestDispatcher("editNews.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        }
-    } 
+            throws ServletException, IOException {
+           request.getRequestDispatcher("changepass.jsp").forward(request, response);
+    }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String title=request.getParameter("title");
-        String content=request.getParameter("content");
-        String newsId_raw=request.getParameter("news_id");
-        String staffId_raw=request.getParameter("staff_id");
-         try {
-            int news_id = Integer.parseInt(newsId_raw);
-            int staff_id = Integer.parseInt(staffId_raw);
-            DAO d=new DAO();
-            d.editNews(title, content, news_id, staff_id);
-            String redirectUrl = "newsManage?staff_id=" +staff_id;
-        response.sendRedirect(redirectUrl);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
+            throws ServletException, IOException {
+           response.setContentType("text/html;charset=UTF-8");
+        String oldPass = request.getParameter("opass");
+        String newPass = request.getParameter("newpass");
+        String confirmPass = request.getParameter("confirmpass");
+
+        // Validate Input
+          if (oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
+              request.setAttribute("error", "Please fill all fields!");
+               response.sendRedirect("changepass");
+              return;
         }
+
+        HttpSession session = request.getSession();
+        Customer c = (Customer) session.getAttribute("account");
+        DAO dao = new DAO();
         
+
+        if (dao.login(c.getUsername(), oldPass)==null) {
+            //Incorrect User or Old password
+             request.setAttribute("error", "Incorrect old password!");
+            request.getRequestDispatcher("changepass").forward(request, response);
+            return;
+        } else {
+             //Change the password
+             c.setPassword(newPass);
+            dao.changePassword(c.getCustomer_id(), newPass);
+             request.setAttribute("ms1", "Successfully changed password!");
+             
+             response.sendRedirect("login");
+        }
     }
 
     /** 

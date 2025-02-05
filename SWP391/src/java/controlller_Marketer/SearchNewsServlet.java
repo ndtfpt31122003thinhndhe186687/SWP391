@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controlller;
+package controlller_Marketer;
 
 import dal.DAO;
 import java.io.IOException;
@@ -12,15 +12,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Staff;
+import java.util.List;
+import model.News;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "CancelSendingServlet", urlPatterns = {"/cancelSend"})
-public class CancelSendingServlet extends HttpServlet {
+@WebServlet(name = "SearchNewsServlet", urlPatterns = {"/searchNews"})
+public class SearchNewsServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class CancelSendingServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CancelSendingServlet</title>");
+            out.println("<title>Servlet SearchNewsServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CancelSendingServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SearchNewsServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,18 +60,11 @@ public class CancelSendingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String newsId_raw = request.getParameter("news_id");
-        HttpSession session = request.getSession();
-        Staff staff = (Staff) session.getAttribute("account");
-        try {
-            int news_id = Integer.parseInt(newsId_raw);
-            DAO d = new DAO();
-            d.cancelSend(news_id);
-            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id();
-            response.sendRedirect(redirectUrl);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        }
+        DAO d = new DAO();
+        String searchName = request.getParameter("searchName");
+        List<News> list = d.getSearchNewsByTitle(searchName);
+        request.setAttribute("listN", list);
+        request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
     }
 
     /**

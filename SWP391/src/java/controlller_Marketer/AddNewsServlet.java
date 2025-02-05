@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controlller;
+package controlller_Marketer;
 
 import dal.DAO;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,14 +15,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Customer;
+import model.Staff;
 
 /**
  *
- * @author default
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name="ChangePassServlet", urlPatterns={"/changepass"})
-public class ChangePassServlet extends HttpServlet {
+@WebServlet(name="AddNewsServlet", urlPatterns={"/addNews"})
+public class AddNewsServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +39,10 @@ public class ChangePassServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ChangePassServlet</title>");  
+            out.println("<title>Servlet AddNewsServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ChangePassServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet AddNewsServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,43 +58,29 @@ public class ChangePassServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-           request.getRequestDispatcher("changepass.jsp").forward(request, response);
-    }
+    throws ServletException, IOException {
+       request.getRequestDispatcher("addNews.jsp").forward(request, response);
+    } 
 
+    /** 
+     * Handles the HTTP <code>POST</code> method.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-           response.setContentType("text/html;charset=UTF-8");
-        String oldPass = request.getParameter("opass");
-        String newPass = request.getParameter("newpass");
-        String confirmPass = request.getParameter("confirmpass");
-
-        // Validate Input
-          if (oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
-              request.setAttribute("error", "Please fill all fields!");
-               response.sendRedirect("changepass");
-              return;
-        }
-
-        HttpSession session = request.getSession();
-        Customer c = (Customer) session.getAttribute("account");
-        DAO dao = new DAO();
-        
-
-        if (dao.login(c.getUsername(), oldPass)==null) {
-            //Incorrect User or Old password
-             request.setAttribute("error", "Incorrect old password!");
-            request.getRequestDispatcher("changepass").forward(request, response);
-            return;
-        } else {
-             //Change the password
-             c.setPassword(newPass);
-            dao.changePassword(c.getCustomer_id(), newPass);
-             request.setAttribute("ms1", "Successfully changed password!");
-             
-             response.sendRedirect("login");
-        }
+    throws ServletException, IOException {
+        //processRequest(request, response);
+        String title=request.getParameter("title");
+        String content=request.getParameter("content");
+        HttpSession session=request.getSession();
+        Staff staff=(Staff) session.getAttribute("account");
+        DAO_Marketer d=new DAO_Marketer();
+        d.addNews(title, content, staff.getStaff_id());
+        String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id();
+        response.sendRedirect(redirectUrl);
     }
 
     /** 
