@@ -104,14 +104,8 @@
                             <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
 
                             <div class="d-flex flex-column">
-                                <c:if test="${sessionScope.account.role_id==6}">
-                                <small>${sessionScope.account.customer_id}</small>
+                                <small>${sessionScope.account.full_name}</small>
                                 <small>${sessionScope.account.email}</small>
-                                </c:if>
-                                <c:if test="${sessionScope.account.role_id==1}">
-                                <small>${sessionScope.account.staff_id}</small>
-                                <small>${sessionScope.account.email}</small>
-                                </c:if> 
                             </div>
                         </div>
                     </li>
@@ -145,14 +139,6 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <c:if test="${sessionScope.account.role_id==1}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="staff_management">
-                            <i class="bi-person me-2"></i>
-                            Manager
-                        </a>
-                    </li>
-                    </c:if>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="index.html">
                             <i class="bi-house-fill me-2"></i>
@@ -166,12 +152,14 @@
                             My Wallet
                         </a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="profile.html">
                             <i class="bi-person me-2"></i>
                             Profile
                         </a>
-                    </li>                
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link active" href="setting.html">
                             <i class="bi-gear me-2"></i>
@@ -217,13 +205,17 @@
                                     <input class="form-control" type="email" name="profile-email" placeholder="Email">
                                     <input class="form-control" type="number" name="profile-phone" placeholder="Phone"> 
                                     <input class="form-control" type="text" name="profile-address" placeholder="Address">
-                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth">
+                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth (yyyy-MM-dd)">
 
                                     <div class="input-group mb-1">
                                         <img src="" class="profile-image img-fluid" alt="">
                                         <input type="file" class="form-control" name="profile-image">
                                     </div>
-
+                                    <c:if test="${not empty errorMessage}">
+                                        <div style="color: red; font-weight: bold;">
+                                            ${errorMessage}
+                                        </div>
+                                    </c:if>
                                     <div class="d-flex">
                                         <button type="button " class="form-control me-3 text-bg-danger">
                                             Reset
@@ -236,7 +228,7 @@
                                 </form>
                             </div>
 
-                            
+
 
                             <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
                                 <h6 class="mb-4 text-danger">Notification</h6>
