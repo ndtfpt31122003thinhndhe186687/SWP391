@@ -151,7 +151,15 @@
                             <i class="bi-person me-2"></i>
                             Manager
                         </a>
-                    </li>
+                    </li>                   
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id==2}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="banker_dashboard.jsp">
+                            <i class="bi-person me-2"></i>
+                            Banker
+                        </a>
+                    </li>                   
                     </c:if>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="index.html">
