@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controlller;
+package controller_Admin;
 
 import dal.DAO;
 import dal.DAO_Admin;
@@ -13,17 +13,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Customer;
-import model.Customer;
-import model.Staff;
+import java.util.List;
+import model.Services;
+import model.Term;
 
 /**
  *
- * @author Windows
+ * @author DELL
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "service_managementServlet", urlPatterns = {"/service_management"})
+public class service_managementServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +41,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet service_managementServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet service_managementServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,7 +62,20 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        DAO_Admin d = new DAO_Admin();
+        String type = request.getParameter("type");
+        if (type == null) {
+            type = "services";
+        }
+        if ("services".equals(type)) {
+            List<Services> list = d.getAllServices();
+            request.setAttribute("service", list);
+        } else if ("term".equals(type)) {
+            List<Term> list = d.getAllTerm();
+            request.setAttribute("term", list);
+        }
+        
+        request.getRequestDispatcher("service management.jsp").forward(request, response);
     }
 
     /**
@@ -77,32 +89,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("pass");
-        String role = request.getParameter("role");
-        DAO dao = new DAO();
-        DAO_Admin daoadmin = new DAO_Admin();
-        if ("customer".equals(role)) {
-            Customer acc = dao.login(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
-        } else if ("staff".equals(role)) {
-            Staff acc = daoadmin.login_admin(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
-        }
+        processRequest(request, response);
     }
 
     /**

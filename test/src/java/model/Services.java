@@ -15,6 +15,13 @@ public class Services {
     public Services() {
     }
 
+    public Services(String service_name, String description, String service_type, String status) {
+        this.service_name = service_name;
+        this.description = description;
+        this.service_type = service_type;
+        this.status = status;
+    }
+
     public Services(int service_id, String service_name, String description, String service_type, String status) {
         this.service_id = service_id;
         this.service_name = service_name;

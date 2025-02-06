@@ -105,12 +105,12 @@
 
                             <div class="d-flex flex-column">
                                 <c:if test="${sessionScope.account.role_id==6}">
-                                <small>${sessionScope.account.customer_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.customer_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if>
                                 <c:if test="${sessionScope.account.role_id==1}">
-                                <small>${sessionScope.account.staff_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.staff_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if> 
                             </div>
                         </div>
@@ -145,162 +145,134 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <c:if test="${sessionScope.account.role_id==1}">
                     <li class="nav-item">
-                        <a class="nav-link" href="staff_management">
-                            <i class="bi-person me-2"></i>
-                            Manager
-                        </a>
-                    </li>
-                    </c:if>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="index.html">
-                            <i class="bi-house-fill me-2"></i>
-                            Overview
+                        <a class="nav-link " aria-current="page" href="staff_management">
+                            <i class="me-2"></i>
+                            Staff Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="wallet.html">
-                            <i class="bi-wallet me-2"></i>
-                            My Wallet
+                        <a class="nav-link active" href="service_management">
+                            <i class="me-2"></i>
+                            Service Management
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">
-                            <i class="bi-person me-2"></i>
-                            Profile
+                        <a class="nav-link" href="transaction_management">
+                            <i class=" me-2"></i>
+                            Transaction Management
                         </a>
-                    </li>                
+                    </li>                   
+
                     <li class="nav-item">
-                        <a class="nav-link active" href="setting.html">
-                            <i class="bi-gear me-2"></i>
-                            Settings
+                        <a class="nav-link " href="statistic_management">
+                            <i class="me-2"></i>
+                            Statistic Management
                         </a>
                     </li>
-                    <li class="nav-item border-top mt-auto pt-2">
-                        <a class="nav-link" href="logout">
-                            <i class="bi-box-arrow-left me-2"></i>
-                            Logout
-                        </a>
-                    </li>
+
                 </ul>
             </div>
         </nav>
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Settings</h1>
+                <h1 class="h2 mb-0 text-danger"> Service Management</h1>
             </div>
-
-            <div class="row my-4">
-                <div class="col-lg-7 col-12">
-                    <div class="custom-block bg-white">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" href="changeInfor" id="profile-tab" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changenotification" id="notification-tab" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                                <h6 class="mb-4 text-danger"><a href="changepass">User Profile</a></h6>
-
-                                <form class="custom-form profile-form" action="changeInfor" method="post" >
-                                    <input class="form-control" type="text" name="profile-name" placeholder="Name">
-                                    <input class="form-control" type="email" name="profile-email" placeholder="Email">
-                                    <input class="form-control" type="number" name="profile-phone" placeholder="Phone"> 
-                                    <input class="form-control" type="text" name="profile-address" placeholder="Address">
-                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth">
-
-                                    <div class="input-group mb-1">
-                                        <img src="" class="profile-image img-fluid" alt="">
-                                        <input type="file" class="form-control" name="profile-image">
-                                    </div>
-
-                                    <div class="d-flex">
-                                        <button type="button " class="form-control me-3 text-bg-danger">
-                                            Reset
-                                        </button>
-
-                                        <button type="submit" class="form-control me-3 text-bg-danger">
-                                            Update
-                                        </button>
-                                    </div> 
-                                </form>
-                            </div>
-
-                            
-
-                            <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                                <h6 class="mb-4 text-danger">Notification</h6>
-
-                                <form class="custom-form notification-form" action="#" method="post" role="form">
-
-                                    <div class="form-check form-switch d-flex mb-3 ps-0">
-                                        <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
-
-                                        <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                    </div>
-
-                                    <div class="form-check form-switch d-flex mb-3 ps-0">
-                                        <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
-
-                                        <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                    </div>
-
-                                    <div class="d-flex mt-4">
-                                        <button type="button" class="form-control me-3 text-bg-danger">
-                                            Reset
-                                        </button>
-
-                                        <button type="submit" class="form-control ms-2 text-bg-danger">
-                                            Update Password
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-5 col-12">
-                    <div class="custom-block custom-block-contact">
-                        <h6 class="mb-4">Still can?t find what you looking for?</h6>
-
-                        <p>
-                            <strong>Call us:</strong>
-                            <a href="tel: 305-240-9671" class="ms-2">
-                                (60) 
-                                305-240-9671
-                            </a>
-                        </p>
-
-                        <a href="#" class="btn custom-btn custom-btn-bg-white mt-3">
-                            Chat with us
-                        </a>
-                    </div>
-                </div>
+            
+            <!-- Tabs choose  -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link ${param.type == null || param.type == 'services' ? 'active' : ''}" href="service_management?type=services">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ${param.type == 'term' ? 'active' : ''}" href="service_management?type=term">Term</a>
+                </li>              
+            </ul>
+            
+            <!-- View list service -->
+            <c:if test="${requestScope.service!=null}">
+            <div class="mt-3">
+                <a class="btn btn-success mb-2" href="addService.jsp">Add New</a>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <c:forEach items="${requestScope.service}" var="s">
+                        <tr>
+                            <td>${s.service_id}</td>
+                            <td>${s.service_name}</td>
+                            <td>${s.description}</td>
+                            <td>${s.service_type}</td>
+                            <td>${s.status}</td>                    
+                            <td>
+                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger">Delete</a>
+                                <a href="updateService?id=${s.service_id}" class="btn btn-success">Update</a> 
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
             </div>
+            </c:if>
+            
+            <!-- View list term -->
+            <c:if test="${requestScope.term!=null}">
+            <div class="mt-3">
+                <a class="btn btn-success mb-2" href="addTerm.jsp">Add New</a>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Duration</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <c:forEach items="${requestScope.term}" var="t">
+                        <tr>
+                            <td>${t.term_id}</td>
+                            <td>${t.term_name}</td>
+                            <td>${t.duration}</td>
+                            <td>${t.term_type}</td>    
+                             <td>${t.status}</td>  
+                            <td>
+                                <a onclick="doDeleteTerm('${t.term_id}')" href="#" class="btn btn-danger">Delete</a>
+                                <a href="updateTerm?id=${t.term_id}" class="btn btn-success">Update</a> 
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+            </c:if>
+        </main>
 
-            <footer class="site-footer">
-                <div class="container">
-                    <div class="row">
+        <script type="text/javascript">
+            function doDeleteService(id) {
+                if (confirm("Are you sure to delete ID '" + id + "'?")) {
+                    window.location = "deleteService?id=" + id;
+                }
+            }
+        </script>
+        <script type="text/javascript">
+            function doDeleteTerm(id) {
+                if (confirm("Are you sure to delete ID '" + id + "'?")) {
+                    window.location = "deleteTerm?id=" + id;
+                }
+            }
+        </script>
+    
 
-                        <div class="col-lg-12 col-12">
-                            <p class="copyright-text">Copyright © Mini Finance 2048 
-                                - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                        </div>
-
-                    </div>
-                </div>
-            </footer>
         </main>
 
     </div>

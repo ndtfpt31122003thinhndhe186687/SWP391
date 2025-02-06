@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controlller;
+
+package controller_Admin;
 
 import dal.DAO;
 import dal.DAO_Admin;
@@ -13,48 +14,42 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Customer;
-import model.Customer;
-import model.Staff;
+import model.Term;
 
 /**
  *
- * @author Windows
+ * @author DELL
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
-public class LoginServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+@WebServlet(name="updateTermServlet", urlPatterns={"/updateTerm"})
+public class updateTermServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet updateTermServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet updateTermServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -62,13 +57,21 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
-    }
+    throws ServletException, IOException {
+        String id_raw = request.getParameter("id");
+        int id;
+        try {
+            id=Integer.parseInt(id_raw);
+            DAO_Admin d = new DAO_Admin();
+            Term t = d.get_Term_BY_Term_id(id);
+            request.setAttribute("term", t);
+            request.getRequestDispatcher("updateTerm.jsp").forward(request, response);
+        } catch (Exception e) {
+        }
+    } 
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -76,38 +79,26 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("pass");
-        String role = request.getParameter("role");
-        DAO dao = new DAO();
-        DAO_Admin daoadmin = new DAO_Admin();
-        if ("customer".equals(role)) {
-            Customer acc = dao.login(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
-        } else if ("staff".equals(role)) {
-            Staff acc = daoadmin.login_admin(username, password);
-            if (acc == null) {
-                request.setAttribute("mess", "Wrong username or password");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
-            }
+    throws ServletException, IOException {
+        String term_id_raw = request.getParameter("term_id");
+        String term_name = request.getParameter("term_name");
+        String duration_raw = request.getParameter("duration");
+        String term_type = request.getParameter("term_type");
+        String status = request.getParameter("status");
+        int term_id,duration;
+        DAO_Admin d = new DAO_Admin();
+        try {
+            term_id=Integer.parseInt(term_id_raw);
+            duration = Integer.parseInt(duration_raw);
+            Term t = new Term(term_id, term_name, duration, term_type, status);
+            d.UpdateTerm(t);
+            response.sendRedirect("service_management");
+        } catch (Exception e) {
         }
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override
