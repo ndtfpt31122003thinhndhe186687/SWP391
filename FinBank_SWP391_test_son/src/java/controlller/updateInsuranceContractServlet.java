@@ -98,7 +98,7 @@ public class updateInsuranceContractServlet extends HttpServlet {
             Contract_id = Integer.parseInt(contract_id);
             Service_id = Integer.parseInt(service_id);
             dao.updateInsuranceContract(Contract_id, Service_id, payment_frequency, status, start_date, end_date);
-            String url = "managerInsuranceContract?policy_id=" + i.getPolicy_id(); 
+            String url = "managerInsuranceContract?insurance_id=" + i.getInsurance_id(); 
         response.sendRedirect(url);
         } catch (Exception e) {
         }

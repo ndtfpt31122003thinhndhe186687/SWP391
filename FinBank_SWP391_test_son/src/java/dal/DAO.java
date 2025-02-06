@@ -558,6 +558,38 @@ public class DAO extends DBContext {
         }
         return list;
     }
+    public List<Insurance_contract> getAllInsuranceContractByInsuranceId(int insurance_id) {
+        List<Insurance_contract> list = new ArrayList<>();
+        String sql = "select * from insurance_contract\n" +
+"join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n" +
+"join insurance on insurance_policy.insurance_id = insurance.insurance_id\n" +
+"where insurance.insurance_id = ?";
+
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int contract_id = rs.getInt("contract_id");
+                int customer_id = rs.getInt("customer_id");
+                int service_id = rs.getInt("service_id");
+                 insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String payment_frequency = rs.getString("payment_frequency");
+                String status = rs.getString("status");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                Date created_at = rs.getDate("created_at");
+                Insurance_contract contract = new Insurance_contract(contract_id, customer_id, service_id, policy_id, insurance_id, start_date, end_date, created_at, payment_frequency, status);
+                list.add(contract);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    
     
     public Insurance_contract getInsuranceContractById(int contract_id) {
         String sql = "select * from insurance_contract\n"

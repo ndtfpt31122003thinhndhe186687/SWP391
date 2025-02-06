@@ -59,9 +59,9 @@ public class ManagerInsuranceContractServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         DAO d = new DAO();
-               String policy_id = request.getParameter("policy_id");
-       int id = Integer.parseInt(policy_id);
-        List<Insurance_contract> listC = d.getAllInsuranceContractByPolicyId(id);
+               String insurance_id = request.getParameter("insurance_id");
+       int id = Integer.parseInt(insurance_id);
+        List<Insurance_contract> listC = d.getAllInsuranceContractByInsuranceId(id);
         request.setAttribute("listC", listC);
         request.getRequestDispatcher("managerInsuranceContract.jsp").forward(request, response);
     } 

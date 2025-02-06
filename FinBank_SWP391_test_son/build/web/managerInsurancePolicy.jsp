@@ -152,7 +152,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="managerInsuranceContract?policy_id=${sessionScope.account.policy_id}">
+                        <a class="nav-link" href="managerInsuranceContract?insurance_id=${sessionScope.account.insurance_id}">
                             <i class=" me-2"></i>
                             Insurance Contact Management
                         </a>
