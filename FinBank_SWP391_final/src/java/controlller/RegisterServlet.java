@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Customer;
+import utils.Password;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
 public class RegisterServlet extends HttpServlet {
@@ -47,6 +48,8 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("error", "Please fill all fields!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
+        } else{
+            password=Password.toSHA1(password);
         }
 
         // Chuyển đổi `dobString` thành java.sql.Date

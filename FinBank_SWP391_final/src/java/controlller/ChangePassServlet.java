@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Customer;
+import utils.Password;
 
 /**
  *
@@ -68,6 +69,8 @@ public class ChangePassServlet extends HttpServlet {
         String oldPass = request.getParameter("opass");
         String newPass = request.getParameter("newpass");
         String confirmPass = request.getParameter("confirmpass");
+       oldPass=Password.toSHA1(oldPass);
+        newPass=Password.toSHA1(newPass);
 
         // Validate Input
           if (oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
