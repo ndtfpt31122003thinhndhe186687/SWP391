@@ -155,7 +155,7 @@
                     </c:if>
                     <c:if test="${sessionScope.account.role_id==2}">
                     <li class="nav-item">
-                        <a class="nav-link" href="banker_dashboard.jsp">
+                        <a class="nav-link" href="customerList">
                             <i class="bi-person me-2"></i>
                             Banker
                         </a>

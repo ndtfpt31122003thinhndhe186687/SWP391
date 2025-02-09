@@ -1,4 +1,4 @@
-package controller;
+package controlller;
 
 import dal.DAO;
 import java.io.IOException;
@@ -42,7 +42,8 @@ public class RegisterServlet extends HttpServlet {
         if (fullName == null || fullName.isEmpty() || username == null || username.isEmpty() || phone == null || phone.isEmpty()
                 || password == null || password.isEmpty() || address == null || address.isEmpty()
                 || dobString == null || dobString.isEmpty() || gender == null || gender.isEmpty()
-                || profilePicture == null || profilePicture.isEmpty()|| cardtype==null||cardtype.isEmpty()||email==null||email.isEmpty()) {
+                || profilePicture == null || profilePicture.isEmpty()|| cardtype==null||cardtype.isEmpty()||email==null||email.isEmpty()
+                ) {
             request.setAttribute("error", "Please fill all fields!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
@@ -72,8 +73,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Tạo đối tượng Customer mới
-        Customer c = new Customer(fullName, email, username, password, phone, address, cardtype, gender, profilePicture, dob);
-
+        Customer c = new Customer(fullName, email, username, password, phone, address, cardtype, email, gender, profilePicture, 0, 6, 0, 0, dob, dob);
         // Đăng ký tài khoản
         dao.register(c);
 

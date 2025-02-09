@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Customer;
-
+import utils.Password;
 /**
  *
  * @author default
@@ -63,38 +63,57 @@ public class ChangePassServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-           response.setContentType("text/html;charset=UTF-8");
-        String oldPass = request.getParameter("opass");
-        String newPass = request.getParameter("newpass");
-        String confirmPass = request.getParameter("confirmpass");
+        throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    String oldPass = request.getParameter("opass");
+    String newPass = request.getParameter("newpass");
+    String confirmPass = request.getParameter("confirmpass");
 
-        // Validate Input
-          if (oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
-              request.setAttribute("error", "Please fill all fields!");
-               response.sendRedirect("changepass");
-              return;
-        }
+    
 
-        HttpSession session = request.getSession();
-        Customer c = (Customer) session.getAttribute("account");
-        DAO dao = new DAO();
-        
-
-        if (dao.login(c.getUsername(), oldPass)==null) {
-            //Incorrect User or Old password
-             request.setAttribute("error", "Incorrect old password!");
-            request.getRequestDispatcher("changepass").forward(request, response);
-            return;
-        } else {
-             //Change the password
-             c.setPassword(newPass);
-            dao.changePassword(c.getCustomer_id(), newPass);
-             request.setAttribute("ms1", "Successfully changed password!");
-             
-             response.sendRedirect("login");
-        }
+    // Kiểm tra các trường có trống không
+    if (oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
+        request.setAttribute("error", "Please fill all fields!");
+        request.getRequestDispatcher("changepass.jsp").forward(request, response);
+        return;
     }
+
+    // Kiểm tra độ dài và định dạng mật khẩu mới
+    String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z]).{6,}$";
+    if (!newPass.matches(passwordPattern)) {
+        request.setAttribute("error", "New password must be at least 6 characters long, include at least 1 lowercase letter and 1 uppercase letter.");
+        request.getRequestDispatcher("changepass.jsp").forward(request, response);
+        return;
+    }else{
+            oldPass = Password.toSHA1(oldPass);
+    newPass = Password.toSHA1(newPass);
+    confirmPass=Password.toSHA1(confirmPass);
+    }
+
+    // Kiểm tra mật khẩu xác nhận có khớp không
+    if (!newPass.equals(confirmPass)) {
+        request.setAttribute("error", "Passwords do not match!");
+        request.getRequestDispatcher("changepass.jsp").forward(request, response);
+        return;
+    }
+
+    HttpSession session = request.getSession();
+    Customer c = (Customer) session.getAttribute("account");
+    DAO dao = new DAO();
+
+    // Kiểm tra mật khẩu cũ
+    if (dao.login(c.getUsername(), oldPass) == null) {
+        request.setAttribute("error", "Incorrect old password!");
+        request.getRequestDispatcher("changepass.jsp").forward(request, response);
+        return;
+    } else {
+        // Thay đổi mật khẩu
+        c.setPassword(newPass);
+        dao.changePassword(c.getCustomer_id(), newPass);
+        request.setAttribute("ms1", "Successfully changed password!");
+        response.sendRedirect("login");
+    }
+}
 
     /** 
      * Returns a short description of the servlet.

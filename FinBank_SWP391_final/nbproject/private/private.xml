@@ -3,30 +3,39 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/staff_managementServlet.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/customerDetails.jsp</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/updateStaffServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/staff%20management.jsp</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/CustomerListServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/RegisterServlet.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/LogoutServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/model/Staff.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/updatedebtmanagement.jsp</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/LoginServlet.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/ChangePassServlet.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/HomeServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/ResetPassServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/dal/DAO.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/ForgotPassServlet.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/updateStaff.jsp</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/customerList.jsp</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/updateTerm.jsp</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/CustomerDetailsServlet.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/dal/DBContext.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/statistic%20management.jsp</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/changepass.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/updaterequest.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/requestcustomer.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/login.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/staff_managementServlet.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/banker_dashboard.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/staff%20management.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/CustomerListServlet.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/RegisterServlet.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/model/Staff.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/changeInfor.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/CustomerRequestServlet.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/updatedebtmanagement.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/ResetPassServlet.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/ForgotPassServlet.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/customerList.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/updateTerm.jsp</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/listdebt.jsp</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/model/Debt_management.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/UpdateDebtServlet.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/web/css/styles.css</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/utils/Password.java</file>
+            <file>file:/C:/Users/AD/OneDrive/Desktop/FinBank_SWP391_final/src/java/controlller/ListDebtServlet.java</file>
         </group>
     </open-files>
 </project-private>
