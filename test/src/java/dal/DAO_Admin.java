@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import model.Customer;
+import model.ServiceTerms;
 import model.Services;
 import model.Staff;
 import model.Term;
@@ -118,11 +118,11 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public void insertBanker(Staff s){
+
+    public void insertBanker(Staff s) {
         String sql = "insert into staff (full_name, email,username,password,phone_number,gender,date_of_birth,address,role_id,status) "
                 + "values (?,?,?,?,?,?,?,?,?,?)";
-        
+
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, s.getFull_name());
@@ -171,14 +171,14 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public Staff get_Staff_By_StaffId(int id){
-        String sql="select * from staff where staff_id=?";
+
+    public Staff get_Staff_By_StaffId(int id) {
+        String sql = "select * from staff where staff_id=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Staff s = new Staff();
                 s.setStaff_id(rs.getInt(1));
                 s.setFull_name(rs.getString(2));
@@ -198,14 +198,14 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
-    public Staff get_Staff_By_Username(String username){
-        String sql="select * from staff where username=?";
-        try{
-            PreparedStatement pre=con.prepareStatement(sql);
+
+    public Staff get_Staff_By_Username(String username) {
+        String sql = "select * from staff where username=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, username);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Staff s = new Staff();
                 s.setStaff_id(rs.getInt(1));
                 s.setFull_name(rs.getString(2));
@@ -220,19 +220,19 @@ public class DAO_Admin extends DBContext {
                 s.setStatus(rs.getString(12));
                 return s;
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
         return null;
     }
-    
-    public List<Services> getAllServices(){
+
+    public List<Services> getAllServices() {
         List<Services> list = new ArrayList<>();
-        String sql="select * from services ";
+        String sql = "select * from services ";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Services s = new Services();
                 s.setService_id(rs.getInt(1));
                 s.setService_name(rs.getString(2));
@@ -246,14 +246,14 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    
-    public List<Term> getAllTerm(){
+
+    public List<Term> getAllTerm() {
         List<Term> list = new ArrayList<>();
-        String sql="select * from term";
+        String sql = "select * from term";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Term t = new Term();
                 t.setTerm_id(rs.getInt(1));
                 t.setTerm_name(rs.getString(2));
@@ -266,14 +266,14 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    
-    public List<Transaction> getAllTransaction(){
+
+    public List<Transaction> getAllTransaction() {
         List<Transaction> list = new ArrayList<>();
-        String sql="select * from transactions";
+        String sql = "select * from transactions";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Transaction t = new Transaction();
                 t.setTransaction_id(rs.getInt(1));
                 t.setCustomer_id(rs.getInt(2));
@@ -288,9 +288,9 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-     
-    public void InsertService(Services s){
-        String sql="insert into services values(?,?,?,?)";
+
+    public void InsertService(Services s) {
+        String sql = "insert into services values(?,?,?,?)";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, s.getService_name());
@@ -302,8 +302,8 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public void UpdateService(Services s){
+
+    public void UpdateService(Services s) {
         String sql = "update services set service_name=?,"
                 + "description=?,"
                 + "service_type=?,"
@@ -321,51 +321,51 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public Services get_Service_BY_Service_id(int service_id){
+
+    public Services get_Service_BY_Service_id(int service_id) {
         String sql = "select * from services where service_id=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, service_id);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Services s = new Services();
                 s.setService_id(rs.getInt(1));
                 s.setService_name(rs.getString(2));
                 s.setDescription(rs.getString(3));
                 s.setService_type(rs.getString(4));
                 s.setStatus(rs.getString(5));
-                return s ;
+                return s;
             }
         } catch (SQLException e) {
             System.out.println(e);
         }
         return null;
     }
-    
-    public Services get_Service_BY_Service_name(String service_name){
+
+    public Services get_Service_BY_Service_name(String service_name) {
         String sql = "select * from services where service_name=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, service_name);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Services s = new Services();
                 s.setService_id(rs.getInt(1));
                 s.setService_name(rs.getString(2));
                 s.setDescription(rs.getString(3));
                 s.setService_type(rs.getString(4));
                 s.setStatus(rs.getString(5));
-                return s ;
+                return s;
             }
         } catch (SQLException e) {
             System.out.println(e);
         }
         return null;
     }
-    
-    public void InsertTerm (Term t) {
-        String sql="insert into term values(?,?,?,?)";
+
+    public void InsertTerm(Term t) {
+        String sql = "insert into term values(?,?,?,?)";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, t.getTerm_name());
@@ -377,9 +377,9 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public void UpdateTerm (Term t){
-        String sql ="update term set term_name=?, "
+
+    public void UpdateTerm(Term t) {
+        String sql = "update term set term_name=?, "
                 + "duration=?, "
                 + "term_type=?, "
                 + "status=? "
@@ -396,14 +396,14 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public Term get_Term_BY_Term_id(int term_id){
-        String sql="select * from term where term_id=?";
+
+    public Term get_Term_BY_Term_id(int term_id) {
+        String sql = "select * from term where term_id=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, term_id);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Term t = new Term();
                 t.setTerm_id(rs.getInt(1));
                 t.setTerm_name(rs.getString(2));
@@ -417,14 +417,14 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
-    public Term get_Term_BY_Term_name(String term_name){
-        String sql="select * from term where term_name=?";
+
+    public Term get_Term_BY_Term_name(String term_name) {
+        String sql = "select * from term where term_name=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, term_name);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Term t = new Term();
                 t.setTerm_id(rs.getInt(1));
                 t.setTerm_name(rs.getString(2));
@@ -438,7 +438,7 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
+
     // Statistical functions for admin dashboard
     public int get_Total_Customers() {
         String sql = "SELECT COUNT(*) as total FROM customer";
@@ -583,12 +583,144 @@ public class DAO_Admin extends DBContext {
         return 0;
     }
 
+    //get list service_term
+    public List<ServiceTerms> getAllServiceTerms() {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
+                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
+                + "from service_terms st join services s on st.service_id=s.service_id";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setService_name(rs.getString("service_name"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setMax_term_months(rs.getInt("max_term_months"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getDate("created_at"));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
 
+    //add new service_term
+    public void addServiceTerm(ServiceTerms s) {
+        String sql = "INSERT INTO service_terms (service_id, term_name, description, contract_terms, max_term_months, early_payment_penalty, interest_rate, min_payment, min_deposit)"
+                + "values (?,?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, s.getService_id());
+            pre.setString(2, s.getTerm_name());
+            pre.setString(3, s.getDescription());
+            pre.setString(4, s.getContract_terms());
+            pre.setInt(5, s.getMax_term_months());
+            pre.setDouble(6, s.getEarly_payment_penalty());
+            pre.setDouble(7, s.getInterest_rate());
+            pre.setDouble(8, s.getMin_payment());
+            pre.setDouble(9, s.getMin_deposit());
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    //delete service_term
+    public void deleteServiceTerm(int term_id) {
+        String sql = "delete from service_terms where term_id=? and status not in ('active')";
+
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, term_id);
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    //get service term by term_id
+    public ServiceTerms getServiceTermByTermId(int term_id) {
+        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
+                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
+                + "from service_terms st join services s on st.service_id=s.service_id where term_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, term_id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setMax_term_months(rs.getInt("max_term_months"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getDate("created_at"));
+                return s;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public void updateServiceTerm(ServiceTerms s) {
+        String sql = "UPDATE service_terms \n"
+                + "SET \n"
+                + "    term_name = ?, \n"
+                + "    description = ?, \n"
+                + "    contract_terms = ?, \n"
+                + "    max_term_months = ?, \n"
+                + "    early_payment_penalty = ?, \n"
+                + "    interest_rate = ?, \n"
+                + "    min_payment = ?, \n"
+                + "    min_deposit = ?,\n"
+                + "    [status] = ?\n"
+                + "WHERE term_id = ?;";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, s.getTerm_name());
+            pre.setString(2, s.getDescription());
+            pre.setString(3, s.getContract_terms());
+            pre.setInt(4, s.getMax_term_months());
+            pre.setDouble(5, s.getEarly_payment_penalty());
+            pre.setDouble(6, s.getInterest_rate());
+            pre.setDouble(7, s.getMin_payment());
+            pre.setDouble(8, s.getMin_deposit());
+            pre.setString(9, s.getStatus());
+            pre.setInt(10, s.getTerm_id());
+            pre.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    //
     // Main method for testing
     public static void main(String[] args) {
         DAO_Admin d = new DAO_Admin();
 //        String date ="2000-12-31";
 //        Date sqlDate = java.sql.Date.valueOf(date);
+        ServiceTerms s = new ServiceTerms(9, 12, "bbb", "aaa", "ccc", "inactive", 0, 0, 0, 0);
+        d.updateServiceTerm(s);
         
+
     }
 }

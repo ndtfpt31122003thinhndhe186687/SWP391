@@ -23,9 +23,53 @@
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 
+
+        <style>
+            .news-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .news-table th, .news-table td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+            }
+            .news-table th {
+                background-color: #d32f2f;
+                color: white;
+            }
+            .news-content {
+                max-width: 300px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .table-container {
+                width: 100%;
+                overflow-x: auto;
+            }
+            .news-table {
+                width: max-content;
+                min-width: 100%;
+            }
+            body {
+                background-color: #ececec;
+                min-width: 100vw;
+                overflow-x: auto;
+            }
+            .test{
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+
+        </style>
+
+
     </head>
     <body>
-        <header class="navbar sticky-top flex-md-nowrap bg-danger">
+        <header class="navbar sticky-top flex-md-nowrap bg-danger test">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="">
                     <i class="bi-box"></i>
@@ -105,12 +149,12 @@
 
                             <div class="d-flex flex-column">
                                 <c:if test="${sessionScope.account.role_id==6}">
-                                <small>${sessionScope.account.customer_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.customer_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if>
                                 <c:if test="${sessionScope.account.role_id==1}">
-                                <small>${sessionScope.account.staff_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.staff_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if> 
                             </div>
                         </div>
@@ -146,7 +190,7 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="staff_management">
+                        <a class="nav-link" aria-current="page" href="staff_management">
                             <i class="me-2"></i>
                             Staff Management
                         </a>
@@ -158,9 +202,9 @@
                             Service Management
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link active" href="transaction_management">
+                        <a class="nav-link" href="transaction_management">
                             <i class=" me-2"></i>
                             Transaction Management
                         </a>
@@ -172,54 +216,74 @@
                             Statistic Management
                         </a>
                     </li>
-                    
-                      
+
                     <li class="nav-item">
-                        <a class="nav-link " href="serviceTermManagement">
+                        <a class="nav-link active " href="serviceManagement">
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
                     </li>
-                    
+
                 </ul>
             </div>
         </nav>
 
-        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start" style="margin-top: 50px">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Transaction Management</h1>
+                <h1 class="h2 mb-0 text-danger">Service term Management</h1>
             </div>
-            
-            <!-- View list transaction -->
+
             <div class="mt-3">
-                <table class="table table-bordered">
+                <a class="btn btn-success mb-2" href="addServiceTerm">Add New</a>
+                <table class="news-table">
                     <thead>
                         <tr>
-                            <th>Transaction id</th>
-                            <th>Customer id</th>
-                            <th>Service id</th>
-                            <th>Amount</th>
-                            <th>Transaction date</th>
-                            <th>Transaction type</th>
+                            <th>Service name</th>
+                            <th>Service term name</th>
+                            <th>Description</th>
+                            <th>Contract terms</th>
+                            <th>Max term months</th>
+                            <th>Early payment penalty</th>
+                            <th>Interest rate</th>
+                            <th>Min Payment</th>
+                            <th>Min Deposit</th>                           
+                            <th>Created at</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <c:forEach items="${requestScope.data}" var="b">
-                        <tr>
-                            <td>${b.transaction_id}</td>
-                            <td>${b.customer_id}</td>
-                            <td>${b.service_id}</td>
-                            <td>${b.amount} $</td>
-                            <td>${b.transaction_date}</td>
-                            <td>${b.transaction_type}</td>                          
-                        </tr>
-                    </c:forEach>
+                    <tbody>
+                        <c:forEach items="${requestScope.listSt}" var="s">
+                            <tr>
+                                <td>${s.service_name}</td>
+                                <td>${s.term_name}</td>
+                                <td>${s.description}</td>
+                                <td class="news-content">${s.contract_terms}</td>
+                                <td>${s.max_term_months}</td>
+                                <td>${s.early_payment_penalty}</td>
+                                <td>${s.interest_rate}</td>
+                                <td>${s.min_payment}</td>
+                                <td>${s.min_deposit}</td>
+                                <td>${s.created_at}</td>
+                                <td>${s.status}</td>
+                                <td>
+                                    <a onclick="doDelete('${s.term_id}')" class="btn btn-danger">Delete</a>
+                                    <a href="updateServiceTerm?term_id=${s.term_id}" class="btn btn-success">Update</a> 
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
                 </table>
+                <script type="text/javascript">
+                    function doDelete(id) {
+                        if (confirm("Are you sure to delete this term ?" )) {
+                            window.location = "deleteServiceTerm?term_id=" + id;
+                        }
+                    }
+                </script>
+
             </div>
         </main>
-
-        
-
-                       
         </main>
 
     </div>

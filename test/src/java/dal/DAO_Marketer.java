@@ -222,16 +222,18 @@ public class DAO_Marketer extends DBContext {
     }
     
     //search news by title
-    public List<News> getSearchNewsByTitle(String title){
+    public List<News> getSearchNewsByTitle(String title,int staff_id){
         List<News> list = new ArrayList<>();
-        String sql = "select* from news where title like ? ";
+        String sql = "select* from news where title like ? and staff_id=?";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, "%" + title + "%");
+            st.setInt(2, staff_id);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 News n = new News();
                 n.setNews_id(rs.getInt("news_id"));
+                n.setStaff_id(rs.getInt("staff_id"));
                 n.setTitle(rs.getString("title"));
                 n.setContent(rs.getString("content"));
                 n.setCreated_at(rs.getDate("created_at"));

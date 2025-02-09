@@ -139,6 +139,14 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
+                    <c:if test="${sessionScope.account.role_id==1}">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="staff_management">
+                            <i class="bi-house-fill me-2"></i>
+                            Management
+                        </a>
+                    </li>
+                    </c:if>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="index.html">
                             <i class="bi-house-fill me-2"></i>
