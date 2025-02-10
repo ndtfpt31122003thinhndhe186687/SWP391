@@ -83,7 +83,7 @@ public class DAO extends DBContext {
 
     // Check if a phone number already exists
     public boolean existedPhoneNum(String phoneNum) {
-        String sql = "SELECT [user_id] FROM [dbo].[customer] WHERE phone_number = ?";
+        String sql = "SELECT [customer_id] FROM [dbo].[customer] WHERE phone_number = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, phoneNum);
             try (ResultSet rs = ps.executeQuery()) {
@@ -97,7 +97,7 @@ public class DAO extends DBContext {
     
     // Check if a emali already exists
     public boolean existedEmail(String email) {
-        String sql = "SELECT [user_id] FROM [dbo].[customer] WHERE email = ?";
+        String sql = "SELECT [customer_id] FROM [dbo].[customer] WHERE email = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
@@ -178,8 +178,8 @@ public class DAO extends DBContext {
     // Main method for testing
     public static void main(String[] args) {
         DAO d = new DAO();
-//        String date ="2000-12-31";
-//        Date sqlDate = java.sql.Date.valueOf(date);
+        boolean b=d.existedEmail("b@example.com");
+        System.out.println(b);
 
     }
 }

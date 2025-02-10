@@ -23,6 +23,37 @@
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 
+        <style>
+            .filter-sort-bar {
+                margin-bottom: 20px;
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
+            .filter-sort-bar label {
+                font-weight: bold;
+                color: #333;
+            }
+            .filter-dropdown {
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                font-size: 14px;
+            }
+            .filter-dropdown:focus {
+                border-color: #d32f2f;
+                outline: none;
+            }
+            .filter-dropdown:hover {
+                background-color: #f0f0f0;
+            }
+            .filter-dropdown option:hover {
+                background-color: #d32f2f;
+                color: white;
+            }
+        </style>
+
     </head>
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
@@ -181,79 +212,164 @@
             <div class="title-group mb-3">
                 <h1 class="h2 mb-0 text-danger"> Service Management</h1>
             </div>
-            
+
             <!-- Tabs choose  -->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == null || param.type == 'services' ? 'active' : ''}" href="service_management?type=services">Services</a>
+                    <a class="nav-link ${requestScope.service != null ? 'active' : ''}" href="service_management?type=services">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == 'term' ? 'active' : ''}" href="service_management?type=term">Term</a>
+                    <a class="nav-link ${requestScope.term != null ? 'active' : ''}" href="service_management?type=term">Term</a>
                 </li>              
             </ul>
-            
+            <c:if test="${requestScope.service!=null}">    
+                <div class="filter-sort-bar">
+                    <label for="filterStatus">Filter by Status:</label>
+                    <select id="filterStatus" class="filter-dropdown" onchange="filterService()">
+                        <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
+                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
+                        <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Inactive</option>                  
+                    </select>
+
+                    <label for="sortService">Sort by:</label>
+                    <select id="sortService" class="filter-dropdown">
+                        <option value="service_name" ${requestScope.sort == 'service_name' ? 'selected' : ''}>Name</option>
+                        <option value="service_type" ${requestScope.sort == 'service_type' ? 'selected' : ''}>Type</option>                   
+                    </select>
+                </div>       
+            </c:if>  
+
+            <c:if test="${requestScope.term!=null}">    
+                <div class="filter-sort-bar">
+                    <label for="filterStatus">Filter by Status:</label>
+                    <select id="filterStatus" class="filter-dropdown" onchange="filterTerm()">
+                        <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
+                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
+                        <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Inactive</option>                  
+                    </select>
+
+                    <label for="sortTerm">Sort by:</label>
+                    <select id="sortTerm" class="filter-dropdown">
+                        <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Name</option>
+                        <option value="duration" ${requestScope.sort == 'duration' ? 'selected' : ''}>Duration</option>                   
+                    </select>
+                </div>       
+            </c:if>      
+
             <!-- View list service -->
             <c:if test="${requestScope.service!=null}">
-            <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addService.jsp">Add New</a>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <c:forEach items="${requestScope.service}" var="s">
-                        <tr>
-                            <td>${s.service_id}</td>
-                            <td>${s.service_name}</td>
-                            <td>${s.description}</td>
-                            <td>${s.service_type}</td>
-                            <td>${s.status}</td>                    
-                            <td>
-                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger">Delete</a>
-                                <a href="updateService?id=${s.service_id}" class="btn btn-success">Update</a> 
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
-            </div>
+                <div class="mt-3">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <form action="searchService" class="d-flex">
+                                <input type="hidden" name="type" value="services">
+                                <input type="text" class="form-control me-2" placeholder="Search by service name" name="searchName" value="${searchName}">
+                                <button type="submit" class="btn btn-danger">Search</button>
+                            </form>
+                        </div>                       
+                        <div class="col-md-2">
+                            <a class="btn btn-success w-100" href="addService.jsp">Add New</a>
+                        </div>
+                    </div>
+                    <div class="mb-3 text-end">
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:choose>
+                                <c:when test="${not empty ListByName}">
+                                    <c:forEach items="${ListByName}" var="s">
+                                        <tr>
+                                            <td>${s.service_id}</td>
+                                            <td>${s.service_name}</td>
+                                            <td>${s.description}</td>
+                                            <td>${s.service_type}</td>
+                                            <td><span class="badge ${s.status == 'active' ? 'bg-success' : 'bg-danger'}">${s.status}</span></td>
+                                            <td>
+                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">Delete</a>
+                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">Update</a> 
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach items="${service}" var="s">
+                                        <tr>
+                                            <td>${s.service_id}</td>
+                                            <td>${s.service_name}</td>
+                                            <td>${s.description}</td>
+                                            <td>${s.service_type}</td>
+                                            <td><span class="badge ${s.status == 'active' ? 'bg-success' : 'bg-danger'}">${s.status}</span></td>
+                                            <td>
+                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">Delete</a>
+                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">Update</a> 
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${empty ListByName and empty service}">
+                                <tr>
+                                    <td colspan="6" class="text-center">No services found.</td>
+                                </tr>
+                            </c:if>
+                        </tbody>
+                    </table>
+                </div>
             </c:if>
-            
+
             <!-- View list term -->
             <c:if test="${requestScope.term!=null}">
-            <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addTerm.jsp">Add New</a>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Duration</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <c:forEach items="${requestScope.term}" var="t">
-                        <tr>
-                            <td>${t.term_id}</td>
-                            <td>${t.term_name}</td>
-                            <td>${t.duration}</td>
-                            <td>${t.term_type}</td>    
-                             <td>${t.status}</td>  
-                            <td>
-                                <a onclick="doDeleteTerm('${t.term_id}')" href="#" class="btn btn-danger">Delete</a>
-                                <a href="updateTerm?id=${t.term_id}" class="btn btn-success">Update</a> 
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
-            </div>
+                <div class="mt-3">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <form action="searchTerm" class="d-flex">
+                                <input type="hidden" name="type" value="term">
+                                <input type="text" class="form-control me-2" placeholder="Search by term name" name="searchName" value="${searchName}">
+                                <button type="submit" class="btn btn-danger">Search</button>
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn btn-success w-100" href="addTerm.jsp"">Add New</a>
+                        </div>
+                    </div>
+                    <div class="mb-3 text-end">
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Duration</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <c:forEach items="${requestScope.term}" var="t">
+                            <tr>
+                                <td>${t.term_id}</td>
+                                <td>${t.term_name}</td>
+                                <td>${t.duration}</td>
+                                <td>${t.term_type}</td>    
+                                <td><span class="badge ${t.status == 'active' ? 'bg-success' : 'bg-danger'}">${t.status}</span></td>  
+                                <td>
+                                    <a onclick="doDeleteTerm('${t.term_id}')" href="#" class="btn btn-danger">Delete</a>
+                                    <a href="updateTerm?id=${t.term_id}" class="btn btn-success">Update</a> 
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </div>
             </c:if>
         </main>
 
@@ -263,15 +379,48 @@
                     window.location = "deleteService?id=" + id;
                 }
             }
-        </script>
-        <script type="text/javascript">
             function doDeleteTerm(id) {
                 if (confirm("Are you sure to delete ID '" + id + "'?")) {
                     window.location = "deleteTerm?id=" + id;
                 }
             }
+            function filterService() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortService").value;
+                var type = '${param.type}';
+                window.location.href = "ServiceFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+            }
+
+            function sortService() {
+                var sort = document.getElementById("sortService").value;
+                var status = document.getElementById("filterStatus").value;
+                var type = '${param.type}';
+                window.location.href = "ServiceFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+            }
+
+            document.getElementById("sortService").onchange = sortService;
+
+
         </script>
-    
+
+        <script>
+            function filterTerm() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortTerm").value;
+                var type = '${param.type}';
+                window.location.href = "TermFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+            }
+
+            function sortTerm() {
+                var sort = document.getElementById("sortTerm").value;
+                var status = document.getElementById("filterStatus").value;
+                var type = '${param.type}';
+                window.location.href = "TermFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+            }
+
+            document.getElementById("sortTerm").onchange = sortTerm;
+        </script>
+
 
         </main>
 

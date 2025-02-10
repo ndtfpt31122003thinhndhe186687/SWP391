@@ -5,7 +5,6 @@
 
 package controller_Admin;
 
-import dal.DAO;
 import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,14 +13,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Services;
+import java.util.List;
+import model.Term;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="updateServiceServlet", urlPatterns={"/updateService"})
-public class updateServiceServlet extends HttpServlet {
+@WebServlet(name="TermFilterServlet", urlPatterns={"/TermFilter"})
+public class TermFilterServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +38,10 @@ public class updateServiceServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateServiceServlet</title>");  
+            out.println("<title>Servlet TermFilterServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateServiceServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet TermFilterServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,14 +58,23 @@ public class updateServiceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String id_raw = request.getParameter("id");
-        int id;
+        String status = request.getParameter("status");
+        String sortBy = request.getParameter("sort");
+        List<Term> list;
+        status = (status==null) ?"all": status;
+        sortBy = (sortBy==null) ?"term_name": sortBy;
         try {
-            id=Integer.parseInt(id_raw);
-            DAO_Admin d = new DAO_Admin();
-            Services s = d.get_Service_BY_Service_id(id);
-            request.setAttribute("service", s);
-            request.getRequestDispatcher("updateService.jsp").forward(request, response);
+            DAO_Admin d =new DAO_Admin();
+            if(status.equals("all")){
+                list = d.get_All_Term_Sorted(sortBy);
+            }else{
+                list = d.get_All_Term_By_Status_Sorted(sortBy, status);
+            }
+            request.setAttribute("term", list);
+            request.setAttribute("sort", sortBy);
+            request.setAttribute("status", status);
+            
+            request.getRequestDispatcher("service management.jsp").forward(request, response);
         } catch (Exception e) {
         }
     } 
@@ -80,28 +89,7 @@ public class updateServiceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String service_id_raw = request.getParameter("service_id");
-        String service_name = request.getParameter("service_name");
-        String description = request.getParameter("description");
-        String service_type = request.getParameter("service_type");
-        String status = request.getParameter("status");
-        DAO_Admin d = new DAO_Admin();
-        int service_id;
-        try {
-            service_id = Integer.parseInt(service_id_raw);
-            Services services = d.get_Service_BY_Service_id(service_id);
-            Services test = d.get_Service_BY_Service_name(service_name);
-            if(test != null){
-                request.setAttribute("error", "service name "+ service_name + " existed!!");
-                request.setAttribute("service",services);
-                request.getRequestDispatcher("updateService.jsp").forward(request, response);
-            }else{
-            Services s = new Services(service_id, service_name, description, service_type, status);
-            d.UpdateService(s);
-            response.sendRedirect("service_management");
-            }
-        } catch (Exception e) {
-        }
+        processRequest(request, response);
     }
 
     /** 

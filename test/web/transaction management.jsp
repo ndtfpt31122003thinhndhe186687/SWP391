@@ -188,8 +188,8 @@
                     <thead>
                         <tr>
                             <th>Transaction id</th>
-                            <th>Customer id</th>
-                            <th>Service id</th>
+                            <th>Customer name</th>
+                            <th>Service name</th>
                             <th>Amount</th>
                             <th>Transaction date</th>
                             <th>Transaction type</th>
@@ -198,8 +198,8 @@
                     <c:forEach items="${requestScope.data}" var="b">
                         <tr>
                             <td>${b.transaction_id}</td>
-                            <td>${b.customer_id}</td>
-                            <td>${b.service_id}</td>
+                            <td>${b.customer_name}</td>
+                            <td>${b.service_name}</td>
                             <td>${b.amount} $</td>
                             <td>${b.transaction_date}</td>
                             <td>${b.transaction_type}</td>                          

@@ -5,23 +5,22 @@
 
 package controller_Admin;
 
-import dal.DAO;
 import dal.DAO_Admin;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Services;
+import java.util.List;
+import model.Staff;
 
 /**
  *
  * @author DELL
  */
-@WebServlet(name="addServiceServlet", urlPatterns={"/addService"})
-public class addServiceServlet extends HttpServlet {
+@WebServlet(name="searchStaffServlet", urlPatterns={"/searchStaff"})
+public class SearchStaffServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,19 +31,7 @@ public class addServiceServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet addServiceServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet addServiceServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+       
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -58,20 +45,32 @@ public class addServiceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String service_name = request.getParameter("service_name");
-        String description = request.getParameter("description");
-        String service_type = request.getParameter("service_type");
-        String status = request.getParameter("status");
-        DAO_Admin d = new DAO_Admin();
-        Services test = d.get_Service_BY_Service_name(service_name);
-        if(test!=null){
-            request.setAttribute("error","service name "+ service_name+" existed!!");
-            request.getRequestDispatcher("addService.jsp").forward(request, response);
-        }else {
-            Services s = new Services(service_name, description, service_type, status);
-            d.InsertService(s);
-            response.sendRedirect("service_management");
+        String search = request.getParameter("searchName");
+        String type = request.getParameter("type");
+        
+        // Determine role_id based on staff type
+        int role_id;
+        switch(type != null ? type : "bankers") {
+            case "marketers":
+                role_id = 3;
+                break;
+            case "accountants":
+                role_id = 4;
+                break;
+            default: // bankers
+                role_id = 2;
+                break;
         }
+        
+        DAO_Admin d = new DAO_Admin();
+        List<Staff> ListByName = d.searchStaffByFullName(search, role_id);
+        List<Staff> ListByPhone = d.searchStaffByPhone(search, role_id);
+        
+        request.setAttribute("ListByName", ListByName);
+        request.setAttribute("ListByPhone", ListByPhone);
+        request.setAttribute("type", type); // Keep the current type for tab highlighting
+        
+        request.getRequestDispatcher("staff management.jsp").forward(request, response);
     } 
 
     /** 
@@ -84,7 +83,7 @@ public class addServiceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
 
     /** 
