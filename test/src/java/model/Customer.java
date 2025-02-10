@@ -4,6 +4,7 @@
  */
 package model;
 
+import dal.DAO_Insurance;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
 public class Customer {
 
     public String full_name, email, username, password, phone_number, address, card_type, status, gender, profile_picture;
-    int customer_id, role_id;
+    int customer_id, role_id,insurance_id;
     double amount, credit_limit;
     Date date_of_birth, created_at;
 
@@ -55,6 +56,45 @@ public class Customer {
         this.credit_limit = credit_limit;
         this.date_of_birth = date_of_birth;
         this.created_at = created_at;
+    }
+    
+    public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.card_type = card_type;
+        this.status = status;
+        this.gender = gender;
+        this.profile_picture = profile_picture;
+        this.customer_id = customer_id;
+        this.amount = amount;
+        this.credit_limit = credit_limit;
+        this.date_of_birth = date_of_birth;
+        this.created_at = created_at;
+    }
+
+    public Customer(String full_name, String email, String username, String phone_number, String address, String gender, int customer_id, int insurance_id) {
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.gender = gender;
+        this.customer_id = customer_id;
+        this.insurance_id = insurance_id;
+    }
+    
+    
+
+    public int getInsurance_id() {
+        return insurance_id;
+    }
+
+    public void setInsurance_id(int insurance_id) {
+        this.insurance_id = insurance_id;
     }
 
     public Date getCreated_at() {

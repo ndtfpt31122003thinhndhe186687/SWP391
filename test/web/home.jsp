@@ -85,6 +85,7 @@
             <!-- Login/logout -->
             <div class="login">
                 <c:if test="${sessionScope.account != null}">
+                <c:if test="${sessionScope.account.role_id !=5}">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Hello ${sessionScope.account.full_name}
@@ -98,6 +99,16 @@
                         </ul>
                     </li>
                 </c:if>
+                
+                <c:if test="${sessionScope.account.role_id == 5}">
+                    <li class="">
+                    <a class="" href="changeInfor">Hello ${sessionScope.account.insurance_name}</a>
+                        
+                    </li>
+                    <li><a href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">Manage insurance policy</a></li>
+                     <li><a class="dropdown-item" href="logout">Logout</a></li>
+                </c:if>
+                </c:if>    
                 <c:if test="${sessionScope.account == null}">
                     <li class="nav-item">
                         <a class="nav-link" href="login">Login</a>

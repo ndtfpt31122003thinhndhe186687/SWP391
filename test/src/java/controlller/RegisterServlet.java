@@ -1,4 +1,4 @@
-package controller;
+package controlller;
 
 import dal.DAO;
 import java.io.IOException;
@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Customer;
+import utils.Password;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
 public class RegisterServlet extends HttpServlet {
@@ -33,7 +36,7 @@ public class RegisterServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String password = request.getParameter("pass");
         String address = request.getParameter("address");
-        String cardtype = request.getParameter("card_type");        
+        String cardtype = request.getParameter("card_type");
         String dobString = request.getParameter("dob");
         String gender = request.getParameter("gender");
         String profilePicture = request.getParameter("profilePicture");
@@ -42,10 +45,19 @@ public class RegisterServlet extends HttpServlet {
         if (fullName == null || fullName.isEmpty() || username == null || username.isEmpty() || phone == null || phone.isEmpty()
                 || password == null || password.isEmpty() || address == null || address.isEmpty()
                 || dobString == null || dobString.isEmpty() || gender == null || gender.isEmpty()
-                || profilePicture == null || profilePicture.isEmpty()|| cardtype==null||cardtype.isEmpty()||email==null||email.isEmpty()) {
+                || profilePicture == null || profilePicture.isEmpty() || cardtype == null || cardtype.isEmpty() || email == null || email.isEmpty()) {
             request.setAttribute("error", "Please fill all fields!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
+        }
+
+        // Validate password
+        if (!isValidPassword(password)) {
+            request.setAttribute("error", "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one special character.");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        } else {
+            password = Password.toSHA1(password);
         }
 
         // Chuyển đổi `dobString` thành java.sql.Date
@@ -72,8 +84,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Tạo đối tượng Customer mới
-        Customer c = new Customer(fullName, email, username, password, phone, address, cardtype, gender, profilePicture, dob);
-
+        Customer c = new Customer(fullName, email, username, password, phone, address, cardtype, email, gender, profilePicture, 0, 6, 0, 0, dob, dob);
         // Đăng ký tài khoản
         dao.register(c);
 
@@ -85,5 +96,20 @@ public class RegisterServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Servlet for user registration";
+    }
+
+
+    public static boolean isValidPassword(String password) {
+        // Biểu thức chính quy để kiểm tra mật khẩu
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+{}\\[\\]:;<>,.?~\\-]).{8,}$";
+
+        // Tạo một đối tượng Pattern
+        Pattern pattern = Pattern.compile(passwordRegex);
+
+        // Tạo một đối tượng Matcher
+        Matcher matcher = pattern.matcher(password);
+
+        // Kiểm tra xem mật khẩu có khớp với biểu thức chính quy không
+        return matcher.matches();
     }
 }

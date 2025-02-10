@@ -117,13 +117,39 @@
                 text-decoration: none;
                 color: red;
             }
+.file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
 
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .file-input-wrapper .btn-file-input {
+            background-color: #020817;
+            border: 1px solid #58b5e8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #file-chosen {
+            margin-left: 10px;
+            color: white;
+        }
         </style>
     </head>
     <body>
         <div class="form">
             <h2>Register</h2>
-            <p style="color: red">${requestScope.error}</p>
+            <p style="color: red">${requestScope.error}</p> <!-- Display error message in red -->
             <form action="register" method="post">
                 <div class="form-row">
                     <div class="form-group">
@@ -177,15 +203,18 @@
                 <div class="form-group">
                     <label>Gender</label>
                     <select class="form-attribute" name="gender" required>
-                        <option value="MALE">Male</option>
-                        <option value="FEMALE">Female</option>
-                        <option value="OTHER">Other</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>                      
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Profile Picture</label>
-                    <input class="form-attribute" type="text" name="profilePicture" placeholder="Profile Picture URL" required>
+                <label>Profile Picture</label>
+                <div class="file-input-wrapper">
+                    <button type="button" class="btn-file-input">Choose File</button>
+                    <input type="file" name="profilePicture" id="actual-btn" accept="image/*" required/>
                 </div>
+                <span id="file-chosen">No file chosen</span>
+            </div>
                 <div class="form-group">
                     <label>Card Type</label>
                     <select class="form-attribute" name="card_type" required>
@@ -201,5 +230,14 @@
                 </p>
             </form>
         </div>
+            <script>
+        const actualBtn = document.getElementById('actual-btn');
+        const fileChosen = document.getElementById('file-chosen');
+
+        actualBtn.addEventListener('change', function(){
+            fileChosen.textContent = this.files[0] ? this.files[0].name : 'No file chosen';
+        });
+    </script>
+
     </body>
 </html>

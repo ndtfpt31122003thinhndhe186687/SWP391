@@ -9,7 +9,7 @@ import java.util.Date;
  * @author default
  */
 public class Transaction {
-    public int transaction_id;
+    public int transaction_id,customer_id,service_id;
     public String customer_name,service_name;
     public double amount;
     public Date transaction_date;
@@ -26,6 +26,23 @@ public class Transaction {
         this.transaction_date = transaction_date;
         this.transaction_type = transaction_type;
     }
+
+    public int getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(int customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public int getService_id() {
+        return service_id;
+    }
+
+    public void setService_id(int service_id) {
+        this.service_id = service_id;
+    }
+    
 
     public int getTransaction_id() {
         return transaction_id;

@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import model.Customer;
-import model.Services;
+import model.News;
+import model.NewsView;
 import model.Staff;
-import model.Term;
-import model.Transaction;
 
 public class DAO extends DBContext {
 
@@ -51,17 +50,8 @@ public class DAO extends DBContext {
     // Register a new customer
     public void register(Customer c) {
         String sql = "INSERT INTO [dbo].[customer] "
-                + "([full_name],"
-                + "[username],"
-                + "[email] ,"
-                + " [phone_number],"
-                + " [password],"
-                + " [address],"
-                + "[card_type],"
-                + " [gender],"
-                + " [date_of_birth],"
-                + " [profile_picture]) "
-                + "VALUES (?,?, ?, ?, ?, ?,?, ?, ?, ?)";
+                + "([full_name],[username],[email] , [phone_number], [password], [address],[card_type], [gender], [date_of_birth],[role_id], [profile_picture]) "
+                + "VALUES (?,?, ?, ?, ?, ?,?, ?, ?,?, ?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, c.getFull_name());
@@ -73,13 +63,16 @@ public class DAO extends DBContext {
             ps.setString(7, c.getCard_type());
             ps.setString(8, c.getGender());
             ps.setDate(9, new java.sql.Date(c.getDate_of_birth().getTime())); // Convert java.util.Date to java.sql.Date
-            ps.setString(10, c.getProfile_picture());
+            ps.setInt(10, c.getRole_id());
+            ps.setString(11, c.getProfile_picture());
             ps.executeUpdate();
         } catch (SQLException e) {
             status = "Error at register: " + e.getMessage();
             e.printStackTrace();
         }
     }
+
+    
 
     // Check if a phone number already exists
     public boolean existedPhoneNum(String phoneNum) {
@@ -94,17 +87,17 @@ public class DAO extends DBContext {
         }
         return false;
     }
-    
-    // Check if a emali already exists
+
+    // Check if a email already exists
     public boolean existedEmail(String email) {
         String sql = "SELECT [customer_id] FROM [dbo].[customer] WHERE email = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next(); // If a record exists, return true
+                return rs.next();
             }
         } catch (SQLException e) {
-            status = "Error at existedPhoneNum: " + e.getMessage();
+            status = "Error at existedEmail: " + e.getMessage();
         }
         return false;
     }
@@ -164,10 +157,7 @@ public class DAO extends DBContext {
                 double amount = rs.getDouble("amount");
                 double credit_limit = rs.getDouble("credit_limit");
                 Date date_of_birth = rs.getDate("date_of_birth");
-                int role_id = rs.getInt("role_id");
-                Customer acc = new Customer(fullname, email, userName,
-                        password, phone_number, address, card_type, status, gender,
-                        profile_picture, customer_id, role_id, amount, credit_limit, date_of_birth, created_at);
+                Customer acc = new Customer(fullname, email, userName, password, phone_number, address, card_type, status, gender, profile_picture, customer_id, amount, credit_limit, date_of_birth, created_at);
                 return acc;
             }
         } catch (Exception e) {
@@ -175,11 +165,38 @@ public class DAO extends DBContext {
         return null;
     }
 
+    // admin 
+    public Staff login_admin(String username, String password) {
+        String sql = "select * from staff where username=? and password=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, username);
+            pre.setString(2, password);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                int staff_id = rs.getInt(1);
+                String full_name = rs.getString(2);
+                String email = rs.getString(3);
+                String phone_number = rs.getString(6);
+                String gender = rs.getString(7);
+                Date date_of_birth = rs.getDate(8);
+                String address = rs.getString(9);
+                int role_id = rs.getInt(10);
+                String status = rs.getString(12);
+                Staff staff = new Staff(staff_id, full_name, email, password,
+                        username, phone_number, gender, date_of_birth, address, role_id, status);
+                return staff;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+
     // Main method for testing
     public static void main(String[] args) {
-        DAO d = new DAO();
-        boolean b=d.existedEmail("b@example.com");
-        System.out.println(b);
-
+       
     }
+
 }

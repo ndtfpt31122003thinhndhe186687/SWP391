@@ -62,8 +62,14 @@ public class SearchNewsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAO_Marketer d=new DAO_Marketer();
+        List<News> list ;
         String searchName = request.getParameter("searchName");
-        List<News> list = d.getSearchNewsByTitle(searchName);
+        if (searchName != null && !searchName.trim().isEmpty()) {
+            list = d.getSearchNewsByTitle(searchName);
+            request.setAttribute("listN", list);
+        }else{
+            list=d.getAllNews();
+        }
         request.setAttribute("listN", list);
         request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
     }
