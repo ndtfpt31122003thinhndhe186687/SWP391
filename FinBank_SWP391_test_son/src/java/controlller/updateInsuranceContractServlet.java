@@ -5,7 +5,7 @@
 
 package controlller;
 
-import dal.DAO;
+import dal.DAO_Insurance;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -64,7 +64,7 @@ public class updateInsuranceContractServlet extends HttpServlet {
         int id;
         try {
             id=Integer.parseInt(contract_id);
-            DAO dao = new DAO();
+            DAO_Insurance dao = new DAO_Insurance();
             Insurance_contract c = dao.getInsuranceContractById(id);
             request.setAttribute("contract", c);
             request.getRequestDispatcher("updateInsuranceContract.jsp").forward(request, response);
@@ -82,22 +82,14 @@ public class updateInsuranceContractServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        DAO dao = new DAO();
+        DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        int policy_id = i.getPolicy_id();
-        String contract_id = request.getParameter("contract_id");
-        String service_id = request.getParameter("service_id");
-        String payment_frequency = request.getParameter("payment_frequency");
-        
+        int policy_id = i.getPolicy_id();       
         String status = request.getParameter("status");
-        String start_date = request.getParameter("start_date");
-        String end_date = request.getParameter("end_date");
-        int Service_id,Contract_id;
         try {
-            Contract_id = Integer.parseInt(contract_id);
-            Service_id = Integer.parseInt(service_id);
-            dao.updateInsuranceContract(Contract_id, Service_id, payment_frequency, status, start_date, end_date);
+            Insurance_contract c = new Insurance_contract(policy_id, status);
+            dao.updateInsuranceContract(c);
             String url = "managerInsuranceContract?insurance_id=" + i.getInsurance_id(); 
         response.sendRedirect(url);
         } catch (Exception e) {

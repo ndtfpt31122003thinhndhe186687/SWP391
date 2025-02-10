@@ -5,7 +5,7 @@
 
 package controlller;
 
-import dal.DAO;
+import dal.DAO_Insurance;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -60,7 +60,7 @@ public class deletePolicyServlet extends HttpServlet {
     throws ServletException, IOException {
         String policy_id = request.getParameter("policy_id");
         int id = Integer.parseInt(policy_id);
-        DAO dao = new DAO();
+        DAO_Insurance dao = new DAO_Insurance();
         dao.deletePolicy(id);
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");

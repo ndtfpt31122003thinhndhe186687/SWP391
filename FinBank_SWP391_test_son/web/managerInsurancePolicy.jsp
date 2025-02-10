@@ -22,6 +22,39 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+        
+        <style>
+    .table thead {
+        background-color: #dc3545; 
+        color: white;
+    }
+
+
+    .table {
+        border-color: #dc3545;
+    }
+
+    .table tbody tr {
+        color: #333;
+    }
+
+
+    .table tbody tr:hover {
+        background-color: #f1b0b7;
+        transition: 0.3s;
+    }
+
+    .btn-danger {
+        background-color: #8b0000 !important;
+        border-color: #8b0000 !important;
+    }
+
+    .btn-success {
+        background-color: #b02a37 !important;
+        border-color: #b02a37 !important;
+    }
+</style>
+
 
     </head>
     <body>
@@ -37,8 +70,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
-                <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchByPolicyName" method="post" role="form">
+                <input class="form-control bg-white text-dark" name="search_policy_name" type="text" placeholder="Search" aria-label="Search">
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -165,6 +198,13 @@
                         </a>
                     </li>
                     
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${sessionScope.account.insurance_id}">
+                            <i class="me-2"></i>
+                            Insurance Term Management
+                        </a>
+                    </li>
+                    
 
                 </ul>
             </div>
@@ -180,18 +220,33 @@
 
             <!-- View list staff -->
             <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addPolicy.jsp">Add New</a>
+                <a class="btn btn-success mb-2" href="addPolicy">Add New</a>
+                <form action="sortInsurancePolicy" method="get">
+                    <label>Sort by :</label>
+                    <select class="filter-dropdown" name="sortInsurancePolicy">
+                    <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>None</option>    
+                    <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created At</option>
+                    <option value="coverage_amount" ${requestScope.sort == 'coverage_amount' ? 'selected' : ''}>Coverage Amount</option>
+                </select>
+                 <label>Filter by Status:</label>
+                 <select class="filter-dropdown" name="status">                    
+                     <option value="all" ${requestScope.status == '' ? 'selected' : ''}>All</option>
+                    <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
+                    <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                   
+                </select>
+                <button type="submit">Find</button>
+                </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Policy id</th>
-                            <th>Policy name</th>
-                            <th>Insurance id</th>
+                            <th>Policy ID</th>
+                            <th>Policy Name</th>
                             <th>Description</th>
-                            <th>Coverage amount</th>
-                            <th>Premium amount</th>
-                            <th>status</th>
-                            <th>Created at</th>
+                            <th>Coverage Amount</th>
+                            <th>Premium Amount</th>
+                            <th>Status</th>
+                            <th>Created At</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -199,7 +254,6 @@
                         <tr>
                             <td>${P.policy_id}</td>
                             <td>${P.policy_name}</td>
-                            <td>${P.insurance_id}</td>
                             <td>${P.description}</td>
                             <td>${P.coverage_amount}</td>
                             <td>${P.premium_amount}</td> 

@@ -5,7 +5,7 @@
 
 package controlller;
 
-import dal.DAO;
+import dal.DAO_Insurance;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -77,7 +77,7 @@ public class LoginServlet extends HttpServlet {
               String username = request.getParameter("username");
         String password = request.getParameter("pass");
         String role = request.getParameter("role");
-        DAO dao = new DAO();
+        DAO_Insurance dao = new DAO_Insurance();
         if ("customer".equals(role)) {
             Customer acc = dao.login(username, password);
             if (acc == null) {

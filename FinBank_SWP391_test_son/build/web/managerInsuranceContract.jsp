@@ -22,6 +22,35 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+                <style>
+    .table thead {
+        background-color: #dc3545; 
+        color: white;
+    }
+
+    .table {
+        border-color: #dc3545;
+    }
+
+    .table tbody tr {
+        color: #333;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1b0b7; 
+        transition: 0.3s;
+    }
+
+    .btn-danger {
+        background-color: #8b0000 !important;
+        border-color: #8b0000 !important;
+    }
+
+    .btn-success {
+        background-color: #b02a37 !important;
+        border-color: #b02a37 !important;
+    }
+</style>
 
     </head>
     <body>
@@ -37,8 +66,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
-                <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchInsuranceContract" method="post" role="form">
+                <input class="form-control bg-white text-dark" name="search_customer_name" type="text" placeholder="Search" aria-label="Search">
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -103,7 +132,7 @@
                         <div class="dropdown-menu-profile-thumb d-flex">
                             <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
 
-                          
+
                         </div>
                     </li>
                     <li>
@@ -136,7 +165,7 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    
+
                     <li class="nav-item">
                         <a class="nav-link " href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">
                             <i class="me-2"></i>
@@ -165,6 +194,12 @@
                         </a>
                     </li>
                     
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${sessionScope.account.insurance_id}">
+                            <i class="me-2"></i>
+                            Insurance Term Management
+                        </a>
+                    </li>
 
                 </ul>
             </div>
@@ -176,39 +211,54 @@
             </div>
 
             <!-- Tabs choose staff -->
-            
+
 
             <!-- View list staff -->
             <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addInsuranceContract.jsp">Add New</a>
+                <form action="sortInsuranceContract" method="get">
+                    <label>Sort by :</label>
+                    <select class="filter-dropdown" name="sortInsuranceContract">
+                        <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>None</option>
+                        <option value="start_date" ${requestScope.sort == 'start_date' ? 'selected' : ''}>Start At</option>
+                        <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created At</option>
+                    </select>
+                    <label>Filter by Status:</label>
+                    <select class="filter-dropdown" name="status">                    
+                        <option value="all" ${requestScope.status == '' ? 'selected' : ''}>All</option>
+                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
+                        <option value="expired" ${requestScope.status == 'expired' ? 'selected' : ''}>Expired</option>
+                        <option value="cancelled" ${requestScope.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                    <button type="submit">Find</button>
+                </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Contract id</th>
-                            <th>Customer id</th>
-                            <th>Service id </th>
-                            <th>Policy id</th>
-                            <th>Payment frequency</th>
+                            <th>Contract ID</th>
+                            <th>Customer Name</th>
+                            <th>Service Name </th>
+                            <th>Policy Name</th>
+                            <th>Payment Frequency</th>
                             <th>Status</th>
-                            <th>Start date</th>
-                            <th>End date</th>
-                            <th>Created at</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Created At</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <c:forEach items="${listC}" var="C">
                         <tr>
                             <td>${C.contract_id}</td>
-                            <td>${C.customer_id}</td>
-                            <td>${C.service_id}</td>
-                            <td>${C.policy_id}</td>
+                            <td>${C.full_name}</td>
+                            <td>${C.service_name}</td>
+                            <td>${C.policy_name}</td>
                             <td>${C.payment_frequency}</td>
                             <td>${C.status}</td> 
-                             <td>${C.start_date}</td> 
-                             <td>${C.end_date}</td>
-                             <td>${C.created_at}</td>
+                            <td>${C.start_date}</td> 
+                            <td>${C.end_date}</td>
+                            <td>${C.created_at}</td>
                             <td>
-                                <a onclick="doDelete('${C.contract_id}')" href="deleteInsuranceContract?contract_id=${C.contract_id}" class="btn btn-danger">Delete</a>
+
                                 <a href="updateInsuranceContract?contract_id=${C.contract_id}" class="btn btn-success">Update</a> 
                             </td>
                         </tr>
@@ -217,13 +267,7 @@
             </div>
         </main>
 
-        <script type="text/javascript">
-            function doDelete(id) {
-                if (confirm("Are you sure to delete ID '" + id + "'?")) {
-                    window.location = "deleteInsuranceContract?contract_id=" + id;
-                }
-            }
-        </script>
+
 
 
         </main>

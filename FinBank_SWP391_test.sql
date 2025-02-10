@@ -243,6 +243,7 @@ CREATE TABLE insurance (
 );
 
 -- Bảng để quản lý các loại bảo hiểm của bên bảo hiểm
+
 CREATE TABLE insurance_policy (
     policy_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất của loại bảo hiểm
     insurance_id INT NOT NULL, -- ID bên bảo hiểm cung cấp
@@ -254,13 +255,23 @@ CREATE TABLE insurance_policy (
     created_at DATETIME DEFAULT GETDATE(), -- Ngày tạo loại bảo hiểm
     FOREIGN KEY (insurance_id) REFERENCES insurance(insurance_id)
 );
-select * from insurance
-join insurance_policy on insurance.insurance_id = insurance_policy.insurance_id
-where insurance.username = 'insure_b' and password = '123'
-select * from insurance_contract
-                join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id
-				join insurance on insurance.insurance_id = insurance_policy.insurance_id
-				where insurance_contract.policy_id = 2
+
+-- Bảng để quản lý các điều khoản của bên bảo hiểm
+
+CREATE TABLE insurance_terms (
+    term_id INT IDENTITY(1,1) PRIMARY KEY,  -- ID duy nhất của điều khoản
+    insurance_id INT NOT NULL,              -- Liên kết với bảng insurance
+    policy_id INT NOT NULL,                           -- (Tùy chọn) Liên kết với bảng chính sách bảo hiểm
+    term_name NVARCHAR(255) NOT NULL,       -- Tiêu đề điều khoản
+    term_description NVARCHAR(MAX) NOT NULL, -- Nội dung chi tiết của điều khoản
+    start_date DATE NOT NULL,            -- Ngày hiệu lực
+    end_date DATE NOT NULL,                         -- Ngày hết hạn (nếu có)
+	created_at  DATETIME DEFAULT GETDATE(),
+    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active', -- Trạng thái
+    FOREIGN KEY (insurance_id) REFERENCES insurance(insurance_id),
+    FOREIGN KEY (policy_id) REFERENCES insurance_policy(policy_id) 
+);
+
 -- Bảng để lưu thông tin hợp đồng bảo hiểm
 CREATE TABLE insurance_contract (
     contract_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất của hợp đồng
@@ -291,9 +302,7 @@ CREATE TABLE insurance_contract_detail (
     FOREIGN KEY (contract_id) REFERENCES insurance_contract(contract_id),        
     FOREIGN KEY (insurance_id) REFERENCES insurance(insurance_id)
 );
-select * from insurance_transactions
-join insurance_contract_detail on insurance_transactions.contract_id = insurance_contract_detail.contract_id
-where insurance_id = 1
+
 
 CREATE TABLE insurance_transactions (
     transaction_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất của giao dịch
@@ -335,7 +344,7 @@ VALUES
 INSERT INTO staff (full_name, email,username,password, phone_number, gender, date_of_birth, address, role_id, status)
 VALUES 
 ('Nguyen Dang Q', 'q@example.com', 'g', '123', '0123456731', 'male', '1985-06-05', '111 Staff St, City', 5, 'active'),
-('Nguyen Hoang S', 's@example.com', 's', '123', '0123456711', 'male', '1980-06-06', '111 Staff St, City', 5, 'active')
+('Nguyen Hoang S', 's@example.com', 's', '123', '0123456711', 'male', '1980-06-06', '111 Staff St, City', 5, 'active'),
 ('Nguyen Van F', 'f@example.com', 'a', '123', '0123456781', 'male', '1980-06-06', '111 Staff St, City', 1, 'active'),
 ('Tran Thi G', 'g@example.com', 'b', '123', '0987654322', 'female', '1983-07-07', '222 Staff Ave, City', 2, 'active'),
 ('Le Van H', 'h@example.com', 'c', '123', '0123456782', 'male', '1978-08-08', '333 Staff Blvd, City', 3, 'active'),
@@ -428,7 +437,7 @@ VALUES
 (3, 1),
 (4, 3),
 (5, 4);
-select * from insurance
+
 INSERT INTO insurance (username, password, insurance_name, email, phone_number, address, status,role_id)
 VALUES 
 ('insure_a', '123', 'Insurance Co A', 'insure_a@example.com', '0123456784', 'Insurance St, City', 'active',5),
@@ -439,11 +448,34 @@ VALUES
 
 INSERT INTO insurance_policy (insurance_id, policy_name, description, coverage_amount, premium_amount, status)
 VALUES 
+(1, 'Dental Insurance', 'Coverage for dental treatments and surgeries.', 50000.00, 4000.00, 'active'),
+(1, 'Vision Insurance', 'Covers eye exams and prescription glasses.', 30000.00, 2500.00, 'active'),
 (1, 'Health Insurance', 'Comprehensive health insurance.', 100000.00, 5000.00, 'active'),
+(2, 'Disability Insurance', 'Provides income replacement in case of disability.', 150000.00, 8000.00, 'active'),
 (2, 'Life Insurance', 'Life insurance policy.', 200000.00, 7000.00, 'active'),
+(2, 'Critical Illness Insurance', 'Lump sum payout for serious illnesses.', 250000.00, 12000.00, 'active'),
 (3, 'Car Insurance', 'Insurance for vehicles.', 15000.00, 2500.00, 'active'),
+(3, 'Motorbike Insurance', 'Insurance for motorbikes.', 10000.00, 2000.00, 'active'),
+(3, 'Fleet Insurance', 'Covers a company’s fleet of vehicles.', 500000.00, 20000.00, 'active'),
 (4, 'Home Insurance', 'Insurance for homes.', 300000.00, 6000.00, 'active'),
-(5, 'Travel Insurance', 'Insurance for travelers.', 50000.00, 3000.00, 'active');
+(4, 'Earthquake Insurance', 'Special coverage for earthquake damages.', 400000.00, 7000.00, 'active'),
+(4, 'Flood Insurance', 'Coverage for flood damages.', 350000.00, 6500.00, 'active'),
+(5, 'Travel Insurance', 'Insurance for travelers.', 50000.00, 3000.00, 'active'),
+(5, 'Baggage Insurance', 'Covers lost or stolen baggage during travel.', 10000.00, 1500.00, 'active'),
+(5, 'Flight Delay Insurance', 'Compensation for delayed flights.', 5000.00, 1000.00, 'active');
+
+INSERT INTO insurance_terms (insurance_id, policy_id, term_name, term_description, start_date, end_date,created_at, status)
+VALUES
+(1, 1, 'Coverage Details', 'This policy covers hospitalization expenses.', '2025-01-01', '2030-01-01','2025-01-01', 'active'),
+(1, 1, 'Exclusions', 'Pre-existing conditions are not covered.', '2025-01-01', '2030-01-01', '2025-01-01', 'active'),
+(2, 2, 'Beneficiary Clause', 'The sum assured will be paid to the nominee.', '2025-01-01','2030-01-01', '2025-01-01', 'active'),
+(2, 2, 'Premium Payment', 'Premium must be paid annually.', '2025-01-01', '2035-12-31', '2025-01-01', 'active'),
+(3, 3, 'Accident Coverage', 'Covers damages due to accidents.', '2025-01-01', '2028-12-31', '2025-01-01', 'active'),
+(3, 3, 'Third-Party Liability', 'Covers damages caused to third parties.', '2025-01-01', '2030-01-01', '2025-01-01', 'active'),
+(4, 4, 'Natural Disasters', 'Covers damages caused by earthquakes and floods.', '2025-01-01', '2030-01-01', '2025-01-01', 'active'),
+(4, 4, 'Property Damage', 'Includes coverage for fire and theft.', '2025-01-01', '2030-01-01', '2025-01-01', 'active'),
+(5, 5, 'Trip Cancellation', 'Covers trip cancellations due to unforeseen events.', '2025-01-01', '2027-12-31', '2025-01-01', 'active'),
+(5, 5, 'Medical Emergencies', 'Covers emergency medical expenses abroad.', '2025-01-01', '2030-01-01', '2025-01-01', 'active');
 
 INSERT INTO insurance_contract (customer_id, service_id, policy_id, start_date, end_date, payment_frequency, status)
 VALUES 
@@ -451,9 +483,18 @@ VALUES
 (2, 2, 2, '2023-02-01', '2024-02-01', 'quarterly', 'active'),
 (3, 1, 3, '2023-03-01', '2024-03-01', 'annually', 'active'),
 (4, 3, 4, '2023-04-01', '2024-04-01', 'monthly', 'active'),
-(5, 4, 5, '2023-05-01', '2024-05-01', 'annually', 'active');
-select * from customer
-                join insurance_contract on customer.customer_id = insurance_contract.customer_id
+(4, 4, 5, '2023-05-01', '2024-05-01', 'annually', 'active'),
+(1, 1, 1, '2024-01-01', '2025-01-01', 'monthly', 'active'),
+(1, 3, 3, '2024-02-01', '2025-02-01', 'annually', 'active'),
+(2, 2, 2, '2024-03-01', '2025-03-01', 'quarterly', 'active'),
+(2, 4, 5, '2024-04-01', '2025-04-01', 'annually', 'active'),
+(3, 1, 6, '2024-05-01', '2025-05-01', 'monthly', 'active'),
+(3, 3, 7, '2024-06-01', '2025-06-01', 'quarterly', 'active'),
+(4, 2, 8, '2024-07-01', '2025-07-01', 'annually', 'active'),
+(4, 4, 9, '2024-08-01', '2025-08-01', 'monthly', 'active'),
+(5, 1, 10, '2024-09-01', '2025-09-01', 'quarterly', 'active'),
+(5, 3, 11, '2024-10-01', '2025-10-01', 'annually', 'active');
+
 
 INSERT INTO insurance_contract_detail (contract_id, insurance_id, CoverageAmount, PremiumAmount, StartDate, EndDate)
 VALUES 
@@ -461,18 +502,40 @@ VALUES
 (2, 2, 200000.00, 7000.00, '2023-02-01', '2024-02-01'),
 (3, 3, 15000.00, 2500.00, '2023-03-01', '2024-03-01'),
 (4, 4, 300000.00, 6000.00, '2023-04-01', '2024-04-01'),
-(5, 5, 50000.00, 3000.00, '2023-05-01', '2024-05-01');
+(5, 5, 50000.00, 3000.00, '2023-05-01', '2024-05-01'),
+(3, 1, 100000.00, 5000.00, '2024-01-01', '2025-01-01'),
+(2, 3, 15000.00, 2500.00, '2024-02-01', '2025-02-01'),
+(3, 2, 200000.00, 7000.00, '2024-03-01', '2025-03-01'),
+(4, 5, 50000.00, 3000.00, '2024-04-01', '2025-04-01'),
+(5, 1, 250000.00, 12000.00, '2024-05-01', '2025-05-01'),
+(6, 3, 10000.00, 2000.00, '2024-06-01', '2025-06-01'),
+(7, 4, 400000.00, 7000.00, '2024-07-01', '2025-07-01'),
+(8, 5, 10000.00, 1500.00, '2024-08-01', '2025-08-01'),
+(9, 2, 350000.00, 6500.00, '2024-09-01', '2025-09-01'),
+(10, 1, 50000.00, 4000.00, '2024-10-01', '2025-10-01');
 
 INSERT INTO insurance_transactions (contract_id, customer_id, amount, transaction_type, notes)
-VALUES 
+VALUES
 (1, 1, 5000.00, 'premium_payment', 'Monthly premium payment.'),
 (2, 2, 7000.00, 'premium_payment', 'Quarterly premium payment.'),
 (3, 3, 2500.00, 'claim_payment', 'Claim payment for accident.'),
 (4, 4, 6000.00, 'premium_payment', 'Monthly premium payment.'),
-(5, 5, 3000.00, 'premium_payment', 'Annual premium payment.');
+(5, 5, 3000.00, 'premium_payment', 'Annual premium payment.'),
+(1, 1, 5000.00, 'premium_payment', 'Monthly premium payment.'),
+(2, 2, 7000.00, 'premium_payment', 'Quarterly premium payment.'),
+(3, 3, 2500.00, 'claim_payment', 'Claim payment for accident.'),
+(4, 4, 6000.00, 'premium_payment', 'Monthly premium payment.'),
+(5, 5, 3000.00, 'premium_payment', 'Annual premium payment.'),
+(6, 1, 4000.00, 'premium_payment', 'Monthly payment for dental insurance.'),
+(7, 3, 2000.00, 'premium_payment', 'Annual payment for motorbike insurance.'),
+(8, 4, 7000.00, 'claim_payment', 'Earthquake insurance claim settlement.'),
+(9, 2, 12000.00, 'premium_payment', 'Annual premium payment for critical illness insurance.'),
+(10, 5, 1000.00, 'premium_payment', 'Flight delay insurance fee.');
+
+
 
 --select * from customer
-select * from staff 
+--select * from staff 
 select * from role
 --select * from insurance
 select * from staff 
@@ -484,15 +547,6 @@ select * from transactions
 --delete from news where staff_id= 2;
 --delete from request where staff_id=2;
 --delete from staff where staff_id= 2;
-select * from insurance_policy
-where insurance_id = 1
-select * from customer
-                join insurance_contract on customer.customer_id = insurance_contract.customer_id
-				join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id
-                where insurance_id = 1
-update transactions
-set transaction_type = ''
-
-update insurance_contract
-                set status = 'active'
-				where contract_id = 2
+select * from insurance_terms
+join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id
+where insurance_terms.insurance_id = 2

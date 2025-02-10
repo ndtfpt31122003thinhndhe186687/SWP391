@@ -22,6 +22,35 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+        <style>
+            .table thead {
+                background-color: #dc3545;
+                color: white;
+            }
+
+            .table {
+                border-color: #dc3545;
+            }
+
+            .table tbody tr {
+                color: #333;
+            }
+
+            .table tbody tr:hover {
+                background-color: #f1b0b7;
+                transition: 0.3s;
+            }
+
+            .btn-danger {
+                background-color: #8b0000 !important;
+                border-color: #8b0000 !important;
+            }
+
+            .btn-success {
+                background-color: #b02a37 !important;
+                border-color: #b02a37 !important;
+            }
+        </style>
 
     </head>
     <body>
@@ -37,8 +66,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
-                <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchInsuranceTransaction" method="post" role="form">
+                <input class="form-control bg-white text-dark" name="search_customer_name" type="text" placeholder="Search" aria-label="Search">
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -103,7 +132,7 @@
                         <div class="dropdown-menu-profile-thumb d-flex">
                             <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
 
-                          
+
                         </div>
                     </li>
                     <li>
@@ -136,7 +165,7 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    
+
                     <li class="nav-item">
                         <a class="nav-link " href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">
                             <i class="me-2"></i>
@@ -165,6 +194,12 @@
                         </a>
                     </li>
                     
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${sessionScope.account.insurance_id}">
+                            <i class="me-2"></i>
+                            Insurance Term Management
+                        </a>
+                    </li>
 
                 </ul>
             </div>
@@ -176,51 +211,58 @@
             </div>
 
             <!-- Tabs choose staff -->
-            
+
 
             <!-- View list staff -->
             <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addInsuranceTransaction.jsp">Add New</a>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Transaction id</th>
-                            <th>Contract id</th>
-                            <th>Customer id</th>
-                            <th>Transaction date</th>
-                            <th>amount</th>
-                            <th>Transaction type</th>
-                            <th>Notes</th>
-                            <th>Action</th>
-                           
-                        </tr>
-                    </thead>
-                    <c:forEach items="${listT}" var="T">
-                        <tr>
-                            <td>${T.transaction_id}</td>
-                            <td>${T.contract_id}</td>
-                            <td>${T.customer_id}</td>
-                            <td>${T.transaction_date}</td>
-                            <td>${T.amount}</td>
-                            <td>${T.transaction_type}</td> 
-                             <td>${T.notes}</td> 
-                            
-                            <td>
-                                <a href="updateInsurance?id=${T.transaction_id}" class="btn btn-success">Update</a> 
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
+                <form action="sortInsuranceTransaction" method="get">
+                    <label>Sort by :</label>
+                    <select class="filter-dropdown" name="sortInsuranceTransaction">
+                        <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>None</option>
+                        <option value="transaction_date" ${requestScope.sort == 'transaction_date' ? 'selected' : ''}>Transaction Date</option>
+                        <option value="amount" ${requestScope.sort == 'amount' ? 'selected' : ''}>Amount</option>
+                    </select>
+                    <label>Filter by Transaction Type</label>
+                    <select class="filter-dropdown" name="transaction_type">                    
+                        <option value="all" ${requestScope.transaction_type == '' ? 'selected' : ''}>All</option>
+                        <option value="premium_payment" ${requestScope.transaction_type == 'premium_payment' ? 'selected' : ''}>Premium Payment</option>
+                        <option value="claim_payment" ${requestScope.transaction_type == 'claim_payment' ? 'selected' : ''}>Claim Payment</option>
+
+                    </select>
+                        <button type="submit">Find</button>
+                </form>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Contract ID</th>
+                                <th>Customer Name</th>
+                                <th>Transaction Date</th>
+                                <th>amount</th>
+                                <th>Transaction Type</th>
+                                <th>Notes</th>
+
+
+                            </tr>
+                        </thead>
+                        <c:forEach items="${listT}" var="T">
+                            <tr>
+                                <td>${T.transaction_id}</td>
+                                <td>${T.contract_id}</td>
+                                <td>${T.full_name}</td>
+                                <td>${T.transaction_date}</td>
+                                <td>${T.amount}</td>
+                                <td>${T.transaction_type}</td> 
+                                <td>${T.notes}</td> 
+
+
+                            </tr>
+                        </c:forEach>
+                    </table>
             </div>
         </main>
 
-        <script type="text/javascript">
-            function doDelete(id) {
-                if (confirm("Are you sure to delete ID '" + id + "'?")) {
-                    window.location = "deleteInsuranceTransaction?id=" + id;
-                }
-            }
-        </script>
+
 
 
         </main>

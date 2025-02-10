@@ -5,7 +5,7 @@
 
 package controlller;
 
-import dal.DAO;
+import dal.DAO_Insurance;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -58,10 +58,10 @@ public class ManagerInsuranceCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        DAO d = new DAO();
-        String insurance_id = request.getParameter("insurance_id");
-        int id = Integer.parseInt(insurance_id);
-        List<Customer> listC = d.getInsuranceCustomerByInsuranceId(id);
+        DAO_Insurance d = new DAO_Insurance();
+        String insurance_id_raw = request.getParameter("insurance_id");
+        int insurance_id = Integer.parseInt(insurance_id_raw);
+        List<Customer> listC = d.getInsuranceCustomerByInsuranceId(insurance_id);
         request.setAttribute("listC", listC);
         request.getRequestDispatcher("managerInsuranceCustomer.jsp").forward(request, response);
     } 

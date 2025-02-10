@@ -14,11 +14,23 @@ public class Insurance_transactions {
     public int transaction_id,contract_id,customer_id,insurance_id;
     public Date transaction_date;
     public double amount;
-    public String transaction_type,notes;
+    public String transaction_type,notes,full_name;
 
     public Insurance_transactions() {
     }
 
+    public Insurance_transactions(int transaction_id, int contract_id, int insurance_id, Date transaction_date, double amount, String transaction_type, String notes, String full_name) {
+        this.transaction_id = transaction_id;
+        this.contract_id = contract_id;
+        this.insurance_id = insurance_id;
+        this.transaction_date = transaction_date;
+        this.amount = amount;
+        this.transaction_type = transaction_type;
+        this.notes = notes;
+        this.full_name = full_name;
+    }
+
+    
     public Insurance_transactions(int transaction_id, int contract_id, int customer_id,int insurance_id, Date transaction_date, double amount, String transaction_type, String notes) {
         this.transaction_id = transaction_id;
         this.contract_id = contract_id;
@@ -28,6 +40,14 @@ public class Insurance_transactions {
         this.amount = amount;
         this.transaction_type = transaction_type;
         this.notes = notes;
+    }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
     public int getInsurance_id() {
@@ -96,8 +116,9 @@ public class Insurance_transactions {
 
     @Override
     public String toString() {
-        return "Insurance_transactions{" + "transaction_id=" + transaction_id + ", contract_id=" + contract_id + ", customer_id=" + customer_id + ", insurance_id=" + insurance_id + ", transaction_date=" + transaction_date + ", amount=" + amount + ", transaction_type=" + transaction_type + ", notes=" + notes + '}';
+        return "Insurance_transactions{" + "transaction_id=" + transaction_id + ", contract_id=" + contract_id + ", customer_id=" + customer_id + ", insurance_id=" + insurance_id + ", transaction_date=" + transaction_date + ", amount=" + amount + ", transaction_type=" + transaction_type + ", notes=" + notes + ", full_name=" + full_name + '}';
     }
+
 
  
 }

@@ -22,6 +22,35 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+                <style>
+    .table thead {
+        background-color: #dc3545; 
+        color: white;
+    }
+
+    .table {
+        border-color: #dc3545;
+    }
+
+    .table tbody tr {
+        color: #333;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1b0b7; 
+        transition: 0.3s;
+    }
+
+    .btn-danger {
+        background-color: #8b0000 !important;
+        border-color: #8b0000 !important;
+    }
+
+    .btn-success {
+        background-color: #b02a37 !important;
+        border-color: #b02a37 !important;
+    }
+</style>
 
     </head>
     <body>
@@ -37,8 +66,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
-                <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchInsuranceCustomer" method="post" role="form">
+                <input class="form-control bg-white text-dark" name="search_customer_name" type="text" placeholder="Search" aria-label="Search">
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -165,6 +194,12 @@
                         </a>
                     </li>
                     
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${sessionScope.account.insurance_id}">
+                            <i class="me-2"></i>
+                            Insurance Term Management
+                        </a>
+                    </li>
 
                 </ul>
             </div>
@@ -180,7 +215,15 @@
 
             <!-- View list staff -->
             <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addInsuranceContract.jsp">Add New</a>
+                <form action="filterInsuranceCustomer" method="get">
+                    <label>Filter by Gender:</label>
+                    <select class="filter-dropdown" name="gender">                    
+                        <option value="all" ${requestScope.gender == '' ? 'selected' : ''}>All</option>
+                        <option value="male" ${requestScope.gender == 'male' ? 'selected' : ''}>Male</option>
+                        <option value="female" ${requestScope.gender == 'female' ? 'selected' : ''}>Female</option>                   
+                    </select>
+                    <button type="submid">Find</button>
+                </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -191,7 +234,6 @@
                             <th>Phone number</th>
                             <th>Address</th>
                             <th>Gender</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <c:forEach items="${listC}" var="C">
@@ -203,22 +245,14 @@
                             <td>${C.phone_number}</td>
                             <td>${C.address}</td> 
                              <td>${C.gender}</td>
-                            <td>
-                                <a href="updateInsurance?id=${C.customer_id}" class="btn btn-success">Update</a> 
-                            </td>
+                            
                         </tr>
                     </c:forEach>
                 </table>
             </div>
         </main>
 
-        <script type="text/javascript">
-            function doDelete(id) {
-                if (confirm("Are you sure to delete ID '" + id + "'?")) {
-                    window.location = "deleteInsuranceCustomer?id=" + id;
-                }
-            }
-        </script>
+        
 
 
         </main>

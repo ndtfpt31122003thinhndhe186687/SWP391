@@ -4,7 +4,7 @@
  */
 package controlller;
 
-import dal.DAO;
+import dal.DAO_Insurance;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

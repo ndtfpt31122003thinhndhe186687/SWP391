@@ -19,6 +19,15 @@ public class Insurance_policy {
     public Insurance_policy() {
     }
 
+    public Insurance_policy(int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount) {
+        this.insurance_id = insurance_id;
+        this.policy_name = policy_name;
+        this.description = description;
+        this.status = status;
+        this.coverage_amount = coverage_amount;
+        this.premium_amount = premium_amount;
+    }
+
     public Insurance_policy(int policy_id, int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount) {
         this.policy_id = policy_id;
         this.insurance_id = insurance_id;
