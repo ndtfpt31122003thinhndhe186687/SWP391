@@ -76,12 +76,13 @@ CREATE TABLE customer (
 
 CREATE TABLE asset (
 	asset_id INT IDENTITY(1,1) PRIMARY KEY,  
-	description NVARCHAR(MAX),
+	description NVARCHAR(MAX) NOT NULL,
 	Value DECIMAL(15, 2) NOT NULL,
 	customer_id INT NOT NULL,
 	[status] NVARCHAR(20) CHECK ([status] IN ('verified', 'unverified','pending')) DEFAULT 'pending',
 	FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
 );
+
 
 CREATE TABLE staff (
     staff_id INT IDENTITY(1,1) PRIMARY KEY, -- ID duy nhất cho mỗi nhân viên
