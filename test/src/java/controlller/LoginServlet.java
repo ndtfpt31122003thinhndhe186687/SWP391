@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import model.Customer;
 import model.Customer;
 import model.Staff;
+import utils.Password;
 
 /**
  *
@@ -82,6 +83,7 @@ public class LoginServlet extends HttpServlet {
         String role = request.getParameter("role");
         DAO dao = new DAO();
         DAO_Admin daoadmin = new DAO_Admin();
+        password = Password.toSHA1(password);
         if ("customer".equals(role)) {
             Customer acc = dao.login(username, password);
             if (acc == null) {

@@ -112,12 +112,11 @@
                                 <small>${sessionScope.account.staff_id}</small>
                                 <small>${sessionScope.account.email}</small>
                                 </c:if> 
-                                
                             </div>
                         </div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="profile.html">
+                        <a class="dropdown-item" href="viewprofie">
                             <i class="bi-person me-2"></i>
                             Profile
                         </a>
@@ -152,11 +151,11 @@
                             <i class="bi-person me-2"></i>
                             Manager
                         </a>
-                    </li>
+                    </li>                   
                     </c:if>
                     <c:if test="${sessionScope.account.role_id==2}">
                     <li class="nav-item">
-                        <a class="nav-link" href="banker_dashboard.jsp">
+                        <a class="nav-link" href="customerList">
                             <i class="bi-person me-2"></i>
                             Banker
                         </a>
@@ -176,7 +175,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">
+                        <a class="nav-link" href="viewprofie">
                             <i class="bi-person me-2"></i>
                             Profile
                         </a>
