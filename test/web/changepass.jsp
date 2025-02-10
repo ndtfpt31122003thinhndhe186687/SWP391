@@ -104,7 +104,7 @@
                             <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
 
                             <div class="d-flex flex-column">
-                                <small>${sessionScope.account.customer_id}</small>
+                                <small>${sessionScope.account.full_name}</small>
                                 <small>${sessionScope.account.email}</small>
                             </div>
                         </div>

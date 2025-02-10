@@ -127,27 +127,27 @@
 
                 <div class="form-group">
                     <label for="max_term_months">Max term months:</label>
-                    <input type="number" id="max_term_months" name="max_term_months"  />
+                    <input type="number" id="max_term_months" name="max_term_months" min="0" />
                 </div>
 
                 <div class="form-group">
                     <label for="early_payment_penalty">Early payment penalty:</label>
-                    <input type="number" id="early_payment_penalty" name="early_payment_penalty"  />
+                    <input type="number" id="early_payment_penalty" name="early_payment_penalty" min="0" step="0.01" />
                 </div>
 
                 <div class="form-group">
                     <label for="interest_rate">Interest rate:</label>
-                    <input type="number" id="interest_rate" name="interest_rate"  />
+                    <input type="number" id="interest_rate" name="interest_rate" min="0" step="0.01" />
                 </div>
 
                 <div class="form-group">
-                    <label for="min_payment">Min Payment</label>
-                    <input type="number" id="min_payment" name="min_payment"  />
+                    <label for="min_payment">Min Payment:</label>
+                    <input type="number" id="min_payment" name="min_payment" min="0" step="0.01" />
                 </div>
 
                 <div class="form-group">
                     <label for="min_deposit">Min Deposit:</label>
-                    <input type="number"id="min_deposit" name="min_deposit"  />
+                    <input type="number" id="min_deposit" name="min_deposit" min="0" step="0.01" />
                 </div>
                 <button type="submit">Add New Service Term</button>
             </form>

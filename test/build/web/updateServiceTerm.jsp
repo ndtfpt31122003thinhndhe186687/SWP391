@@ -1,9 +1,3 @@
-<%-- 
-    Document   : new
-    Created on : Sep 26, 2024, 3:49:32 PM
-    Author     : DELL
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -55,7 +49,7 @@
                 font-weight: 500;
             }
 
-            input {
+            input, select {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #ddd;
@@ -92,69 +86,79 @@
             button:hover {
                 background-color: var(--dark-red);
             }
+
+            .error-message {
+                color: red;
+                text-align: center;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Update a service term</h1>
+
             <c:set var="s" value="${requestScope.serviceTerm}"/>
             <form action="updateServiceTerm" method="post">
-                
+
                 <input type="hidden" name="term_id" value="${s.term_id}" />
+
                 <div class="form-group">
                     <label for="term_name">Term name:</label>
-                    <input type="text" id="term_name" name="term_name" value="${s.term_name}"/>
+                    <input type="text" id="term_name" name="term_name" value="${s.term_name}" required/>
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <input type="text" id="description" name="description" value="${s.description}"/>
+                    <input type="text" id="description" name="description" value="${s.description}" required/>
                 </div>
 
                 <div class="form-group">
-                    <label for="contract_terms">Detailed contract terms</label>
-                    <input type="text" id= "contract_terms" name="contract_terms" value="${s.contract_terms}" />
+                    <label for="contract_terms">Detailed contract terms:</label>
+                    <input type="text" id="contract_terms" name="contract_terms" value="${s.contract_terms}" required/>
                 </div>
 
                 <c:if test="${s.service_id==1 || s.service_id==2}"> 
                     <div class="form-group">
                         <label for="max_term_months">Max term months:</label>
-                        <input type="number" id="max_term_months" name="max_term_months" value="${s.max_term_months}" />
+                        <input type="number" id="max_term_months" name="max_term_months" value="${s.max_term_months}" min="0" required/>
                     </div>
 
                     <div class="form-group">
                         <label for="early_payment_penalty">Early payment penalty:</label>
-                        <input type="number" id="early_payment_penalty" name="early_payment_penalty" value="${s.early_payment_penalty}" />
+                        <input type="number" id="early_payment_penalty" name="early_payment_penalty" value="${s.early_payment_penalty}" min="0" step="0.01" required/>
                     </div>
 
                     <div class="form-group">
                         <label for="interest_rate">Interest rate:</label>
-                        <input type="number" id="interest_rate" name="interest_rate" value="${s.interest_rate}" />
+                        <input type="number" id="interest_rate" name="interest_rate" value="${s.interest_rate}" min="0" step="0.01" required/>
                     </div>
                 </c:if>
 
                 <c:if test="${s.service_id==2}"> 
                     <div class="form-group">
-                        <label for="min_payment">Min Payment</label>
-                        <input type="number" id="min_payment" name="min_payment" value="${s.min_payment}" />
+                        <label for="min_payment">Min Payment:</label>
+                        <input type="number" id="min_payment" name="min_payment" value="${s.min_payment}" min="0" step="0.01" required/>
                     </div>
                 </c:if>
 
                 <c:if test="${s.service_id==1}"> 
                     <div class="form-group">
                         <label for="min_deposit">Min Deposit:</label>
-                        <input type="number"id="min_deposit" name="min_deposit" value="${s.min_deposit}" />
+                        <input type="number" id="min_deposit" name="min_deposit" value="${s.min_deposit}" min="0" step="0.01" required/>
                     </div>
                 </c:if>
-                
+
                 <div class="form-group">
-                    <label>Status</label>
+                    <label>Status:</label>
                     <select name="status">
-                        <option value="active" ${s.status=="active" ? 'selected':''}>Active</option>
-                        <option value="inactive" ${s.status=="inactive" ? 'selected':''}>Inactive</option>
+                        <option value="active" ${s.status=="active" ? 'selected' : ''}>Active</option>
+                        <option value="inactive" ${s.status=="inactive" ? 'selected' : ''}>Inactive</option>
                     </select>
                 </div>
-                <button type="submit">Update New Service Term</button>
+
+                <button type="submit">Update Service Term</button>
             </form>
         </div>
     </body>

@@ -269,10 +269,11 @@ public class DAO_Marketer extends DBContext {
     }
     
     //Total article
-    public int totalArticle(){
-        String sql="select count(*) as totalArticle from news where status='approved'";
+    public int totalArticle(int staff_id){
+        String sql="select count(*) as totalArticle from news where status='approved' and staff_id=?";
         try {
             PreparedStatement st=con.prepareStatement(sql);
+            st.setInt(1, staff_id);
             ResultSet rs=st.executeQuery();
             while(rs.next()){
                 return rs.getInt("totalArticle");

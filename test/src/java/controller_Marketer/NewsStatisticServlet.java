@@ -11,8 +11,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.NewsView;
+import model.Staff;
 
 /**
  *
@@ -57,9 +59,11 @@ public class NewsStatisticServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         DAO_Marketer d=new DAO_Marketer();
+         HttpSession session=request.getSession();
+        Staff staff=(Staff) session.getAttribute("account");
         List<NewsView> list=d.countNews();
         request.setAttribute("newsView", list);
-        int totalArticles=d.totalArticle();
+        int totalArticles=d.totalArticle(staff.getStaff_id());
         request.setAttribute("totalArticle", totalArticles);
         int totalViews=d.totalView();
         request.setAttribute("totalView", totalViews);
