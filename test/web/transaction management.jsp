@@ -173,14 +173,6 @@
                         </a>
                     </li>
                     
-                      
-                    <li class="nav-item">
-                        <a class="nav-link " href="serviceTermManagement">
-                            <i class="me-2"></i>
-                            Service Term Management
-                        </a>
-                    </li>
-                    
                 </ul>
             </div>
         </nav>
@@ -190,14 +182,21 @@
                 <h1 class="h2 mb-0 text-danger">Transaction Management</h1>
             </div>
             
+            <div class="search-bar">
+                <form action="searchTransaction">
+                    <input type="text" placeholder="Search" name="searchName" >                  
+                    <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
+                </form>
+            </div>    
+            
             <!-- View list transaction -->
             <div class="mt-3">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Transaction id</th>
-                            <th>Customer id</th>
-                            <th>Service id</th>
+                            <th>Customer name</th>
+                            <th>Service name</th>
                             <th>Amount</th>
                             <th>Transaction date</th>
                             <th>Transaction type</th>
@@ -206,8 +205,8 @@
                     <c:forEach items="${requestScope.data}" var="b">
                         <tr>
                             <td>${b.transaction_id}</td>
-                            <td>${b.customer_id}</td>
-                            <td>${b.service_id}</td>
+                            <td>${b.customer_name}</td>
+                            <td>${b.service_name}</td>
                             <td>${b.amount} $</td>
                             <td>${b.transaction_date}</td>
                             <td>${b.transaction_type}</td>                          

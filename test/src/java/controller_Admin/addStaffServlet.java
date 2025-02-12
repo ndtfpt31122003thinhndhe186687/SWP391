@@ -73,11 +73,20 @@ public class addStaffServlet extends HttpServlet {
             role_id=Integer.parseInt(role_id_raw);
             var date_of_birth = java.sql.Date.valueOf(date_of_birth_raw);
             DAO_Admin dao = new DAO_Admin();
-            Staff test = dao.get_Staff_By_Username(username);
-            if(test!= null){
+            Staff Username = dao.get_Staff_By_Username(username);
+            Staff Email = dao.get_Staff_By_Email(email);
+            Staff Phone = dao.get_Staff_By_Phone(phone_number);
+            if(Username!= null){
                 request.setAttribute("error","username "+ username+" existed!!");
                 request.getRequestDispatcher("addStaff.jsp").forward(request, response);
-            }else{
+            }else if (Email != null){
+                request.setAttribute("error","emai "+ email+" existed!!");
+                request.getRequestDispatcher("addStaff.jsp").forward(request, response);
+            }else if (Phone != null){
+                request.setAttribute("error","phone number "+ phone_number+" existed!!");
+                request.getRequestDispatcher("addStaff.jsp").forward(request, response);
+            }
+            else{
                 Staff s = new Staff(full_name, email, username, password,
                         phone_number, gender, date_of_birth, address, role_id, status);
                 dao.insertBanker(s);

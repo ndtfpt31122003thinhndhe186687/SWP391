@@ -89,9 +89,17 @@ public class updateServiceServlet extends HttpServlet {
         int service_id;
         try {
             service_id = Integer.parseInt(service_id_raw);
+            Services services = d.get_Service_BY_Service_id(service_id);
+            Services test = d.get_Service_BY_Service_name(service_name);
+            if(test != null){
+                request.setAttribute("error", "service name "+ service_name + " existed!!");
+                request.setAttribute("service",services);
+                request.getRequestDispatcher("updateService.jsp").forward(request, response);
+            }else{
             Services s = new Services(service_id, service_name, description, service_type, status);
             d.UpdateService(s);
             response.sendRedirect("service_management");
+            }
         } catch (Exception e) {
         }
     }

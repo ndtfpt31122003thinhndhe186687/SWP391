@@ -62,7 +62,7 @@
                 font-weight: 500;
             }
             
-            input {
+            input, select {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #ddd;
@@ -71,7 +71,7 @@
                 transition: border-color 0.3s;
             }
             
-            input:focus {
+            input:focus, select:focus {
                 outline: none;
                 border-color: var(--primary-red);
                 box-shadow: 0 0 5px rgba(220,53,69,0.2);
@@ -94,13 +94,26 @@
             button:hover {
                 background-color: var(--dark-red);
             }
+
+            .password-requirements {
+                font-size: 12px;
+                color: #666;
+                margin-top: 5px;
+            }
+
+            .invalid-feedback {
+                color: var(--primary-red);
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Add New Staff</h1>
             <h4 class="error-message">${requestScope.error}</h4>
-            <form action="addStaff" method="get">
+            <form action="addStaff" method="get" id="staffForm" onsubmit="return validateForm()">
                 <div class="form-group">
                     <label for="full_name">Full Name:</label>
                     <input type="text" id="full_name" name="full_name" required />
@@ -108,7 +121,8 @@
                 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
+                    <input type="email" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
+                    <div class="invalid-feedback" id="email-feedback">Please enter a valid email address.</div>
                 </div>
                 
                 <div class="form-group">
@@ -118,17 +132,34 @@
                 
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required />
+                    <input type="password" id="password" name="password" required 
+                           pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$" />
+                    <div class="password-requirements">
+                        Password must contain at least:
+                        <ul>
+                            <li>8 characters</li>
+                            <li>One uppercase letter</li>
+                            <li>One number</li>
+                            <li>One special character (!@#$%^&*)</li>
+                        </ul>
+                    </div>
+                    <div class="invalid-feedback" id="password-feedback">Password does not meet the requirements.</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="phone_number">Phone Number:</label>
-                    <input type="tel" id="phone_number" name="phone_number" required />
+                    <input type="tel" id="phone_number" name="phone_number" required 
+                           pattern="[0-9]{10}" maxlength="10" />
+                    <div class="invalid-feedback" id="phone-feedback">Please enter a valid 10-digit phone number.</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="gender">Gender:</label>
-                    <input type="text" id="gender" name="gender" required />
+                    <select id="gender" name="gender" required>
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -148,11 +179,66 @@
                 
                 <div class="form-group">
                     <label for="status">Status:</label>
-                    <input type="text" id="status" name="status" required />
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
                 </div>
                 
                 <button type="submit">Add New Staff</button>
             </form>
         </div>
+
+        <script>
+            function validateForm() {
+                let isValid = true;
+                const form = document.getElementById('staffForm');
+                
+                // Email validation
+                const email = document.getElementById('email');
+                const emailFeedback = document.getElementById('email-feedback');
+                if (!email.checkValidity()) {
+                    emailFeedback.style.display = 'block';
+                    isValid = false;
+                } else {
+                    emailFeedback.style.display = 'none';
+                }
+
+                // Password validation
+                const password = document.getElementById('password');
+                const passwordFeedback = document.getElementById('password-feedback');
+                if (!password.checkValidity()) {
+                    passwordFeedback.style.display = 'block';
+                    isValid = false;
+                } else {
+                    passwordFeedback.style.display = 'none';
+                }
+
+                // Phone validation
+                const phone = document.getElementById('phone_number');
+                const phoneFeedback = document.getElementById('phone-feedback');
+                if (!phone.checkValidity()) {
+                    phoneFeedback.style.display = 'block';
+                    isValid = false;
+                } else {
+                    phoneFeedback.style.display = 'none';
+                }
+
+                // Only allow numbers in phone field
+                phone.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+
+                return isValid;
+            }
+
+            // Prevent non-numeric input in phone field
+            document.getElementById('phone_number').addEventListener('keypress', function(e) {
+                if (e.key < '0' || e.key > '9') {
+                    e.preventDefault();
+                }
+            });
+        </script>
     </body>
 </html>

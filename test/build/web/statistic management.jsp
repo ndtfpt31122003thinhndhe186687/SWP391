@@ -195,13 +195,6 @@
                         </a>
                     </li>
                     
-                    <li class="nav-item">
-                        <a class="nav-link " href="serviceTermManagement">
-                            <i class="me-2"></i>
-                            Service Term Management
-                        </a>
-                    </li>
-                    
                 </ul>
             </div>
         </nav>

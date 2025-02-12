@@ -23,6 +23,37 @@
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 
+        <style>
+            .filter-sort-bar {
+                margin-bottom: 20px;
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
+            .filter-sort-bar label {
+                font-weight: bold;
+                color: #333;
+            }
+            .filter-dropdown {
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                font-size: 14px;
+            }
+            .filter-dropdown:focus {
+                border-color: #d32f2f;
+                outline: none;
+            }
+            .filter-dropdown:hover {
+                background-color: #f0f0f0;
+            }
+            .filter-dropdown option:hover {
+                background-color: #d32f2f;
+                color: white;
+            }
+        </style>
+
     </head>
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
@@ -173,7 +204,6 @@
                         </a>
                     </li>
                     
-                     
                     <li class="nav-item">
                         <a class="nav-link " href="serviceTermManagement">
                             <i class="me-2"></i>
@@ -203,42 +233,178 @@
                 </li>
             </ul>
 
+            <div class="filter-sort-bar">
+                <label for="filterStatus">Filter by Status:</label>
+                <select id="filterStatus" class="filter-dropdown" onchange="filterStaff()">
+                    <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
+                    <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
+                    <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Inactive</option>                  
+                </select>
+
+                <label for="sortStaff">Sort by:</label>
+                <select id="sortStaff" class="filter-dropdown">
+                    <option value="full_name" ${requestScope.sort == 'full_name' ? 'selected' : ''}>Name</option>
+                    <option value="gender" ${requestScope.sort == 'gender' ? 'selected' : ''}>Gender</option>
+                    <option value="date_of_birth" ${requestScope.sort == 'date_of_birth' ? 'selected' : ''}>DOB</option>
+                </select>
+            </div>    
+
+            <div class="search-bar">
+                <form action="searchStaff">
+                    <input type="text" placeholder="Search" name="searchName" >
+                    <input type="hidden" name="type" value="${param.type != null ? param.type : 'bankers'}">
+                    <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
+                </form>
+            </div>    
+
             <!-- View list staff -->
             <div class="mt-3">
                 <a class="btn btn-success mb-2" href="addStaff.jsp">Add New</a>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <c:forEach items="${requestScope.data}" var="b">
-                        <tr>
-                            <td>${b.staff_id}</td>
-                            <td>${b.full_name}</td>
-                            <td>${b.email}</td>
-                            <td>${b.phone_number}</td>
-                            <td>${b.address}</td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${b.role_id == 2}">Banker</c:when>
-                                    <c:when test="${b.role_id == 3}">Marketer</c:when>
-                                    <c:when test="${b.role_id == 4}">Accountant</c:when>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
-                                <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
+
+                <!-- Display search results if available -->
+                <c:if test="${not empty ListByName or not empty ListByPhone}">
+                    <div class="search-results mb-4">
+                        <h4>Search Results</h4>
+
+                        <!-- Results by Name -->
+                        <c:if test="${not empty ListByName}">
+                            <h5 class="mt-3">Found by Name:</h5>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Gender</th>
+                                        <th>DOB</th>
+                                        <th>Address</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <c:forEach items="${ListByName}" var="b">
+                                    <tr>
+                                        <td>${b.staff_id}</td>
+                                        <td>${b.full_name}</td>
+                                        <td>${b.email}</td>
+                                        <td>${b.phone_number}</td>
+                                        <td>${b.gender}</td>
+                                        <td>${b.date_of_birth}</td>
+                                        <td>${b.address}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${b.role_id == 2}">Banker</c:when>
+                                                <c:when test="${b.role_id == 3}">Marketer</c:when>
+                                                <c:when test="${b.role_id == 4}">Accountant</c:when>
+                                            </c:choose>
+                                        </td>
+                                        <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
+                                        <td>
+                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
+                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </c:if>
+
+                        <!-- Results by Phone -->
+                        <c:if test="${not empty ListByPhone}">
+                            <h5 class="mt-3">Found by Phone:</h5>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Gender</th>
+                                        <th>DOB</th>
+                                        <th>Address</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <c:forEach items="${ListByPhone}" var="b">
+                                    <tr>
+                                        <td>${b.staff_id}</td>
+                                        <td>${b.full_name}</td>
+                                        <td>${b.email}</td>
+                                        <td>${b.phone_number}</td>
+                                        <td>${b.gender}</td>
+                                        <td>${b.date_of_birth}</td>
+                                        <td>${b.address}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${b.role_id == 2}">Banker</c:when>
+                                                <c:when test="${b.role_id == 3}">Marketer</c:when>
+                                                <c:when test="${b.role_id == 4}">Accountant</c:when>
+                                            </c:choose>
+                                        </td>
+                                        <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
+                                        <td>
+                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
+                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </c:if>
+
+                        <!-- No results found message -->
+                        <c:if test="${empty ListByName and empty ListByPhone}">
+                            <div class="alert alert-info mt-3">
+                                No staff members found matching your search.
+                            </div>
+                        </c:if>
+                    </div>
+                </c:if>
+
+                <!-- Original staff list table -->
+                <c:if test="${empty ListByName and empty ListByPhone}">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Gender</th>
+                                <th>DOB</th>
+                                <th>Address</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <c:forEach items="${requestScope.data}" var="b">
+                            <tr>
+                                <td>${b.staff_id}</td>
+                                <td>${b.full_name}</td>
+                                <td>${b.email}</td>
+                                <td>${b.phone_number}</td>
+                                <td>${b.gender}</td>
+                                <td>${b.date_of_birth}</td>
+                                <td>${b.address}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${b.role_id == 2}">Banker</c:when>
+                                        <c:when test="${b.role_id == 3}">Marketer</c:when>
+                                        <c:when test="${b.role_id == 4}">Accountant</c:when>
+                                    </c:choose>
+                                </td>
+                                <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
+                                <td>
+                                    <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
+                                    <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:if>
             </div>
         </main>
 
@@ -248,8 +414,23 @@
                     window.location = "deleteStaff?id=" + id;
                 }
             }
-        </script>
+                     
+            function filterStaff() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortStaff").value;
+                var type = '${param.type}';  
+                window.location.href = "StaffFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+            }
 
+            function sortStaff() {
+                var sort = document.getElementById("sortStaff").value;
+                var status = document.getElementById("filterStatus").value;
+                var type = '${param.type}';  
+                window.location.href = "StaffFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+            }
+
+            document.getElementById("sortStaff").onchange = sortStaff;
+        </script>
 
         </main>
 

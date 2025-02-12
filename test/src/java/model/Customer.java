@@ -4,6 +4,7 @@
  */
 package model;
 
+import dal.DAO_Insurance;
 import java.util.Date;
 
 /**
@@ -11,15 +12,14 @@ import java.util.Date;
  * @author default
  */
 public class Customer {
-    public String full_name,email,username,password,phone_number,address,card_type,status,gender,profile_picture;
-    int customer_id;
-    double amount,credit_limit;
-    Date date_of_birth,created_at;
-    int role_id;
+
+    public String full_name, email, username, password, phone_number, address, card_type, status, gender, profile_picture;
+    int customer_id, role_id,insurance_id;
+    double amount, credit_limit;
+    Date date_of_birth, created_at;
+
     public Customer() {
     }
-
-    
 
     public Customer(String username, String password) {
         this.username = username;
@@ -39,7 +39,24 @@ public class Customer {
         this.date_of_birth = date_of_birth;
     }
 
-   
+    public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, int role_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.card_type = card_type;
+        this.status = status;
+        this.gender = gender;
+        this.profile_picture = profile_picture;
+        this.customer_id = customer_id;
+        this.role_id = role_id;
+        this.amount = amount;
+        this.credit_limit = credit_limit;
+        this.date_of_birth = date_of_birth;
+        this.created_at = created_at;
+    }
     
     public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
         this.full_name = full_name;
@@ -59,6 +76,27 @@ public class Customer {
         this.created_at = created_at;
     }
 
+    public Customer(String full_name, String email, String username, String phone_number, String address, String gender, int customer_id, int insurance_id) {
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.gender = gender;
+        this.customer_id = customer_id;
+        this.insurance_id = insurance_id;
+    }
+    
+    
+
+    public int getInsurance_id() {
+        return insurance_id;
+    }
+
+    public void setInsurance_id(int insurance_id) {
+        this.insurance_id = insurance_id;
+    }
+
     public Date getCreated_at() {
         return created_at;
     }
@@ -75,8 +113,6 @@ public class Customer {
         this.role_id = role_id;
     }
 
-    
-
     public int getCustomer_id() {
         return customer_id;
     }
@@ -85,7 +121,6 @@ public class Customer {
         this.customer_id = customer_id;
     }
 
-      
     public String getFull_name() {
         return full_name;
     }
@@ -158,8 +193,6 @@ public class Customer {
         this.gender = gender;
     }
 
-   
-
     public String getProfile_picture() {
         return profile_picture;
     }
@@ -194,8 +227,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" + "full_name=" + full_name + ", email=" + email + ", username=" + username + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", card_type=" + card_type + ", status=" + status + ", gender=" + gender + ", profile_picture=" + profile_picture + ", customer_id=" + customer_id + ", amount=" + amount + ", credit_limit=" + credit_limit + ", date_of_birth=" + date_of_birth + ", created_at=" + created_at + '}';
+        return "Customer{" + "full_name=" + full_name + ", email=" + email + ", username=" + username + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", card_type=" + card_type + ", status=" + status + ", gender=" + gender + ", profile_picture=" + profile_picture + ", customer_id=" + customer_id + ", role_id=" + role_id + ", amount=" + amount + ", credit_limit=" + credit_limit + ", date_of_birth=" + date_of_birth + ", created_at=" + created_at + '}';
     }
-
 
 }

@@ -81,7 +81,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchServiceTerm" method="post" role="form">
                 <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
             </form>
 
@@ -232,7 +232,22 @@
             <div class="title-group mb-3">
                 <h1 class="h2 mb-0 text-danger">Service term Management</h1>
             </div>
+            <div class="filter-sort-bar">
+                <label for="filterServiceName">Filter by service name:</label> 
+                <select id="filterServiceName" class="filter-dropdown" onchange="filterServiceName()">
+                    <option value="all" ${requestScope.serviceName == 'all' ? 'selected' : ''}}>All </option>        
+                    <c:forEach var="s" items="${requestScope.listS}">
+                        <option value="${s.service_name}" ${requestScope.serviceName == s.service_name ? 'selected':''}>${s.service_name}</option>        
+                    </c:forEach>
+                </select>
 
+                <label for="sort">Sort by:</label>
+                <select id="sort" class="filter-dropdown" onchange="filterSort()">
+                    <option value="all" ${requestScope.sort == 'all' ? 'selected' : ''}>All</option>        
+                    <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Service term name</option>
+                    <option value="max_term_months" ${requestScope.sort == 'max_term_months' ? 'selected' : ''}>Max Term Months</option>
+                </select>
+            </div>    
             <div class="mt-3">
                 <a class="btn btn-success mb-2" href="addServiceTerm">Add New</a>
                 <table class="news-table">
@@ -276,16 +291,25 @@
                 </table>
                 <script type="text/javascript">
                     function doDelete(id) {
-                        if (confirm("Are you sure to delete this term ?" )) {
+                        if (confirm("Are you sure to delete this term ?")) {
                             window.location = "deleteServiceTerm?term_id=" + id;
                         }
                     }
-                </script>
 
+                    function filterServiceName() {
+                        var serviceName = document.getElementById("filterServiceName").value;
+                        var sort = document.getElementById("sort").value;
+                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort;
+                    }
+
+                    function filterSort() {
+                        var sort = document.getElementById("sort").value;
+                        var serviceName = document.getElementById("filterServiceName").value;
+                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort;
+                    }
+                </script>
             </div>
         </main>
-        </main>
-
     </div>
 </div>
 

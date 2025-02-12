@@ -4,6 +4,7 @@
  */
 package controller_Marketer;
 
+import dal.DAO;
 import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;

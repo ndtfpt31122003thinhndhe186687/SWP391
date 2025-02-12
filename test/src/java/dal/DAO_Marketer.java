@@ -47,11 +47,6 @@ public class DAO_Marketer extends DBContext {
         this.status = status;
     }
 
-    
-
-   
-
-
     //get all news that is approved
     public List<News> getAllNews() {
         List<News> listNews = new ArrayList<>();
@@ -91,7 +86,6 @@ public class DAO_Marketer extends DBContext {
         }
         return null;
     }
-
 
     //insert news
     public void addNews(String title, String content, int staff_id) {
@@ -220,11 +214,11 @@ public class DAO_Marketer extends DBContext {
             System.out.println(e);
         }
     }
-    
+
     //search news by title
-    public List<News> getSearchNewsByTitle(String title,int staff_id){
+    public List<News> getSearchNewsByTitle(String title, int staff_id) {
         List<News> list = new ArrayList<>();
-        String sql = "select* from news where title like ? and staff_id=?";
+        String sql = "select * from news where title like ? and staff_id=?";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, "%" + title + "%");
@@ -267,15 +261,14 @@ public class DAO_Marketer extends DBContext {
         }
         return list;
     }
-    
+
     //Total article
-    public int totalArticle(int staff_id){
-        String sql="select count(*) as totalArticle from news where status='approved' and staff_id=?";
+    public int totalArticle() {
+        String sql = "select count(*) as totalArticle from news where status='approved'";
         try {
-            PreparedStatement st=con.prepareStatement(sql);
-            st.setInt(1, staff_id);
-            ResultSet rs=st.executeQuery();
-            while(rs.next()){
+            PreparedStatement st = con.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
                 return rs.getInt("totalArticle");
             }
         } catch (Exception e) {
@@ -283,56 +276,31 @@ public class DAO_Marketer extends DBContext {
         }
         return 0;
     }
-    
+
     //Total views
-    public int totalView(){
-        String sql="select count(*) as totalView from news_views";
+    public int totalView() {
+        String sql = "select count(*) as totalView from news_views";
         try {
-            PreparedStatement st=con.prepareStatement(sql);
-            ResultSet rs=st.executeQuery();
-            while(rs.next()){
+            PreparedStatement st = con.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
                 return rs.getInt("totalView");
-            }
-        } catch (Exception e) {
-                System.out.println(e);
-        }
-        return 0;
-    }
-    
-    
-    //Get all news sorted
-    public List<News> getAllNewsSorted(int staff_id,String sortBy){
-        List<News> list=new ArrayList<>();
-        String sql="select* from news where staff_id=? order by "+sortBy+" asc";
-        try {
-            PreparedStatement st=con.prepareStatement(sql);
-            st.setInt(1, staff_id);
-            ResultSet rs=st.executeQuery();
-            while(rs.next()){
-                News n = new News();
-                n.setNews_id(rs.getInt("news_id"));
-                n.setTitle(rs.getString("title"));
-                n.setContent(rs.getString("content"));
-                n.setCreated_at(rs.getDate("created_at"));
-                n.setUpdated_at(rs.getDate("updated_at"));
-                n.setStatus(rs.getString("status"));
-                list.add(n);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-        return list;
+        return 0;
     }
-    //Get news sorted by status
-    public List<News> getNewsByStatusSorted(int staff_id,String status, String sortBy){
-        List<News> list=new ArrayList<>();
-        String sql="select* from news where staff_id=? and status=? order by "+sortBy+" asc";
+
+    //Get all news sorted
+    public List<News> getAllNewsSorted(int staff_id, String sortBy) {
+        List<News> list = new ArrayList<>();
+        String sql = "select* from news where staff_id=? order by " + sortBy + " asc";
         try {
-            PreparedStatement st=con.prepareStatement(sql);
+            PreparedStatement st = con.prepareStatement(sql);
             st.setInt(1, staff_id);
-            st.setString(2, status);
-            ResultSet rs=st.executeQuery();
-            while(rs.next()){
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
                 News n = new News();
                 n.setNews_id(rs.getInt("news_id"));
                 n.setTitle(rs.getString("title"));
@@ -348,5 +316,37 @@ public class DAO_Marketer extends DBContext {
         return list;
     }
 
+    //Get news sorted by status
+    public List<News> getNewsByStatusSorted(int staff_id, String status, String sortBy) {
+        List<News> list = new ArrayList<>();
+        String sql = "select* from news where staff_id=? and status=? order by " + sortBy + " asc";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, staff_id);
+            st.setString(2, status);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                News n = new News();
+                n.setNews_id(rs.getInt("news_id"));
+                n.setTitle(rs.getString("title"));
+                n.setContent(rs.getString("content"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setUpdated_at(rs.getDate("updated_at"));
+                n.setStatus(rs.getString("status"));
+                list.add(n);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<News> getListByPage(List<News> list, int start, int end) {
+        List<News> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
 
 }

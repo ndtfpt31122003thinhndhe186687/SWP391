@@ -147,6 +147,73 @@
                         </a>
                     </li>
                     </c:if>
+                    <c:if test="${sessionScope.account.role_id==2}">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="customerList">
+                            <i class="bi-house-fill me-2"></i>
+                            Management
+                        </a>
+                    </li>
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id==4}">
+                        <li class="nav-item">
+                        <a class="nav-link" href="list-insurance-contracts">
+                            <i class="bi-house-fill me-2"></i>
+                            List Insurance Contracts
+                        </a>
+                    </li>
+                    </c:if>
+                    
+                    <c:if test="${sessionScope.account.role_id==4}">
+                        <li class="nav-item">
+                        <a class="nav-link" href="list-debt-customers">
+                            <i class="bi-wallet me-2"></i>
+                            List Debt Customer
+                        </a>
+                    </li>
+                    </c:if>
+                    
+                    <c:if test="${sessionScope.account.role_id==4}">
+                        <li class="nav-item">
+                        <a class="nav-link" href="list-transactions">
+                            <i class="bi-person me-2"></i>
+                            List Transactions
+                        </a>
+                    </li>
+                    </c:if>
+                    
+                    <c:if test="${sessionScope.account.role_id==4}">
+                        <li class="nav-item">
+                        <a class="nav-link" href="list-insurance-transactions">
+                            <i class="bi-person me-2"></i>
+                            List Insurance Transactions
+                        </a>
+                    </li>
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id==4}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="amountStatistics">
+                            <i class="bi-person me-2"></i>
+                            Amount Statistics
+                        </a>
+                    </li>
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id==4}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="CustomerList_AServlet">
+                            <i class="bi-person me-2"></i>
+                            Accountant
+                        </a>
+                    </li>                   
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id==4}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="calculate">
+                            <i class="bi-person me-2"></i>
+                            Loan and Savings Interest Calculator
+                        </a>
+                    </li>                   
+                    </c:if>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="index.html">
                             <i class="bi-house-fill me-2"></i>

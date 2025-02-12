@@ -63,21 +63,32 @@ public class NewsManageServlet extends HttpServlet {
             throws ServletException, IOException {
         String staffId_raw = request.getParameter("staff_id");
         String status = request.getParameter("status");
-        String sortBy=request.getParameter("sort");
+        String sortBy = request.getParameter("sort");
+        String page_raw = request.getParameter("page");
         List<News> list;
-        status=(status==null) ?"all": status;
-        sortBy=(sortBy==null) ?"created_at" : sortBy;
+        status = (status == null) ? "all" : status;
+        sortBy = (sortBy == null) ? "created_at" : sortBy;
         try {
             int staff_id = Integer.parseInt(staffId_raw);
-        DAO_Marketer d=new DAO_Marketer();
-            if (status.equals("all")){
-                list=d.getAllNewsSorted(staff_id, sortBy);
-            }else{
+            DAO_Marketer d = new DAO_Marketer();
+            if (status.equals("all")) {
+                list = d.getAllNewsSorted(staff_id, sortBy);
+            } else {
                 list = d.getNewsByStatusSorted(staff_id, status, sortBy);
             }
-            request.setAttribute("listN", list);
             request.setAttribute("sort", sortBy);
             request.setAttribute("status", status);
+
+            int pageSize = 5;
+            int totalNews = list.size();
+            int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
+            int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+            int start = (page - 1) * pageSize;
+            int end = Math.min(page * pageSize, totalNews);
+            List<News> listN = d.getListByPage(list, start, end);
+            request.setAttribute("listN", listN);
+            request.setAttribute("page", page);
+            request.setAttribute("totalPage", totalPage);
             request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);

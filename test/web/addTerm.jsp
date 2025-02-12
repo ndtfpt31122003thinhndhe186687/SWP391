@@ -62,7 +62,7 @@
                 font-weight: 500;
             }
             
-            input {
+            input, select {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #ddd;
@@ -71,7 +71,7 @@
                 transition: border-color 0.3s;
             }
             
-            input:focus {
+            input:focus, select:focus {
                 outline: none;
                 border-color: var(--primary-red);
                 box-shadow: 0 0 5px rgba(220,53,69,0.2);
@@ -94,13 +94,30 @@
             button:hover {
                 background-color: var(--dark-red);
             }
+
+            select {
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 1rem center;
+                background-size: 1em;
+            }
+
+            .invalid-feedback {
+                color: var(--primary-red);
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Add New Term</h1>
             <h4 class="error-message">${requestScope.error}</h4>
-            <form action="addTerm" method="get">
+            <form action="addTerm" method="get" id="termForm" onsubmit="return validateForm()">
                 <div class="form-group">
                     <label for="term_name">Term Name:</label>
                     <input type="text" id="term_name" name="term_name" required />
@@ -108,21 +125,57 @@
                 
                 <div class="form-group">
                     <label for="duration">Duration:</label>
-                    <input type="text" id="duration" name="duration" required />
+                    <input type="number" id="duration" name="duration" required min="1" 
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <div class="invalid-feedback" id="duration-feedback">Please enter a valid number for duration.</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="term_type">Term Type:</label>
-                    <input type="text" id="term_type" name="term_type" required />
+                    <select id="term_type" name="term_type" required>
+                        <option value="">Select term type</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="annually">Annually</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
                     <label for="status">Status:</label>
-                    <input type="text" id="status" name="status" required />
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
                 </div>
                 
                 <button type="submit">Add New Term</button>
             </form>
         </div>
+
+        <script>
+            function validateForm() {
+                let isValid = true;
+                
+                // Duration validation
+                const duration = document.getElementById('duration');
+                const durationFeedback = document.getElementById('duration-feedback');
+                if (!duration.checkValidity() || duration.value < 1) {
+                    durationFeedback.style.display = 'block';
+                    isValid = false;
+                } else {
+                    durationFeedback.style.display = 'none';
+                }
+
+                return isValid;
+            }
+
+            // Prevent non-numeric input in duration field
+            document.getElementById('duration').addEventListener('keypress', function(e) {
+                if (e.key < '0' || e.key > '9') {
+                    e.preventDefault();
+                }
+            });
+        </script>
     </body>
 </html>

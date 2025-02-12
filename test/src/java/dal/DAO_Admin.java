@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import model.Customer;
+import model.News;
 import model.ServiceTerms;
 import model.Services;
 import model.Staff;
@@ -226,11 +228,188 @@ public class DAO_Admin extends DBContext {
         return null;
     }
 
-    public List<Services> getAllServices() {
-        List<Services> list = new ArrayList<>();
-        String sql = "select * from services ";
+    public Staff get_Staff_By_Email(String email) {
+        String sql = "select * from staff where email=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, email);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                return s;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public Staff get_Staff_By_Phone(String phone) {
+        String sql = "select * from staff where phone_number=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, phone);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                return s;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    // get all staff sorted 
+    public List<Staff> get_All_Staff_Sorted(int role_id, String sortBy) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "select * from staff where role_id =? order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, role_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    // get staff sorted by status
+    public List<Staff> get_Staff_By_Status_Sorted(int role_id, String status, String sortBy) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "select * from staff where role_id =? and status =? order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, role_id);
+            pre.setString(2, status);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Services> getAllServices() {
+        List<Services> list = new ArrayList<>();
+        String sql = "SELECT * FROM services where status='active'";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Services s = new Services();
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setService_type(rs.getString("service_type"));
+                s.setDescription(rs.getString("description"));
+                s.setStatus(rs.getString("status"));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public Services getServiceById(int serviceId) {
+        String sql = "SELECT * FROM services WHERE service_id = ?";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, serviceId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Services s = new Services();
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setService_type(rs.getString("service_type"));
+                s.setDescription(rs.getString("description"));
+                s.setStatus(rs.getString("status"));
+                return s;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public List<Services> get_All_Service_Sorted(String sortBy) {
+        List<Services> list = new ArrayList<>();
+        String sql = "select * from services order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Services s = new Services();
+                s.setService_id(rs.getInt(1));
+                s.setService_name(rs.getString(2));
+                s.setDescription(rs.getString(3));
+                s.setService_type(rs.getString(4));
+                s.setStatus(rs.getString(5));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Services> get_All_Service_By_Status_Sorted(String sortBy, String status) {
+        List<Services> list = new ArrayList<>();
+        String sql = "select * from services where status = ? order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, status);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 Services s = new Services();
@@ -267,17 +446,83 @@ public class DAO_Admin extends DBContext {
         return list;
     }
 
+    public List<Term> get_All_Term_Sorted(String sortBy) {
+        List<Term> list = new ArrayList<>();
+        String sql = "select * from term order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Term t = new Term();
+                t.setTerm_id(rs.getInt(1));
+                t.setTerm_name(rs.getString(2));
+                t.setDuration(rs.getInt(3));
+                t.setTerm_type(rs.getString(4));
+                t.setStatus(rs.getString(5));
+                list.add(t);
+            }
+        } catch (SQLException e) {
+        }
+        return list;
+    }
+
+    public List<Term> get_All_Term_By_Status_Sorted(String sortBy, String status) {
+        List<Term> list = new ArrayList<>();
+        String sql = "select * from term where status=? order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, status);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Term t = new Term();
+                t.setTerm_id(rs.getInt(1));
+                t.setTerm_name(rs.getString(2));
+                t.setDuration(rs.getInt(3));
+                t.setTerm_type(rs.getString(4));
+                t.setStatus(rs.getString(5));
+                list.add(t);
+            }
+        } catch (SQLException e) {
+        }
+        return list;
+    }
+
     public List<Transaction> getAllTransaction() {
         List<Transaction> list = new ArrayList<>();
-        String sql = "select * from transactions";
+        String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount,t.transaction_date,t.transaction_type \n"
+                + "from transactions t join customer c on t.customer_id=c.customer_id join services s on t.service_id=s.service_id";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 Transaction t = new Transaction();
                 t.setTransaction_id(rs.getInt(1));
-                t.setCustomer_id(rs.getInt(2));
-                t.setService_id(rs.getInt(3));
+                t.setCustomer_name(rs.getString(2));
+                t.setService_name(rs.getString(3));
+                t.setAmount(rs.getDouble(4));
+                t.setTransaction_date(rs.getDate(5));
+                t.setTransaction_type(rs.getString(6));
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Transaction> getTransactionByCustomerName(String name) {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount,t.transaction_date,t.transaction_type \n"
+                + "from transactions t join customer c on t.customer_id=c.customer_id join services s on t.service_id=s.service_id where c.full_name like ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + name + "%");
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Transaction t = new Transaction();
+                t.setTransaction_id(rs.getInt(1));
+                t.setCustomer_name(rs.getString(2));
+                t.setService_name(rs.getString(3));
                 t.setAmount(rs.getDouble(4));
                 t.setTransaction_date(rs.getDate(5));
                 t.setTransaction_type(rs.getString(6));
@@ -583,31 +828,157 @@ public class DAO_Admin extends DBContext {
         return 0;
     }
 
-    //get list service_term
-    public List<ServiceTerms> getAllServiceTerms() {
-        List<ServiceTerms> list = new ArrayList<>();
-        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
-                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
-                + "from service_terms st join services s on st.service_id=s.service_id";
+    public List<Staff> search_Staff_By_FullName(String fullName) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "SELECT * FROM staff WHERE full_name LIKE ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + fullName + "%");
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
-                ServiceTerms s = new ServiceTerms();
-                s.setTerm_id(rs.getInt("term_id"));
-                s.setTerm_name(rs.getString("term_name"));
-                s.setService_name(rs.getString("service_name"));
-                s.setService_id(rs.getInt("service_id"));
-                s.setDescription(rs.getString("description"));
-                s.setContract_terms(rs.getString("contract_terms"));
-                s.setMax_term_months(rs.getInt("max_term_months"));
-                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
-                s.setInterest_rate(rs.getDouble("interest_rate"));
-                s.setMin_payment(rs.getDouble("min_payment"));
-                s.setMin_deposit(rs.getDouble("min_deposit"));
-                s.setStatus(rs.getString("status"));
-                s.setCreated_at(rs.getDate("created_at"));
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
                 list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching staff by full name: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Staff> search_Staff_By_PhoneNumber(String phoneNumber) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "SELECT * FROM staff WHERE phone_number LIKE ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + phoneNumber + "%");
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching staff by phone: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Staff> searchStaffByFullName(String fullName, int role_id) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "SELECT * FROM staff WHERE full_name LIKE ? AND role_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + fullName + "%");
+            pre.setInt(2, role_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching staff by full name: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Staff> searchStaffByPhone(String phoneNumber, int role_id) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "SELECT * FROM staff WHERE phone_number LIKE ? AND role_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + phoneNumber + "%");
+            pre.setInt(2, role_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching staff by phone: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Services> searchServiceByName(String search) {
+        List<Services> list = new ArrayList<>();
+        String sql = "select * from services where LOWER(service_name) like LOWER(?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, search);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Services s = new Services();
+                s.setService_id(rs.getInt(1));
+                s.setService_name(rs.getString(2));
+                s.setDescription(rs.getString(3));
+                s.setService_type(rs.getString(4));
+                s.setStatus(rs.getString(5));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Term> searchTermByName(String search) {
+        List<Term> list = new ArrayList<>();
+        String sql = "select * from term where term_name like ?";
+        try {
+            PreparedStatement pre = con.prepareCall(sql);
+            pre.setString(1, "%" + search + "%");
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Term t = new Term();
+                t.setTerm_id(rs.getInt(1));
+                t.setTerm_name(rs.getString(2));
+                t.setDuration(rs.getInt(3));
+                t.setTerm_type(rs.getString(4));
+                t.setStatus(rs.getString(5));
+                list.add(t);
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -712,15 +1083,119 @@ public class DAO_Admin extends DBContext {
         }
     }
 
-    //
+    //search service term by name
+    public List<ServiceTerms> getServiceTermByName(String termName) {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "select st.*,s.service_name from service_terms st join services s on st.service_id=s.service_id where st.term_name like ?";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, "%" + termName + "%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setMax_term_months(rs.getInt("max_term_months"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getDate("created_at"));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    //filter
+    //get list service_term with sort by
+    public List<ServiceTerms> getAllServiceTerms() {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
+                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
+                + "from service_terms st join services s on st.service_id=s.service_id";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setService_name(rs.getString("service_name"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setMax_term_months(rs.getInt("max_term_months"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getDate("created_at"));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    //get list by service name and sortby
+    public List<ServiceTerms> getFilteredServiceTerms(String serviceName, String sortBy) {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "SELECT st.*, s.service_name FROM service_terms st "
+                + "JOIN services s ON st.service_id = s.service_id WHERE 1=1";
+
+        if (!serviceName.isEmpty() && !serviceName.equals("all") && serviceName != null) {
+            sql += " AND s.service_name = ?";
+        }
+
+        if (!sortBy.equals("all") && sortBy != null && !sortBy.isEmpty()) {
+            sql += " ORDER BY st." + sortBy;
+        }
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            if (!serviceName.isEmpty() && !serviceName.equals("all") && serviceName != null) {
+
+                ps.setString(1, serviceName);
+
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ServiceTerms term = new ServiceTerms();
+                term.setTerm_id(rs.getInt("term_id"));
+                term.setService_name(rs.getString("service_name"));
+                term.setService_id(rs.getInt("service_id"));
+                term.setTerm_name(rs.getString("term_name"));
+                term.setDescription(rs.getString("description"));
+                term.setContract_terms(rs.getString("contract_terms"));
+                term.setMax_term_months(rs.getInt("max_term_months"));
+                term.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                term.setInterest_rate(rs.getDouble("interest_rate"));
+                term.setMin_payment(rs.getDouble("min_payment"));
+                term.setMin_deposit(rs.getDouble("min_deposit"));
+                term.setCreated_at(rs.getTimestamp("created_at"));
+                term.setStatus(rs.getString("status"));
+                list.add(term);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // Main method for testing
     public static void main(String[] args) {
         DAO_Admin d = new DAO_Admin();
 //        String date ="2000-12-31";
 //        Date sqlDate = java.sql.Date.valueOf(date);
-        ServiceTerms s = new ServiceTerms(9, 12, "bbb", "aaa", "ccc", "inactive", 0, 0, 0, 0);
-        d.updateServiceTerm(s);
-        
 
     }
 }

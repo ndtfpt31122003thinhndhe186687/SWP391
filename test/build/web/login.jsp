@@ -65,6 +65,7 @@
                                                 <select name="role">
                                                     <option value="customer">Customer</option>
                                                     <option value="staff">Staff</option>
+                                                    <option value="insurance">Insurance</option>
                                                 </select>
                                                 <div class="form-group">
                                                     <div class="custom-control custom-checkbox small">

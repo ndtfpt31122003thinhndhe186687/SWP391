@@ -36,7 +36,7 @@
         <div class="header_section">
             <div class="header_left">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="logo"><a href="index.html"><img src="images/logo.png"></a></div>
+                    <div class="logo" "><a href="index.html"><img src="images/logobank.png"></a></div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -49,7 +49,7 @@
                                 <a class="nav-link" href="about.html">About</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="services.html">Services</a>
+                                <a class="nav-link" href="Service">Services</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="team.html">Team</a>
@@ -85,6 +85,7 @@
             <!-- Login/logout -->
             <div class="login">
                 <c:if test="${sessionScope.account != null}">
+                <c:if test="${sessionScope.account.role_id !=5}">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Hello ${sessionScope.account.full_name}
@@ -92,12 +93,22 @@
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
                                 <c:if test="${sessionScope.account.role_id==3}">
-                                <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}">Manage news</a></li>
+                                <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}&status=all&sort=created_at&page=1">Manage news</a></li>
                                 </c:if>
                             <li><a class="dropdown-item" href="logout">Logout</a></li>
                         </ul>
                     </li>
                 </c:if>
+                
+                <c:if test="${sessionScope.account.role_id == 5}">
+                    <li class="">
+                    <a class="" href="changeInfor">Hello ${sessionScope.account.insurance_name}</a>
+                        
+                    </li>
+                    <li><a href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">Manage insurance policy</a></li>
+                     <li><a class="dropdown-item" href="logout">Logout</a></li>
+                </c:if>
+                </c:if>    
                 <c:if test="${sessionScope.account == null}">
                     <li class="nav-item">
                         <a class="nav-link" href="login">Login</a>

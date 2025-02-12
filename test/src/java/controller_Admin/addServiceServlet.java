@@ -65,7 +65,7 @@ public class addServiceServlet extends HttpServlet {
         DAO_Admin d = new DAO_Admin();
         Services test = d.get_Service_BY_Service_name(service_name);
         if(test!=null){
-            request.setAttribute("error","service name"+ service_name+" existed!!");
+            request.setAttribute("error","service name "+ service_name+" existed!!");
             request.getRequestDispatcher("addService.jsp").forward(request, response);
         }else {
             Services s = new Services(service_name, description, service_type, status);

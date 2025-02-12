@@ -88,11 +88,19 @@ public class updateTermServlet extends HttpServlet {
         int term_id,duration;
         DAO_Admin d = new DAO_Admin();
         try {
-            term_id=Integer.parseInt(term_id_raw);
+            term_id=Integer.parseInt(term_id_raw);          
             duration = Integer.parseInt(duration_raw);
+            Term term = d.get_Term_BY_Term_id(term_id);
+            Term test =d.get_Term_BY_Term_name(term_name);
+            if(test != null){
+                request.setAttribute("error", "term name "+ term_name+" existed!!");
+                request.setAttribute("term", term);
+                request.getRequestDispatcher("updateTerm.jsp").forward(request, response);
+            }else{                        
             Term t = new Term(term_id, term_name, duration, term_type, status);
             d.UpdateTerm(t);
             response.sendRedirect("service_management");
+            }
         } catch (Exception e) {
         }
     }

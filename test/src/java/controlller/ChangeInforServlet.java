@@ -92,7 +92,7 @@ public class ChangeInforServlet extends HttpServlet {
             if (email == null || d.existedEmail(email)) {
                 throw new Exception("Email has been already exists.");
             }
-            if(phone==null || phone.matches("^0\\d{9}$")){
+            if(phone==null || phone.matches("^0\\d{10}$")){
                 throw new Exception("Phone number must start with 0 and have 10 digits");
             }
             //check phone number duplicate

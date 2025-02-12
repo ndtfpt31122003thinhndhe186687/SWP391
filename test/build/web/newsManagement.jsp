@@ -95,17 +95,51 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 20px;
+                padding: 10px;
+                width: 100%;
+            }
+
+            .pagination a, .pagination span {
+                padding: 8px 12px;
+                margin: 0 5px;
+                text-decoration: none;
+                border: 1px solid #ddd;
+                color: #007bff;
+                background-color: #fff;
+                border-radius: 5px;
+                display: inline-block;
+                text-align: center;
+            }
+
+            .pagination a:hover {
+                background-color: red;
+                color: white;
+            }
+
+            .pagination .current-page {
+                background-color: red;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+            }
         </style>
     </head>
     <body>
         <div class="sidebar">
-            <h2>Bank News</h2>
+            <h2>Bank News</h2>      
+            <a href="home">Back Home</a>
             <a href="newsManage?staff_id=${sessionScope.account.staff_id}">Dashboard</a>
             <a href="addNews">Add News</a>
             <a href="newsStatistic">Statistic of news</a>
         </div>
         <div class="content">
             <h1>News Management</h1>
+            <input type="hidden" name="page" value="1">
             <div class="filter-sort-bar">
                 <label for="filterStatus">Filter by Status:</label>
                 <select id="filterStatus" class="filter-dropdown" onchange="filterNews()">
@@ -116,16 +150,19 @@
                 </select>
 
                 <label for="sortNews">Sort by:</label>
-                <select id="sortNews" class="filter-dropdown">
+                <select id="sortNews" class="filter-dropdown" onchange="sortNews()">
                     <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created Date</option>
                     <option value="title" ${requestScope.sort == 'title' ? 'selected' : ''}>Title</option>
                 </select>
             </div>
 
             <div class="search-bar">
-                <form action="searchNews">
+                <form action="searchNews" method="post">
                     <input type="text" placeholder="Search news by title" name="searchName">
-                    <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
+                    <button type="submit" style="background-color: #d32f2f;
+                            color: white;
+                            border: none;
+                            padding: 5px 10px;">Search</button>
                 </form>
             </div>
             <table class="news-table">
@@ -148,13 +185,29 @@
                             <td>${news.updated_at}</td>
                             <td>${news.status}</td>  
                             <td>
-                                <a href="editNews?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Edit</a>
-                                <a onclick="doDelete('${news.news_id}')" href="#" style="background-color: #b71c1c; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;" >Delete</a>
+                                <a href="editNews?news_id=${news.news_id}" style="background-color: #d32f2f;
+                                   color: white;
+                                   padding: 5px 10px;
+                                   text-decoration: none;
+                                   border-radius: 5px;">Edit</a>
+                                <a onclick="doDelete('${news.news_id}')" href="#" style="background-color: #b71c1c;
+                                   color: white;
+                                   padding: 5px 10px;
+                                   text-decoration: none;
+                                   border-radius: 5px;" >Delete</a>
                                 <c:if test="${news.status=='draft'}">
-                                    <a href="sendNews?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Send</a>
+                                    <a href="sendNews?news_id=${news.news_id}" style="background-color: #d32f2f;
+                                       color: white;
+                                       padding: 5px 10px;
+                                       text-decoration: none;
+                                       border-radius: 5px;">Send</a>
                                 </c:if>
                                 <c:if test="${news.status!='approved' && news.status!='draft'}">
-                                    <a href="cancelSend?news_id=${news.news_id}" style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Cancel sending</a>
+                                    <a href="cancelSend?news_id=${news.news_id}" style="background-color: #d32f2f;
+                                       color: white;
+                                       padding: 5px 10px;
+                                       text-decoration: none;
+                                       border-radius: 5px;">Cancel sending</a>
                                 </c:if>
                             </td>
                         </tr>
@@ -164,26 +217,35 @@
                         if (confirm("Are you sure to delete this news ?")) {
                             window.location = "deleteNews?news_id=" + id;
                         }
-                    } 
+                    }
                     function filterNews() {
                         var status = document.getElementById("filterStatus").value;
-                        var sort = document.getElementById("sortNews").value; 
-                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort;
+                        var sort = document.getElementById("sortNews").value;
                     }
 
                     function sortNews() {
                         var sort = document.getElementById("sortNews").value;
-                        var status = document.getElementById("filterStatus").value; 
-                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort;
+                        var status = document.getElementById("filterStatus").value;
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1";
                     }
 
-                    document.getElementById("sortNews").onchange = sortNews;
                 </script>  
-
-
-
                 </tbody>
             </table>
+            <div class="pagination">
+                <c:forEach begin="1" end="${totalPage}" var="i">
+                    <c:choose>
+                        <c:when test="${i == page}">
+                            <span class="current-page">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="newsManage?staff_id=${sessionScope.account.staff_id}&status=${status}&sort=${sort}&page=${i}">${i}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
         </div>
+
+
     </body>
 </html>

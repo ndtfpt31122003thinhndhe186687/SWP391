@@ -62,7 +62,7 @@
                 font-weight: 500;
             }
             
-            input {
+            input, select {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #ddd;
@@ -71,7 +71,7 @@
                 transition: border-color 0.3s;
             }
             
-            input:focus {
+            input:focus, select:focus {
                 outline: none;
                 border-color: var(--primary-red);
                 box-shadow: 0 0 5px rgba(220,53,69,0.2);
@@ -94,6 +94,16 @@
             button:hover {
                 background-color: var(--dark-red);
             }
+
+            select {
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 1rem center;
+                background-size: 1em;
+            }
         </style>
     </head>
     <body>
@@ -113,12 +123,22 @@
                 
                 <div class="form-group">
                     <label for="service_type">Service Type:</label>
-                    <input type="text" id="service_type" name="service_type" required />
+                    <select id="service_type" name="service_type" required>
+                        <option value="">Select service type</option>
+                        <option value="saving">Saving</option>
+                        <option value="loan">Loan</option>
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdrawal</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
                     <label for="status">Status:</label>
-                    <input type="text" id="status" name="status" required />
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
                 </div>
                 
                 <button type="submit">Add New Service</button>

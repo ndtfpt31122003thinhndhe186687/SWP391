@@ -14,11 +14,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.News;
 import model.Staff;
-import java.util.List;
-
 
 /**
  *
@@ -65,13 +64,21 @@ public class SearchNewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAO_Marketer d=new DAO_Marketer();
-        String searchName = request.getParameter("searchName");
-        HttpSession session=request.getSession();
-        Staff staff=(Staff) session.getAttribute("account");
-        List<News> list = d.getSearchNewsByTitle(searchName,staff.getStaff_id());
-        request.setAttribute("listN", list);
         request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
+//        DAO_Marketer d = new DAO_Marketer();
+//        String searchName = request.getParameter("searchName");
+//         if (searchName == null && searchName.trim().isEmpty()) {
+//            searchName = "%";
+//        } else {
+//            searchName = searchName.trim().replaceAll("\\s+", " ");
+//            searchName = "%" + searchName.replace(" ", "%") + "%";
+//        }
+//        HttpSession session = request.getSession();
+//        Staff s = (Staff) session.getAttribute("account");
+//        List<News> list = d.getSearchNewsByTitle(searchName, s.getStaff_id());
+//        request.setAttribute("listN", list);
+//        request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
+
     }
 
     /**
@@ -85,7 +92,20 @@ public class SearchNewsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        DAO_Marketer d = new DAO_Marketer();
+        String searchName = request.getParameter("searchName");
+         if (searchName == null && searchName.trim().isEmpty()) {
+            searchName = "%";
+        } else {
+            searchName = searchName.trim().replaceAll("\\s+", " ");
+            searchName = "%" + searchName.replace(" ", "%") + "%";
+        }
+        HttpSession session = request.getSession();
+        Staff s = (Staff) session.getAttribute("account");
+        List<News> list = d.getSearchNewsByTitle(searchName, s.getStaff_id());
+        request.setAttribute("listN", list);
+        request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
     }
 
     /**

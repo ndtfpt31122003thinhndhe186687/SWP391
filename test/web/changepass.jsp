@@ -104,7 +104,7 @@
                             <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
 
                             <div class="d-flex flex-column">
-                                <small>${sessionScope.account.full_name}</small>
+                                <small>${sessionScope.account.customer_id}</small>
                                 <small>${sessionScope.account.email}</small>
                             </div>
                         </div>
@@ -202,7 +202,15 @@
                                 <form class="custom-form password-form" action="changepass" method="post" role="form">
                                     <input type="password" name="opass" id="password" class="form-control" placeholder="Current Password" required="">
                                     <input type="password" name="newpass" id="newpass" class="form-control" placeholder="New Password" required="">
+                                    <c:if test="${not empty error}">
+                                        <div class="text-danger">${error}</div>
+                                    </c:if>
+
                                     <input type="password" name="confirmpass" id="confirmpass" class="form-control" placeholder="Confirm Password" required="">
+                                    <c:if test="${not empty error}">
+                                        <div class="text-danger">${error}</div>
+                                    </c:if>
+
                                     <hr>
                                     <div class="d-flex">
                                         <button type="button" class="form-control me-3 text-bg-danger">Reset</button>

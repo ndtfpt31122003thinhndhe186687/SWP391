@@ -84,6 +84,7 @@
     <body>
         <div class="sidebar">
             <h2>Bank News</h2>
+            <a href="home">Back Home</a>
             <a href="newsManage?staff_id=${sessionScope.account.staff_id}">Dashboard</a>
             <a href="addNews">Add News</a>
             <a href="newsStatistic">Statistic of news</a>

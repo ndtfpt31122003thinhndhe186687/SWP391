@@ -50,8 +50,8 @@ public class DAO extends DBContext {
     // Register a new customer
     public void register(Customer c) {
         String sql = "INSERT INTO [dbo].[customer] "
-                + "([full_name],[username],[email] , [phone_number], [password], [address],[card_type], [gender], [date_of_birth], [profile_picture]) "
-                + "VALUES (?,?, ?, ?, ?, ?,?, ?, ?, ?)";
+                + "([full_name],[username],[email] , [phone_number], [password], [address],[card_type], [gender], [date_of_birth],[role_id], [profile_picture]) "
+                + "VALUES (?,?, ?, ?, ?, ?,?, ?, ?,?, ?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, c.getFull_name());
@@ -63,13 +63,16 @@ public class DAO extends DBContext {
             ps.setString(7, c.getCard_type());
             ps.setString(8, c.getGender());
             ps.setDate(9, new java.sql.Date(c.getDate_of_birth().getTime())); // Convert java.util.Date to java.sql.Date
-            ps.setString(10, c.getProfile_picture());
+            ps.setInt(10, c.getRole_id());
+            ps.setString(11, c.getProfile_picture());
             ps.executeUpdate();
         } catch (SQLException e) {
             status = "Error at register: " + e.getMessage();
             e.printStackTrace();
         }
     }
+
+    
 
     // Check if a phone number already exists
     public boolean existedPhoneNum(String phoneNum) {
