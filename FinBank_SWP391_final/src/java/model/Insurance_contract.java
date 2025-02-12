@@ -13,15 +13,21 @@ public class Insurance_contract {
     private String payment_frequency;
     private String status;
     private Timestamp created_at;
+    
+    // Các trường bổ sung
+    private String customer_name;
+    private String service_name;
+    private String policy_name;
 
-    // Default constructor
+    // Constructor mặc định
     public Insurance_contract() {
     }
 
-    // Constructor with all fields
+    // Constructor đầy đủ (bao gồm cả các trường bổ sung)
     public Insurance_contract(int contract_id, int customer_id, int service_id, int policy_id, 
                               Date start_date, Date end_date, String payment_frequency, 
-                              String status, Timestamp created_at) {
+                              String status, Timestamp created_at,
+                              String customer_name, String service_name, String policy_name) {
         this.contract_id = contract_id;
         this.customer_id = customer_id;
         this.service_id = service_id;
@@ -31,9 +37,12 @@ public class Insurance_contract {
         this.payment_frequency = payment_frequency;
         this.status = status;
         this.created_at = created_at;
+        this.customer_name = customer_name;
+        this.service_name = service_name;
+        this.policy_name = policy_name;
     }
 
-    // Getters and Setters
+    // Getters và setters cho các thuộc tính gốc
     public int getContract_id() {
         return contract_id;
     }
@@ -106,6 +115,31 @@ public class Insurance_contract {
         this.created_at = created_at;
     }
 
+    // Getters và setters cho các trường bổ sung
+    public String getCustomer_name() {
+        return customer_name;
+    }
+
+    public void setCustomer_name(String customer_name) {
+        this.customer_name = customer_name;
+    }
+
+    public String getService_name() {
+        return service_name;
+    }
+
+    public void setService_name(String service_name) {
+        this.service_name = service_name;
+    }
+
+    public String getPolicy_name() {
+        return policy_name;
+    }
+
+    public void setPolicy_name(String policy_name) {
+        this.policy_name = policy_name;
+    }
+
     @Override
     public String toString() {
         return "Insurance_contract{" +
@@ -118,6 +152,9 @@ public class Insurance_contract {
                 ", payment_frequency='" + payment_frequency + '\'' +
                 ", status='" + status + '\'' +
                 ", created_at=" + created_at +
+                ", customer_name='" + customer_name + '\'' +
+                ", service_name='" + service_name + '\'' +
+                ", policy_name='" + policy_name + '\'' +
                 '}';
     }
 }

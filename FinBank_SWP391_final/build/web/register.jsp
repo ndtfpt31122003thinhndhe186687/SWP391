@@ -149,7 +149,7 @@
     <body>
         <div class="form">
             <h2>Register</h2>
-            <p style="color: red">${requestScope.error}</p>
+            <p style="color: red">${requestScope.error}</p> <!-- Display error message in red -->
             <form action="register" method="post">
                 <div class="form-row">
                     <div class="form-group">
@@ -180,15 +180,9 @@
                         <input class="form-attribute" type="password" name="pass" placeholder="Password" required>
                     </div>
                 </div>
-                <!--                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Card type</label>
-                                        <select class="form-attribute" name="cardType" required>
-                                            <option value="credtit">Credit card</option>
-                                            <option value="debit">Debit card</option>
-                                        </select>
-                                    </div>
-                                </div>-->
+             <c:if test="${not empty error}">
+                                        <div class="text-danger">${error}</div>
+                                    </c:if>
 
                 <div class="form-group">
                     <label>Address</label>
@@ -239,6 +233,6 @@
             fileChosen.textContent = this.files[0] ? this.files[0].name : 'No file chosen';
         });
     </script>
-    
+
     </body>
 </html>

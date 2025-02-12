@@ -1,11 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mini Finance - Debt Customers List</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Mini Finance - Amounts List</title>
     <!-- CSS FILES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +21,7 @@
     <!-- HEADER -->
     <header class="navbar sticky-top flex-md-nowrap bg-danger">
       <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-        <a class="navbar-brand text-white" href="#">
+        <a class="navbar-brand text-white" href="">
           <i class="bi-box"></i>
           Mini Finance
         </a>
@@ -46,9 +49,9 @@
           <div class="position-sticky py-4 px-3 sidebar-sticky">
             <ul class="nav flex-column h-100">
               <li class="nav-item">
-                <a class="nav-link active" href="list-debt-customers.jsp">
-                  <i class="bi-person me-2"></i>
-                  Debt Customers List
+                <a class="nav-link active" href="amounts">
+                  <i class="bi-currency-dollar me-2"></i>
+                  Amounts List
                 </a>
               </li>
             </ul>
@@ -58,19 +61,36 @@
         <!-- MAIN CONTENT -->
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
           <div class="title-group mb-3">
-            <h1 class="h2 mb-0 text-danger">Debt Customers List</h1>
+            <h1 class="h2 mb-0 text-danger">Amounts List</h1>
           </div>
           
           <!-- Search Form -->
           <div class="mb-4">
-            <form method="get" action="list-debt-customers" class="form-inline">
+            <form method="get" action="amounts" class="form-inline">
               <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search by Debt ID or Customer Name" value="${search}" />
+                <input type="text" name="search" class="form-control" placeholder="Search by customer or source" value="${search}" />
                 <div class="input-group-append">
-                  <button type="submit" class="btn btn-primary">Search</button>
+                  <button type="submit" class="btn btn-danger">Search</button>
                 </div>
               </div>
             </form>
+          </div>
+          
+          <!-- Statistics Report -->
+          <div class="mb-4">
+            <h4 class="text-danger">Statistics</h4>
+            <div class="row">
+              <div class="col-md-6">
+                <p>Total Customers : <strong>${totalCustomers}</strong></p>
+                <p>Total Amount (Customer): <strong><fmt:formatNumber value="${totalAmountCustomer}" pattern="###0.000" /> $</strong></p>
+              </div>
+              <div class="col-md-6">
+                <p>Total Amount (Transactions): <strong><fmt:formatNumber value="${totalAmountTransactions}" pattern="###0.000" /> $</strong></p>
+                <p>Total Amount (Insurance): <strong><fmt:formatNumber value="${totalAmountInsurance}" pattern="###0.000" /> $</strong></p>
+                <p>Total Amount (Loans): <strong><fmt:formatNumber value="${totalAmountLoans}" pattern="###0.000" /> $</strong></p>
+                <p>Total Amount (Loan Disbursements): <strong><fmt:formatNumber value="${totalAmountLoanDisbursements}" pattern="###0.000" /> $</strong></p>
+              </div>
+            </div>
           </div>
           
           <!-- Table Display -->
@@ -78,25 +98,23 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Debt ID</th>
+                  <th>Source</th>
                   <th>Customer Name</th>
-                  <th>Customer Email</th>
-                  <th>Loan ID</th>
-                  <th>Debt Status</th>
-                  <th>Overdue Days</th>
-                  <th>Notes</th>
+                  <th>Amount($)</th>
+                  <th>Transaction Date</th>
                 </tr>
               </thead>
               <tbody>
-                <c:forEach var="debt" items="${debtCustomers}">
+                <c:forEach var="item" items="${amounts}">
                   <tr>
-                    <td>${debt.debt_id}</td>
-                    <td>${debt.customerName}</td>
-                    <td>${debt.customerEmail}</td>
-                    <td>${debt.loan_id}</td>
-                    <td>${debt.debt_status}</td>
-                    <td>${debt.overdue_days}</td>
-                    <td>${debt.notes}</td>
+                    <td>${item.source}</td>
+                    <td>${item.customerName}</td>
+                    <td class="text-end">
+                      <fmt:formatNumber value="${item.amount}" pattern="###0.000" />
+                    </td>
+                    <td>
+                      <fmt:formatDate value="${item.transactionDate}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                    </td>
                   </tr>
                 </c:forEach>
               </tbody>
@@ -108,17 +126,17 @@
             <ul class="pagination justify-content-center">
               <c:if test="${currentPage > 1}">
                 <li class="page-item">
-                  <a class="page-link" href="list-debt-customers?page=${currentPage - 1}&search=${search}">Previous</a>
+                  <a class="page-link" href="amounts?page=${currentPage - 1}&search=${search}">Previous</a>
                 </li>
               </c:if>
               <c:forEach begin="1" end="${totalPages}" var="i">
                 <li class="page-item ${i == currentPage ? 'active' : ''}">
-                  <a class="page-link" href="list-debt-customers?page=${i}&search=${search}">${i}</a>
+                  <a class="page-link" href="amounts?page=${i}&search=${search}">${i}</a>
                 </li>
               </c:forEach>
               <c:if test="${currentPage < totalPages}">
                 <li class="page-item">
-                  <a class="page-link" href="list-debt-customers?page=${currentPage + 1}&search=${search}">Next</a>
+                  <a class="page-link" href="amounts?page=${currentPage + 1}&search=${search}">Next</a>
                 </li>
               </c:if>
             </ul>

@@ -190,7 +190,7 @@
                     </c:if>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="amountStatistics">
+                        <a class="nav-link" href="amounts">
                             <i class="bi-person me-2"></i>
                             Amount Statistics
                         </a>
@@ -200,6 +200,22 @@
                         <a class="nav-link" href="CustomerList_AServlet">
                             <i class="bi-person me-2"></i>
                             Accountant
+                        </a>
+                    </li>                   
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id==4}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="calculateLoan">
+                            <i class="bi-person me-2"></i>
+                            Loan Interest Calculator
+                        </a>
+                    </li>                   
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id==4}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="calculateSaving">
+                            <i class="bi-person me-2"></i>
+                            Savings Interest Calculator
                         </a>
                     </li>                   
                     </c:if>
