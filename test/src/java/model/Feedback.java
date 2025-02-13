@@ -1,30 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.util.Date;
 
-/**
- *
- * @author default
- */
 public class Feedback {
-    public String feedback_id,customer_id,service_id,feedback_content;
-    public Date feedback_date;
+    private String feedback_id;
+    private String customer_id;
+    private String service_id;
+    private String feedback_content;
+    private Date feedback_date;
+    
+    // Các trường bổ sung để hiển thị trên JSP
+    private String customer_name;
+    private String service_name;
 
+    // Constructor mặc định
     public Feedback() {
     }
 
-    public Feedback(String feedback_id, String customer_id, String service_id, String feedback_content, Date feedback_date) {
+    // Constructor đầy đủ, bao gồm các trường bổ sung
+    public Feedback(String feedback_id, String customer_id, String service_id, String feedback_content, Date feedback_date,
+                    String customer_name, String service_name) {
         this.feedback_id = feedback_id;
         this.customer_id = customer_id;
         this.service_id = service_id;
         this.feedback_content = feedback_content;
         this.feedback_date = feedback_date;
+        this.customer_name = customer_name;
+        this.service_name = service_name;
     }
 
+    // Getters và Setters cho các trường ban đầu
     public String getFeedback_id() {
         return feedback_id;
     }
@@ -65,8 +70,33 @@ public class Feedback {
         this.feedback_date = feedback_date;
     }
 
+    // Getters và Setters cho các trường bổ sung
+    public String getCustomer_name() {
+        return customer_name;
+    }
+
+    public void setCustomer_name(String customer_name) {
+        this.customer_name = customer_name;
+    }
+
+    public String getService_name() {
+        return service_name;
+    }
+
+    public void setService_name(String service_name) {
+        this.service_name = service_name;
+    }
+
     @Override
     public String toString() {
-        return "Feedback{" + "feedback_id=" + feedback_id + ", customer_id=" + customer_id + ", service_id=" + service_id + ", feedback_content=" + feedback_content + ", feedback_date=" + feedback_date + '}';
+        return "Feedback{" +
+               "feedback_id=" + feedback_id +
+               ", customer_id=" + customer_id +
+               ", service_id=" + service_id +
+               ", feedback_content=" + feedback_content +
+               ", feedback_date=" + feedback_date +
+               ", customer_name=" + customer_name +
+               ", service_name=" + service_name +
+               '}';
     }
 }

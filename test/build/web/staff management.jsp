@@ -210,6 +210,12 @@
                             Service Term Management
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="feedbackmanagement">
+                            <i class="me-2"></i>
+                            Feedback Management
+                        </a>
+                    </li>
 
                 </ul>
             </div>
