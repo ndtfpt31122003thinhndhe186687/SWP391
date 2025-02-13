@@ -41,26 +41,40 @@ public class RegisterServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String profilePicture = request.getParameter("profilePicture");
 
-        // Kiểm tra dữ liệu đầu vào
-        if (fullName == null || fullName.isEmpty() || username == null || username.isEmpty() || phone == null || phone.isEmpty()
-                || password == null || password.isEmpty() || address == null || address.isEmpty()
-                || dobString == null || dobString.isEmpty() || gender == null || gender.isEmpty()
-                || profilePicture == null || profilePicture.isEmpty() || cardtype == null || cardtype.isEmpty() || email == null || email.isEmpty()) {
+        // Kiểm tra dữ liệu đầu vào (đảm bảo tất cả các trường đều được nhập)
+        if (fullName == null || fullName.isEmpty() ||
+            username == null || username.isEmpty() ||
+            phone == null || phone.isEmpty() ||
+            password == null || password.isEmpty() ||
+            address == null || address.isEmpty() ||
+            dobString == null || dobString.isEmpty() ||
+            gender == null || gender.isEmpty() ||
+            profilePicture == null || profilePicture.isEmpty() ||
+            cardtype == null || cardtype.isEmpty() ||
+            email == null || email.isEmpty()) {
+            
             request.setAttribute("error", "Please fill all fields!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        // Validate password
-        if (!isValidPassword(password)) {
-            request.setAttribute("error", "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one special character.");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        } else {
+        // Validate password theo yêu cầu:
+        // - Ít nhất 8 ký tự
+        // - Ít nhất 1 chữ hoa
+        // - Ít nhất 1 chữ thường
+        // - Ít nhất 1 số
+        // - Ít nhất 1 ký tự đặc biệt (những ký tự: !@#$%^&*()_+{}[]:;<>,.?~\-)
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z]).{6,}$";
+    if (!password.matches(passwordPattern)) {
+        request.setAttribute("error", "Password must be at least 6 characters long, include at least 1 lowercase letter and 1 uppercase letter.");
+        request.getRequestDispatcher("register.jsp").forward(request, response);
+        return;
+    } else {
+            // Mã hóa mật khẩu (ví dụ bằng SHA-1)
             password = Password.toSHA1(password);
         }
 
-        // Chuyển đổi `dobString` thành java.sql.Date
+        // Chuyển đổi chuỗi ngày sinh sang java.sql.Date
         Date dob = null;
         java.sql.Date sqlDob = null;
         try {
@@ -73,7 +87,7 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // Khởi tạo DAO để xử lý logic
+        // Khởi tạo DAO để xử lý logic (ví dụ đăng ký, kiểm tra số điện thoại đã tồn tại, ...)
         DAO dao = new DAO();
 
         // Kiểm tra số điện thoại đã tồn tại chưa
@@ -84,11 +98,13 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Tạo đối tượng Customer mới
+        // Lưu ý: Các tham số trong constructor của Customer cần phù hợp với định nghĩa của lớp.
         Customer c = new Customer(fullName, email, username, password, phone, address, cardtype, email, gender, profilePicture, 0, 6, 0, 0, dob, dob);
+        
         // Đăng ký tài khoản
         dao.register(c);
 
-        // Đăng ký thành công, chuyển hướng tới trang đăng nhập
+        // Sau khi đăng ký thành công, chuyển hướng tới trang đăng nhập và thông báo thành công
         request.setAttribute("message", "Account successfully created! Please log in.");
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
@@ -98,18 +114,11 @@ public class RegisterServlet extends HttpServlet {
         return "Servlet for user registration";
     }
 
-
+    // Hàm kiểm tra mật khẩu với yêu cầu: trên 8 ký tự, chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt.
     public static boolean isValidPassword(String password) {
-        // Biểu thức chính quy để kiểm tra mật khẩu
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+{}\\[\\]:;<>,.?~\\-]).{8,}$";
-
-        // Tạo một đối tượng Pattern
         Pattern pattern = Pattern.compile(passwordRegex);
-
-        // Tạo một đối tượng Matcher
         Matcher matcher = pattern.matcher(password);
-
-        // Kiểm tra xem mật khẩu có khớp với biểu thức chính quy không
         return matcher.matches();
     }
 }
