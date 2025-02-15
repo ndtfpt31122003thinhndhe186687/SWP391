@@ -65,6 +65,7 @@ public class NewsManageServlet extends HttpServlet {
         String status = request.getParameter("status");
         String sortBy = request.getParameter("sort");
         String page_raw = request.getParameter("page");
+        String pageSize_raw=request.getParameter("pageSize");
         List<News> list;
         status = (status == null) ? "all" : status;
         sortBy = (sortBy == null) ? "created_at" : sortBy;
@@ -79,7 +80,7 @@ public class NewsManageServlet extends HttpServlet {
             request.setAttribute("sort", sortBy);
             request.setAttribute("status", status);
 
-            int pageSize = 5;
+            int pageSize = Integer.parseInt(pageSize_raw);
             int totalNews = list.size();
             int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
             int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
@@ -89,6 +90,7 @@ public class NewsManageServlet extends HttpServlet {
             request.setAttribute("listN", listN);
             request.setAttribute("page", page);
             request.setAttribute("totalPage", totalPage);
+            request.setAttribute("pageSize", pageSize);
             request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);

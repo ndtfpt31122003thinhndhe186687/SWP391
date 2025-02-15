@@ -154,6 +154,13 @@
                     <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created Date</option>
                     <option value="title" ${requestScope.sort == 'title' ? 'selected' : ''}>Title</option>
                 </select>
+
+                <label for="pageSize">Items per page:</label>
+                <select id="pageSize" class="filter-dropdown" onchange="changePageSize()">
+                    <option value="2" ${requestScope.pageSize == 2 ? 'selected' : ''}>2</option>
+                    <option value="3" ${requestScope.pageSize == 3 ? 'selected' : ''}>3</option>
+                    <option value="4" ${requestScope.pageSize == 4 ? 'selected' : ''}>4</option>
+                </select>
             </div>
 
             <div class="search-bar">
@@ -221,12 +228,22 @@
                     function filterNews() {
                         var status = document.getElementById("filterStatus").value;
                         var sort = document.getElementById("sortNews").value;
+                        var pageSize = document.getElementById("pageSize").value;
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+
                     }
 
                     function sortNews() {
                         var sort = document.getElementById("sortNews").value;
                         var status = document.getElementById("filterStatus").value;
-                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1";
+                        var pageSize = document.getElementById("pageSize").value;
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+                    }
+                    function changePageSize() {
+                        var pageSize = document.getElementById("pageSize").value;
+                        var status = document.getElementById("filterStatus").value;
+                        var sort = document.getElementById("sortNews").value;
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
                     }
 
                 </script>  
@@ -239,7 +256,7 @@
                             <span class="current-page">${i}</span>
                         </c:when>
                         <c:otherwise>
-                            <a href="newsManage?staff_id=${sessionScope.account.staff_id}&status=${status}&sort=${sort}&page=${i}">${i}</a>
+                            <a href="newsManage?staff_id=${sessionScope.account.staff_id}&status=${status}&sort=${sort}&page=${i}&pageSize=${pageSize}">${i}</a>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>

@@ -62,8 +62,10 @@ public class ServiceTermManagement extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAO_Admin d = new DAO_Admin();
+        String page_raw = request.getParameter("page");
         String serviceName = request.getParameter("serviceName");
         String sort = request.getParameter("sort");
+        String pageSize_raw=request.getParameter("pageSize");
         if (serviceName == null || serviceName.isEmpty()) {
             serviceName = "all";
         }
@@ -79,7 +81,17 @@ public class ServiceTermManagement extends HttpServlet {
         }
         request.setAttribute("serviceName", serviceName);
         request.setAttribute("sort", sort);
-        request.setAttribute("listSt", listSt);
+        int pageSize=Integer.parseInt(pageSize_raw);
+        int totalServiceTerm=listSt.size();
+        int totalPage=(totalServiceTerm%pageSize==0)?(totalServiceTerm/pageSize) :(totalServiceTerm/pageSize+1);
+        int page=(page_raw==null)?1:Integer.parseInt(page_raw);
+        int start=(page-1)*pageSize;
+        int end=Math.min(page*pageSize, totalServiceTerm);
+        List<ServiceTerms> list=d.getListByPage(listSt, start, end);
+        request.setAttribute("listSt", list);
+        request.setAttribute("totalPage", totalPage);
+        request.setAttribute("page", page);
+        request.setAttribute("pageSize", pageSize);
         List<Services> listS = d.getAllServices();
         request.setAttribute("listS", listS);
         request.getRequestDispatcher("serviceTermManagement.jsp").forward(request, response);

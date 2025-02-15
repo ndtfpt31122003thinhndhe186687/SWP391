@@ -63,7 +63,37 @@
                 left: 0;
                 width: 100%;
             }
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                padding: 10px;
+            }
 
+            .pagination a {
+                display: inline-block;
+                padding: 8px 12px;
+                text-decoration: none;
+                color: white;
+                background-color: #d32f2f;
+                border-radius: 5px;
+                font-weight: bold;
+                transition: background 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: #b71c1c;
+            }
+
+            .current-page {
+                display: inline-block;
+                padding: 8px 12px;
+                background-color: #ff5252;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+            }
         </style>
 
 
@@ -218,7 +248,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active " href="serviceManagement">
+                        <a class="nav-link active " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
@@ -246,6 +276,13 @@
                     <option value="all" ${requestScope.sort == 'all' ? 'selected' : ''}>All</option>        
                     <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Service term name</option>
                     <option value="max_term_months" ${requestScope.sort == 'max_term_months' ? 'selected' : ''}>Max Term Months</option>
+                </select>
+
+                <label for="pageSize">Items per page:</label>
+                <select id="pageSize" class="filter-dropdown" onchange="changePageSize()">
+                    <option value="2" ${requestScope.pageSize == 2 ? 'selected' : ''}>2</option>
+                    <option value="3" ${requestScope.pageSize == 3 ? 'selected' : ''}>3</option>
+                    <option value="4" ${requestScope.pageSize == 4 ? 'selected' : ''}>4</option>
                 </select>
             </div>    
             <div class="mt-3">
@@ -288,7 +325,20 @@
                             </tr>
                         </c:forEach>
                     </tbody>
+
                 </table>
+                <div class="pagination">
+                    <c:forEach begin="1" end="${totalPage}" var="i">
+                        <c:choose>
+                            <c:when test="${i == page}">
+                                <span class="current-page">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="serviceTermManagement?serviceName=${requestScope.serviceName}&sort=${requestScope.sort}&page=${i}&pageSize=${pageSize}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </div>
                 <script type="text/javascript">
                     function doDelete(id) {
                         if (confirm("Are you sure to delete this term ?")) {
@@ -299,13 +349,22 @@
                     function filterServiceName() {
                         var serviceName = document.getElementById("filterServiceName").value;
                         var sort = document.getElementById("sort").value;
-                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort;
+                        var pageSize = document.getElementById("pageSize").value;
+                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1"+"&pageSize="+pageSize;
                     }
 
                     function filterSort() {
                         var sort = document.getElementById("sort").value;
                         var serviceName = document.getElementById("filterServiceName").value;
-                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort;
+                        var pageSize = document.getElementById("pageSize").value;
+                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1"+"&pageSize="+pageSize;
+                    }
+
+                    function changePageSize() {
+                        var pageSize = document.getElementById("pageSize").value;
+                        var serviceName = document.getElementById("filterServiceName").value;
+                        var sort = document.getElementById("sort").value;
+                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1"+"&pageSize="+pageSize;
                     }
                 </script>
             </div>

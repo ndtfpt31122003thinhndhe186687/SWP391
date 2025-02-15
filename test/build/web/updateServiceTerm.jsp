@@ -157,7 +157,11 @@
                         <option value="inactive" ${s.status=="inactive" ? 'selected' : ''}>Inactive</option>
                     </select>
                 </div>
-
+                <c:if test="${not empty err}">
+                    <div>
+                        <p style="color: red;">${err}</p>
+                    </div>
+                </c:if>
                 <button type="submit">Update Service Term</button>
             </form>
         </div>

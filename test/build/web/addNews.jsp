@@ -79,6 +79,11 @@
             <textarea name="content" id="content" required></textarea><br/>
             <button type="submit">ADD</button>
         </form>
+          <c:if test="${not empty err}">
+            <div>
+                <p style="color: red;">${err}</p>
+            </div>
+        </c:if>
     </div>
 </body>
 </html>

@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller_Marketer;
 
 import dal.DAO;
@@ -20,36 +19,39 @@ import model.News;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name="EditNewsServlet", urlPatterns={"/editNews"})
+@WebServlet(name = "EditNewsServlet", urlPatterns = {"/editNews"})
 public class EditNewsServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EditNewsServlet</title>");  
+            out.println("<title>Servlet EditNewsServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EditNewsServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet EditNewsServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -57,9 +59,9 @@ public class EditNewsServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-         String newsId_raw = request.getParameter("news_id");
-        DAO_Marketer d=new DAO_Marketer();
+            throws ServletException, IOException {
+        String newsId_raw = request.getParameter("news_id");
+        DAO_Marketer d = new DAO_Marketer();
         int news_id;
         try {
             news_id = Integer.parseInt(newsId_raw);
@@ -69,10 +71,11 @@ public class EditNewsServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             System.out.println(e);
         }
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -80,26 +83,38 @@ public class EditNewsServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String title=request.getParameter("title");
-        String content=request.getParameter("content");
-        String newsId_raw=request.getParameter("news_id");
-        String staffId_raw=request.getParameter("staff_id");
-         try {
+            throws ServletException, IOException {
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        String newsId_raw = request.getParameter("news_id");
+        String staffId_raw = request.getParameter("staff_id");
+        if (title != null) {
+            title = title.trim();
+        }
+        if (content != null) {
+            content = content.trim();
+        }
+        if (title == null || content == null || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {
+            request.setAttribute("error", "Please enter again!");
+            request.getRequestDispatcher("editNews.jsp").forward(request, response);
+            return;
+        }
+        try {
             int news_id = Integer.parseInt(newsId_raw);
             int staff_id = Integer.parseInt(staffId_raw);
-        DAO_Marketer d=new DAO_Marketer();
+            DAO_Marketer d = new DAO_Marketer();
             d.editNews(title, content, news_id, staff_id);
-            String redirectUrl = "newsManage?staff_id=" +staff_id;
-        response.sendRedirect(redirectUrl);
+            String redirectUrl = "newsManage?staff_id=" + staff_id + "&status=all&sort=created_at&page=1";
+            response.sendRedirect(redirectUrl);
         } catch (NumberFormatException e) {
             System.out.println(e);
         }
-        
+
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

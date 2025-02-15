@@ -149,6 +149,11 @@
                     <label for="min_deposit">Min Deposit:</label>
                     <input type="number" id="min_deposit" name="min_deposit" min="0" step="0.01" />
                 </div>
+                <c:if test="${not empty err}">
+                    <div>
+                        <p style="color: red;">${err}</p>
+                    </div>
+                </c:if>
                 <button type="submit">Add New Service Term</button>
             </form>
             <script>

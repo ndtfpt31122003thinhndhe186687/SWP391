@@ -168,7 +168,7 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="staff_management">
+                        <a class="nav-link" aria-current="page" href="staff_management">
                             <i class="me-2"></i>
                             Staff Management
                         </a>
@@ -180,7 +180,7 @@
                             Service Management
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" href="transaction_management">
                             <i class=" me-2"></i>
@@ -189,9 +189,16 @@
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="statistic_management">
+                        <a class="nav-link active " href="statistic_management">
                             <i class="me-2"></i>
                             Statistic Management
+                        </a>
+                    </li>
+
+                     <li class="nav-item">
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=2">
+                            <i class="me-2"></i>
+                            Service Term Management
                         </a>
                     </li>
                     

@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.ServiceTerms;
+import model.Services;
 
 /**
  *
@@ -92,6 +93,25 @@ public class UpdateServiceTermServlet extends HttpServlet {
         String minPayment_raw = request.getParameter("min_payment");
         String minDeposit_raw = request.getParameter("min_deposit");
         String status = request.getParameter("status");
+        DAO_Admin d = new DAO_Admin();
+        if (termName != null) {
+            termName = termName.trim();
+        }
+        if (description != null) {
+            description = description.trim();
+        }
+        if (contractTerms != null) {
+            contractTerms = contractTerms.trim();
+        }
+        if (termName == null || description == null || contractTerms == null
+                || termName.matches(".*\\s{2,}.*") || description.matches(".*\\s{2,}.*") || contractTerms.matches(".*\\s{2,}.*")) {
+            request.setAttribute("err", "Please enter again. The space between words only needs 1 space!");
+            int termId = Integer.parseInt(termId_raw);
+            ServiceTerms s = d.getServiceTermByTermId(termId);
+            request.setAttribute("serviceTerm", s);
+            request.getRequestDispatcher("updateServiceTerm.jsp").forward(request, response);
+            return;
+        }
         try {
             int termId = Integer.parseInt(termId_raw);
             int maxTermMonths = (maxTermMonths_raw != null && !maxTermMonths_raw.isEmpty()) ? Integer.parseInt(maxTermMonths_raw) : 0;
@@ -100,9 +120,8 @@ public class UpdateServiceTermServlet extends HttpServlet {
             double minPayment = (minPayment_raw != null && !minPayment_raw.isEmpty()) ? Double.parseDouble(minPayment_raw) : 0.0;
             double minDeposit = (minDeposit_raw != null && !minDeposit_raw.isEmpty()) ? Double.parseDouble(minDeposit_raw) : 0.0;
             ServiceTerms s = new ServiceTerms(termId, maxTermMonths, termName, description, contractTerms, status, paymentPen, interestRate, minPayment, minDeposit);
-            DAO_Admin d = new DAO_Admin();
             d.updateServiceTerm(s);
-            response.sendRedirect("serviceTermManagement");
+            response.sendRedirect("serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=2");
         } catch (Exception e) {
         }
     }

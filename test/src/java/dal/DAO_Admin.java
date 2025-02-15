@@ -1190,6 +1190,15 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
+    
+    //page
+    public List<ServiceTerms> getListByPage(List<ServiceTerms> list,int start,int end){
+        List<ServiceTerms> arr=new ArrayList<>();
+        for (int i=start;i<end;i++){
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
 
     // Main method for testing
     public static void main(String[] args) {

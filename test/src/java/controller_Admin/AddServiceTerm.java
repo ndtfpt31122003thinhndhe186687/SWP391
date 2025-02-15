@@ -87,6 +87,24 @@ public class AddServiceTerm extends HttpServlet {
         String interestRate_raw = request.getParameter("interest_rate");
         String minPayment_raw = request.getParameter("min_payment");
         String minDeposit_raw = request.getParameter("min_deposit");
+        DAO_Admin d = new DAO_Admin();
+        if (termName != null) {
+            termName = termName.trim();
+        }
+        if (description != null) {
+            description = description.trim();
+        }
+        if (contractTerms != null) {
+            contractTerms = contractTerms.trim();
+        }
+        if (termName == null || description == null || contractTerms == null
+                || termName.matches(".*\\s{2,}.*") || description.matches(".*\\s{2,}.*") || contractTerms.matches(".*\\s{2,}.*")) {
+            request.setAttribute("err", "Please enter again. The space between words only needs 1 space!");
+            List<Services> listS = d.getAllServices();
+            request.setAttribute("listS", listS);
+            request.getRequestDispatcher("addServiceTerm.jsp").forward(request, response);
+            return;
+        }
         try {
             int serviceId = Integer.parseInt(serviceId_raw);
             int maxTermMonths = (maxTermMonths_raw == null || maxTermMonths_raw.isEmpty()) ? 0 : Integer.parseInt(maxTermMonths_raw);
@@ -95,9 +113,8 @@ public class AddServiceTerm extends HttpServlet {
             double minPayment = (minPayment_raw == null || minPayment_raw.isEmpty()) ? 0.0 : Double.parseDouble(minPayment_raw);
             double minDeposit = (minDeposit_raw == null || minDeposit_raw.isEmpty()) ? 0.0 : Double.parseDouble(minDeposit_raw);
             ServiceTerms s = new ServiceTerms(serviceId, maxTermMonths, termName, description, contractTerms, paymentPen, interestRate, minPayment, minDeposit);
-            DAO_Admin d = new DAO_Admin();
             d.addServiceTerm(s);
-            response.sendRedirect("serviceTermManagement");
+            response.sendRedirect("serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=2");
         } catch (Exception e) {
         }
 
