@@ -95,7 +95,7 @@ public class sortInsurancePolicyServlet extends HttpServlet {
             list = dao.sortInsurancePolicyByCoverageAmount(i.getInsurance_id());
         }
         request.setAttribute("listPolicy", list);
-        request.setAttribute("sort", sort);
+        request.setAttribute("sortInsurancePolicy", sort);
         request.setAttribute("status", status);
         request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
     } 

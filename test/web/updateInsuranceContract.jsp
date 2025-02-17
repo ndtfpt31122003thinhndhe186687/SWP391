@@ -39,6 +39,9 @@
                 border: 1px solid #cc0000;
                 border-radius: 5px;
             }
+            input[type="hidden"] {
+                display: none;
+            }
             button {
                 background-color: #cc0000;
                 color: white;
@@ -62,7 +65,8 @@
         <h1>Update a Insurance contract</h1>
         <c:set var="c" value="${requestScope.contract}"/>
         <form action="updateInsuranceContract" method="post">
-            enter Status
+            <input type="hidden" name="contract_id" value="${contract.contract_id}">
+            Enter Status
             <select class="filter-dropdown" name="status">
                <option value="active" ${c.status == 'active' ? 'selected' : ''}>Active</option>
                <option value="expired" ${c.status == 'expired' ? 'selected' : ''}>Expired</option>

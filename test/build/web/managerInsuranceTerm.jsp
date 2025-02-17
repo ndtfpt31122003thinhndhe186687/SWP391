@@ -70,8 +70,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchByPolicyName" method="post" role="form">
-                <input class="form-control bg-white text-dark" name="search_policy_name" type="text" placeholder="Search" aria-label="Search">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchInsuranceTermByTermName" method="post" role="form">
+                <input class="form-control bg-white text-dark" name="search_term_name" type="text" placeholder="Search" aria-label="Search">
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -220,12 +220,12 @@
             <!-- View list staff -->
             <div class="mt-3">
                 <a class="btn btn-success mb-2" href="addInsuranceTerm">Add New</a>
-                <form action="sortInsurancePolicy" method="get">
+                <form action="sortInsuranceTerm" method="get">
                     <label>Sort by :</label>
-                    <select class="filter-dropdown" name="sortInsurancePolicy">
-                    <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>None</option>    
-                    <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created At</option>
-                    <option value="coverage_amount" ${requestScope.sort == 'coverage_amount' ? 'selected' : ''}>Coverage Amount</option>
+                    <select class="filter-dropdown" name="sortInsuranceTerm">
+                    <option value="none" ${requestScope.sortInsuranceTerm == '' ? 'selected' : ''}>None</option>    
+                    <option value="created_at" ${requestScope.sortInsuranceTerm == 'created_at' ? 'selected' : ''}>Created At</option>
+                    <option value="start_date" ${requestScope.sortInsuranceTerm == 'start_date' ? 'selected' : ''}>Start Date</option>
                 </select>
                  <label>Filter by Status:</label>
                  <select class="filter-dropdown" name="status">                    
@@ -236,6 +236,15 @@
                 </select>
                 <button type="submit">Find</button>
                 </form>
+                    <form action="paginationInsuranceTerm" method="get">
+                        <label>Select quantity term: </label>
+                 <select class="filter-dropdown" name="quantity">                    
+                     <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
+                    <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
+                    <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
+                </select>
+                    <button type="submit">Find</button>
+                    </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -261,12 +270,15 @@
                              <td>${T.end_date}</td>
                              <td>${T.created_at}</td>
                             <td>
-                                <a onclick="doDelete('${T.term_id}')" href="deleteInsuranceTerm?term_id=${T.term_id}" class="btn btn-danger">Delete</a>
+                                <a href="#" onclick="doDelete('${T.term_id}')" class="btn btn-danger">Delete</a>
                                 <a href="updateInsuranceTerm?term_id=${T.term_id}" class="btn btn-success">Update</a> 
                             </td>
                         </tr>
                     </c:forEach>
                 </table>
+                <c:forEach begin="1" end="${endP}" var="q">
+                        <a href="paginationInsuranceTerm?offset=${q}&quantity=${quantity}">${q}</a>
+                    </c:forEach>
             </div>
         </main>
 

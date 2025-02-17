@@ -116,7 +116,7 @@ public class updatePolicyServlet extends HttpServlet {
             
         }
         
-            
+            String policy_name_trim = policy_name.trim();
             Insurance_policy in = dao.getPolicyByName(policy_name);
             if (in != null && in.getPolicy_id() != policy_id) {
                 request.setAttribute("error", "policy name " + policy_name + " existed!");
@@ -126,7 +126,7 @@ public class updatePolicyServlet extends HttpServlet {
             } 
            
             
-        Insurance_policy p = new Insurance_policy(policy_id, i.getInsurance_id(), policy_name, description, status, coverage_amount, premium_amount);
+        Insurance_policy p = new Insurance_policy(policy_id, i.getInsurance_id(), policy_name_trim, description, status, coverage_amount, premium_amount);
         dao.updatePolicy(p);
         String url = "managerPolicy?insurance_id=" + i.getInsurance_id();
                 response.sendRedirect(url);

@@ -119,7 +119,8 @@ public class AddInsuranceTermServlet extends HttpServlet {
             return;
         }
         try {
-            Insurance_term termName = dao.getInsuranceTermByName(term_name);
+            String term_name_trim = term_name.trim();
+            Insurance_term termName = dao.getInsuranceTermByName(term_name_trim);
             if (termName != null) {
                 request.setAttribute("error", "Term name: " + term_name + " is existed!");
                 List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
@@ -127,7 +128,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
                 request.getRequestDispatcher("addInsuranceTerm.jsp").forward(request, response);
             } else {
                 Insurance_term t = new Insurance_term(i.getInsurance_id(),
-                        policy_id, term_name, term_description, status, start_date, end_date);
+                        policy_id, term_name_trim, term_description, status, start_date, end_date);
                 dao.insertInsuranceTerm(t);
                 String url = "managerInsuranceTerm?insurance_id=" + i.getInsurance_id();
                 response.sendRedirect(url);

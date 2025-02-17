@@ -84,16 +84,14 @@ public class updateInsuranceContractServlet extends HttpServlet {
     throws ServletException, IOException {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
-        Insurance i = (Insurance) session.getAttribute("account");
-        int policy_id = i.getPolicy_id();       
+        Insurance i = (Insurance) session.getAttribute("account");   
+        String contract_id_raw = request.getParameter("contract_id");
         String status = request.getParameter("status");
-        try {
-            Insurance_contract c = new Insurance_contract(policy_id, status);
+            int contract_id = Integer.parseInt(contract_id_raw);
+            Insurance_contract c = new Insurance_contract(contract_id, status);
             dao.updateInsuranceContract(c);
             String url = "managerInsuranceContract?insurance_id=" + i.getInsurance_id(); 
         response.sendRedirect(url);
-        } catch (Exception e) {
-        }
     }
 
     /** 

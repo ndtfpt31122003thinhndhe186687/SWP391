@@ -40,6 +40,18 @@ public class Insurance_term {
         this.start_date = start_date;
         this.end_date = end_date;
     }
+
+    public Insurance_term(int term_id, int insurance_id, int policy_id, String term_name, String term_description, String status, Date start_date, Date end_date) {
+        this.term_id = term_id;
+        this.insurance_id = insurance_id;
+        this.policy_id = policy_id;
+        this.term_name = term_name;
+        this.term_description = term_description;
+        this.status = status;
+        this.start_date = start_date;
+        this.end_date = end_date;
+    }
+    
     
     
 

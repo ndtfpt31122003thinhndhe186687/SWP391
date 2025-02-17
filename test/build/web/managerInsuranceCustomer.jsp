@@ -224,6 +224,15 @@
                     </select>
                     <button type="submid">Find</button>
                 </form>
+                    <form action="paginationInsuranceCustomer" method="get">
+                        <label>Select quantity customer: </label>
+                 <select class="filter-dropdown" name="quantity">                    
+                     <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
+                    <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
+                    <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
+                </select>
+                    <button type="submit">Find</button>
+                    </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -249,6 +258,9 @@
                         </tr>
                     </c:forEach>
                 </table>
+                <c:forEach begin="1" end="${endP}" var="q">
+                        <a href="paginationInsuranceCustomer?offset=${q}&quantity=${quantity}">${q}</a>
+                    </c:forEach>
             </div>
         </main>
 

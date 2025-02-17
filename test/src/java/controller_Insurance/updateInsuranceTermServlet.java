@@ -132,8 +132,9 @@ public class updateInsuranceTermServlet extends HttpServlet {
                 return;
 
         }
-         iT = dao.getInsuranceTermByName(term_name);
-        if(iT != null && iT.getTerm_id() != term_id){
+        String term_name_trim = term_name.trim();
+         Insurance_term iTName = dao.getInsuranceTermByName(term_name_trim);
+        if(iTName != null && iTName.getTerm_id() != term_id){
             request.setAttribute("listPolicy", listPolicy);
             request.setAttribute("term", iT);
             request.setAttribute("listStatus", listStatus);
@@ -142,7 +143,8 @@ public class updateInsuranceTermServlet extends HttpServlet {
                 return;
         }
 
-        Insurance_term t = new Insurance_term(i.getInsurance_id(), policy_id, term_name, term_description, status, start_date, end_date);
+        Insurance_term t = new Insurance_term(term_id, i.getInsurance_id(), 
+                policy_id, term_name_trim, term_description, status, start_date, end_date);
         dao.updateInsuranceTerm(t);
         String url = "managerInsuranceTerm?insurance_id=" +i.getInsurance_id();
         response.sendRedirect(url);

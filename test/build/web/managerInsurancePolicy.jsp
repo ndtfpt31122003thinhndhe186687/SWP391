@@ -224,9 +224,9 @@
                 <form action="sortInsurancePolicy" method="get">
                     <label>Sort by :</label>
                     <select class="filter-dropdown" name="sortInsurancePolicy">
-                    <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>None</option>    
-                    <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created At</option>
-                    <option value="coverage_amount" ${requestScope.sort == 'coverage_amount' ? 'selected' : ''}>Coverage Amount</option>
+                    <option value="none" ${requestScope.sortInsurancePolicy == '' ? 'selected' : ''}>None</option>    
+                    <option value="created_at" ${requestScope.sortInsurancePolicy == 'created_at' ? 'selected' : ''}>Created At</option>
+                    <option value="coverage_amount" ${requestScope.sortInsurancePolicy == 'coverage_amount' ? 'selected' : ''}>Coverage Amount</option>
                 </select>
                  <label>Filter by Status:</label>
                  <select class="filter-dropdown" name="status">                    
@@ -237,6 +237,15 @@
                 </select>
                 <button type="submit">Find</button>
                 </form>
+                    <form action="paginationInsurancePolicy" method="get">
+                        <label>Select quantity policy: </label>
+                 <select class="filter-dropdown" name="quantity">                    
+                     <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
+                    <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
+                    <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
+                </select>
+                    <button type="submit">Find</button>
+                    </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -260,12 +269,15 @@
                              <td>${P.status}</td> 
                              <td>${P.created_at}</td>
                             <td>
-                                <a onclick="doDelete('${P.policy_id}')" href="deletePolicy?policy_id=${P.policy_id}" class="btn btn-danger">Delete</a>
+                                <a href="#" onclick="doDelete('${P.policy_id}')"  class="btn btn-danger">Delete</a>
                                 <a href="updatePolicy?policy_id=${P.policy_id}" class="btn btn-success">Update</a> 
                             </td>
                         </tr>
                     </c:forEach>
                 </table>
+                    <c:forEach begin="1" end="${endP}" var="q">
+                        <a href="paginationInsurancePolicy?offset=${q}&quantity=${quantity}">${q}</a>
+                    </c:forEach>
             </div>
         </main>
 

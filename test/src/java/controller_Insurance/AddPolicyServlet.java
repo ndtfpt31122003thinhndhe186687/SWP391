@@ -98,13 +98,14 @@ public class AddPolicyServlet extends HttpServlet {
         int insurance_Id = i.getInsurance_id();
         try {
             DAO_Insurance dao = new DAO_Insurance();
-            Insurance_policy in = dao.getPolicyByName(policy_name);
+            String policy_name_trim = policy_name.trim();
+            Insurance_policy in = dao.getPolicyByName(policy_name_trim);
             if(in!=null){
                 request.setAttribute("error", "policy name " + policy_name + " existed!");
                 request.getRequestDispatcher("addPolicy.jsp").forward(request, response);
             }
             else{
-        Insurance_policy p = new Insurance_policy(i.getInsurance_id(), policy_name, description, status, coverage_amount, premium_amount);
+        Insurance_policy p = new Insurance_policy(i.getInsurance_id(), policy_name_trim, description, status, coverage_amount, premium_amount);
         dao.insertPolicy(p);
          String url = "managerPolicy?insurance_id=" + i.getInsurance_id(); 
         response.sendRedirect(url);
