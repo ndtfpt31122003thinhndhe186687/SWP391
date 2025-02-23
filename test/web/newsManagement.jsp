@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -127,20 +129,49 @@
                 font-weight: bold;
                 border-radius: 5px;
             }
+            .news-image {
+                width: 100px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+            }
+            .news-title {
+                text-decoration: none;
+                color: black;
+            }
+            .news-title:hover {
+                color: #d32f2f;
+                text-decoration: none;
+            }
         </style>
     </head>
     <body>
         <div class="sidebar">
             <h2>Bank News</h2>      
             <a href="home">Back Home</a>
-            <a href="newsManage?staff_id=${sessionScope.account.staff_id}">Dashboard</a>
+            <a href="newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Dashboard</a>
             <a href="addNews">Add News</a>
             <a href="newsStatistic">Statistic of news</a>
         </div>
         <div class="content">
             <h1>News Management</h1>
+            <c:if test="${not empty requestScope.errorDelete}">
+                <div style="color: red; font-weight: bold; margin-bottom: 10px;">
+                    ${requestScope.errorDelete}
+                </div>
+            </c:if>
+
             <input type="hidden" name="page" value="1">
             <div class="filter-sort-bar">
+                <label for="filterCategory">Filter by Category</label>
+                <select id="filterCategory" class="filter-dropdown" onchange="filterCategory()">
+                    <option value="0" ${requestScope.categoryId == 0 ? 'selected' : ''}}>All </option>        
+                    <c:forEach var="n" items="${requestScope.listNc}">
+                        <option value="${n.category_id}" ${requestScope.categoryId == n.category_id ? 'selected':''}>${n.category_name}</option>        
+                    </c:forEach>
+                </select>
+
                 <label for="filterStatus">Filter by Status:</label>
                 <select id="filterStatus" class="filter-dropdown" onchange="filterNews()">
                     <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
@@ -151,21 +182,24 @@
 
                 <label for="sortNews">Sort by:</label>
                 <select id="sortNews" class="filter-dropdown" onchange="sortNews()">
+                    <option value="all" ${requestScope.sort == 'all' ? 'selected' : ''}>All</option>
                     <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created Date</option>
                     <option value="title" ${requestScope.sort == 'title' ? 'selected' : ''}>Title</option>
                 </select>
 
                 <label for="pageSize">Items per page:</label>
                 <select id="pageSize" class="filter-dropdown" onchange="changePageSize()">
-                    <option value="2" ${requestScope.pageSize == 2 ? 'selected' : ''}>2</option>
-                    <option value="3" ${requestScope.pageSize == 3 ? 'selected' : ''}>3</option>
                     <option value="4" ${requestScope.pageSize == 4 ? 'selected' : ''}>4</option>
+                    <option value="8" ${requestScope.pageSize == 8 ? 'selected' : ''}>8</option>
+                    <option value="12" ${requestScope.pageSize == 12 ? 'selected' : ''}>12</option>
                 </select>
             </div>
 
             <div class="search-bar">
-                <form action="searchNews" method="post">
-                    <input type="text" placeholder="Search news by title" name="searchName">
+                <form action="searchNews" method="get">
+                    <input type="text" placeholder="Search news by title" name="searchName" id="searchName" value="${param.searchName}">
+                    <input type="hidden" name="page" value="${page}">
+                    <input type="hidden" name="pageSize" value="${pageSize}">
                     <button type="submit" style="background-color: #d32f2f;
                             color: white;
                             border: none;
@@ -174,43 +208,59 @@
             </div>
             <table class="news-table">
                 <thead>
-                    <tr>
+                    <tr>                      
+                        <th>Category News</th>
                         <th>Title</th>
                         <th>Content</th>
-                        <th>Created at</th>
-                        <th>Updated at</th>
+                        <th>Created At</th>
                         <th>Status</th>
+                        <th>Image</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach items="${requestScope.listN}" var="news">
                         <tr>
-                            <td>${news.title}</td>
+                            <td>${news.category_name}</td>
+                            <td>
+                                <a href="#" class="news-title" 
+                                   onclick="showNewsModal('${news.category_name}',
+                                                   '${news.title}',
+                                                   `${news.content}`,
+                                                   '${news.created_at}',
+                                                   '${news.updated_at}',
+                                                   '${news.picture}')">
+                                    ${news.getTitle()}
+                                </a>
+                            </td>                          
                             <td class="news-content">${news.content}</td>
-                            <td>${news.created_at}</td>
-                            <td>${news.updated_at}</td>
+                            <td>
+                                <fmt:formatDate value="${news.created_at}" pattern="dd-MM-yyyy" />
+                            </td>                           
                             <td>${news.status}</td>  
                             <td>
-                                <a href="editNews?news_id=${news.news_id}" style="background-color: #d32f2f;
+                                <img src="imageNews/${news.picture}" alt="News Image" class="news-image">
+                            </td>
+                            <td>
+                                <a href="editNews?news_id=${news.news_id}&category_id=${news.category_id}" style="background-color: #d32f2f;
                                    color: white;
                                    padding: 5px 10px;
                                    text-decoration: none;
                                    border-radius: 5px;">Edit</a>
-                                <a onclick="doDelete('${news.news_id}')" href="#" style="background-color: #b71c1c;
+                                <a onclick="doDelete('${news.news_id}', '${news.category_id}')" href="#" style="background-color: #b71c1c;
                                    color: white;
                                    padding: 5px 10px;
                                    text-decoration: none;
                                    border-radius: 5px;" >Delete</a>
                                 <c:if test="${news.status=='draft'}">
-                                    <a href="sendNews?news_id=${news.news_id}" style="background-color: #d32f2f;
-                                       color: white;
-                                       padding: 5px 10px;
-                                       text-decoration: none;
-                                       border-radius: 5px;">Send</a>
+                                    <a href="sendNews?news_id=${news.news_id}&categoryId=${categoryId}&status=${status}&sort=${sort}&page=${page}&pageSize=${pageSize}" 
+                                       style="background-color: #d32f2f; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">
+                                        Send
+                                    </a>
+
                                 </c:if>
                                 <c:if test="${news.status!='approved' && news.status!='draft'}">
-                                    <a href="cancelSend?news_id=${news.news_id}" style="background-color: #d32f2f;
+                                    <a href="cancelSend?news_id=${news.news_id}&categoryId=${categoryId}&status=${status}&sort=${sort}&page=${page}&pageSize=${pageSize}" style="background-color: #d32f2f;
                                        color: white;
                                        padding: 5px 10px;
                                        text-decoration: none;
@@ -219,47 +269,120 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    <!-- Modal -->
+                <div id="newsModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                     width: 50%; max-height: 80vh; overflow-y: auto; background: white; padding: 20px; border: 2px solid black;
+                     box-shadow: 0px 0px 10px gray;">
+                    <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                    <p><strong>Title:</strong> <span id="modalTitle"></span></p>
+                    <p><strong>Content:</strong></p>
+                    <div id="modalContent" style="max-height: 50vh; overflow-y: auto; border: 1px solid #ddd; padding: 10px;"></div>
+                    <p><strong>Created At:</strong> <span id="modalCreatedAt"></span></p>
+                    <p><strong>Updated At:</strong> <span id="modalUpdatedAt"></span></p>
+                    <p><strong>Picture:</strong></p>
+                    <img id="modalImage" src="" style="max-width: 100%; display: none;" />
+                    <br>
+                    <button onclick="closeModal()" style="margin-top: 10px; padding: 5px 10px; background-color: #d32f2f;
+                            color: white; border: none; border-radius: 5px;">Close</button>
+                </div>
+
                 <script type="text/javascript">
-                    function doDelete(id) {
+                    function doDelete(id, cateId) {
                         if (confirm("Are you sure to delete this news ?")) {
-                            window.location = "deleteNews?news_id=" + id;
+                            window.location = "deleteNews?news_id=" + id + "&categoryId=" + cateId;
                         }
                     }
-                    function filterNews() {
+                    function filterCategory() {
+                        var categoryId = document.getElementById("filterCategory").value;
                         var status = document.getElementById("filterStatus").value;
                         var sort = document.getElementById("sortNews").value;
                         var pageSize = document.getElementById("pageSize").value;
-                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
-
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=" + categoryId + "&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
                     }
 
+                    function filterNews() {
+                        var categoryId = document.getElementById("filterCategory").value;
+                        var status = document.getElementById("filterStatus").value;
+                        var sort = document.getElementById("sortNews").value;
+                        var pageSize = document.getElementById("pageSize").value;
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=" + categoryId + "&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+                    }
                     function sortNews() {
+                        var categoryId = document.getElementById("filterCategory").value;
                         var sort = document.getElementById("sortNews").value;
                         var status = document.getElementById("filterStatus").value;
                         var pageSize = document.getElementById("pageSize").value;
-                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=" + categoryId + "&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
                     }
                     function changePageSize() {
+                        var categoryId = document.getElementById("filterCategory").value;
                         var pageSize = document.getElementById("pageSize").value;
                         var status = document.getElementById("filterStatus").value;
                         var sort = document.getElementById("sortNews").value;
-                        window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+                        var searchInput = document.getElementById("searchName");
+
+                        var searchName = searchInput ? searchInput.value.trim().replace(/\s+/g, " ") : "";
+
+                        if (searchName !== "") {
+                            window.location.href = "searchNews?searchName=" + encodeURIComponent(searchName) + "&page=1&pageSize=" + pageSize;
+                        } else {
+                            window.location.href = "newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=" + categoryId + "&status=" + status + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+                        }
+                    }
+
+                    function showNewsModal(category, title, content, createdAt, updatedAt, image) {
+                        function formatDate(dateString) {
+                            let date = new Date(dateString);
+                            return date.toLocaleDateString("vi-VN");
+                        }
+                        document.getElementById("modalTitle").innerText = title;
+                        document.getElementById("modalCategory").innerText = category;
+                        document.getElementById("modalContent").innerHTML = content;
+                        document.getElementById("modalCreatedAt").innerText = formatDate(createdAt);
+                        document.getElementById("modalUpdatedAt").innerText = formatDate(updatedAt);
+                        let imgElement = document.getElementById("modalImage");
+                        if (image && image !== "null") {
+                            imgElement.src = "imageNews/" + image;
+                            imgElement.style.display = "block";
+                        } else {
+                            imgElement.style.display = "none";
+                        }
+
+                        document.getElementById("newsModal").style.display = "block";
+                    }
+
+                    function closeModal() {
+                        document.getElementById("newsModal").style.display = "none";
                     }
 
                 </script>  
                 </tbody>
             </table>
             <div class="pagination">
-                <c:forEach begin="1" end="${totalPage}" var="i">
-                    <c:choose>
-                        <c:when test="${i == page}">
-                            <span class="current-page">${i}</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="newsManage?staff_id=${sessionScope.account.staff_id}&status=${status}&sort=${sort}&page=${i}&pageSize=${pageSize}">${i}</a>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
+                <c:if test="${not empty param.searchName}">
+                    <c:forEach begin="1" end="${totalPage}" var="i">
+                        <c:choose>
+                            <c:when test="${i == page}">
+                                <span class="current-page">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="searchNews?searchName=${param.searchName}&page=${i}&pageSize=${pageSize}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty param.searchName}">      
+                    <c:forEach begin="1" end="${totalPage}" var="i">
+                        <c:choose>
+                            <c:when test="${i == page}">
+                                <span class="current-page">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=${categoryId}&status=${status}&sort=${sort}&page=${i}&pageSize=${pageSize}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </c:if>
             </div>
         </div>
 

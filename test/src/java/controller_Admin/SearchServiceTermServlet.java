@@ -65,6 +65,37 @@ public class SearchServiceTermServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        DAO_Admin d = new DAO_Admin();
+        List<Services> listS = d.getAllServices();
+        request.setAttribute("listS", listS);
+        String searchName = request.getParameter("searchName");
+        String page_raw = request.getParameter("page");
+        String pageSize_raw = request.getParameter("pageSize");
+
+        if (searchName == null && searchName.trim().isEmpty()) {
+            searchName = "%";
+        } else {
+            searchName = searchName.trim().replaceAll("\\s+", " ");
+            if (searchName.contains(" ")) {
+                searchName = searchName.replace(" ", "");
+            }
+            searchName = "%" + searchName + "%";
+        }
+
+        List<ServiceTerms> listSt = d.getServiceTermByName(searchName);
+        request.setAttribute("searchName", searchName);
+        //paging
+        int pageSize = Integer.parseInt(pageSize_raw);
+        int totalNews = listSt.size();
+        int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
+        int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+        int start = (page - 1) * pageSize;
+        int end = Math.min(page * pageSize, totalNews);
+        List<ServiceTerms> list = d.getListByPage(listSt, start, end);
+        request.setAttribute("listSt", list);
+        request.setAttribute("page", page);
+        request.setAttribute("totalPage", totalPage);
+        request.setAttribute("pageSize", pageSize);
         request.getRequestDispatcher("serviceTermManagement.jsp").forward(request, response);
     }
 
@@ -80,17 +111,36 @@ public class SearchServiceTermServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAO_Admin d = new DAO_Admin();
-        List<Services> listS=d.getAllServices();
-        request.setAttribute("listS", listS); 
+        List<Services> listS = d.getAllServices();
+        request.setAttribute("listS", listS);
         String searchName = request.getParameter("search");
+        String page_raw = request.getParameter("page");
+        String pageSize_raw = request.getParameter("pageSize");
+
         if (searchName == null && searchName.trim().isEmpty()) {
             searchName = "%";
         } else {
             searchName = searchName.trim().replaceAll("\\s+", " ");
-            searchName = "%" + searchName.replace(" ", "%") + "%";
+            if (searchName.contains(" ")) {
+                searchName = searchName.replace(" ", "");
+            }
+            searchName = "%" + searchName + "%";
         }
+
         List<ServiceTerms> listSt = d.getServiceTermByName(searchName);
-        request.setAttribute("listSt", listSt);
+        //paging
+        int pageSize = Integer.parseInt(pageSize_raw);
+        int totalNews = listSt.size();
+        int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
+        int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+        int start = (page - 1) * pageSize;
+        int end = Math.min(page * pageSize, totalNews);
+        List<ServiceTerms> list = d.getListByPage(listSt, start, end);
+        request.setAttribute("listSt", list);
+        request.setAttribute("page", page);
+        request.setAttribute("searchName", searchName);
+        request.setAttribute("totalPage", totalPage);
+        request.setAttribute("pageSize", pageSize);
         request.getRequestDispatcher("serviceTermManagement.jsp").forward(request, response);
     }
 

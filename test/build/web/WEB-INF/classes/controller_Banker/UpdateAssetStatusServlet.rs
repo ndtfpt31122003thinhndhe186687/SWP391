@@ -1,1 +1,2 @@
+controlller_Banker.UpdateAssetStatusServlet
 controlller.UpdateAssetStatusServlet

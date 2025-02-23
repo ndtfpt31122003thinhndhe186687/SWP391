@@ -200,12 +200,12 @@
                     <li class="nav-item">
                         <a class="nav-link " href="statistic_management">
                             <i class="me-2"></i>
-                            Statistic Management
+                            Statistic Managements
                         </a>
                     </li>
                     
                      <li class="nav-item">
-                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=2">
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
                             <i class="me-2"></i>
                             Service Term Management
                         </a>

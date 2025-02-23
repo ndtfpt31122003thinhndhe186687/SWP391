@@ -3,24 +3,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-import java.util.Date;
 
+import java.util.Date;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
 public class News {
-    public int news_id,staff_id;
-    public String content,title,status;
-    public Date created_at,updated_at;
+
+    public int news_id, staff_id;
+    public String content, title, status;
+    public Date created_at, updated_at;
+    public int category_id;
+    public String category_name,picture;
 
     public News(String content, String title) {
         this.content = content;
         this.title = title;
     }
 
-   
     public News() {
     }
 
@@ -32,6 +34,30 @@ public class News {
         this.status = status;
         this.created_at = created_at;
         this.updated_at = updated_at;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public int getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
+    }
+
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
     }
 
     public int getNews_id() {
@@ -89,5 +115,5 @@ public class News {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
-    
+
 }

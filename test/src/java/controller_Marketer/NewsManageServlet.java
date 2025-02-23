@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.News;
+import model.NewsCategory;
 
 /**
  *
@@ -66,19 +67,18 @@ public class NewsManageServlet extends HttpServlet {
         String sortBy = request.getParameter("sort");
         String page_raw = request.getParameter("page");
         String pageSize_raw=request.getParameter("pageSize");
-        List<News> list;
+        String categoryId_raw = request.getParameter("categoryId");
+        List<News> list;         
+        DAO_Marketer d = new DAO_Marketer();
         status = (status == null) ? "all" : status;
-        sortBy = (sortBy == null) ? "created_at" : sortBy;
+        sortBy = (sortBy == null) ? "all" : sortBy;
         try {
             int staff_id = Integer.parseInt(staffId_raw);
-            DAO_Marketer d = new DAO_Marketer();
-            if (status.equals("all")) {
-                list = d.getAllNewsSorted(staff_id, sortBy);
-            } else {
-                list = d.getNewsByStatusSorted(staff_id, status, sortBy);
-            }
+            int categoryId=Integer.parseInt(categoryId_raw);
+            list = d.getNewsFilter(categoryId, staff_id, status, sortBy);
             request.setAttribute("sort", sortBy);
             request.setAttribute("status", status);
+            request.setAttribute("categoryId", categoryId);
 
             int pageSize = Integer.parseInt(pageSize_raw);
             int totalNews = list.size();
@@ -91,6 +91,8 @@ public class NewsManageServlet extends HttpServlet {
             request.setAttribute("page", page);
             request.setAttribute("totalPage", totalPage);
             request.setAttribute("pageSize", pageSize);
+            List<NewsCategory> listNc=d.getAllNewsCategory();
+            request.setAttribute("listNc", listNc);
             request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);
@@ -109,6 +111,7 @@ public class NewsManageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
 
     }
 

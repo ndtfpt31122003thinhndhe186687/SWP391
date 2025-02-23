@@ -58,13 +58,13 @@ public class DeleteServiceTerm extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String termId_raw = request.getParameter("term_id");
+        String termId_raw = request.getParameter("serviceTerm_id");
         int term_id;
         try {
             term_id = Integer.parseInt(termId_raw);
             DAO_Admin d = new DAO_Admin();
             d.deleteServiceTerm(term_id);
-            response.sendRedirect("serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=2");
+            response.sendRedirect("serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4");
         } catch (Exception e) {
         }
     }

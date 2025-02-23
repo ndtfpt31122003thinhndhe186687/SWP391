@@ -5,6 +5,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Add Bank News</title>
+        <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+
         <style>
             * {
                 margin: 0;
@@ -47,7 +49,7 @@
                 color: red;
             }
 
-            input[type="text"], textarea {
+            input[type="text"], textarea, select, input[type="file"] {
                 padding: 10px;
                 font-size: 16px;
                 border: 2px solid black;
@@ -67,23 +69,52 @@
                 transition: background-color 0.3s;
             }
 
+            #preview {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+                margin-top: 10px;
+                display: none;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                padding: 5px;
+            }
         </style>
     </head>
     <body>
-    <div class="container">
-        <h1>Add Bank News</h1>
-        <form action="addNews" method="post">
-            <label for="title">Enter title:</label>
-            <input type="text" name="title" id="title" required/><br/>
-            <label for="content">Enter content:</label>
-            <textarea name="content" id="content" required></textarea><br/>
-            <button type="submit">ADD</button>
-        </form>
-          <c:if test="${not empty err}">
-            <div>
-                <p style="color: red;">${err}</p>
-            </div>
-        </c:if>
-    </div>
-</body>
+        <div class="container">
+            <h1>Add Bank News</h1>
+            <form method="post" action="addNews" enctype="multipart/form-data">
+                <label for="category">Choose Category</label><br/>
+                <select name="category" required>
+                    <option value="">-- Select Category --</option>        
+                    <c:forEach var="n" items="${requestScope.listNc}">
+                        <option value="${n.category_id}">${n.category_name}</option>        
+                    </c:forEach>            
+                </select><br/>
+
+                <label for="title">Enter title:</label>
+                <input type="text" name="title" id="title" required/><br/>
+
+                <label for="content">Enter content:</label>
+                <textarea name="content" id="content" required></textarea><br/>
+
+                <label for="image">Choose Image (JPG/PNG only):</label>
+                <input type="file" name="image" id="image" required><br/>
+                <img id="preview" src="#" alt="Image Preview"/>
+
+                <button type="submit">ADD</button>
+            </form>
+
+            <c:if test="${not empty err}">
+                <div>
+                    <p style="color: red;">${err}</p>
+                </div>
+            </c:if>
+        </div>
+    </body>
+
+    <script>
+        CKEDITOR.replace('content');
+    </script>
 </html>

@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
     <title>News</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content=""> 
     <!-- bootstrap css -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <!-- style css -->
@@ -21,77 +32,143 @@
     <link rel="stylesheet" href="css/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
     <style>
-        .news-container {
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .category-filter {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 8px;
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
+            align-items: center;
+            gap: 10px;
         }
 
-        .news-card {
+        .category-filter label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .category-filter select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .news-container {
             display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 10px;
             justify-content: center;
-            align-items: center;
+        }
+
+        .news-item {
+            display: flex;
+            flex-direction: column;
+            width: 32%;
             background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            min-height: 120px;
-            margin-bottom: 13px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .news-item:hover {
+            transform: scale(1.03);
+        }
+
+        .news-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
         }
 
         .news-content {
-            text-align: center;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
         }
 
-        .news-category {
-            font-size: 14px;
-            color: red;
+        .news-content h2 {
+            font-size: 18px;
             font-weight: bold;
-            text-transform: uppercase;
+            color: #333;
+            margin: 0 0 5px 0;
         }
 
         .news-date {
             font-size: 14px;
-            color: gray;
+            color: #777;
+            margin-bottom: 5px;
         }
 
-        .news-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 10px 0;
+        .news-content-1 {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 10px;
         }
 
-        .news-link {
-            font-size: 16px;
-            color: red;
-            text-decoration: none;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .news-link span {
-            font-size: 20px;
-            margin-left: 5px;
-        }
-        .header_section {
-            position: relative;
-            padding: 10px 20px;
-        }
-
-        .login {
-            position: absolute;
-            right: 2px;
-        }
-
-        .login .nav-item {
-            list-style: none;
+        .read-more {
             display: inline-block;
+            color: #007bff;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: auto;
         }
 
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 20px;
+                padding: 10px;
+                width: 100%;
+            }
+
+            .pagination a, .pagination span {
+                padding: 8px 12px;
+                margin: 0 5px;
+                text-decoration: none;
+                border: 1px solid #ddd;
+                color: #007bff;
+                background-color: #fff;
+                border-radius: 5px;
+                display: inline-block;
+                text-align: center;
+            }
+
+            .pagination a:hover {
+                background-color: red;
+                color: white;
+            }
+
+            .pagination .current-page {
+                background-color: red;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+            }
     </style>
 </head>
 <body>
@@ -99,7 +176,7 @@
     <div class="header_section">
         <div class="header_left">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="logo"><a href="index.html"><img src="images/logo.png"></a></div>
+                <div class="logo" "><a href="index.html"><img src="images/logobank.png"></a></div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -112,7 +189,7 @@
                             <a class="nav-link" href="about.html">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="services.html">Services</a>
+                            <a class="nav-link" href="Service">Services</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="team.html">Team</a>
@@ -126,52 +203,102 @@
                     </ul>
                 </div>
             </nav>
-
         </div>
         <!--search section-->
+
         <div class="search">
             <form action="">
                 <input type="text" placeholder="What do you need to search??"  name="searchvalue">
                 <button type="submit" class="site-btn">SEARCH</button>
             </form>
         </div>
+
+        <!-- Login/logout -->
+        <div class="login">
+            <c:if test="${sessionScope.account != null}">
+                <c:if test="${sessionScope.account.role_id !=5}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hello ${sessionScope.account.full_name}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
+                                <c:if test="${sessionScope.account.role_id==3}">
+                                <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Manage news</a></li>
+                                </c:if>
+                            <li><a class="dropdown-item" href="logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </c:if>
+
+                <c:if test="${sessionScope.account.role_id == 5}">
+                    <li class="">
+                        <a class="" href="changeInfor">Hello ${sessionScope.account.insurance_name}</a>
+
+                    </li>
+                    <li><a href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">Manage insurance policy</a></li>
+                    <li><a class="dropdown-item" href="logout">Logout</a></li>
+                    </c:if>
+                </c:if>    
+                <c:if test="${sessionScope.account == null}">
+                <li class="nav-item">
+                    <a class="nav-link" href="login">Login</a>
+                </li>
+            </c:if>
+        </div>
     </div>
     <!--header section end -->
-
-    <div class="login">
-        <c:if test="${sessionScope.account != null}">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Hello ${sessionScope.account.full_name}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
-                        <c:if test="${sessionScope.role==3}">
-                        <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}">Manage news</a></li>
-                        </c:if>
-                    <li><a class="dropdown-item" href="logout">Logout</a></li>
-                </ul>
-            </li>
-        </c:if>
-        <c:if test="${sessionScope.account == null}">
-            <li class="nav-item">
-                <a class="nav-link" href="login">Login</a>
-            </li>
-        </c:if>
-    </div>
-
-    <c:forEach items="${requestScope.listNews}" var="news">
-        <div class="news-card">
-            <div class="news-content">
-                <span class="news-category">News </span> | 
-                <span class="news-date">${news.created_at}</span>
-                <h3 class="news-title">${news.title}</h3>
-                <a href="newsDetail?news_id=${news.news_id}" class="news-link">View detail<span>&#8250;</span></a>
-            </div>
+    <div>
+        <div class="category-filter">
+            <label for="category">Choose category:</label>
+            <select id="category" name="category" onchange="filterCategory()">
+                <option value="0" ${category_id == 0 ? 'selected' : ''}>All</option>
+                <c:forEach var="n" items="${requestScope.listNc}">
+                    <option value="${n.category_id}" ${n.category_id == category_id ? 'selected' : ''}>
+                        ${n.category_name}
+                    </option>        
+                </c:forEach>   
+            </select>
         </div>
-    </c:forEach>
+
+        <script>
+            function filterCategory() {
+                var categoryId = document.getElementById("category").value;
+                window.location.href = "news?category=" + categoryId+"&page=1";
+            }
+        </script>
+
+        <div id="news-container" class="news-container">
+            <c:forEach items="${requestScope.listNews}" var="news">
+                <article class="news-item">
+                    <img src="imageNews/${news.picture}" alt="">
+                    <div class="news-content">
+                        <h2>${news.title}</h2>
+                        <span class="news-date">                             
+                            <fmt:formatDate value="${news.created_at}" pattern="dd-MM-yyyy" />
+                        </span>
+                        <p class="news-content-1">${news.content}</p>
+                        <a href="newsDetail?news_id=${news.news_id}" class="read-more">View detail</a>
+                    </div>
+                </article>
+            </c:forEach>
+
+        </div>
+        <div class="pagination">
+            <c:forEach begin="1" end="${totalPage}" var="i">
+                <c:choose>
+                    <c:when test="${i == page}">
+                        <span class="current-page">${i}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="news?category=${category_id}&page=${i}">${i}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+        </div>
 
 
+    </div>
 
     <!--footer section start -->
     <div class="footer_section layout_padding">
@@ -207,6 +334,18 @@
             <!-- copyright section end -->
         </div>
     </div>
+
     <!--footer section end -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/plugin.js"></script>
+    <!-- sidebar -->
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/custom.js"></script>
+    <!-- javascript --> 
+    <script src="js/owl.carousel.js"></script>
+    <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script> 
 </body>
 </html>

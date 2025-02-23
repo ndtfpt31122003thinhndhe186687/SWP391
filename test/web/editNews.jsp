@@ -5,6 +5,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Edit Bank News</title>
+                <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+
         <style>
             * {
                 margin: 0;
@@ -73,13 +75,19 @@
         <c:set var="news" value="${requestScope.news}"/>
         <div class="container">
             <h1>Edit Bank News</h1>
-            <form action="editNews" method="post">
+            <form action="editNews" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="news_id" value="${news.news_id}" />
+                <input type="hidden" name="category_id" value="${news.category_id}" />
                 <input type="hidden" name="staff_id" value="${news.staff_id}" />
+                <input type="hidden" name="oldImage" value="${news.picture}" />
+                
                 <label for="title">Enter title:</label>
                 <input type="text" name="title" id="title" required value="${news.title}"/><br/>
                 <label for="content">Enter content:</label>
                 <textarea name="content" id="content" required>${news.content}</textarea><br/>
+                <label for="image">Choose Image (JPG/PNG only):</label>
+                <input type="file" name="image" id="image" value="${news.picture}"><br/>
+                <img src="imageNews/${news.picture}" alt="Current Image" style="max-width: 200px; display: block; margin-bottom: 10px; border: 2px solid black;">
                 <button type="submit">UPDATE</button>
             </form>
             <c:if test="${not empty error}">
@@ -88,6 +96,8 @@
                 </div>
             </c:if>
         </div>
-
     </body>
+    <script>
+        CKEDITOR.replace('content');
+    </script>
 </html>

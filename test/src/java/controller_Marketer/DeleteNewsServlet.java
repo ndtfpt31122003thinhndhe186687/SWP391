@@ -62,13 +62,15 @@ public class DeleteNewsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String newsId_raw = request.getParameter("news_id");
+        String categoryId_raw = request.getParameter("categoryId");
         HttpSession session = request.getSession();
         Staff staff = (Staff) session.getAttribute("account");
         try {
             int news_id = Integer.parseInt(newsId_raw);
+            int categoryId=Integer.parseInt(categoryId_raw);
             DAO_Marketer d = new DAO_Marketer();
-            d.deleteNews(news_id);
-            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id() + "&status=all&sort=created_at&page=1";
+            d.deleteNews(news_id,categoryId);
+            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id() + "&categoryId=0&status=all&sort=all&page=1&pageSize=4";
             response.sendRedirect(redirectUrl);
         } catch (Exception e) {
         }

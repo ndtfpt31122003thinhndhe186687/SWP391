@@ -11,18 +11,20 @@ import java.util.Date;
  * @author Acer Nitro Tiger
  */
 public class ServiceTerms {
-    public int term_id,service_id,max_term_months;
+    public int service_id,serviceTerm_id,duration;
     public String term_name,description,contract_terms,status,service_name;
     public double early_payment_penalty,interest_rate,min_payment,min_deposit;
     public Date created_at;
+    private Integer term_id;
+
 
     public ServiceTerms() {
     }
 
-    public ServiceTerms(int term_id, int service_id, int max_term_months, String term_name, String description, String contract_terms, String status, String service_name, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit, Date created_at) {
-        this.term_id = term_id;
+    public ServiceTerms(int service_id, int serviceTerm_id, int duration, String term_name, String description, String contract_terms, String status, String service_name, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit, Date created_at, Integer term_id) {
         this.service_id = service_id;
-        this.max_term_months = max_term_months;
+        this.serviceTerm_id = serviceTerm_id;
+        this.duration = duration;
         this.term_name = term_name;
         this.description = description;
         this.contract_terms = contract_terms;
@@ -33,12 +35,15 @@ public class ServiceTerms {
         this.min_payment = min_payment;
         this.min_deposit = min_deposit;
         this.created_at = created_at;
+        this.term_id = term_id;
     }
-    
-    //for add
-    public ServiceTerms(int service_id, int max_term_months, String term_name, String description, String contract_terms, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit) {
+
+  
+    //add
+
+    public ServiceTerms(Integer term_id, int service_id, String term_name, String description, String contract_terms, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit) {
+        this.term_id = term_id;
         this.service_id = service_id;
-        this.max_term_months = max_term_months;
         this.term_name = term_name;
         this.description = description;
         this.contract_terms = contract_terms;
@@ -47,12 +52,12 @@ public class ServiceTerms {
         this.min_payment = min_payment;
         this.min_deposit = min_deposit;
     }
+    
+    //update
 
-    //for update
-
-    public ServiceTerms(int term_id, int max_term_months, String term_name, String description, String contract_terms, String status, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit) {
+    public ServiceTerms(int serviceTerm_id,Integer term_id, String term_name, String description, String contract_terms, String status, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit) {
+               this.serviceTerm_id = serviceTerm_id;
         this.term_id = term_id;
-        this.max_term_months = max_term_months;
         this.term_name = term_name;
         this.description = description;
         this.contract_terms = contract_terms;
@@ -62,18 +67,18 @@ public class ServiceTerms {
         this.min_payment = min_payment;
         this.min_deposit = min_deposit;
     }
-    
 
-   
-    
-
-    public int getTerm_id() {
+    public Integer getTerm_id() {
         return term_id;
     }
 
-    public void setTerm_id(int term_id) {
+    public void setTerm_id(Integer term_id) {
         this.term_id = term_id;
     }
+    
+    
+   
+  
 
     public int getService_id() {
         return service_id;
@@ -83,12 +88,20 @@ public class ServiceTerms {
         this.service_id = service_id;
     }
 
-    public int getMax_term_months() {
-        return max_term_months;
+    public int getServiceTerm_id() {
+        return serviceTerm_id;
     }
 
-    public void setMax_term_months(int max_term_months) {
-        this.max_term_months = max_term_months;
+    public void setServiceTerm_id(int serviceTerm_id) {
+        this.serviceTerm_id = serviceTerm_id;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public String getTerm_name() {
@@ -172,11 +185,6 @@ public class ServiceTerms {
     }
 
    
-    @Override
-    public String toString() {
-        return "ServiceTerms{" + "term_id=" + term_id + ", service_id=" + service_id + ", max_term_months=" + max_term_months + ", term_name=" + term_name + ", description=" + description + ", contract_terms=" + contract_terms + ", status=" + status + ", service_name=" + service_name + ", early_payment_penalty=" + early_payment_penalty + ", interest_rate=" + interest_rate + ", min_payment=" + min_payment + ", min_deposit=" + min_deposit + ", created_at=" + created_at + '}';
-    }
-
     
     
 }

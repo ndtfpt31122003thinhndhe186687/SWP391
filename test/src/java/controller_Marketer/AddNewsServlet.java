@@ -1,19 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller_Marketer;
 
-import dal.DAO;
 import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.nio.file.Paths;
+import java.util.List;
+import model.NewsCategory;
 import model.Staff;
 
 /**
@@ -21,6 +21,7 @@ import model.Staff;
  * @author Acer Nitro Tiger
  */
 @WebServlet(name = "AddNewsServlet", urlPatterns = {"/addNews"})
+@MultipartConfig
 public class AddNewsServlet extends HttpServlet {
 
     /**
@@ -36,7 +37,6 @@ public class AddNewsServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -61,6 +61,9 @@ public class AddNewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        DAO_Marketer d = new DAO_Marketer();
+        List<NewsCategory> listNc = d.getAllNewsCategory();
+        request.setAttribute("listNc", listNc);
         request.getRequestDispatcher("addNews.jsp").forward(request, response);
     }
 
@@ -75,26 +78,71 @@ public class AddNewsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        String title = request.getParameter("title");
-        String content = request.getParameter("content");
-        if (title != null) {
-            title = title.trim();
-        }
-        if (content != null) {
-            content = content.trim();
-        }
-        if (title == null || content == null || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {
-            request.setAttribute("err", "Please enter again!");
+        try {
+            // Lấy dữ liệu từ form
+            String title = request.getParameter("title");
+            String content = request.getParameter("content");
+            String categoryId_raw = request.getParameter("category");
+
+            DAO_Marketer d = new DAO_Marketer();
+
+            // Chuẩn hóa dữ liệu đầu vào
+            if (title != null) {
+                title = title.trim();
+            }
+            if (content != null) {
+                content = content.trim();
+            }
+
+            // Kiểm tra điều kiện hợp lệ
+            if (title == null || content == null || title.isEmpty() || content.isEmpty() || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {
+                request.setAttribute("err", "Please enter again!");
+                List<NewsCategory> listNc = d.getAllNewsCategory();
+                request.setAttribute("listNc", listNc);
+                request.getRequestDispatcher("addNews.jsp").forward(request, response);
+                return;
+            }
+
+            // Lấy file ảnh
+            Part filePart = request.getPart("image");
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+            // Kiểm tra nếu không có ảnh
+            if (fileName == null || fileName.isEmpty()) {
+                request.setAttribute("err", "Please upload an image!");
+                List<NewsCategory> listNc = d.getAllNewsCategory();
+                request.setAttribute("listNc", listNc);
+                request.getRequestDispatcher("addNews.jsp").forward(request, response);
+                return;
+            }
+            if ((!fileName.endsWith(".png") && !fileName.endsWith(".jpg"))) {
+                request.setAttribute("err", "Only .jpg or .png images are allowed!");
+                List<NewsCategory> listNc = d.getAllNewsCategory();
+                request.setAttribute("listNc", listNc);
+                request.getRequestDispatcher("addNews.jsp").forward(request, response);
+                return;
+            }
+
+            // Định dạng đường dẫn lưu ảnh
+            String uploadPath = getServletContext().getRealPath("/") + "imageNews/" + fileName;
+            filePart.write(uploadPath);
+
+            // Lấy thông tin nhân viên từ session
+            HttpSession session = request.getSession();
+            Staff staff = (Staff) session.getAttribute("account");
+
+            // Thêm tin tức vào database
+            d.addNews(Integer.parseInt(categoryId_raw), title, content, staff.getStaff_id(), fileName);
+
+            // Chuyển hướng sau khi thêm thành công
+            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id() + "&categoryId=0&status=all&sort=all&page=1&pageSize=4";
+            response.sendRedirect(redirectUrl);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("err", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("addNews.jsp").forward(request, response);
-            return;
         }
-        HttpSession session = request.getSession();
-        Staff staff = (Staff) session.getAttribute("account");
-        DAO_Marketer d = new DAO_Marketer();
-        d.addNews(title, content, staff.getStaff_id());
-        String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id() + "&status=all&sort=created_at&page=1";
-        response.sendRedirect(redirectUrl);
     }
 
     /**
