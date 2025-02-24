@@ -986,145 +986,6 @@ public class DAO_Admin extends DBContext {
         return list;
     }
 
-//    //delete service_term
-//    public void deleteServiceTerm(int term_id) {
-//        String sql = "delete from service_terms where term_id=? and status not in ('active')";
-//
-//        try {
-//            PreparedStatement pre = con.prepareStatement(sql);
-//            pre.setInt(1, term_id);
-//            pre.executeUpdate();
-//        } catch (SQLException e) {
-//            System.out.println(e);
-//        }
-//    }
-//
-//    //get service term by term_id
-//    public ServiceTerms getServiceTermByTermId(int term_id) {
-//        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
-//                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
-//                + "from service_terms st join services s on st.service_id=s.service_id where term_id=?";
-//        try {
-//            PreparedStatement pre = con.prepareStatement(sql);
-//            pre.setInt(1, term_id);
-//            ResultSet rs = pre.executeQuery();
-//            if (rs.next()) {
-//                ServiceTerms s = new ServiceTerms();
-//                s.setTerm_id(rs.getInt("term_id"));
-//                s.setTerm_name(rs.getString("term_name"));
-//                s.setService_id(rs.getInt("service_id"));
-//                s.setService_name(rs.getString("service_name"));
-//                s.setDescription(rs.getString("description"));
-//                s.setContract_terms(rs.getString("contract_terms"));
-//                s.setMax_term_months(rs.getInt("max_term_months"));
-//                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
-//                s.setInterest_rate(rs.getDouble("interest_rate"));
-//                s.setMin_payment(rs.getDouble("min_payment"));
-//                s.setMin_deposit(rs.getDouble("min_deposit"));
-//                s.setStatus(rs.getString("status"));
-//                s.setCreated_at(rs.getDate("created_at"));
-//                return s;
-//            }
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-//
-//    public void updateServiceTerm(ServiceTerms s) {
-//        String sql = "UPDATE service_terms \n"
-//                + "SET \n"
-//                + "    term_name = ?, \n"
-//                + "    description = ?, \n"
-//                + "    contract_terms = ?, \n"
-//                + "    max_term_months = ?, \n"
-//                + "    early_payment_penalty = ?, \n"
-//                + "    interest_rate = ?, \n"
-//                + "    min_payment = ?, \n"
-//                + "    min_deposit = ?,\n"
-//                + "    [status] = ?\n"
-//                + "WHERE term_id = ?;";
-//        try {
-//            PreparedStatement pre = con.prepareStatement(sql);
-//            pre.setString(1, s.getTerm_name());
-//            pre.setString(2, s.getDescription());
-//            pre.setString(3, s.getContract_terms());
-//            pre.setInt(4, s.getMax_term_months());
-//            pre.setDouble(5, s.getEarly_payment_penalty());
-//            pre.setDouble(6, s.getInterest_rate());
-//            pre.setDouble(7, s.getMin_payment());
-//            pre.setDouble(8, s.getMin_deposit());
-//            pre.setString(9, s.getStatus());
-//            pre.setInt(10, s.getTerm_id());
-//            pre.executeUpdate();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//    }
-//
-//    //search service term by name
-//    public List<ServiceTerms> getServiceTermByName(String termName) {
-//        List<ServiceTerms> list = new ArrayList<>();
-//        String sql = "select st.*,s.service_name from service_terms st join services s on st.service_id=s.service_id where st.term_name like ?";
-//        try {
-//            PreparedStatement st = con.prepareStatement(sql);
-//            st.setString(1, "%" + termName + "%");
-//            ResultSet rs = st.executeQuery();
-//            while (rs.next()) {
-//                ServiceTerms s = new ServiceTerms();
-//                s.setTerm_id(rs.getInt("term_id"));
-//                s.setTerm_name(rs.getString("term_name"));
-//                s.setService_id(rs.getInt("service_id"));
-//                s.setService_name(rs.getString("service_name"));
-//                s.setDescription(rs.getString("description"));
-//                s.setContract_terms(rs.getString("contract_terms"));
-//                s.setMax_term_months(rs.getInt("max_term_months"));
-//                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
-//                s.setInterest_rate(rs.getDouble("interest_rate"));
-//                s.setMin_payment(rs.getDouble("min_payment"));
-//                s.setMin_deposit(rs.getDouble("min_deposit"));
-//                s.setStatus(rs.getString("status"));
-//                s.setCreated_at(rs.getDate("created_at"));
-//                list.add(s);
-//            }
-//        } catch (SQLException e) {
-//            System.out.println(e);
-//        }
-//        return list;
-//    }
-//
-    //filter
-    //get list service_term with sort by
-//    public List<ServiceTerms> getAllServiceTerms() {
-//        List<ServiceTerms> list = new ArrayList<>();
-//        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
-//                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
-//                + "from service_terms st join services s on st.service_id=s.service_id";
-//        try {
-//            PreparedStatement pre = con.prepareStatement(sql);
-//            ResultSet rs = pre.executeQuery();
-//            while (rs.next()) {
-//                ServiceTerms s = new ServiceTerms();
-//                s.setTerm_id(rs.getInt("term_id"));
-//                s.setTerm_name(rs.getString("term_name"));
-//                s.setService_name(rs.getString("service_name"));
-//                s.setService_id(rs.getInt("service_id"));
-//                s.setDescription(rs.getString("description"));
-//                s.setContract_terms(rs.getString("contract_terms"));
-//                s.setMax_term_months(rs.getInt("max_term_months"));
-//                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
-//                s.setInterest_rate(rs.getDouble("interest_rate"));
-//                s.setMin_payment(rs.getDouble("min_payment"));
-//                s.setMin_deposit(rs.getDouble("min_deposit"));
-//                s.setStatus(rs.getString("status"));
-//                s.setCreated_at(rs.getDate("created_at"));
-//                list.add(s);
-//            }
-//        } catch (SQLException e) {
-//            System.out.println(e);
-//        }
-//        return list;
-//    }
     public List<ServiceTerms> getFilteredServiceTerms(String serviceName, String sortBy) {
         List<ServiceTerms> list = new ArrayList<>();
         String sql = "SELECT st.*, s.service_name, t.duration FROM service_terms st "
@@ -1176,27 +1037,7 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-//    //add new service_term
-//    public void addServiceTerm(ServiceTerms s) {
-//        String sql = "INSERT INTO service_terms (service_id, term_name, description, contract_terms, max_term_months, early_payment_penalty, interest_rate, min_payment, min_deposit)"
-//                + "values (?,?,?,?,?,?,?,?,?)";
-//        try {
-//            PreparedStatement pre = con.prepareStatement(sql);
-//            pre.setInt(1, s.getService_id());
-//            pre.setString(2, s.getTerm_name());
-//            pre.setString(3, s.getDescription());
-//            pre.setString(4, s.getContract_terms());
-//            pre.setInt(5, s.getMax_term_months());
-//            pre.setDouble(6, s.getEarly_payment_penalty());
-//            pre.setDouble(7, s.getInterest_rate());
-//            pre.setDouble(8, s.getMin_payment());
-//            pre.setDouble(9, s.getMin_deposit());
-//            pre.executeUpdate();
-//        } catch (SQLException e) {
-//            System.out.println(e);
-//        }
-//    }
-//
+
 
     public void addServiceTerm(ServiceTerms s) {
         String sql = "INSERT INTO service_terms (service_id, term_name, description, contract_terms, early_payment_penalty, interest_rate, min_payment, min_deposit,term_id) "
@@ -1373,6 +1214,7 @@ public class DAO_Admin extends DBContext {
         }
         return arr;
     }
+    
 
     // Main method for testing
     public static void main(String[] args) {

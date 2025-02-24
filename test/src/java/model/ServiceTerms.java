@@ -184,6 +184,11 @@ public class ServiceTerms {
         this.created_at = created_at;
     }
 
+    @Override
+    public String toString() {
+        return "ServiceTerms{" + "service_id=" + service_id + ", serviceTerm_id=" + serviceTerm_id + ", duration=" + duration + ", term_name=" + term_name + ", description=" + description + ", contract_terms=" + contract_terms + ", status=" + status + ", service_name=" + service_name + ", early_payment_penalty=" + early_payment_penalty + ", interest_rate=" + interest_rate + ", min_payment=" + min_payment + ", min_deposit=" + min_deposit + ", created_at=" + created_at + ", term_id=" + term_id + '}';
+    }
+
    
     
     
