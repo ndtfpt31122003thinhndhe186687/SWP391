@@ -22,7 +22,7 @@ import model.News;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "EditNewsServlet", urlPatterns = {"/editNews"})
+@WebServlet(name = "EditNewsServlet", urlPatterns = {"/marketer/editNews"})
 @MultipartConfig
 
 public class EditNewsServlet extends HttpServlet {

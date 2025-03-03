@@ -78,6 +78,12 @@ public class SavingsListServlet extends HttpServlet {
             accruedInterestMap.put(s.getSavings_id(), totalWithInterest);
         }
         request.setAttribute("accruedInterestMap", accruedInterestMap);
+        double totalSavings = 0;
+        for (Savings saving : savingList) {
+            totalSavings += saving.getAmount();
+        }
+        request.setAttribute("totalSavings", totalSavings);
+
         request.getRequestDispatcher("depositSaving.jsp").forward(request, response);
 
     }

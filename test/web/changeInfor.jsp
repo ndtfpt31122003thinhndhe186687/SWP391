@@ -230,7 +230,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">
+                        <a class="nav-link" href="viewprofile">
                             <i class="bi-person me-2"></i>
                             Hồ sơ
                         </a>
@@ -283,31 +283,31 @@
                             <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                                 <h6 class="mb-4 text-danger"><a href="changepass">User Profile</a></h6>
 
-                                <form class="custom-form profile-form" action="changeInfor" method="post" >
+                                <form class="custom-form profile-form" action="changeInfor" method="post" enctype="multipart/form-data">
                                     <input class="form-control" type="text" name="profile-name" placeholder="Name">
                                     <input class="form-control" type="email" name="profile-email" placeholder="Email">
                                     <input class="form-control" type="number" name="profile-phone" placeholder="Phone"> 
                                     <input class="form-control" type="text" name="profile-address" placeholder="Address">
-                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth (yyyy-MM-dd)">
-
+                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth (dd-MM-yyyy)">
+                                   
                                     <div class="input-group mb-1">
-                                        <img src="" class="profile-image img-fluid" alt="">
                                         <input type="file" class="form-control" name="profile-image">
+                                    </div>
+
+                                    <div class="d-flex">
+                                        <button type="button" class="form-control me-3 text-bg-danger">
+                                            Reset
+                                        </button>
+
+                                        <button type="submit" class="form-control ms-2 text-bg-danger">
+                                            Update
+                                        </button>
                                     </div>
                                     <c:if test="${not empty errorMessage}">
                                         <div style="color: red; font-weight: bold;">
                                             ${errorMessage}
                                         </div>
                                     </c:if>
-                                    <div class="d-flex">
-                                        <button type="button " class="form-control me-3 text-bg-danger">
-                                            Reset
-                                        </button>
-
-                                        <button type="submit" class="form-control me-3 text-bg-danger">
-                                            Update
-                                        </button>
-                                    </div> 
                                 </form>
                             </div>
 

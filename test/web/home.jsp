@@ -61,7 +61,7 @@
                                 <a class="nav-link" href="home.jsp">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="about.html">About</a>
+                                <a class="nav-link" href="about.jsp">About</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="Service">Services</a>
@@ -108,7 +108,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                                     <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
                                         <c:if test="${sessionScope.account.role_id==3}">
-                                        <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Manage news</a></li>
+                                        <li><a class="dropdown-item" href="marketer/newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Manage news</a></li>
                                         </c:if>
                                     <li><a class="dropdown-item" href="logout">Logout</a></li>
                                 </ul>

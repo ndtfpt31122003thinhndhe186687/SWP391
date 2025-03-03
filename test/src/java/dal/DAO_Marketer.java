@@ -2,7 +2,6 @@ package dal;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import model.News;
 import model.NewsView;
@@ -348,11 +347,12 @@ public class DAO_Marketer extends DBContext {
         if (!status.isEmpty() && !status.equals("all") && status != null) {
             sql += " AND n.status = ?";
         }
-
-        if (!sortBy.equals("all") && sortBy != null && !sortBy.isEmpty()) {
-            sql += " ORDER BY n." + sortBy;
+        // Sắp xếp theo ngày tạo giảm dần (tin mới nhất trước)
+        if (sortBy != null && !sortBy.equals("all") && !sortBy.isEmpty()) {
+            sql += " ORDER BY n.created_at DESC, n." + sortBy;
+        } else {
+            sql += " ORDER BY n.created_at DESC"; 
         }
-
         try {
             PreparedStatement st = con.prepareStatement(sql);
             int index = 1;
@@ -430,19 +430,19 @@ public class DAO_Marketer extends DBContext {
                 + "AND status = 'approved' \n"
                 + "ORDER BY news_id ";
         try {
-            PreparedStatement ps=con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, news_id);
             ps.setInt(2, news_id);
-            ResultSet rs=ps.executeQuery();
-            while(rs.next()){
-                News n=new News();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                News n = new News();
                 n.setNews_id(rs.getInt("news_id"));
                 n.setTitle(rs.getString("title"));
                 list.add(n);
             }
         } catch (Exception e) {
         }
-      return list;
+        return list;
     }
 
     public List<News> getListByPage(List<News> list, int start, int end) {
@@ -452,7 +452,42 @@ public class DAO_Marketer extends DBContext {
         }
         return arr;
     }
+    
+    //Thống kê số lượng bài viết theo tháng
+    public int getNewsCountByMonth() {
+        String query = "SELECT COUNT(news_id) AS total_news " +
+                       "FROM news GROUP BY YEAR(created_at), MONTH(created_at) " +
+                       "ORDER BY year DESC, month DESC";
+        try (
+             PreparedStatement ps = con.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
 
+            while (rs.next()) {
+                return rs.getInt("total_news");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    //Thống kê số lượng bài viết theo danh mục
+    public int getNewsAmountByCategory(int category_id){
+        String sql="select count(*) as total from news where category_id=? and status='approved'";
+        try {
+            PreparedStatement ps=con.prepareStatement(sql);
+            ps.setInt(1, category_id);
+            ResultSet rs=ps.executeQuery();
+            while(rs.next()){
+                return rs.getInt("total");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+   
     public static void main(String[] args) {
         DAO_Marketer d = new DAO_Marketer();
         List<News> list = d.getAllNewsByCategory(1);

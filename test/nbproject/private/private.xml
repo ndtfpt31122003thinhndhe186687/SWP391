@@ -3,15 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/web/addNews.jsp</file>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/web/savingsApplication.jsp</file>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/dal/SavingDAO.java</file>
+            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/web/interestRate.jsp</file>
+            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/web/news.jsp</file>
+            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/web/home.jsp</file>
+            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/controller_Marketer/InterestRateServlet.java</file>
             <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/dal/DAO_Admin.java</file>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/web/depositSaving.jsp</file>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/controller_SavingDepositService/SendSavingsApplication.java</file>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/model/Savings.java</file>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/controller_SavingDepositService/SavingsListServlet.java</file>
-            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/controller_SavingDepositService/WithdrawSavingServlet.java</file>
+            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/controller_Marketer/NewsManageServlet.java</file>
+            <file>file:/D:/Semester4_FALL2024/PRJ/testSWP1/src/java/model/Customer.java</file>
         </group>
     </open-files>
 </project-private>

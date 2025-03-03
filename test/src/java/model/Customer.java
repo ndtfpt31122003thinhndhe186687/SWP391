@@ -4,7 +4,6 @@
  */
 package model;
 
-import dal.DAO_Insurance;
 import java.util.Date;
 
 /**

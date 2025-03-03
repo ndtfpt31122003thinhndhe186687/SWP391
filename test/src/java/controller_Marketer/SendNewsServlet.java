@@ -20,7 +20,7 @@ import model.Staff;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "SendNewsServlet", urlPatterns = {"/sendNews"})
+@WebServlet(name = "SendNewsServlet", urlPatterns = {"/marketer/sendNews"})
 public class SendNewsServlet extends HttpServlet {
 
     /**

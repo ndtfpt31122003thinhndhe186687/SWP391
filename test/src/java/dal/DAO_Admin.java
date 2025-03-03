@@ -1063,6 +1063,27 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
+    
+    //kiem tra trung lap
+    public boolean isDuplicateServiceTerm(int termId, String termName, int serviceId, double minDeposit,double interest_rate) {
+        String query = "SELECT COUNT(*) FROM service_terms WHERE term_id = ? AND term_name = ? "
+                + "AND service_id = ? AND min_deposit = ? and interest_rate=?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, termId);
+            ps.setString(2, termName);
+            ps.setInt(3, serviceId);
+            ps.setDouble(4, minDeposit);
+            ps.setDouble(5, interest_rate);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT(*) > 0, nghĩa là đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 // Xóa service_term (chỉ xóa khi không active)
     public void deleteServiceTerm(int serviceTerm_id) {

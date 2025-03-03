@@ -51,6 +51,27 @@
             font-weight: bold;
             color: #333;
         }
+        .category-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .category-list button {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .category-list button:hover {
+            background-color: #f0f0f0;
+        }
+        .category-list button.active {
+            background-color: red;
+            color: white;
+            border-color: red;
+        }
 
         .category-filter select {
             padding: 8px 12px;
@@ -138,37 +159,37 @@
             text-decoration: underline;
         }
         .pagination {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-top: 20px;
-                padding: 10px;
-                width: 100%;
-            }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+        }
 
-            .pagination a, .pagination span {
-                padding: 8px 12px;
-                margin: 0 5px;
-                text-decoration: none;
-                border: 1px solid #ddd;
-                color: #007bff;
-                background-color: #fff;
-                border-radius: 5px;
-                display: inline-block;
-                text-align: center;
-            }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            margin: 0 5px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #007bff;
+            background-color: #fff;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: center;
+        }
 
-            .pagination a:hover {
-                background-color: red;
-                color: white;
-            }
+        .pagination a:hover {
+            background-color: red;
+            color: white;
+        }
 
-            .pagination .current-page {
-                background-color: red;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-            }
+        .pagination .current-page {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -224,7 +245,7 @@
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
                                 <c:if test="${sessionScope.account.role_id==3}">
-                                <li><a class="dropdown-item" href="newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Manage news</a></li>
+                                <li><a class="dropdown-item" href="marketer/newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Manage news</a></li>
                                 </c:if>
                             <li><a class="dropdown-item" href="logout">Logout</a></li>
                         </ul>
@@ -250,23 +271,23 @@
     <!--header section end -->
     <div>
         <div class="category-filter">
-            <label for="category">Choose category:</label>
-            <select id="category" name="category" onchange="filterCategory()">
-                <option value="0" ${category_id == 0 ? 'selected' : ''}>All</option>
+            <label>Choose category:</label>
+            <div class="category-list">
+                <button onclick="filterCategory(0)" class="${category_id == 0 ? 'active' : ''}">All</button>
                 <c:forEach var="n" items="${requestScope.listNc}">
-                    <option value="${n.category_id}" ${n.category_id == category_id ? 'selected' : ''}>
+                    <button onclick="filterCategory(${n.category_id})" class="${n.category_id == category_id ? 'active' : ''}">
                         ${n.category_name}
-                    </option>        
-                </c:forEach>   
-            </select>
+                    </button>        
+                </c:forEach>
+            </div>
         </div>
 
         <script>
-            function filterCategory() {
-                var categoryId = document.getElementById("category").value;
-                window.location.href = "news?category=" + categoryId+"&page=1";
+            function filterCategory(categoryId) {
+                window.location.href = "news?category=" + categoryId + "&page=1";
             }
         </script>
+
 
         <div id="news-container" class="news-container">
             <c:forEach items="${requestScope.listNews}" var="news">

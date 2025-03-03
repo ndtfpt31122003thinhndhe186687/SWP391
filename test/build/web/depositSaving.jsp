@@ -224,7 +224,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="profile.html">
+                                <a class="nav-link" href="viewprofile">
                                     <i class="bi-person me-2"></i>
                                     Hồ sơ
                                 </a>
@@ -260,7 +260,7 @@
                     </div>
                     <div class="custom-block custom-block-balance">
                         <small>Tổng số dư tiết kiệm</small>
-                        <h2 class="mt-2 mb-3">$25,480</h2> 
+                        <h2 class="mt-2 mb-3">$<fmt:formatNumber value="${totalSavings}" pattern="#,##0.00" /></h2>
                         <div class="savings-list">
                             <c:forEach var="saving" items="${savingsList}">
                                 <div class="savings-item">
@@ -277,7 +277,7 @@
                                             <div class="row"><span class="label">Ngày đáo hạn:</span><span class="value"><fmt:formatDate value="${saving.end_date}" pattern="dd-MM-yyyy" /></span></div>
                                             <div class="row accrued-interest"><span class="label">Lãi suất tích lũy dự kiến nhận về:</span><span class="value">$<fmt:formatNumber value="${accruedInterestMap[saving.savings_id]}" pattern="#,##0.00" /></span></div>
                                         </div>
-                                        <form action="withdrawSaving" method="post">
+                                        <form action="withdrawSaving" method="post" onsubmit="return confirmWithdraw(event, '${saving.savings_id}', '${saving.end_date}')">
                                             <input type="hidden" name="saving_id" value="${saving.savings_id}">
                                             <button class="btn btn-danger btn-sm">Rút tiền</button>
                                         </form>
@@ -302,6 +302,21 @@
                         details.style.display = "none";
                     }
                 }
+
+                function confirmWithdraw(event, savingId, endDate) {
+                    var today = new Date();
+                    var maturityDate = new Date(endDate);
+
+                    if (today < maturityDate) {
+                        var confirmAction = confirm("Gói tiết kiệm này chưa đến kỳ hạn. Bạn có chắc chắn muốn rút tiền không?");
+                        if (!confirmAction) {
+                            event.preventDefault(); // Ngăn chặn gửi form nếu không xác nhận
+                            return false;
+                        }
+                    }
+                    return true; // Cho phép gửi form nếu đã xác nhận hoặc đến kỳ hạn
+                }
+
 
             </script>
 

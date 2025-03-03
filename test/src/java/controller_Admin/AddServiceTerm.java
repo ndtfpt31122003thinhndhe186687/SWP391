@@ -102,7 +102,7 @@ public class AddServiceTerm extends HttpServlet {
         }
         if (termName == null || description == null || contractTerms == null
                 || termName.matches(".*\\s{2,}.*") || description.matches(".*\\s{2,}.*") || contractTerms.matches(".*\\s{2,}.*")) {
-            request.setAttribute("err", "Please enter again. The space between words only needs 1 space!");
+            request.setAttribute("err", "Vui lòng nhập lại. Khoảng cách giữa các từ chỉ cần 1 khoảng cách!");
             List<Services> listS = d.getAllServices();
             request.setAttribute("listS", listS);
             List<Term> listTerms = d.getAllTerm();
@@ -112,12 +112,22 @@ public class AddServiceTerm extends HttpServlet {
         }
         try {
             Integer termId = (termId_raw == null || termId_raw.trim().isEmpty()) ? null : Integer.valueOf(termId_raw);
-            int serviceId=Integer.parseInt(serviceId_raw);
+            int serviceId = Integer.parseInt(serviceId_raw);
             double paymentPen = (paymentPen_raw == null || paymentPen_raw.isEmpty()) ? 0.0 : Double.parseDouble(paymentPen_raw);
             double interestRate = (interestRate_raw == null || interestRate_raw.isEmpty()) ? 0.0 : Double.parseDouble(interestRate_raw);
             double minPayment = (minPayment_raw == null || minPayment_raw.isEmpty()) ? 0.0 : Double.parseDouble(minPayment_raw);
             double minDeposit = (minDeposit_raw == null || minDeposit_raw.isEmpty()) ? 0.0 : Double.parseDouble(minDeposit_raw);
-            ServiceTerms s = new ServiceTerms(termId, serviceId, termName, description, contractTerms, 
+            // Kiểm tra xem service_term có bị trùng không
+            if (d.isDuplicateServiceTerm(termId, termName, serviceId, minDeposit,interestRate)) {
+                request.setAttribute("err", "Điều khoản dịch vụ đã tồn tại!");
+                List<Services> listS = d.getAllServices();
+                request.setAttribute("listS", listS);
+                List<Term> listTerms = d.getAllTerm();
+                request.setAttribute("listTerms", listTerms);
+                request.getRequestDispatcher("addServiceTerm.jsp").forward(request, response);
+                return;
+            }
+            ServiceTerms s = new ServiceTerms(termId, serviceId, termName, description, contractTerms,
                     paymentPen, interestRate, minPayment, minDeposit);
             d.addServiceTerm(s);
             response.sendRedirect("serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4");

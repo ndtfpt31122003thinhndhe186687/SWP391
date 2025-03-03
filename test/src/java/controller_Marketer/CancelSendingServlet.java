@@ -20,7 +20,7 @@ import model.Staff;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "CancelSendingServlet", urlPatterns = {"/cancelSend"})
+@WebServlet(name = "CancelSendingServlet", urlPatterns = {"/marketer/cancelSend"})
 public class CancelSendingServlet extends HttpServlet {
 
     /**

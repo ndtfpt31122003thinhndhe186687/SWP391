@@ -37,7 +37,7 @@
             padding: 0;
             background: #f9f9f9;
         }
-
+       
         .header, .footer {
             background-color: #cc0000;
             color: white;
@@ -50,6 +50,7 @@
         .article-container {
             max-width: 900px;
             margin: 50px auto;
+            margin-top: 50px;
             padding: 20px;
             background: #fff;
             border-radius: 10px;
@@ -188,6 +189,9 @@
         </div>
     </div>
     <!--header section end -->
+    
+    <div style="height: 50px;"></div> <!-- Thêm kho?ng tr?ng -->
+
     <div class="article-container">
         <div class="article-title">${newsDetail.title}</div>
         <div class="article-date">

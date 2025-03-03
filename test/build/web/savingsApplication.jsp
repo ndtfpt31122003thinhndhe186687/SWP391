@@ -114,6 +114,7 @@
                 <div class="input-group">
                     <label for="amount">Deposit Amount:</label>
                     <input type="number" id="amount" name="amount" required>
+                    <input type="hidden" id="availableAmount" value="${sessionScope.account.amount}">
                 </div>
 
                 <div class="input-group">
@@ -144,10 +145,14 @@
                         var selectedOption = document.getElementById("serviceTerm_id").options[document.getElementById("serviceTerm_id").selectedIndex];
                         var minDeposit = parseFloat(selectedOption.getAttribute("data-min-deposit"));
                         var amountInput = parseFloat(this.value);
+                        var availableAmount=parseFloat(document.getElementById("availableAmount").value);
 
                         if (amountInput < minDeposit) {
                             this.setCustomValidity("Deposit amount must be at least " + minDeposit + " $.");
-                        } else {
+                        } else if (amountInput>availableAmount){
+                            this.setCustomValidity("Your account is not enough. Please enter again!! ");
+                        }else
+                                {
                             this.setCustomValidity("");
                         }
                     });

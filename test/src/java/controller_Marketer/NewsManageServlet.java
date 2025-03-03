@@ -21,7 +21,7 @@ import model.NewsCategory;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "NewsManageServlet", urlPatterns = {"/newsManage"})
+@WebServlet(name = "NewsManageServlet", urlPatterns = {"/marketer/newsManage"})
 public class NewsManageServlet extends HttpServlet {
 
     /**
@@ -111,9 +111,11 @@ public class NewsManageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+       
+   
+}
 
-    }
+    
 
     /**
      * Returns a short description of the servlet.

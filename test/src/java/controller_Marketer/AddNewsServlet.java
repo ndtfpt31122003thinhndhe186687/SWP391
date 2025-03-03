@@ -20,7 +20,7 @@ import model.Staff;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "AddNewsServlet", urlPatterns = {"/addNews"})
+@WebServlet(name = "AddNewsServlet", urlPatterns = {"/marketer/addNews"})
 @MultipartConfig
 public class AddNewsServlet extends HttpServlet {
 
@@ -91,9 +91,9 @@ public class AddNewsServlet extends HttpServlet {
                 title = title.trim();
             }
             if (content != null) {
-                content = content.trim();
+                content = content.replaceAll("<[^>]*>", "").
+                        replaceAll("&nbsp;", "").trim();
             }
-
             // Kiểm tra điều kiện hợp lệ
             if (title == null || content == null || title.isEmpty() || content.isEmpty() || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {
                 request.setAttribute("err", "Please enter again!");

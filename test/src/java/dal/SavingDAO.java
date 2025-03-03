@@ -113,29 +113,24 @@ public class SavingDAO extends DBContext {
             pre.setTimestamp(5, new java.sql.Timestamp(s.getStart_date().getTime()));
             pre.setTimestamp(6, new java.sql.Timestamp(s.getEnd_date().getTime()));
             pre.executeUpdate();
+            updateAmount(s.customer_id,s.getAmount());
         } catch (SQLException e) {
         }
     }
 
     //If the application is accepted, the account money will be deducted to add to the savings deposit
-    //update amount in customer
-    public void updateAmount(int customer_id) {
-        String sql = "UPDATE customer\n"
-                + "SET amount = amount - (\n"
-                + "   SELECT s.amount \n"
-                + "    FROM savings s\n"
-                + "    WHERE s.customer_id = customer.customer_id\n"
-                + "    AND s.status = 'approved'\n"
-                + ")\n"
-                + "WHERE customer_id=?;";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, customer_id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+    //update amount in customer when the application is sending
+    public void updateAmount(int customer_id, double amount) {
+    String sql = "UPDATE customer SET amount = amount - ? WHERE customer_id = ?";
+    try (PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setDouble(1, amount);
+        ps.setInt(2, customer_id);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println(e);
     }
+}
+
 
     //get total saving deposit
     public double getSavingDeposit(int saving_id) {
@@ -232,6 +227,27 @@ public class SavingDAO extends DBContext {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, saving_id);
             ps.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    //rut tien truoc ki han
+    public void withdrawSavingsEarly(int saving_id) {
+        String sql = "update customer \n"
+                + "set amount=c.amount+s.amount\n"
+                + "from customer c join savings s on s.customer_id=c.customer_id\n"
+                + "where s.status='approved' and s.savings_id=?";
+        String updateStatusSql = "UPDATE savings SET status = 'completed' WHERE savings_id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, saving_id);
+            ps.executeUpdate();
+
+            PreparedStatement psStatus = con.prepareStatement(updateStatusSql);
+            psStatus.setInt(1, saving_id);
+            psStatus.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println(e);

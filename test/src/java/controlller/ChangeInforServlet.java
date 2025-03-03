@@ -107,12 +107,12 @@ public class ChangeInforServlet extends HttpServlet {
             }
             //check day month invalid or not
             try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 dateFormat.setLenient(false); // Bật kiểm tra giá trị chặt chẽ
                 dob = dateFormat.parse(dob_raw);
                 sqlDob = new java.sql.Date(dob.getTime());
             } catch (ParseException e) {
-                throw new Exception("Invalid date format. Please use yyyy-MM-dd.");
+                throw new Exception("Invalid date format. Please use dd-MM-yyyy.");
             }
             // Lấy file ảnh
             String oldImage = request.getParameter("oldImage");
@@ -134,7 +134,8 @@ public class ChangeInforServlet extends HttpServlet {
             HttpSession session = request.getSession();
             Customer c = (Customer) session.getAttribute("account");
             d.changeInfor(fullname, email, phone, address, sqlDob, imagePath, c.getCustomer_id());
-            response.sendRedirect("changeInfor");
+            session.setAttribute("successMessage", "Cập nhật thông tin thành công!");
+            response.sendRedirect("viewprofile");
         } catch (Exception e) {
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("changeInfor.jsp").forward(request, response);

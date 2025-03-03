@@ -90,21 +90,13 @@ public class WithdrawSavingServlet extends HttpServlet {
             session.setAttribute("successMessage", "Rút tiền thành công! Hãy kiểm tra số dư tài khoản!");
             response.sendRedirect("home");
         } else {
-            request.setAttribute("error", "Khoản tiết kiệm chưa đến hạn, không thể rút!");
-            Customer c = (Customer) session.getAttribute("account");
-            List<Savings> savingList = d.getAllDepositSavingsOfUser(c.getCustomer_id());
-            request.setAttribute("savingsList", savingList);
-
-            // Tính tổng tiền sau khi có lãi suất
-            Map<Integer, Double> accruedInterestMap = new HashMap<>();
-            for (Savings s : savingList) {
-                // Tính tổng tiền sau khi có lãi suất
-                double totalWithInterest = d.getSavingDeposit(s.getSavings_id());
-                accruedInterestMap.put(s.getSavings_id(), totalWithInterest);
-            }
-            request.setAttribute("accruedInterestMap", accruedInterestMap);
-            request.getRequestDispatcher("depositSaving.jsp").forward(request, response);
+            //request.setAttribute("error", "Khoản tiết kiệm chưa đến hạn, không thể rút!");
+            d.withdrawSavingsEarly(savingId);
+            session.setAttribute("successMessage", "Rút tiền thành công nhueng chuwa den han! Hãy kiểm tra số dư tài khoản!");
+            response.sendRedirect("home");
         }
+            
+        
     }
 
     /**
