@@ -62,11 +62,7 @@
                 font-weight: 500;
             }
 
-<<<<<<< HEAD
-            input {
-=======
             input, select {
->>>>>>> origin/phong
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #ddd;
@@ -75,11 +71,7 @@
                 transition: border-color 0.3s;
             }
 
-<<<<<<< HEAD
-            input:focus {
-=======
             input:focus, select:focus {
->>>>>>> origin/phong
                 outline: none;
                 border-color: var(--primary-red);
                 box-shadow: 0 0 5px rgba(220,53,69,0.2);
@@ -125,34 +117,22 @@
 
                 <div class="form-group">
                     <label for="description">Description:</label>
-<<<<<<< HEAD
-                    <input type="text" id="description" name="description"  />
-=======
                     <input type="text" id="description" name="description"/>
->>>>>>> origin/phong
                 </div>
 
                 <div class="form-group">
                     <label for="contract_terms">Detailed contract terms</label>
-<<<<<<< HEAD
-                    <input type="text" id= "contract_terms" name="contract_terms"  />
-=======
                     <input type="text" id="contract_terms" name="contract_terms"/>
->>>>>>> origin/phong
                 </div>
 
                 <div class="form-group">
                     <label for="max_term_months">Max term months:</label>
-<<<<<<< HEAD
-                    <input type="number" id="max_term_months" name="max_term_months" min="0" />
-=======
                     <select name="term_id" id="max_term_months">
                         <option value="">-- Select Term --</option>
                         <c:forEach var="term" items="${requestScope.listTerms}">
                             <option value="${term.term_id}">${term.duration} months</option>
                         </c:forEach>
                     </select>
->>>>>>> origin/phong
                 </div>
 
                 <div class="form-group">
@@ -174,11 +154,6 @@
                     <label for="min_deposit">Min Deposit:</label>
                     <input type="number" id="min_deposit" name="min_deposit" min="0" step="0.01" />
                 </div>
-<<<<<<< HEAD
-                <button type="submit">Add New Service Term</button>
-            </form>
-            <script>
-=======
                 
                 <c:if test="${not empty err}">
                     <div>
@@ -193,7 +168,6 @@
 </html>
 
  <script>
->>>>>>> origin/phong
                 function toggleFields() {
                     var serviceType = document.getElementById("service_id").value;
 
@@ -226,10 +200,3 @@
                 // Gọi khi trang load để ẩn các trường ban đầu
                 window.onload = toggleFields;
             </script>
-<<<<<<< HEAD
-
-        </div>
-    </body>
-</html>
-=======
->>>>>>> origin/phong

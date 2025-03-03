@@ -1,10 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<<<<<<< HEAD
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-=======
->>>>>>> origin/phong
 
 <html lang="en">
     <head>
@@ -57,7 +54,6 @@
                 background-color: #d32f2f;
                 color: white;
             }
-<<<<<<< HEAD
             .table {
                 border-collapse: collapse;
                 width: 100%;
@@ -146,8 +142,6 @@
             }
 
 
-=======
->>>>>>> origin/phong
         </style>
 
     </head>
@@ -273,22 +267,14 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-<<<<<<< HEAD
                         <a class="nav-link active" aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
-=======
-                        <a class="nav-link active" aria-current="page" href="staff_management">
->>>>>>> origin/phong
                             <i class="me-2"></i>
                             Staff Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-<<<<<<< HEAD
                         <a class="nav-link" href="service_management?type=services">
-=======
-                        <a class="nav-link" href="service_management">
->>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Management
                         </a>
@@ -304,21 +290,12 @@
                     <li class="nav-item">
                         <a class="nav-link " href="statistic_management">
                             <i class="me-2"></i>
-<<<<<<< HEAD
                             Statistic Management
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link " href="serviceTermManagement">
-=======
-                            Statistic Managements
-                        </a>
-                    </li>
-                    
-                     <li class="nav-item">
-                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
->>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
@@ -333,7 +310,6 @@
                 <h1 class="h2 mb-0 text-danger">Staff Management</h1>
             </div>
 
-<<<<<<< HEAD
             <input type="hidden" name ="page" value="1"> 
 
             <!-- Tabs choose staff -->
@@ -346,18 +322,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ${param.type == 'accountants' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=accountants&page=1&pageSize=2">Accountants</a>
-=======
-            <!-- Tabs choose staff -->
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link ${param.type == null || param.type == 'bankers' ? 'active' : ''}" href="staff_management?type=bankers">Bankers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link ${param.type == 'marketers' ? 'active' : ''}" href="staff_management?type=marketers">Marketers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link ${param.type == 'accountants' ? 'active' : ''}" href="staff_management?type=accountants">Accountants</a>
->>>>>>> origin/phong
                 </li>
             </ul>
 
@@ -375,7 +339,6 @@
                     <option value="gender" ${requestScope.sort == 'gender' ? 'selected' : ''}>Gender</option>
                     <option value="date_of_birth" ${requestScope.sort == 'date_of_birth' ? 'selected' : ''}>DOB</option>
                 </select>
-<<<<<<< HEAD
 
                 <label for="selectPage">Show:</label>
                 <select id="selectPage" class="filter-dropdown" onchange="selectPage()">
@@ -403,22 +366,6 @@
                         <a class="btn btn-success mb-2" href="addStaff.jsp">Add New</a>
                     </div>
                 </div>
-=======
-            </div>    
-
-            <div class="search-bar">
-                <form action="searchStaff">
-                    <input type="text" placeholder="Search" name="searchName" >
-                    <input type="hidden" name="type" value="${param.type != null ? param.type : 'bankers'}">
-                    <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
-                </form>
-            </div>    
-
-            <!-- View list staff -->
-            <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addStaff.jsp">Add New</a>
-
->>>>>>> origin/phong
                 <!-- Display search results if available -->
                 <c:if test="${not empty ListByName or not empty ListByPhone}">
                     <div class="search-results mb-4">
@@ -433,14 +380,7 @@
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
-<<<<<<< HEAD
                                         <th>Phone</th>                                       
-=======
-                                        <th>Phone</th>
-                                        <th>Gender</th>
-                                        <th>DOB</th>
-                                        <th>Address</th>
->>>>>>> origin/phong
                                         <th>Role</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -452,13 +392,7 @@
                                         <td>${b.full_name}</td>
                                         <td>${b.email}</td>
                                         <td>${b.phone_number}</td>
-<<<<<<< HEAD
 
-=======
-                                        <td>${b.gender}</td>
-                                        <td>${b.date_of_birth}</td>
-                                        <td>${b.address}</td>
->>>>>>> origin/phong
                                         <td>
                                             <c:choose>
                                                 <c:when test="${b.role_id == 2}">Banker</c:when>
@@ -468,7 +402,6 @@
                                         </td>
                                         <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
                                         <td>
-<<<<<<< HEAD
                                             <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
                                                 <i class="bi bi-trash"></i>
                                             </a>
@@ -477,11 +410,6 @@
                                             </a> 
                                         </td>
 
-=======
-                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
-                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
-                                        </td>
->>>>>>> origin/phong
                                     </tr>
                                 </c:forEach>
                             </table>
@@ -496,14 +424,7 @@
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
-<<<<<<< HEAD
                                         <th>Phone</th>                                       
-=======
-                                        <th>Phone</th>
-                                        <th>Gender</th>
-                                        <th>DOB</th>
-                                        <th>Address</th>
->>>>>>> origin/phong
                                         <th>Role</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -515,13 +436,7 @@
                                         <td>${b.full_name}</td>
                                         <td>${b.email}</td>
                                         <td>${b.phone_number}</td>
-<<<<<<< HEAD
 
-=======
-                                        <td>${b.gender}</td>
-                                        <td>${b.date_of_birth}</td>
-                                        <td>${b.address}</td>
->>>>>>> origin/phong
                                         <td>
                                             <c:choose>
                                                 <c:when test="${b.role_id == 2}">Banker</c:when>
@@ -531,7 +446,6 @@
                                         </td>
                                         <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
                                         <td>
-<<<<<<< HEAD
                                             <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
                                                 <i class="bi bi-trash"></i>
                                             </a>
@@ -540,11 +454,6 @@
                                             </a> 
                                         </td>
 
-=======
-                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
-                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
-                                        </td>
->>>>>>> origin/phong
                                     </tr>
                                 </c:forEach>
                             </table>
@@ -567,14 +476,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-<<<<<<< HEAD
                                 <th>Phone</th>                               
-=======
-                                <th>Phone</th>
-                                <th>Gender</th>
-                                <th>DOB</th>
-                                <th>Address</th>
->>>>>>> origin/phong
                                 <th>Role</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -585,14 +487,7 @@
                                 <td>${b.staff_id}</td>
                                 <td>${b.full_name}</td>
                                 <td>${b.email}</td>
-<<<<<<< HEAD
                                 <td>${b.phone_number}</td>                                                                                          
-=======
-                                <td>${b.phone_number}</td>
-                                <td>${b.gender}</td>
-                                <td>${b.date_of_birth}</td>
-                                <td>${b.address}</td>
->>>>>>> origin/phong
                                 <td>
                                     <c:choose>
                                         <c:when test="${b.role_id == 2}">Banker</c:when>
@@ -602,24 +497,18 @@
                                 </td>
                                 <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
                                 <td>
-<<<<<<< HEAD
                                     <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                     <a href="updateStaff?id=${b.staff_id}" class="btn btn-success btn-sm">
                                         <i class="bi bi-pencil-square"></i>
                                     </a> 
-=======
-                                    <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
-                                    <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
->>>>>>> origin/phong
                                 </td>
                             </tr>
                         </c:forEach>
                     </table>
                 </c:if>
             </div>
-<<<<<<< HEAD
 
             <div class="pagination">
                 <c:forEach begin="1" end="${totalPage}" var="i">
@@ -634,8 +523,6 @@
                 </c:forEach>
             </div>
 
-=======
->>>>>>> origin/phong
         </main>
 
         <script type="text/javascript">
@@ -644,7 +531,6 @@
                     window.location = "deleteStaff?id=" + id;
                 }
             }
-<<<<<<< HEAD
 
             document.getElementById("searchForm").addEventListener("submit", function (event) {
                 event.preventDefault();
@@ -701,27 +587,6 @@
         </script>       
 
 
-=======
-                     
-            function filterStaff() {
-                var status = document.getElementById("filterStatus").value;
-                var sort = document.getElementById("sortStaff").value;
-                var type = '${param.type}';  
-                window.location.href = "StaffFilter?status=" + status + "&sort=" + sort + "&type=" + type;
-            }
-
-            function sortStaff() {
-                var sort = document.getElementById("sortStaff").value;
-                var status = document.getElementById("filterStatus").value;
-                var type = '${param.type}';  
-                window.location.href = "StaffFilter?status=" + status + "&sort=" + sort + "&type=" + type;
-            }
-
-            document.getElementById("sortStaff").onchange = sortStaff;
-        </script>
-
-        </main>
->>>>>>> origin/phong
 
     </div>
 </div>

@@ -12,21 +12,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Update Staff Information</title>
         <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
-<<<<<<< HEAD
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-=======
->>>>>>> origin/phong
         <style>
             :root {
                 --primary-red: #dc3545;
                 --dark-red: #c82333;
                 --light-red: #f8d7da;
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 background-color: #f8f9fa;
@@ -34,11 +27,7 @@
                 padding: 20px;
                 color: #333;
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             h1 {
                 color: var(--primary-red);
                 text-align: center;
@@ -46,22 +35,14 @@
                 padding-bottom: 10px;
                 border-bottom: 3px solid var(--primary-red);
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             .error-message {
                 color: var(--primary-red);
                 text-align: center;
                 margin-bottom: 20px;
                 font-weight: 500;
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             form {
                 max-width: 600px;
                 margin: 0 auto;
@@ -70,30 +51,18 @@
                 border-radius: 10px;
                 box-shadow: 0 0 20px rgba(0,0,0,0.1);
             }
-<<<<<<< HEAD
 
             .form-group {
                 margin-bottom: 20px;
             }
 
-=======
-            
-            .form-group {
-                margin-bottom: 20px;
-            }
-            
->>>>>>> origin/phong
             label {
                 display: block;
                 margin-bottom: 5px;
                 color: #555;
                 font-weight: 500;
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             input, select {
                 width: 100%;
                 padding: 10px;
@@ -102,30 +71,18 @@
                 font-size: 16px;
                 transition: border-color 0.3s;
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             input:focus, select:focus{
                 outline: none;
                 border-color: var(--primary-red);
                 box-shadow: 0 0 5px rgba(220,53,69,0.2);
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             input[readonly] {
                 background-color: #f8f9fa;
                 cursor: not-allowed;
             }
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> origin/phong
             button {
                 background-color: var(--primary-red);
                 color: white;
@@ -139,19 +96,11 @@
                 margin-top: 20px;
                 transition: background-color 0.3s;
             }
-<<<<<<< HEAD
 
             button:hover {
                 background-color: var(--dark-red);
             }
 
-=======
-            
-            button:hover {
-                background-color: var(--dark-red);
-            }
-            
->>>>>>> origin/phong
             .form-header {
                 text-align: center;
                 margin-bottom: 30px;
@@ -168,7 +117,6 @@
                 margin-top: 5px;
                 display: none;
             }
-<<<<<<< HEAD
             /* Căn giữa nội dung */
             .form-group-status {
                 display: flex;
@@ -229,8 +177,6 @@
             input#inactive.custom-radio:checked + label[for="inactive"] {
                 color: red;
             }
-=======
->>>>>>> origin/phong
         </style>
     </head>
     <body>
@@ -243,26 +189,17 @@
                     <label for="staff_id">Staff ID:</label>
                     <input type="number" id="staff_id" readonly name="staff_id" value="${s.staff_id}"/>
                 </div>
-<<<<<<< HEAD
 
-=======
-                
->>>>>>> origin/phong
                 <div class="form-group">
                     <label for="full_name">Full Name:</label>
                     <input type="text" id="full_name" name="full_name" value="${s.full_name}" />
                 </div>
-<<<<<<< HEAD
 
-=======
-                
->>>>>>> origin/phong
                 <div class="form-group">
                     <label for="email">Email:</label>                 
                     <input type="email" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" value="${s.email}" />
                     <div class="invalid-feedback" id="email-feedback">Please enter a valid email address.</div>
                 </div>
-<<<<<<< HEAD
 
                 <div class="form-group">
                     <label for="username">Username:</label>
@@ -270,38 +207,12 @@
 
                 </div>
 
-=======
-                
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="${s.username}" />
-                    
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password:</label>               
-                    <input type="password" id="password" name="password" required 
-                           pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$" value="${s.password}"  />
-                    <div class="password-requirements">
-                        Password must contain at least:
-                        <ul>
-                            <li>8 characters</li>
-                            <li>One uppercase letter</li>
-                            <li>One number</li>
-                            <li>One special character (!@#$%^&*)</li>
-                        </ul>
-                    </div>
-                    <div class="invalid-feedback" id="password-feedback">Password does not meet the requirements.</div>
-                </div>
-                
->>>>>>> origin/phong
                 <div class="form-group">
                     <label for="phone_number">Phone Number:</label>
                     <input type="tel" id="phone_number" name="phone_number" required 
                            pattern="[0-9]{10}" maxlength="10" value="${s.phone_number}"  />
                     <div class="invalid-feedback" id="phone-feedback">Please enter a valid 10-digit phone number.</div>
                 </div>
-<<<<<<< HEAD
 
                 <div class="form-group">
                     <label>Gender:</label>
@@ -316,41 +227,20 @@
                     </div>
                 </div>        
 
-=======
-                
-                <div class="form-group">
-                    <label for="gender">Gender:</label>
-                    <select id="gender" name="gender" required value="${s.gender}">
-                        <option value="">Select gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                
->>>>>>> origin/phong
                 <div class="form-group">
                     <label for="date_of_birth">Date of Birth:</label>
                     <input type="date" id="date_of_birth" name="date_of_birth" value="${s.date_of_birth}" />
                 </div>
-<<<<<<< HEAD
 
-=======
-                
->>>>>>> origin/phong
                 <div class="form-group">
                     <label for="address">Address:</label>
                     <input type="text" id="address" name="address" value="${s.address}" />
                 </div>
-<<<<<<< HEAD
 
-=======
-                
->>>>>>> origin/phong
                 <div class="form-group">
                     <label for="role_id">Role ID:</label>
                     <input type="number" id="role_id" name="role_id" value="${s.role_id}" />
                 </div>
-<<<<<<< HEAD
 
                 <div class="form-group">
                     <label>Status:</label>
@@ -364,17 +254,6 @@
                         <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Inactive</label>
                     </div>
                 </div>        
-=======
-                
-                <div class="form-group">
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" required value="${s.status}">
-                        <option value="">Select status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
-                </div>
->>>>>>> origin/phong
 
                 <button type="submit">Update Staff Information</button>
             </form>
@@ -383,7 +262,6 @@
             function validateForm() {
                 let isValid = true;
                 const form = document.getElementById('staffForm');
-<<<<<<< HEAD
 
                 const full_name = document.getElementById('full_name');
                 const full_nameFeedback = document.getElementById('full_name-feedback');
@@ -398,9 +276,6 @@
                 }
                 
                
-=======
-                
->>>>>>> origin/phong
                 // Email validation
                 const email = document.getElementById('email');
                 const emailFeedback = document.getElementById('email-feedback');
@@ -411,19 +286,6 @@
                     emailFeedback.style.display = 'none';
                 }
 
-<<<<<<< HEAD
-=======
-                // Password validation
-                const password = document.getElementById('password');
-                const passwordFeedback = document.getElementById('password-feedback');
-                if (!password.checkValidity()) {
-                    passwordFeedback.style.display = 'block';
-                    isValid = false;
-                } else {
-                    passwordFeedback.style.display = 'none';
-                }
-
->>>>>>> origin/phong
                 // Phone validation
                 const phone = document.getElementById('phone_number');
                 const phoneFeedback = document.getElementById('phone-feedback');
@@ -435,11 +297,7 @@
                 }
 
                 // Only allow numbers in phone field
-<<<<<<< HEAD
                 phone.addEventListener('input', function (e) {
-=======
-                phone.addEventListener('input', function(e) {
->>>>>>> origin/phong
                     this.value = this.value.replace(/[^0-9]/g, '');
                 });
 
@@ -447,11 +305,7 @@
             }
 
             // Prevent non-numeric input in phone field
-<<<<<<< HEAD
             document.getElementById('phone_number').addEventListener('keypress', function (e) {
-=======
-            document.getElementById('phone_number').addEventListener('keypress', function(e) {
->>>>>>> origin/phong
                 if (e.key < '0' || e.key > '9') {
                     e.preventDefault();
                 }

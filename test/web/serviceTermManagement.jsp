@@ -1,10 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<<<<<<< HEAD
-=======
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
->>>>>>> origin/phong
 
 <html lang="en">
     <head>
@@ -68,9 +65,6 @@
                 left: 0;
                 width: 100%;
             }
-<<<<<<< HEAD
-
-=======
             .pagination {
                 display: flex;
                 justify-content: center;
@@ -102,7 +96,6 @@
                 font-weight: bold;
                 border-radius: 5px;
             }
->>>>>>> origin/phong
         </style>
 
 
@@ -120,15 +113,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-<<<<<<< HEAD
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
-                <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
-=======
             <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchServiceTerm" method="get" role="form">
                 <input class="form-control bg-white text-dark" name="searchName" id="searchName" type="text" placeholder="Search"  value="${param.searchName}" aria-label="Search">
                 <input type="hidden" name="page" value="${page}">
                 <input type="hidden" name="pageSize" value="${pageSize}">
->>>>>>> origin/phong
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -243,11 +231,7 @@
                     </li>
 
                     <li class="nav-item">
-<<<<<<< HEAD
-                        <a class="nav-link" href="service_management?type=services">
-=======
                         <a class="nav-link" href="service_management">
->>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Management
                         </a>
@@ -268,11 +252,7 @@
                     </li>
 
                     <li class="nav-item">
-<<<<<<< HEAD
-                        <a class="nav-link active " href="serviceManagement">
-=======
                         <a class="nav-link active " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
->>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
@@ -286,9 +266,6 @@
             <div class="title-group mb-3">
                 <h1 class="h2 mb-0 text-danger">Service term Management</h1>
             </div>
-<<<<<<< HEAD
-
-=======
             <div class="filter-sort-bar">
                 <label for="filterServiceName">Filter by service name:</label> 
                 <select id="filterServiceName" class="filter-dropdown" onchange="filterServiceName()">
@@ -312,7 +289,6 @@
                     <option value="12" ${requestScope.pageSize == 12 ? 'selected' : ''}>12</option>
                 </select>
             </div>    
->>>>>>> origin/phong
             <div class="mt-3">
                 <a class="btn btn-success mb-2" href="addServiceTerm">Add New</a>
                 <table class="news-table">
@@ -326,13 +302,8 @@
                             <th>Early payment penalty</th>
                             <th>Interest rate</th>
                             <th>Min Payment</th>
-<<<<<<< HEAD
-                            <th>Min Deposit</th>                           
-                            <th>Created at</th>
-=======
                             <th>Min Deposit</th>          
                             <th>Created at</th>                           
->>>>>>> origin/phong
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -344,22 +315,11 @@
                                 <td>${s.term_name}</td>
                                 <td>${s.description}</td>
                                 <td class="news-content">${s.contract_terms}</td>
-<<<<<<< HEAD
-                                <td>${s.max_term_months}</td>
-=======
                                 <td>${s.duration}</td>
->>>>>>> origin/phong
                                 <td>${s.early_payment_penalty}</td>
                                 <td>${s.interest_rate}</td>
                                 <td>${s.min_payment}</td>
                                 <td>${s.min_deposit}</td>
-<<<<<<< HEAD
-                                <td>${s.created_at}</td>
-                                <td>${s.status}</td>
-                                <td>
-                                    <a onclick="doDelete('${s.term_id}')" class="btn btn-danger">Delete</a>
-                                    <a href="updateServiceTerm?term_id=${s.term_id}" class="btn btn-success">Update</a> 
-=======
                                 <td>
                                     <fmt:formatDate value="${s.created_at}" pattern="dd-MM-yyyy" />
                                 </td>                                
@@ -367,26 +327,10 @@
                                 <td>
                                     <a onclick="doDelete('${s.serviceTerm_id}')" class="btn btn-danger">Delete</a>
                                     <a href="updateServiceTerm?serviceTerm_id=${s.serviceTerm_id}" class="btn btn-success">Update</a> 
->>>>>>> origin/phong
                                 </td>
                             </tr>
                         </c:forEach>
                     </tbody>
-<<<<<<< HEAD
-                </table>
-                <script type="text/javascript">
-                    function doDelete(id) {
-                        if (confirm("Are you sure to delete this term ?" )) {
-                            window.location = "deleteServiceTerm?term_id=" + id;
-                        }
-                    }
-                </script>
-
-            </div>
-        </main>
-        </main>
-
-=======
 
                 </table>
                 <div class="pagination">
@@ -452,7 +396,6 @@
                 </script>
             </div>
         </main>
->>>>>>> origin/phong
     </div>
 </div>
 
