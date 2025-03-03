@@ -15,12 +15,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.News;
+import model.NewsCategory;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "NewsManageServlet", urlPatterns = {"/newsManage"})
+@WebServlet(name = "NewsManageServlet", urlPatterns = {"/marketer/newsManage"})
 public class NewsManageServlet extends HttpServlet {
 
     /**
@@ -63,21 +64,35 @@ public class NewsManageServlet extends HttpServlet {
             throws ServletException, IOException {
         String staffId_raw = request.getParameter("staff_id");
         String status = request.getParameter("status");
-        String sortBy=request.getParameter("sort");
-        List<News> list;
-        status=(status==null) ?"all": status;
-        sortBy=(sortBy==null) ?"created_at" : sortBy;
+        String sortBy = request.getParameter("sort");
+        String page_raw = request.getParameter("page");
+        String pageSize_raw=request.getParameter("pageSize");
+        String categoryId_raw = request.getParameter("categoryId");
+        List<News> list;         
+        DAO_Marketer d = new DAO_Marketer();
+        status = (status == null) ? "all" : status;
+        sortBy = (sortBy == null) ? "all" : sortBy;
         try {
             int staff_id = Integer.parseInt(staffId_raw);
-        DAO_Marketer d=new DAO_Marketer();
-            if (status.equals("all")){
-                list=d.getAllNewsSorted(staff_id, sortBy);
-            }else{
-                list = d.getNewsByStatusSorted(staff_id, status, sortBy);
-            }
-            request.setAttribute("listN", list);
+            int categoryId=Integer.parseInt(categoryId_raw);
+            list = d.getNewsFilter(categoryId, staff_id, status, sortBy);
             request.setAttribute("sort", sortBy);
             request.setAttribute("status", status);
+            request.setAttribute("categoryId", categoryId);
+
+            int pageSize = Integer.parseInt(pageSize_raw);
+            int totalNews = list.size();
+            int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
+            int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+            int start = (page - 1) * pageSize;
+            int end = Math.min(page * pageSize, totalNews);
+            List<News> listN = d.getListByPage(list, start, end);
+            request.setAttribute("listN", listN);
+            request.setAttribute("page", page);
+            request.setAttribute("totalPage", totalPage);
+            request.setAttribute("pageSize", pageSize);
+            List<NewsCategory> listNc=d.getAllNewsCategory();
+            request.setAttribute("listNc", listNc);
             request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);
@@ -96,8 +111,11 @@ public class NewsManageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+       
+   
+}
 
-    }
+    
 
     /**
      * Returns a short description of the servlet.

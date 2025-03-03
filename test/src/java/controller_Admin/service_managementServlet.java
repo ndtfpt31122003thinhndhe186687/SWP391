@@ -64,6 +64,7 @@ public class service_managementServlet extends HttpServlet {
             throws ServletException, IOException {
         DAO_Admin d = new DAO_Admin();
         String type = request.getParameter("type");
+<<<<<<< HEAD
         String status = request.getParameter("status");
         String sortBy = request.getParameter("sort");
         String page_raw = request.getParameter("page");
@@ -71,10 +72,13 @@ public class service_managementServlet extends HttpServlet {
         int pageSize;
         List<Services> listService;
         List<Term> listTerm;
+=======
+>>>>>>> origin/phong
         if (type == null) {
             type = "services";
         }
         if ("services".equals(type)) {
+<<<<<<< HEAD
             listService = d.getAllServices();
             status = (status == null) ? "all" : status;
             sortBy = (sortBy == null) ? "service_name" : sortBy;
@@ -132,6 +136,15 @@ public class service_managementServlet extends HttpServlet {
             }
         }
 
+=======
+            List<Services> list = d.getAllServices();
+            request.setAttribute("service", list);
+        } else if ("term".equals(type)) {
+            List<Term> list = d.getAllTerm();
+            request.setAttribute("term", list);
+        }
+        
+>>>>>>> origin/phong
         request.getRequestDispatcher("service management.jsp").forward(request, response);
     }
 

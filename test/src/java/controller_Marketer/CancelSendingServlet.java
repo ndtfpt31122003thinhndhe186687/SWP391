@@ -20,7 +20,7 @@ import model.Staff;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "CancelSendingServlet", urlPatterns = {"/cancelSend"})
+@WebServlet(name = "CancelSendingServlet", urlPatterns = {"/marketer/cancelSend"})
 public class CancelSendingServlet extends HttpServlet {
 
     /**
@@ -61,19 +61,29 @@ public class CancelSendingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String newsId_raw = request.getParameter("news_id");
-        HttpSession session = request.getSession();
-        Staff staff = (Staff) session.getAttribute("account");
+       String newsId_raw = request.getParameter("news_id");
+        String categoryId_raw = request.getParameter("categoryId");
+        String status = request.getParameter("status");
+        String sort = request.getParameter("sort");
+        String page_raw = request.getParameter("page");
+        String pageSize_raw = request.getParameter("pageSize");
+
         try {
             int news_id = Integer.parseInt(newsId_raw);
-        DAO_Marketer d=new DAO_Marketer();
+            int categoryId = Integer.parseInt(categoryId_raw);
+            int page = Integer.parseInt(page_raw);
+            int pageSize = Integer.parseInt(pageSize_raw);
+            HttpSession session = request.getSession();
+            Staff staff = (Staff) session.getAttribute("account");
+            DAO_Marketer d = new DAO_Marketer();
             d.cancelSend(news_id);
-            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id();
+            String redirectUrl = "newsManage?staff_id=" + staff.getStaff_id()
+                    + "&categoryId=" + categoryId + "&status=" + status + "&sort=" + sort
+                    + "&page=" + page + "&pageSize=" + pageSize;
             response.sendRedirect(redirectUrl);
         } catch (NumberFormatException e) {
             System.out.println(e);
-        }
-    }
+        }    }
 
     /**
      * Handles the HTTP <code>POST</code> method.

@@ -2,6 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/phong
 package controller_Admin;
 
 import dal.DAO;
@@ -13,8 +17,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+<<<<<<< HEAD
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+=======
+>>>>>>> origin/phong
 import java.util.List;
 import model.Staff;
 
@@ -22,6 +29,7 @@ import model.Staff;
  *
  * @author DELL
  */
+<<<<<<< HEAD
 @WebServlet(name = "staff_managementServlet", urlPatterns = {"/staff_management"})
 public class staff_managementServlet extends HttpServlet {
     List<Staff> list = new ArrayList<>();
@@ -29,19 +37,31 @@ public class staff_managementServlet extends HttpServlet {
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
+=======
+@WebServlet(name="staff_managementServlet", urlPatterns={"/staff_management"})
+public class staff_managementServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+>>>>>>> origin/phong
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+<<<<<<< HEAD
             throws ServletException, IOException {
+=======
+    throws ServletException, IOException {
+>>>>>>> origin/phong
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
+<<<<<<< HEAD
             out.println("<title>Servlet staff_managementServlet</title>");
             out.println("</head>");
             out.println("<body>");
@@ -55,6 +75,20 @@ public class staff_managementServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>GET</code> method.
      *
+=======
+            out.println("<title>Servlet staff_managementServlet</title>");  
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet staff_managementServlet at " + request.getContextPath () + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    } 
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /** 
+     * Handles the HTTP <code>GET</code> method.
+>>>>>>> origin/phong
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -62,6 +96,7 @@ public class staff_managementServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+<<<<<<< HEAD
             throws ServletException, IOException {
         DAO_Admin d = new DAO_Admin();
         String type = request.getParameter("type");
@@ -118,6 +153,24 @@ public class staff_managementServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
+=======
+    throws ServletException, IOException {
+        DAO_Admin d = new DAO_Admin();
+        String type= request.getParameter("type");
+        int role_id = 2;
+        if("marketers".equals(type)){
+            role_id = 3;
+        }else if ("accountants".equals(type)){
+            role_id = 4;
+        }
+        List<Staff> list = d.getAllBanker(role_id);
+        request.setAttribute("data", list);
+        request.getRequestDispatcher("staff management.jsp").forward(request, response);
+    } 
+
+    /** 
+     * Handles the HTTP <code>POST</code> method.
+>>>>>>> origin/phong
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -125,6 +178,7 @@ public class staff_managementServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
+<<<<<<< HEAD
             throws ServletException, IOException {
 
     }
@@ -132,6 +186,14 @@ public class staff_managementServlet extends HttpServlet {
     /**
      * Returns a short description of the servlet.
      *
+=======
+    throws ServletException, IOException {
+        
+    }
+
+    /** 
+     * Returns a short description of the servlet.
+>>>>>>> origin/phong
      * @return a String containing servlet description
      */
     @Override

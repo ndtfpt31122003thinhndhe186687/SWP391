@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import model.Customer;
+import model.News;
 import model.ServiceTerms;
 import model.Services;
 import model.Staff;
@@ -1142,32 +1144,250 @@ public class DAO_Admin extends DBContext {
         return list;
     }
 
-    public List<Staff> getStaffByPage(List<Staff> list, int start, int end) {
-        List<Staff> arr = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            arr.add(list.get(i));
+    public List<ServiceTerms> getFilteredServiceTerms(String serviceName, String sortBy) {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "SELECT st.*, s.service_name, t.duration FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id WHERE 1=1";
+
+        // Điều kiện lọc theo tên dịch vụ
+        if (serviceName != null && !serviceName.isEmpty() && !serviceName.equals("all")) {
+            sql += " AND s.service_name = ?";
         }
-        return arr;
+
+        // Xử lý sắp xếp
+        if (sortBy != null && !sortBy.isEmpty() && !sortBy.equals("all")) {
+            if (sortBy.equals("service_name")) {
+                sql += " ORDER BY s.service_name";
+            } else if (sortBy.equals("duration")) {
+                sql += " ORDER BY t.duration";
+            } else {
+                sql += " ORDER BY st." + sortBy; // Các cột khác mặc định trong bảng service_terms
+            }
+        }
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            if (serviceName != null && !serviceName.isEmpty() && !serviceName.equals("all")) {
+                ps.setString(1, serviceName);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ServiceTerms term = new ServiceTerms();
+                term.setTerm_id(rs.getInt("term_id"));
+                term.setService_name(rs.getString("service_name"));
+                term.setService_id(rs.getInt("service_id"));
+                term.setTerm_name(rs.getString("term_name"));
+                term.setDescription(rs.getString("description"));
+                term.setContract_terms(rs.getString("contract_terms"));
+                term.setDuration(rs.getInt("duration"));
+                term.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                term.setInterest_rate(rs.getDouble("interest_rate"));
+                term.setMin_payment(rs.getDouble("min_payment"));
+                term.setMin_deposit(rs.getDouble("min_deposit"));
+                term.setCreated_at(rs.getTimestamp("created_at"));
+                term.setStatus(rs.getString("status"));
+                term.setServiceTerm_id(rs.getInt("serviceTerm_id"));
+                list.add(term);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
-    public List<Services> getServiceByPage(List<Services> list, int start, int end) {
-        List<Services> arr = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            arr.add(list.get(i));
+
+    public void addServiceTerm(ServiceTerms s) {
+        String sql = "INSERT INTO service_terms (service_id, term_name, description, contract_terms, early_payment_penalty, interest_rate, min_payment, min_deposit,term_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, s.getService_id());
+            pre.setString(2, s.getTerm_name());
+            pre.setString(3, s.getDescription());
+            pre.setString(4, s.getContract_terms());
+            pre.setDouble(5, s.getEarly_payment_penalty());
+            pre.setDouble(6, s.getInterest_rate());
+            pre.setDouble(7, s.getMin_payment());
+            pre.setDouble(8, s.getMin_deposit());
+            if (s.getTerm_id() == null) {
+                pre.setNull(9, java.sql.Types.INTEGER);
+            } else {
+                pre.setInt(9, s.getTerm_id());
+            }
+            pre.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e);
         }
-        return arr;
+    }
+    
+    //kiem tra trung lap
+    public boolean isDuplicateServiceTerm(int termId, String termName, int serviceId, double minDeposit,double interest_rate) {
+        String query = "SELECT COUNT(*) FROM service_terms WHERE term_id = ? AND term_name = ? "
+                + "AND service_id = ? AND min_deposit = ? and interest_rate=?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, termId);
+            ps.setString(2, termName);
+            ps.setInt(3, serviceId);
+            ps.setDouble(4, minDeposit);
+            ps.setDouble(5, interest_rate);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT(*) > 0, nghĩa là đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
-    public List<Term> getTermByPage(List<Term> list, int start, int end) {
-        List<Term> arr = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            arr.add(list.get(i));
+
+// Xóa service_term (chỉ xóa khi không active)
+    public void deleteServiceTerm(int serviceTerm_id) {
+        String sql = "DELETE FROM service_terms WHERE serviceTerm_id = ? AND status NOT IN ('active')";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, serviceTerm_id);
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
         }
-        return arr;
     }
 
-    public List<Transaction> getTransactionByPage(List<Transaction> list, int start, int end) {
-        List<Transaction> arr = new ArrayList<>();
+// Lấy thông tin service term bằng term_id
+    public ServiceTerms getServiceTermById(int servicetTerm_id) {
+        String sql = "SELECT st.*, t.duration, s.service_name FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id WHERE st.serviceTerm_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, servicetTerm_id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setServiceTerm_id(rs.getInt("serviceTerm_id"));
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setDuration(rs.getInt("duration"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getTimestamp("created_at"));
+                return s;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+// Cập nhật service_term
+    public void updateServiceTerm(ServiceTerms s) {
+        String sql = "UPDATE service_terms SET "
+                + "term_id= ?,term_name = ?, description = ?, contract_terms = ?, "
+                + "early_payment_penalty = ?, interest_rate = ?, "
+                + "min_payment = ?, min_deposit = ?, status = ? "
+                + "WHERE serviceTerm_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            if (s.getTerm_id() == null) {
+                pre.setNull(1, java.sql.Types.INTEGER);
+            } else {
+                pre.setInt(1, s.getTerm_id());
+            }
+            pre.setString(2, s.getTerm_name());
+            pre.setString(3, s.getDescription());
+            pre.setString(4, s.getContract_terms());
+            pre.setDouble(5, s.getEarly_payment_penalty());
+            pre.setDouble(6, s.getInterest_rate());
+            pre.setDouble(7, s.getMin_payment());
+            pre.setDouble(8, s.getMin_deposit());
+            pre.setString(9, s.getStatus());
+            pre.setInt(10, s.getServiceTerm_id());
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+// Tìm kiếm service_term theo tên
+    public List<ServiceTerms> getServiceTermByName(String termName) {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "SELECT st.*, s.service_name, t.duration FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id "
+                + "WHERE st.term_name LIKE ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + termName + "%");
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setServiceTerm_id(rs.getInt("serviceTerm_id"));
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setDuration(rs.getInt("duration"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getTimestamp("created_at"));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+// Lấy tất cả service_terms
+    public List<ServiceTerms> getAllServiceTerms() {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "SELECT st.*, s.service_name, t.duration FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setServiceTerm_id(rs.getInt("serviceTerm_id"));
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setDuration(rs.getInt("duration"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getTimestamp("created_at"));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    //page
+    public List<ServiceTerms> getListByPage(List<ServiceTerms> list, int start, int end) {
+        List<ServiceTerms> arr = new ArrayList<>();
         for (int i = start; i < end; i++) {
             arr.add(list.get(i));
         }

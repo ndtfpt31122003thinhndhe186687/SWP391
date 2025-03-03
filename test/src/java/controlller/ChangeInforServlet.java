@@ -8,21 +8,28 @@ import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import model.Customer;
+import model.NewsCategory;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
 @WebServlet(name = "ChangeInfor", urlPatterns = {"/changeInfor"})
+@MultipartConfig
+
 public class ChangeInforServlet extends HttpServlet {
 
     /**
@@ -81,7 +88,6 @@ public class ChangeInforServlet extends HttpServlet {
         String email = request.getParameter("profile-email");
         String phone = request.getParameter("profile-phone");
         String address = request.getParameter("profile-address");
-        String url_image = request.getParameter("profile-image");
         String dob_raw = request.getParameter("dob");
         DAO d = new DAO();
         Date dob = null;
@@ -92,7 +98,11 @@ public class ChangeInforServlet extends HttpServlet {
             if (email == null || d.existedEmail(email)) {
                 throw new Exception("Email has been already exists.");
             }
+<<<<<<< HEAD
             if(phone==null || phone.matches("^0\\d{10}$")){
+=======
+            if (phone == null || phone.matches("^0\\d{10}$")) {
+>>>>>>> origin/phong
                 throw new Exception("Phone number must start with 0 and have 10 digits");
             }
             //check phone number duplicate
@@ -101,21 +111,35 @@ public class ChangeInforServlet extends HttpServlet {
             }
             //check day month invalid or not
             try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");   
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 dateFormat.setLenient(false); // Bật kiểm tra giá trị chặt chẽ
                 dob = dateFormat.parse(dob_raw);
                 sqlDob = new java.sql.Date(dob.getTime());
             } catch (ParseException e) {
-                throw new Exception("Invalid date format. Please use yyyy-MM-dd.");
+                throw new Exception("Invalid date format. Please use dd-MM-yyyy.");
             }
-            //check if the file is image or not
-            if (url_image == null || (!url_image.endsWith(".png") && !url_image.endsWith(".jpg"))) {
-                throw new Exception("Image must be in .png or .jpg format.");
+            // Lấy file ảnh
+            String oldImage = request.getParameter("oldImage");
+            Part filePart = request.getPart("profile-image");
+            String imagePath;
+            if (filePart != null && filePart.getSize() > 0) {
+                imagePath = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                //check duoi png or jpg
+                if ((!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg"))) {
+                    request.setAttribute("errorMessage", "Only .jpg or .png images are allowed!");
+                    request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
+                    return;
+                }
+                String uploadPath = getServletContext().getRealPath("/imageCustomer") + "/" + imagePath;
+                filePart.write(uploadPath);
+            } else {
+                imagePath = oldImage;
             }
             HttpSession session = request.getSession();
             Customer c = (Customer) session.getAttribute("account");
-            d.changeInfor(fullname, email, phone, address, sqlDob, url_image, c.getCustomer_id());
-            response.sendRedirect("changeInfor");
+            d.changeInfor(fullname, email, phone, address, sqlDob, imagePath, c.getCustomer_id());
+            session.setAttribute("successMessage", "Cập nhật thông tin thành công!");
+            response.sendRedirect("viewprofile");
         } catch (Exception e) {
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("changeInfor.jsp").forward(request, response);

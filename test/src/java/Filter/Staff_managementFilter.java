@@ -18,14 +18,21 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+<<<<<<< HEAD
 import model.Customer;
+=======
+>>>>>>> origin/phong
 import model.Staff;
 
 /**
  *
  * @author DELL
  */
+<<<<<<< HEAD
 @WebFilter(filterName = "Staff_managementFilter", urlPatterns = {"/admin/*"})
+=======
+@WebFilter(filterName = "Staff_managementFilter", urlPatterns = {"/staff_management"})
+>>>>>>> origin/phong
 public class Staff_managementFilter implements Filter {
 
     private static final boolean debug = true;
@@ -105,6 +112,7 @@ public class Staff_managementFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession();
+<<<<<<< HEAD
 
         Object account = session.getAttribute("account"); // Lấy account từ session
 
@@ -124,6 +132,17 @@ public class Staff_managementFilter implements Filter {
             }
         }
 
+=======
+        Staff staff = (Staff)session.getAttribute("account");
+        // check login and role 
+        if(staff !=null && staff.getRole_id()==1){
+            // if staff is admin , accept 
+            chain.doFilter(request, response);
+        }else {
+            ((HttpServletResponse)response).sendRedirect("home");
+        }
+        
+>>>>>>> origin/phong
 //        if (debug) {
 //            log("Staff_managementFilter:doFilter()");
 //        }
@@ -154,6 +173,10 @@ public class Staff_managementFilter implements Filter {
 //            }
 //            sendProcessingError(problem, response);
 //        }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/phong
     }
 
     /**

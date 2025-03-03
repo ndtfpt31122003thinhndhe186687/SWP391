@@ -18,7 +18,11 @@
                 --dark-red: #c82333;
                 --light-red: #f8d7da;
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 background-color: #f8f9fa;
@@ -26,7 +30,11 @@
                 padding: 20px;
                 color: #333;
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             h1 {
                 color: var(--primary-red);
                 text-align: center;
@@ -34,7 +42,11 @@
                 padding-bottom: 10px;
                 border-bottom: 3px solid var(--primary-red);
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             form {
                 max-width: 600px;
                 margin: 0 auto;
@@ -43,18 +55,30 @@
                 border-radius: 10px;
                 box-shadow: 0 0 20px rgba(0,0,0,0.1);
             }
+<<<<<<< HEAD
 
             .form-group {
                 margin-bottom: 20px;
             }
 
+=======
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+>>>>>>> origin/phong
             label {
                 display: block;
                 margin-bottom: 5px;
                 color: #555;
                 font-weight: 500;
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             input, select {
                 width: 100%;
                 padding: 10px;
@@ -63,18 +87,30 @@
                 font-size: 16px;
                 transition: border-color 0.3s;
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             input:focus, select:focus {
                 outline: none;
                 border-color: var(--primary-red);
                 box-shadow: 0 0 5px rgba(220,53,69,0.2);
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             input[readonly] {
                 background-color: #f8f9fa;
                 cursor: not-allowed;
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             button {
                 background-color: var(--primary-red);
                 color: white;
@@ -88,7 +124,11 @@
                 margin-top: 20px;
                 transition: background-color 0.3s;
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             button:hover {
                 background-color: var(--dark-red);
             }
@@ -109,6 +149,7 @@
                 margin-bottom: 20px;
                 font-weight: 500;
             }
+<<<<<<< HEAD
             /* Căn giữa nội dung */
             .form-group-status {
                 display: flex;
@@ -169,6 +210,8 @@
             .radio-input[value="inactive"]:checked + .radio-label {
                 background-color: #dc3545;
             }
+=======
+>>>>>>> origin/phong
         </style>
     </head>
     <body>
@@ -181,17 +224,30 @@
                     <label for="service_id">Service ID:</label>
                     <input type="number" id="service_id" readonly name="service_id" value="${s.service_id}"/>
                 </div>
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> origin/phong
                 <div class="form-group">
                     <label for="service_name">Service Name:</label>
                     <input type="text" id="service_name" name="service_name" value="${s.service_name}" required />
                 </div>
+<<<<<<< HEAD
 
                 <div class="form-group">
                     <label for="description">Description:</label>
                     <textarea type="text" id="description" name="description" required >${s.description}</textarea>
                 </div>
 
+=======
+                
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" value="${s.description}" required />
+                </div>
+                
+>>>>>>> origin/phong
                 <div class="form-group">
                     <label for="service_type">Service Type:</label>
                     <select id="service_type" name="service_type" required>
@@ -202,6 +258,7 @@
                         <option value="withdrawal" ${s.service_type == 'withdrawal' ? 'selected' : ''}>Withdrawal</option>
                     </select>
                 </div>
+<<<<<<< HEAD
 
                 <div class="form-group-status">
                     <label>Status:</label>
@@ -222,5 +279,20 @@
         <script>
             CKEDITOR.replace('description');
         </script>
+=======
+                
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active" ${s.status == 'active' ? 'selected' : ''}>Active</option>
+                        <option value="inactive" ${s.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Update</button>
+            </form>
+        </div>
+>>>>>>> origin/phong
     </body>
 </html>

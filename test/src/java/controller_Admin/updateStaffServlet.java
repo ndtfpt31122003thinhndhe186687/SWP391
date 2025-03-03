@@ -102,6 +102,7 @@ public class updateStaffServlet extends HttpServlet {
             Staff Username = dao.get_Staff_By_Username(username);
             Staff Email = dao.get_Staff_By_Email(email);
             Staff Phone = dao.get_Staff_By_Phone(phone_number);
+<<<<<<< HEAD
             if(Username != null && !staff.getUsername().equals(username)){
                 request.setAttribute("staff", staff);
                 request.setAttribute("error","username "+ username+" existed!!");
@@ -111,6 +112,17 @@ public class updateStaffServlet extends HttpServlet {
                 request.setAttribute("error","emai "+ email+" existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
             }else if (Phone !=null && !staff.getPhone_number().equals(phone_number)){
+=======
+            if(Username != null){
+                request.setAttribute("staff", staff);
+                request.setAttribute("error","username "+ username+" existed!!");
+                request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
+            }else if (Email != null){
+                request.setAttribute("staff", staff);
+                request.setAttribute("error","emai "+ email+" existed!!");
+                request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
+            }else if (Phone !=null){
+>>>>>>> origin/phong
                 request.setAttribute("staff", staff);
                 request.setAttribute("error","phone number "+ phone_number+" existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
@@ -118,7 +130,11 @@ public class updateStaffServlet extends HttpServlet {
             Staff s = new Staff(staff_id, full_name, email, password, username,
                     phone_number, gender, date_of_birth, address, role_id, status);
             dao.updateBanker(s);
+<<<<<<< HEAD
            response.sendRedirect("staff_management?status=all&sort=full_name&type=&page=1&pageSize=2");
+=======
+            response.sendRedirect("staff_management");
+>>>>>>> origin/phong
             }
         } catch (NumberFormatException e) {
             System.out.println(e);

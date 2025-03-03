@@ -52,6 +52,7 @@
                 background-color: #d32f2f;
                 color: white;
             }
+<<<<<<< HEAD
             .table {
                 border-collapse: collapse;
                 width: 100%;
@@ -138,6 +139,8 @@
                 color: white;
                 font-weight: bold;
             }
+=======
+>>>>>>> origin/phong
         </style>
 
     </head>
@@ -263,7 +266,11 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
+=======
+                        <a class="nav-link" aria-current="page" href="staff_management">
+>>>>>>> origin/phong
                             <i class="me-2"></i>
                             Staff Management
                         </a>
@@ -290,14 +297,22 @@
                         </a>
                     </li>
 
+<<<<<<< HEAD
                     <li class="nav-item">
                         <a class="nav-link " href="serviceTermManagement">
+=======
+                   <li class="nav-item">
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
+>>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
                     </li>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/phong
                 </ul>
             </div>
         </nav>
@@ -307,7 +322,10 @@
                 <h1 class="h2 mb-0 text-danger"> Service Management</h1>
             </div>
 
+<<<<<<< HEAD
             <input type="hidden" name ="page" value="1"> 
+=======
+>>>>>>> origin/phong
             <!-- Tabs choose  -->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
@@ -331,6 +349,7 @@
                         <option value="service_name" ${requestScope.sort == 'service_name' ? 'selected' : ''}>Name</option>
                         <option value="service_type" ${requestScope.sort == 'service_type' ? 'selected' : ''}>Type</option>                   
                     </select>
+<<<<<<< HEAD
 
                     <label for="selectPageService">Show:</label>
                     <select id="selectPageService" class="filter-dropdown" onchange="selectPageService()">
@@ -338,6 +357,8 @@
                         <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
                     </select>
+=======
+>>>>>>> origin/phong
                 </div>       
             </c:if>  
 
@@ -355,6 +376,7 @@
                         <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Name</option>
                         <option value="duration" ${requestScope.sort == 'duration' ? 'selected' : ''}>Duration</option>                   
                     </select>
+<<<<<<< HEAD
 
                     <label for="selectPageTerm">Show:</label>
                     <select id="selectPageTerm" class="filter-dropdown" onchange="selectPageTerm()">
@@ -362,6 +384,8 @@
                         <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
                     </select>
+=======
+>>>>>>> origin/phong
                 </div>       
             </c:if>      
 
@@ -404,12 +428,17 @@
                                             <td>${s.service_type}</td>
                                             <td><span class="badge ${s.status == 'active' ? 'bg-success' : 'bg-danger'}">${s.status}</span></td>
                                             <td>
+<<<<<<< HEAD
                                                 <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                                 <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a> 
+=======
+                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">Delete</a>
+                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">Update</a> 
+>>>>>>> origin/phong
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -423,12 +452,17 @@
                                             <td>${s.service_type}</td>
                                             <td><span class="badge ${s.status == 'active' ? 'bg-success' : 'bg-danger'}">${s.status}</span></td>
                                             <td>
+<<<<<<< HEAD
                                                 <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                                 <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a> 
+=======
+                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">Delete</a>
+                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">Update</a> 
+>>>>>>> origin/phong
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -441,7 +475,11 @@
                             </c:if>
                         </tbody>
                     </table>
+<<<<<<< HEAD
                 </div>  
+=======
+                </div>
+>>>>>>> origin/phong
             </c:if>
 
             <!-- View list term -->
@@ -480,17 +518,23 @@
                                 <td>${t.term_type}</td>    
                                 <td><span class="badge ${t.status == 'active' ? 'bg-success' : 'bg-danger'}">${t.status}</span></td>  
                                 <td>
+<<<<<<< HEAD
                                     <a onclick="doDeleteTerm('${t.term_id}')" href="#" class="btn btn-danger">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                     <a href="updateTerm?id=${t.term_id}" class="btn btn-success">
                                         <i class="bi bi-pencil-square"></i>
                                     </a> 
+=======
+                                    <a onclick="doDeleteTerm('${t.term_id}')" href="#" class="btn btn-danger">Delete</a>
+                                    <a href="updateTerm?id=${t.term_id}" class="btn btn-success">Update</a> 
+>>>>>>> origin/phong
                                 </td>
                             </tr>
                         </c:forEach>
                     </table>
                 </div>
+<<<<<<< HEAD
 
             </c:if>
             <div class="pagination">
@@ -506,6 +550,9 @@
                 </c:forEach>
             </div>
 
+=======
+            </c:if>
+>>>>>>> origin/phong
         </main>
 
         <script type="text/javascript">
@@ -519,6 +566,7 @@
                     window.location = "deleteTerm?id=" + id;
                 }
             }
+<<<<<<< HEAD
 
             function selectPageService() {
                 var status = document.getElementById("filterStatus").value;
@@ -534,14 +582,26 @@
                 var pageSize = document.getElementById("selectPageService").value;
                 var type = '${param.type}';
                 window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
+=======
+            function filterService() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortService").value;
+                var type = '${param.type}';
+                window.location.href = "ServiceFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+>>>>>>> origin/phong
             }
 
             function sortService() {
                 var sort = document.getElementById("sortService").value;
                 var status = document.getElementById("filterStatus").value;
+<<<<<<< HEAD
                 var pageSize = document.getElementById("selectPage").value;
                 var type = '${param.type}';
                 window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
+=======
+                var type = '${param.type}';
+                window.location.href = "ServiceFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+>>>>>>> origin/phong
             }
 
             document.getElementById("sortService").onchange = sortService;
@@ -550,6 +610,7 @@
         </script>
 
         <script>
+<<<<<<< HEAD
             function selectPageTerm() {
                 var status = document.getElementById("filterStatus").value;
                 var sort = document.getElementById("sortTerm").value;
@@ -564,14 +625,26 @@
                 var pageSize = document.getElementById("selectPageTerm").value;
                 var type = '${param.type}';
                 window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
+=======
+            function filterTerm() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortTerm").value;
+                var type = '${param.type}';
+                window.location.href = "TermFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+>>>>>>> origin/phong
             }
 
             function sortTerm() {
                 var sort = document.getElementById("sortTerm").value;
                 var status = document.getElementById("filterStatus").value;
+<<<<<<< HEAD
                 var pageSize = document.getElementById("selectPageTerm").value;
                 var type = '${param.type}';
                 window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
+=======
+                var type = '${param.type}';
+                window.location.href = "TermFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+>>>>>>> origin/phong
             }
 
             document.getElementById("sortTerm").onchange = sortTerm;

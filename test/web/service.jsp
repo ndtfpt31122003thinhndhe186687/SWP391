@@ -26,7 +26,11 @@
             .service-header {
                 background: linear-gradient(135deg, #dc3545, #c82333);
                 color: white;
+<<<<<<< HEAD
                 padding: 1rem 0;
+=======
+                padding: 3rem 0;
+>>>>>>> origin/phong
                 margin-bottom: 2rem;
                 text-align: center;
             }
@@ -178,6 +182,7 @@
                 box-shadow: 0 3px 6px rgba(192, 57, 43, 0.5);
             }
 
+<<<<<<< HEAD
             /* menu */
             /* Giao diện chính */
             .navigation_primary {
@@ -296,6 +301,13 @@
                     </c:if>   
             </div>
         </div>
+=======
+
+
+        </style>
+    </head>
+    <body>
+>>>>>>> origin/phong
 
         <!-- Header Section -->
         <div class="service-header">
@@ -305,6 +317,21 @@
             </div>
         </div>
 
+<<<<<<< HEAD
+=======
+        <!-- Navigation Bar -->
+        <nav style="text-align: center; margin: 20px 0;">
+            <ul style="list-style-type: none; padding: 0; display: inline-block;">
+                <li style="display: inline; margin: 0 15px;"><a href="home">Home</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="about.jsp">About</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="services.jsp">Services</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="team.jsp">Team</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="contact.jsp">Contact Us</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="news.jsp">News</a></li>
+            </ul>
+        </nav>
+
+>>>>>>> origin/phong
         <!-- Main Content -->
         <div class="container">
             <!-- Services Grid -->
@@ -315,6 +342,7 @@
                             <div class="card-body text-center">
                                 <div class="service-icon">
                                     <c:choose>
+<<<<<<< HEAD
                                         <c:when test="${s.service_type == 'saving'}">
                                             <i class="bi bi-piggy-bank"></i>
                                         </c:when>
@@ -325,6 +353,18 @@
                                             <i class="bi bi-safe"></i>
                                         </c:when>
                                         <c:when test="${s.service_type == 'withdrawal'}">
+=======
+                                        <c:when test="${s.service_type == 'Saving'}">
+                                            <i class="bi bi-piggy-bank"></i>
+                                        </c:when>
+                                        <c:when test="${s.service_type == 'Loan'}">
+                                            <i class="bi bi-cash-coin"></i>
+                                        </c:when>
+                                        <c:when test="${s.service_type == 'Deposit'}">
+                                            <i class="bi bi-safe"></i>
+                                        </c:when>
+                                        <c:when test="${s.service_type == 'Withdrawal'}">
+>>>>>>> origin/phong
                                             <i class="bi bi-cash-stack"></i>
                                         </c:when>
                                     </c:choose>
@@ -332,6 +372,7 @@
                                 <h3 class="service-title">${s.service_name}</h3>
                                 <div class="service-type-badge ${s.service_type.toLowerCase()}">
                                     <c:choose>
+<<<<<<< HEAD
                                         <c:when test="${s.service_type == 'saving'}">
                                             Savings
                                         </c:when>
@@ -342,6 +383,18 @@
                                             Deposits
                                         </c:when>
                                         <c:when test="${s.service_type == 'withdrawal'}">
+=======
+                                        <c:when test="${s.service_type == 'Saving'}">
+                                            Savings
+                                        </c:when>
+                                        <c:when test="${s.service_type == 'Loan'}">
+                                            Loans
+                                        </c:when>
+                                        <c:when test="${s.service_type == 'Deposit'}">
+                                            Deposits
+                                        </c:when>
+                                        <c:when test="${s.service_type == 'Withdrawal'}">
+>>>>>>> origin/phong
                                             Withdrawals
                                         </c:when>
                                     </c:choose>

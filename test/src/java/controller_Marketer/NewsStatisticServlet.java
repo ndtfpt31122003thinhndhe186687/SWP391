@@ -18,7 +18,7 @@ import model.NewsView;
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name="NewsStatistic", urlPatterns={"/newsStatistic"})
+@WebServlet(name="NewsStatistic", urlPatterns={"/marketer/newsStatistic"})
 public class NewsStatisticServlet extends HttpServlet {
    
     /** 

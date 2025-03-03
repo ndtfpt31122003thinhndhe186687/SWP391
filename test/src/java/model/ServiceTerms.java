@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+<<<<<<< HEAD
 
 import java.util.Date;
 
@@ -15,6 +16,23 @@ public class ServiceTerms {
     public Date created_at;
     private Integer term_id;
 
+=======
+import java.util.Date;
+
+
+/**
+ *
+ * @author Acer Nitro Tiger
+ */
+public class ServiceTerms {
+    public int service_id,serviceTerm_id,duration;
+    public String term_name,description,contract_terms,status,service_name;
+    public double early_payment_penalty,interest_rate,min_payment,min_deposit;
+    public Date created_at;
+    private Integer term_id;
+
+
+>>>>>>> origin/phong
     public ServiceTerms() {
     }
 
@@ -35,7 +53,13 @@ public class ServiceTerms {
         this.term_id = term_id;
     }
 
+<<<<<<< HEAD
     //add
+=======
+  
+    //add
+
+>>>>>>> origin/phong
     public ServiceTerms(Integer term_id, int service_id, String term_name, String description, String contract_terms, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit) {
         this.term_id = term_id;
         this.service_id = service_id;
@@ -47,10 +71,18 @@ public class ServiceTerms {
         this.min_payment = min_payment;
         this.min_deposit = min_deposit;
     }
+<<<<<<< HEAD
 
     //update
     public ServiceTerms(int serviceTerm_id, Integer term_id, String term_name, String description, String contract_terms, String status, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit) {
         this.serviceTerm_id = serviceTerm_id;
+=======
+    
+    //update
+
+    public ServiceTerms(int serviceTerm_id,Integer term_id, String term_name, String description, String contract_terms, String status, double early_payment_penalty, double interest_rate, double min_payment, double min_deposit) {
+               this.serviceTerm_id = serviceTerm_id;
+>>>>>>> origin/phong
         this.term_id = term_id;
         this.term_name = term_name;
         this.description = description;
@@ -69,6 +101,13 @@ public class ServiceTerms {
     public void setTerm_id(Integer term_id) {
         this.term_id = term_id;
     }
+<<<<<<< HEAD
+=======
+    
+    
+   
+  
+>>>>>>> origin/phong
 
     public int getService_id() {
         return service_id;
@@ -179,4 +218,10 @@ public class ServiceTerms {
         return "ServiceTerms{" + "service_id=" + service_id + ", serviceTerm_id=" + serviceTerm_id + ", duration=" + duration + ", term_name=" + term_name + ", description=" + description + ", contract_terms=" + contract_terms + ", status=" + status + ", service_name=" + service_name + ", early_payment_penalty=" + early_payment_penalty + ", interest_rate=" + interest_rate + ", min_payment=" + min_payment + ", min_deposit=" + min_deposit + ", created_at=" + created_at + ", term_id=" + term_id + '}';
     }
 
+<<<<<<< HEAD
+=======
+   
+    
+    
+>>>>>>> origin/phong
 }

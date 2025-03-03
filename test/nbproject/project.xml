@@ -87,7 +87,20 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+<<<<<<< HEAD
                     <file>${file.reference.json-20250107.jar}</file>
+=======
+                    <file>${file.reference.pdfbox-2.0.33.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.commons-logging-1.2.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.fontbox-2.0.33.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+>>>>>>> origin/phong
                 </library>
             </web-module-libraries>
             <web-module-additional-libraries/>

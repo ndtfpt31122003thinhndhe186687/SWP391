@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import model.News;
 
 /**
@@ -64,9 +65,27 @@ public class NewsDetailServlet extends HttpServlet {
         String news_raw = request.getParameter("news_id");
         try {
             int news_id = Integer.parseInt(news_raw);
+            //get view
             d.getView(news_id);
+            //get view detail
             News newsDetail = d.getNewsDetail(news_id);
             request.setAttribute("newsDetail", newsDetail);
+            //gte related news
+            List<News> listRelatedNews=d.getRelatedNews(news_id);
+            request.setAttribute("listRelatedNews", listRelatedNews);
+            // Chia nội dung bài viết làm 2 phần để hiển thị đẹp hơn
+            String content = newsDetail.getContent();
+            int middleIndex = content.length() / 2;
+            int splitIndex = content.indexOf(".", middleIndex);
+            if (splitIndex == -1) {
+                splitIndex = middleIndex;
+            }
+
+            String firstPart = content.substring(0, splitIndex + 1);
+            String secondPart = content.substring(splitIndex + 1);
+
+            request.setAttribute("firstPart", firstPart);
+            request.setAttribute("secondPart", secondPart);
         } catch (Exception e) {
         }
         request.getRequestDispatcher("newsDetail.jsp").forward(request, response);

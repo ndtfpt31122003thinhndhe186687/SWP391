@@ -1,5 +1,10 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<<<<<<< HEAD
+=======
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+>>>>>>> origin/phong
 
 <html lang="en">
     <head>
@@ -63,7 +68,41 @@
                 left: 0;
                 width: 100%;
             }
+<<<<<<< HEAD
 
+=======
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .pagination a {
+                display: inline-block;
+                padding: 8px 12px;
+                text-decoration: none;
+                color: white;
+                background-color: #d32f2f;
+                border-radius: 5px;
+                font-weight: bold;
+                transition: background 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: #b71c1c;
+            }
+
+            .current-page {
+                display: inline-block;
+                padding: 8px 12px;
+                background-color: #ff5252;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+            }
+>>>>>>> origin/phong
         </style>
 
 
@@ -81,8 +120,15 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+<<<<<<< HEAD
             <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
                 <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
+=======
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchServiceTerm" method="get" role="form">
+                <input class="form-control bg-white text-dark" name="searchName" id="searchName" type="text" placeholder="Search"  value="${param.searchName}" aria-label="Search">
+                <input type="hidden" name="page" value="${page}">
+                <input type="hidden" name="pageSize" value="${pageSize}">
+>>>>>>> origin/phong
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -197,7 +243,11 @@
                     </li>
 
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link" href="service_management?type=services">
+=======
+                        <a class="nav-link" href="service_management">
+>>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Management
                         </a>
@@ -218,7 +268,11 @@
                     </li>
 
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link active " href="serviceManagement">
+=======
+                        <a class="nav-link active " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
+>>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
@@ -232,7 +286,33 @@
             <div class="title-group mb-3">
                 <h1 class="h2 mb-0 text-danger">Service term Management</h1>
             </div>
+<<<<<<< HEAD
 
+=======
+            <div class="filter-sort-bar">
+                <label for="filterServiceName">Filter by service name:</label> 
+                <select id="filterServiceName" class="filter-dropdown" onchange="filterServiceName()">
+                    <option value="all" ${requestScope.serviceName == 'all' ? 'selected' : ''}}>All </option>        
+                    <c:forEach var="s" items="${requestScope.listS}">
+                        <option value="${s.service_name}" ${requestScope.serviceName == s.service_name ? 'selected':''}>${s.service_name}</option>        
+                    </c:forEach>
+                </select>
+
+                <label for="sort">Sort by:</label>
+                <select id="sort" class="filter-dropdown" onchange="filterSort()">
+                    <option value="all" ${requestScope.sort == 'all' ? 'selected' : ''}>All</option>        
+                    <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Service term name</option>
+                    <option value="duration" ${requestScope.sort == 'duration' ? 'selected' : ''}>Max Term Months</option>
+                </select>
+
+                <label for="pageSize">Items per page:</label>
+                <select id="pageSize" class="filter-dropdown" onchange="changePageSize()">
+                    <option value="4" ${requestScope.pageSize == 4 ? 'selected' : ''}>4</option>
+                    <option value="8" ${requestScope.pageSize == 8 ? 'selected' : ''}>8</option>
+                    <option value="12" ${requestScope.pageSize == 12 ? 'selected' : ''}>12</option>
+                </select>
+            </div>    
+>>>>>>> origin/phong
             <div class="mt-3">
                 <a class="btn btn-success mb-2" href="addServiceTerm">Add New</a>
                 <table class="news-table">
@@ -246,8 +326,13 @@
                             <th>Early payment penalty</th>
                             <th>Interest rate</th>
                             <th>Min Payment</th>
+<<<<<<< HEAD
                             <th>Min Deposit</th>                           
                             <th>Created at</th>
+=======
+                            <th>Min Deposit</th>          
+                            <th>Created at</th>                           
+>>>>>>> origin/phong
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -259,20 +344,35 @@
                                 <td>${s.term_name}</td>
                                 <td>${s.description}</td>
                                 <td class="news-content">${s.contract_terms}</td>
+<<<<<<< HEAD
                                 <td>${s.max_term_months}</td>
+=======
+                                <td>${s.duration}</td>
+>>>>>>> origin/phong
                                 <td>${s.early_payment_penalty}</td>
                                 <td>${s.interest_rate}</td>
                                 <td>${s.min_payment}</td>
                                 <td>${s.min_deposit}</td>
+<<<<<<< HEAD
                                 <td>${s.created_at}</td>
                                 <td>${s.status}</td>
                                 <td>
                                     <a onclick="doDelete('${s.term_id}')" class="btn btn-danger">Delete</a>
                                     <a href="updateServiceTerm?term_id=${s.term_id}" class="btn btn-success">Update</a> 
+=======
+                                <td>
+                                    <fmt:formatDate value="${s.created_at}" pattern="dd-MM-yyyy" />
+                                </td>                                
+                                <td>${s.status}</td>
+                                <td>
+                                    <a onclick="doDelete('${s.serviceTerm_id}')" class="btn btn-danger">Delete</a>
+                                    <a href="updateServiceTerm?serviceTerm_id=${s.serviceTerm_id}" class="btn btn-success">Update</a> 
+>>>>>>> origin/phong
                                 </td>
                             </tr>
                         </c:forEach>
                     </tbody>
+<<<<<<< HEAD
                 </table>
                 <script type="text/javascript">
                     function doDelete(id) {
@@ -286,6 +386,73 @@
         </main>
         </main>
 
+=======
+
+                </table>
+                <div class="pagination">
+                    <c:if test="${not empty param.searchName}">
+                        <c:forEach begin="1" end="${totalPage}" var="i">
+                            <c:choose>
+                                <c:when test="${i == page}">
+                                    <span class="current-page">${i}</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="searchServiceTerm?searchName=${param.searchName}&page=${i}&pageSize=${pageSize}">${i}</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty param.searchName}">      
+                        <c:forEach begin="1" end="${totalPage}" var="i">
+                            <c:choose>
+                                <c:when test="${i == page}">
+                                    <span class="current-page">${i}</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="serviceTermManagement?serviceName=${requestScope.serviceName}&sort=${requestScope.sort}&page=${i}&pageSize=${pageSize}">${i}</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </c:if>
+
+                </div>
+                <script type="text/javascript">
+                    function doDelete(id) {
+                        if (confirm("Are you sure to delete this term ?")) {
+                            window.location = "deleteServiceTerm?serviceTerm_id=" + id;
+                        }
+                    }
+
+                    function filterServiceName() {
+                        var serviceName = document.getElementById("filterServiceName").value;
+                        var sort = document.getElementById("sort").value;
+                        var pageSize = document.getElementById("pageSize").value;
+                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+                    }
+
+                    function filterSort() {
+                        var sort = document.getElementById("sort").value;
+                        var serviceName = document.getElementById("filterServiceName").value;
+                        var pageSize = document.getElementById("pageSize").value;
+                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+                    }
+
+                    function changePageSize() {
+                        var pageSize = document.getElementById("pageSize").value;
+                        var serviceName = document.getElementById("filterServiceName").value;
+                        var sort = document.getElementById("sort").value;
+                        var searchInput = document.getElementById("searchName");
+                        var searchName = searchInput ? searchInput.value.trim().replace(/\s+/g, " ") : "";
+                        if (searchName !== "") {
+                            window.location.href = "searchServiceTerm?searchName=" + encodeURIComponent(searchName) + "&page=1&pageSize=" + pageSize;
+                        } else {
+                            window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+                        }
+                    }
+                </script>
+            </div>
+        </main>
+>>>>>>> origin/phong
     </div>
 </div>
 

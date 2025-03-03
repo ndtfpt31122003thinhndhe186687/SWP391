@@ -1,6 +1,9 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<<<<<<< HEAD
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+=======
+>>>>>>> origin/phong
 
 <html lang="en">
     <head>
@@ -23,6 +26,7 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+<<<<<<< HEAD
         <style>
             .filter-sort-bar {
                 margin-bottom: 20px;
@@ -139,6 +143,9 @@
                 font-weight: bold;
             }
         </style>
+=======
+
+>>>>>>> origin/phong
     </head>
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
@@ -221,12 +228,21 @@
 
                             <div class="d-flex flex-column">
                                 <c:if test="${sessionScope.account.role_id==6}">
+<<<<<<< HEAD
                                     <small>${sessionScope.account.customer_id}</small>
                                     <small>${sessionScope.account.email}</small>
                                 </c:if>
                                 <c:if test="${sessionScope.account.role_id==1}">
                                     <small>${sessionScope.account.staff_id}</small>
                                     <small>${sessionScope.account.email}</small>
+=======
+                                <small>${sessionScope.account.customer_id}</small>
+                                <small>${sessionScope.account.email}</small>
+                                </c:if>
+                                <c:if test="${sessionScope.account.role_id==1}">
+                                <small>${sessionScope.account.staff_id}</small>
+                                <small>${sessionScope.account.email}</small>
+>>>>>>> origin/phong
                                 </c:if> 
                             </div>
                         </div>
@@ -262,14 +278,22 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
+=======
+                        <a class="nav-link" aria-current="page" href="staff_management">
+>>>>>>> origin/phong
                             <i class="me-2"></i>
                             Staff Management
                         </a>
                     </li>
 
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link" href="service_management?type=services">
+=======
+                        <a class="nav-link" href="service_management">
+>>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Management
                         </a>
@@ -290,13 +314,21 @@
                     </li>
 
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link " href="serviceTermManagement">
+=======
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
+>>>>>>> origin/phong
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
                     </li>
+<<<<<<< HEAD
 
 
+=======
+                    
+>>>>>>> origin/phong
                 </ul>
             </div>
         </nav>
@@ -305,6 +337,7 @@
             <div class="title-group mb-3">
                 <h1 class="h2 mb-0 text-danger">Transaction Management</h1>
             </div>
+<<<<<<< HEAD
 
             <input type="hidden" name ="page" value="1"> 
 
@@ -332,13 +365,20 @@
                 </select>
             </div>  
 
+=======
+            
+>>>>>>> origin/phong
             <div class="search-bar">
                 <form action="searchTransaction">
                     <input type="text" placeholder="Search" name="searchName" >                  
                     <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
                 </form>
             </div>    
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/phong
             <!-- View list transaction -->
             <div class="mt-3">
                 <table class="table table-bordered">
@@ -357,6 +397,7 @@
                             <td>${b.transaction_id}</td>
                             <td>${b.customer_name}</td>
                             <td>${b.service_name}</td>
+<<<<<<< HEAD
                             <td>
                                 <c:choose>
                                     <c:when test="${b.transaction_type == 'deposit'}">
@@ -374,11 +415,16 @@
                             <td>
                                 <fmt:formatDate value="${b.transaction_date}" pattern="dd/MM/yyyy"/>
                             </td>
+=======
+                            <td>${b.amount} $</td>
+                            <td>${b.transaction_date}</td>
+>>>>>>> origin/phong
                             <td>${b.transaction_type}</td>                          
                         </tr>
                     </c:forEach>
                 </table>
             </div>
+<<<<<<< HEAD
 
             <div class="pagination">
                 <c:forEach begin="1" end="${totalPage}" var="i">
@@ -422,6 +468,14 @@
 
 
 
+=======
+        </main>
+
+        
+
+                       
+        </main>
+>>>>>>> origin/phong
 
     </div>
 </div>

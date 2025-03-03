@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+<<<<<<< HEAD
 import java.security.SecureRandom;
 import java.util.Properties;
 import javax.mail.Authenticator;
@@ -26,6 +27,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import model.Staff;
 import utils.Password;
+=======
+import model.Staff;
+>>>>>>> origin/phong
 
 /**
  *
@@ -72,6 +76,10 @@ public class addStaffServlet extends HttpServlet {
         String full_name = request.getParameter("full_name");
         String email = request.getParameter("email");
         String username = request.getParameter("username");
+<<<<<<< HEAD
+=======
+        String password = request.getParameter("password");
+>>>>>>> origin/phong
         String phone_number = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
         String date_of_birth_raw = request.getParameter("date_of_birth");
@@ -97,6 +105,7 @@ public class addStaffServlet extends HttpServlet {
                 request.getRequestDispatcher("addStaff.jsp").forward(request, response);
             }
             else{
+<<<<<<< HEAD
                 String randomPassword = generateRandomPassword(10);
                 String hashedPassword = Password.toSHA1(randomPassword);
                 Staff s = new Staff(full_name, email, username, hashedPassword,
@@ -152,6 +161,16 @@ public class addStaffServlet extends HttpServlet {
         Transport.send(message);
     }
 
+=======
+                Staff s = new Staff(full_name, email, username, password,
+                        phone_number, gender, date_of_birth, address, role_id, status);
+                dao.insertBanker(s);
+                response.sendRedirect("staff_management");
+            }
+        } catch (Exception e) {
+        }
+    } 
+>>>>>>> origin/phong
 
     /** 
      * Handles the HTTP <code>POST</code> method.

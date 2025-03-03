@@ -111,6 +111,7 @@
                 margin-top: 5px;
                 display: none;
             }
+<<<<<<< HEAD
             /* Căn giữa nội dung */
             .form-group-status {
                 display: flex;
@@ -171,6 +172,8 @@
             .radio-input[value="inactive"]:checked + .radio-label {
                 background-color: #dc3545;
             }
+=======
+>>>>>>> origin/phong
         </style>
     </head>
     <body>
@@ -200,6 +203,7 @@
                     </select>
                 </div>
                 
+<<<<<<< HEAD
                 <div class="form-group-status">
                     <label>Status:</label>
                     <div class="radio-group">
@@ -209,6 +213,15 @@
                         <input type="radio" id="inactive" name="status" value="inactive" class="radio-input" required>
                         <label for="inactive" class="radio-label"></label>
                     </div>
+=======
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+>>>>>>> origin/phong
                 </div>
                 
                 <button type="submit">Add New Term</button>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package dal;
 
 import java.sql.*;
@@ -116,4 +117,18 @@ public class DAO_Loan extends DBContext {
         d.InsertLoanRequest(l);
         
     }
+=======
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package dal;
+
+/**
+ *
+ * @author Acer Nitro Tiger
+ */
+public class DAO_Loan {
+    
+>>>>>>> origin/phong
 }

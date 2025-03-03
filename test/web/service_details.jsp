@@ -201,7 +201,11 @@
 
                     <div class="text-center mt-4">
                         <c:if test="${service.status == 'active'}">
+<<<<<<< HEAD
                             <a href="SendLoanRequest" class="btn btn-apply me-3">
+=======
+                            <a href="#" class="btn btn-apply me-3">
+>>>>>>> origin/phong
                                 <i class="bi bi-check-circle"></i> Apply Now
                             </a>
                         </c:if>
