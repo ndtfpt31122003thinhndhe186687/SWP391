@@ -86,6 +86,16 @@ public class Customer {
         this.customer_id = customer_id;
         this.insurance_id = insurance_id;
     }
+
+    public Customer(String full_name, String email, String username, String phone_number, String address, String gender, int customer_id) {
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.gender = gender;
+        this.customer_id = customer_id;
+    }
     
     
 

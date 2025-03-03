@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="en">
     <head>
         <!-- basic -->
@@ -55,7 +56,7 @@
                                 <a class="nav-link" href="team.html">Team</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Contact Us</a>
+                                <a class="nav-link" href="Insurance">Bảo Hiểm</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="news">News</a>
@@ -105,7 +106,7 @@
                     <a class="" href="changeInfor">Hello ${sessionScope.account.insurance_name}</a>
                         
                     </li>
-                    <li><a href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">Manage insurance policy</a></li>
+                    <li><a href="paginationInsurancePolicy?quantity=5">Manage insurance policy</a></li>
                      <li><a class="dropdown-item" href="logout">Logout</a></li>
                 </c:if>
                 </c:if>    
@@ -288,7 +289,7 @@
                 </div>
                 <!-- copyright section start -->
                 <div class="copyright_section">
-                    <div class="copyright_text">Copyright � Vietnam Technological
+                    <div class="copyright_text">Copyright © Vietnam Technological
                     </div>
                 </div>
                 <!-- copyright section end -->

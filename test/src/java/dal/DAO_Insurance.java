@@ -1,12 +1,14 @@
 package dal;
 
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
 import model.Insurance;
 import model.Insurance_contract;
+import model.Insurance_contract_detail;
 import model.Insurance_policy;
 import model.Insurance_term;
 import model.Insurance_transactions;
@@ -188,6 +190,54 @@ public class DAO_Insurance extends DBContext {
         return null;
     }
 
+    //INSURANCE
+    public List<Insurance> getInsuranceByStatus() {
+        List<Insurance> list = new ArrayList<>();
+        String sql = "select * from insurance\n"
+                + "where insurance.status = 'active'";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int insurance_id = rs.getInt("insurance_id");
+                String insurance_name = rs.getString("insurance_name");
+                String email = rs.getString("email");
+                String phone_number = rs.getString("phone_number");
+                String address = rs.getString("address");
+                String status = rs.getString("status");
+                Insurance in = new Insurance(insurance_id, insurance_name, email, phone_number, address, status);
+                list.add(in);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public Insurance getInsuranceByID(int insurance_id) {
+        List<Insurance> list = new ArrayList<>();
+        String sql = "select * from insurance\n"
+                + "where insurance.status = 'active' and insurance_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                insurance_id = rs.getInt("insurance_id");
+                String insurance_name = rs.getString("insurance_name");
+                String email = rs.getString("email");
+                String phone_number = rs.getString("phone_number");
+                String address = rs.getString("address");
+                String status = rs.getString("status");
+                Insurance in = new Insurance(insurance_id, insurance_name, email, phone_number, address, status);
+                return in;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     //INSURANCE POLICY 
     public List<Insurance_policy> getPolicyByInsuranceID(int insurance_id) {
         List<Insurance_policy> list = new ArrayList<>();
@@ -207,7 +257,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -234,7 +285,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -262,7 +314,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -288,7 +341,8 @@ public class DAO_Insurance extends DBContext {
                 double premium_amount = rs.getDouble("premium_amount");
                 String status = rs.getString("status");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 return policy;
             }
 
@@ -315,7 +369,8 @@ public class DAO_Insurance extends DBContext {
                 double premium_amount = rs.getDouble("premium_amount");
                 String status = rs.getString("status");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 return policy;
             }
 
@@ -326,8 +381,8 @@ public class DAO_Insurance extends DBContext {
     }
 
     public void insertPolicy(Insurance_policy p) {
-        String sql = "INSERT INTO insurance_policy (insurance_id,policy_name, description, coverage_amount, premium_amount, status)"
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO insurance_policy (insurance_id,policy_name, description, coverage_amount, premium_amount, status,image)"
+                + "VALUES (?, ?, ?, ?, ?, ?,?)";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, p.getInsurance_id());
@@ -336,6 +391,7 @@ public class DAO_Insurance extends DBContext {
             pre.setDouble(4, p.getCoverage_amount());
             pre.setDouble(5, p.getPremium_amount());
             pre.setString(6, p.getStatus());
+            pre.setString(7, p.getImage());
 
             // Correct Date Handling:  Parse the String *within* the method
             pre.executeUpdate();
@@ -351,7 +407,8 @@ public class DAO_Insurance extends DBContext {
                 + "description = ?,\n"
                 + "coverage_amount = ?,\n"
                 + "premium_amount = ?,\n"
-                + "status = ?\n"
+                + "status = ?,\n"
+                + "image = ?\n"
                 + "where policy_id = ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
@@ -360,7 +417,9 @@ public class DAO_Insurance extends DBContext {
             pre.setDouble(3, p.getCoverage_amount());
             pre.setDouble(4, p.getPremium_amount());
             pre.setString(5, p.getStatus());
-            pre.setInt(6, p.getPolicy_id());
+            pre.setString(6, p.getImage());
+            pre.setInt(7, p.getPolicy_id());
+
             pre.executeUpdate();
             System.out.println("Update insurance policy successfully!");
         } catch (Exception e) {
@@ -399,7 +458,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -428,7 +488,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -456,7 +517,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -484,7 +546,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -513,7 +576,8 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
-                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at);
+                String image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(policy);
             }
         } catch (Exception e) {
@@ -558,8 +622,9 @@ public class DAO_Insurance extends DBContext {
                 double coverage_amount = rs.getDouble("coverage_amount");
                 double premium_amount = rs.getDouble("premium_amount");
                 Date created_at = rs.getDate("created_at");
+                String image = rs.getString("image");
                 Insurance_policy p = new Insurance_policy(policy_id, insurance_id, policy_name,
-                        description, status, coverage_amount, premium_amount, created_at);
+                        description, status, coverage_amount, premium_amount, created_at, image);
                 list.add(p);
             }
         } catch (Exception e) {
@@ -901,6 +966,25 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
+    public void insertInsuranceContract(Insurance_contract c) {
+        String sql = "INSERT INTO insurance_contract (customer_id, service_id, policy_id, start_date, end_date, payment_frequency, status)\n"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, c.getCustomer_id());
+            pre.setInt(2, c.getService_id());
+            pre.setInt(3, c.getPolicy_id());
+            pre.setDate(4, new java.sql.Date(c.getStart_date().getTime()));
+            pre.setDate(5, new java.sql.Date(c.getEnd_date().getTime()));
+            pre.setString(6, c.getPayment_frequency());
+            pre.setString(7, c.getStatus());
+            pre.executeUpdate();
+            System.out.println("Add successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // INSURANCE TRANSACTION
     public List<Insurance_transactions> getInsuranceTransactionByInsuranceID(int insurance_id) {
         List<Insurance_transactions> list = new ArrayList<>();
@@ -1160,15 +1244,16 @@ public class DAO_Insurance extends DBContext {
     // INSURANCE CUSTOMER
     public List<Customer> getInsuranceCustomerByInsuranceId(int insurance_id) {
         List<Customer> list = new ArrayList<>();
-        String sql = "select * from customer\n"
+        String sql = "select distinct customer.*, insurance_contract_detail.insurance_id from customer\n"
                 + "join insurance_contract on customer.customer_id = insurance_contract.customer_id\n"
                 + "join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id\n"
-                + "where insurance_id = ?";
+                + "where insurance_contract_detail.insurance_id = ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
+
                 insurance_id = rs.getInt("insurance_id");
                 int customer_id = rs.getInt("customer_id");
                 String full_name = rs.getString("full_name");
@@ -1673,16 +1758,200 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
+    public List<Insurance_term> paginationInsuranceTermAndStartDateAndStatus(int insurance_id, int offset, int next, String status) {
+        List<Insurance_term> list = new ArrayList<>();
+        String sql = "select * from insurance_terms\n"
+                + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_terms.insurance_id = ? and insurance_terms.status = ?\n"
+                + "order by insurance_terms.start_date \n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int term_id = rs.getInt("term_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String term_name = rs.getString("term_name");
+                String term_description = rs.getString("term_description");
+                status = rs.getString("status");
+                String policy_name = rs.getString("policy_name");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                Date created_at = rs.getDate("created_at");
+                Insurance_term term = new Insurance_term(term_id, insurance_id, policy_id,
+                        term_name, term_description, status, policy_name, start_date, end_date, created_at);
+                list.add(term);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Insurance_term> paginationInsuranceTermAndCreatedAtAndStatus(int insurance_id, int offset, int next, String status) {
+        List<Insurance_term> list = new ArrayList<>();
+        String sql = "select * from insurance_terms\n"
+                + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_terms.insurance_id = ? and insurance_terms.status = ?\n"
+                + "order by insurance_terms.created_at \n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int term_id = rs.getInt("term_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String term_name = rs.getString("term_name");
+                String term_description = rs.getString("term_description");
+                status = rs.getString("status");
+                String policy_name = rs.getString("policy_name");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                Date created_at = rs.getDate("created_at");
+                Insurance_term term = new Insurance_term(term_id, insurance_id, policy_id,
+                        term_name, term_description, status, policy_name, start_date, end_date, created_at);
+                list.add(term);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    //INSURANCE CONTRACT DETAIL
+    public List<Insurance_contract_detail> getInsuranceContractDetailByCustomerIDAndInsuranceID(int customer_id, int insurance_id) {
+        List<Insurance_contract_detail> list = new ArrayList<>();
+        String sql = "select * from  insurance_contract_detail\n"
+                + "join insurance_contract on insurance_contract_detail.contract_id = insurance_contract.contract_id\n"
+                + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_contract.customer_id = ? and insurance_contract_detail.insurance_id = ? and insurance_contract.status = 'active'";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, customer_id);
+            pre.setInt(2, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int contract_id = rs.getInt("contract_id");
+                insurance_id = rs.getInt("insurance_id");
+                customer_id = rs.getInt("customer_id");
+                int policy_id = rs.getInt("policy_id");
+
+                String policy_name = rs.getString("policy_name");
+                Insurance_contract_detail d = new Insurance_contract_detail(contract_id, insurance_id, customer_id,
+                        policy_id, policy_name);
+                list.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public Insurance_contract_detail getInsuranceContractDetailByContractid(int contract_id,int insurance_id) {
+        String sql = "select * from  insurance_contract_detail\n"
+                + "join insurance_contract  on insurance_contract_detail.contract_id = insurance_contract.contract_id\n"
+                + "join loan on insurance_contract.customer_id = loan.customer_id\n"
+                + "join service_terms on loan.serviceTerm_id = service_terms.serviceTerm_id\n"
+                + "join term on service_terms.term_id = term.term_id\n"
+                + "where insurance_contract_detail.contract_id = ? and insurance_contract_detail.insurance_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, contract_id);
+            pre.setInt(2, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                contract_id = rs.getInt("contract_id");
+                 insurance_id = rs.getInt("insurance_id");
+                int customer_id = rs.getInt("customer_id");
+                int service_id = rs.getInt("service_id");
+                int policy_id = rs.getInt("policy_id");
+                int duration = rs.getInt("duration");
+                double coverage_amount = rs.getDouble("CoverageAmount");
+                double premium_amount = rs.getDouble("PremiumAmount");
+                double paid_amount = rs.getDouble("PaidAmount");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                String payment_frequency = rs.getString("payment_frequency");
+                Insurance_contract_detail d = new Insurance_contract_detail(contract_id, insurance_id, customer_id,
+                        service_id, policy_id, coverage_amount, premium_amount, paid_amount, start_date, end_date, payment_frequency, duration);
+                return d;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void insertContractDetail(Insurance_contract_detail d) {
+        String sql = "INSERT INTO insurance_contract_detail (contract_id, insurance_id, CoverageAmount, PremiumAmount, PaidAmount,StartDate, EndDate)\n"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, d.getContract_id());
+            pre.setInt(2, d.getInsurance_id());
+            pre.setDouble(3, d.getCoverageAmount());
+            pre.setDouble(4, d.getPremiumAmount());
+            pre.setDouble(5, d.getPaidAmount());
+            pre.setDate(6, new java.sql.Date(d.getStart_date().getTime()));
+            pre.setDate(7, new java.sql.Date(d.getEnd_date().getTime()));
+            pre.executeUpdate();
+            System.out.println("add succesfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         DAO_Insurance d = new DAO_Insurance();
-        List<Insurance_transactions> list = new ArrayList<>();
-        int insurance_id = 2;
-        int offset = 2;
-        int next = 5;
-        String status = "active";
-        list = d.paginationInsuranceTransaction(insurance_id, offset, next);
-        for (Insurance_transactions p : list) {
-            System.out.println(p);
-        }
+
+//        List<Insurance_contract_detail> c = d.getInsuranceContractDetailByCustomerIDAndInsuranceID(1, 1);
+//        for (Insurance_contract_detail insurance_contract_detail : c) {
+//            System.out.println(c);
+//        }
+        Insurance_contract_detail c = d.getInsuranceContractDetailByContractid(5, 1);
+        System.out.println(c);
+
+        //        List<Customer> c = d.getInsuranceCustomerByInsuranceId(2);
+//        System.out.println(c);
+//        int customer_id = 3;
+//        int service_id = 3;
+//        int policy_id = 4;
+//        int insurance_id = 2;
+//        int contract_id = 22;
+//        double cover = 50000;
+//        double pre = 10000;
+//        double paid = 1000;
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        java.util.Date utilStartDate = null;
+//        java.util.Date utilEndDate = null;
+//
+//        try {
+//            utilStartDate = sdf.parse("2025-03-01");
+//            utilEndDate = sdf.parse("2026-03-01");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // Ensure dates are parsed before converting
+//        if (utilStartDate != null && utilEndDate != null) {
+//            // Convert java.util.Date to java.sql.Date
+//            Date start = new Date(utilStartDate.getTime());
+//            Date end = new Date(utilEndDate.getTime());
+//            String pay = "monthly";
+//            String status = "active";
+//            Insurance_contract_detail con = new Insurance_contract_detail(contract_id, insurance_id, cover, pre, paid, utilStartDate, utilEndDate);
+//            d.insertContractDetail(con);
+//
+//        }
     }
 }

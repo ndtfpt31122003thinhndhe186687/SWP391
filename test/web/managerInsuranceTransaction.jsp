@@ -166,36 +166,36 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
 
-                    <li class="nav-item">
-                        <a class="nav-link " href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">
+                                        <li class="nav-item">
+                        <a class="nav-link " href="paginationInsurancePolicy?offset=1&quantity=5">
                             <i class="me-2"></i>
                             Insurance Policy Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="managerInsuranceCustomer?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link" href="paginationInsuranceCustomer?offset=1&quantity=5">
                             <i class="me-2"></i>
                             Insurance Customer Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="managerInsuranceContract?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link" href="paginationInsuranceContract?offset=1&quantity=5">
                             <i class=" me-2"></i>
                             Insurance Contact Management
                         </a>
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTransaction?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link " href="paginationInsuranceTransaction?offset=1&quantity=5">
                             <i class="me-2"></i>
                             Insurance Transactions Management
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${account.insurance_id}">
                             <i class="me-2"></i>
                             Insurance Term Management
                         </a>
@@ -229,52 +229,62 @@
                         <option value="claim_payment" ${requestScope.transaction_type == 'claim_payment' ? 'selected' : ''}>Claim Payment</option>
 
                     </select>
-                        <button type="submit">Find</button>
-                </form>
-                        <form action="paginationInsuranceTransaction" method="get">
-                        <label>Select quantity transaction: </label>
-                 <select class="filter-dropdown" name="quantity">                    
-                     <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
-                    <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
-                    <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
-                </select>
                     <button type="submit">Find</button>
-                    </form>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Transaction ID</th>
-                                <th>Contract ID</th>
-                                <th>Customer Name</th>
-                                <th>Transaction Date</th>
-                                <th>amount</th>
-                                <th>Transaction Type</th>
-                                <th>Notes</th>
+                </form>
+                <form action="paginationInsuranceTransaction" method="get">
+                    <label>Select quantity transaction: </label>
+                    <select class="filter-dropdown" name="quantity">                    
+                        <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
+                        <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
+                        <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
+                    </select>
+                    <button type="submit">Find</button>
+                </form>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Contract ID</th>
+                            <th>Customer Name</th>
+                            <th>Transaction Date</th>
+                            <th>amount</th>
+                            <th>Transaction Type</th>
+                            <th>Notes</th>
 
 
-                            </tr>
-                        </thead>
-                        <c:forEach items="${listT}" var="T">
-                            <tr>
-                                <td>${T.transaction_id}</td>
-                                <td>${T.contract_id}</td>
-                                <td>${T.full_name}</td>
-                                <td>${T.transaction_date}</td>
-                                <td>${T.amount}</td>
-                                <td>${T.transaction_type}</td> 
-                                <td>${T.notes}</td> 
+                        </tr>
+                    </thead>
+                    <c:forEach items="${listT}" var="T">
+                        <tr>
+                            <td>${T.transaction_id}</td>
+                            <td>${T.contract_id}</td>
+                            <td>${T.full_name}</td>
+                            <td>${T.transaction_date}</td>
+                            <td class="format-number">${T.amount}</td>
+                            <td>${T.transaction_type}</td> 
+                            <td>${T.notes}</td> 
 
 
-                            </tr>
-                        </c:forEach>
-                    </table>
-                <c:forEach begin="1" end="${endP}" var="q">
-                        <a href="paginationInsuranceTransaction?offset=${q}&quantity=${quantity}">${q}</a>
+                        </tr>
                     </c:forEach>
+                </table>
+                <c:forEach begin="1" end="${endP}" var="q">
+                    <a href="paginationInsuranceTransaction?offset=${q}&quantity=${quantity}">${q}</a>
+                </c:forEach>
             </div>
         </main>
 
-
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let formatNumbers = document.querySelectorAll(".format-number");
+                formatNumbers.forEach(function (el) {
+                    let num = parseFloat(el.innerText);
+                    if (!isNaN(num)) {
+                        el.innerText = num.toLocaleString("en-US");
+                    }
+                });
+            });
+        </script>
 
 
         </main>

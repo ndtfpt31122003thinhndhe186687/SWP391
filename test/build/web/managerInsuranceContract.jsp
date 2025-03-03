@@ -22,35 +22,35 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
-                <style>
-    .table thead {
-        background-color: #dc3545; 
-        color: white;
-    }
+        <style>
+            .table thead {
+                background-color: #dc3545;
+                color: white;
+            }
 
-    .table {
-        border-color: #dc3545;
-    }
+            .table {
+                border-color: #dc3545;
+            }
 
-    .table tbody tr {
-        color: #333;
-    }
+            .table tbody tr {
+                color: #333;
+            }
 
-    .table tbody tr:hover {
-        background-color: #f1b0b7; 
-        transition: 0.3s;
-    }
+            .table tbody tr:hover {
+                background-color: #f1b0b7;
+                transition: 0.3s;
+            }
 
-    .btn-danger {
-        background-color: #8b0000 !important;
-        border-color: #8b0000 !important;
-    }
+            .btn-danger {
+                background-color: #8b0000 !important;
+                border-color: #8b0000 !important;
+            }
 
-    .btn-success {
-        background-color: #b02a37 !important;
-        border-color: #b02a37 !important;
-    }
-</style>
+            .btn-success {
+                background-color: #b02a37 !important;
+                border-color: #b02a37 !important;
+            }
+        </style>
 
     </head>
     <body>
@@ -166,41 +166,40 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
 
-                    <li class="nav-item">
-                        <a class="nav-link " href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">
+                                        <li class="nav-item">
+                        <a class="nav-link " href="paginationInsurancePolicy?offset=1&quantity=5">
                             <i class="me-2"></i>
                             Insurance Policy Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="managerInsuranceCustomer?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link" href="paginationInsuranceCustomer?offset=1&quantity=5">
                             <i class="me-2"></i>
                             Insurance Customer Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="managerInsuranceContract?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link" href="paginationInsuranceContract?offset=1&quantity=5">
                             <i class=" me-2"></i>
                             Insurance Contact Management
                         </a>
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTransaction?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link " href="paginationInsuranceTransaction?offset=1&quantity=5">
                             <i class="me-2"></i>
                             Insurance Transactions Management
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${sessionScope.account.insurance_id}">
+                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${account.insurance_id}">
                             <i class="me-2"></i>
                             Insurance Term Management
                         </a>
                     </li>
-
                 </ul>
             </div>
         </nav>
@@ -231,15 +230,15 @@
                     </select>
                     <button type="submit">Find</button>
                 </form>
-                    <form action="paginationInsuranceContract" method="get">
-                        <label>Select quantity contract: </label>
-                 <select class="filter-dropdown" name="quantity">                    
-                     <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
-                    <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
-                    <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
-                </select>
+                <form action="paginationInsuranceContract" method="get">
+                    <label>Select quantity contract: </label>
+                    <select class="filter-dropdown" name="quantity">                    
+                        <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
+                        <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
+                        <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
+                    </select>
                     <button type="submit">Find</button>
-                    </form>
+                </form>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -274,8 +273,8 @@
                     </c:forEach>
                 </table>
                 <c:forEach begin="1" end="${endP}" var="q">
-                        <a href="paginationInsuranceContract?offset=${q}&quantity=${quantity}">${q}</a>
-                    </c:forEach>
+                    <a href="paginationInsuranceContract?offset=${q}&quantity=${quantity}">${q}</a>
+                </c:forEach>
             </div>
         </main>
 

@@ -5,6 +5,8 @@
 package model;
 
 import java.util.Date;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
@@ -12,20 +14,22 @@ import java.util.Date;
  */
 public class Insurance_policy {
     public int policy_id,insurance_id;
-    public String policy_name,description,status;
+    public String policy_name,description,status, image;
+
     public double coverage_amount,premium_amount;
     public Date created_at;
 
     public Insurance_policy() {
     }
 
-    public Insurance_policy(int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount) {
+    public Insurance_policy(int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount, String image) {
         this.insurance_id = insurance_id;
         this.policy_name = policy_name;
         this.description = description;
         this.status = status;
         this.coverage_amount = coverage_amount;
         this.premium_amount = premium_amount;
+        this.image = image;
     }
 
     public Insurance_policy(int policy_id, int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount) {
@@ -36,9 +40,10 @@ public class Insurance_policy {
         this.status = status;
         this.coverage_amount = coverage_amount;
         this.premium_amount = premium_amount;
+        
     }
 
-    public Insurance_policy(int policy_id, int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount, Date created_at) {
+    public Insurance_policy(int policy_id, int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount, Date created_at, String image) {
         this.policy_id = policy_id;
         this.insurance_id = insurance_id;
         this.policy_name = policy_name;
@@ -47,7 +52,21 @@ public class Insurance_policy {
         this.coverage_amount = coverage_amount;
         this.premium_amount = premium_amount;
         this.created_at = created_at;
+        this.image = image;
     }
+
+    public Insurance_policy(int policy_id, String policy_name, String description, String status, String image, double coverage_amount, double premium_amount) {
+        this.policy_id = policy_id;
+        this.policy_name = policy_name;
+        this.description = description;
+        this.status = status;
+        this.image = image;
+        this.coverage_amount = coverage_amount;
+        this.premium_amount = premium_amount;
+    }
+
+   
+    
 
     public int getPolicy_id() {
         return policy_id;
@@ -113,6 +132,15 @@ public class Insurance_policy {
         this.created_at = created_at;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+    
+    
     @Override
     public String toString() {
         return "Insurance_policy{" + "policy_id=" + policy_id + ", insurance_id=" + insurance_id + ", policy_name=" + policy_name + ", description=" + description + ", status=" + status + ", coverage_amount=" + coverage_amount + ", premium_amount=" + premium_amount + ", created_at=" + created_at + '}';

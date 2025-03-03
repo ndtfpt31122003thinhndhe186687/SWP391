@@ -55,6 +55,18 @@ public class Insurance {
         this.status = status;
     }
 
+    public Insurance(int insurance_id, String insurance_name, String email, String phone_number, String address, String status) {
+        this.insurance_id = insurance_id;
+        this.insurance_name = insurance_name;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.status = status;
+    }
+
+
+
+    
 
 
     public int getPolicy_id() {
@@ -137,6 +149,9 @@ public class Insurance {
         this.status = status;
     }
 
+
+
+   
     @Override
     public String toString() {
         return "Insurance{" + "insurance_id=" + insurance_id + ", role_id=" + role_id + ", policy_id=" + policy_id + ", username=" + username + ", password=" + password + ", insurance_name=" + insurance_name + ", email=" + email + ", phone_number=" + phone_number + ", address=" + address + ", status=" + status + '}';

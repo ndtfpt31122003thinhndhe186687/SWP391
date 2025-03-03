@@ -79,6 +79,7 @@ public class updateInsuranceTermServlet extends HttpServlet {
         }
          
     } 
+       
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -132,8 +133,8 @@ public class updateInsuranceTermServlet extends HttpServlet {
                 return;
 
         }
-        String term_name_trim = term_name.trim();
-         Insurance_term iTName = dao.getInsuranceTermByName(term_name_trim);
+        term_name = term_name.trim().replaceAll("\\s+", " ");
+         Insurance_term iTName = dao.getInsuranceTermByName(term_name);
         if(iTName != null && iTName.getTerm_id() != term_id){
             request.setAttribute("listPolicy", listPolicy);
             request.setAttribute("term", iT);
@@ -144,7 +145,7 @@ public class updateInsuranceTermServlet extends HttpServlet {
         }
 
         Insurance_term t = new Insurance_term(term_id, i.getInsurance_id(), 
-                policy_id, term_name_trim, term_description, status, start_date, end_date);
+                policy_id, term_name, term_description, status, start_date, end_date);
         dao.updateInsuranceTerm(t);
         String url = "managerInsuranceTerm?insurance_id=" +i.getInsurance_id();
         response.sendRedirect(url);

@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Insurance;
 import model.Insurance_term;
+import model.Insurance_policy;
 
 /**
  *
@@ -64,6 +65,8 @@ public class ManagerInsuranceTermServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
         List<Insurance_term> list = dao.getInsuranceTermByInsuranceID(i.getInsurance_id());
+        List<Insurance_policy> listP = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active"); 
+        request.setAttribute("listPolicy", listP);
         request.setAttribute("listTerm", list);
         request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
     } 

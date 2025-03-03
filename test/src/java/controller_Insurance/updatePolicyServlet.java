@@ -8,11 +8,14 @@ import dal.DAO_Insurance;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.util.List;
 import model.Insurance;
 import model.Insurance_policy;
@@ -22,6 +25,11 @@ import model.Insurance_policy;
  * @author Windows
  */
 @WebServlet(name = "updatePolicyServlet", urlPatterns = {"/updatePolicy"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50 // 50MB
+)
 public class updatePolicyServlet extends HttpServlet {
 
     /**
@@ -65,13 +73,13 @@ public class updatePolicyServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         String policy_id_raw = request.getParameter("policy_id");
         int policy_id;
-            policy_id= Integer.parseInt(policy_id_raw);
-            Insurance_policy p = dao.getPolicyById(policy_id);
-            List<String> listStatus = List.of("active", "inactive"); 
-            request.setAttribute("listStatus", listStatus);
-            request.setAttribute("policy", p);
-            request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
-        
+        policy_id = Integer.parseInt(policy_id_raw);
+        Insurance_policy p = dao.getPolicyById(policy_id);
+        List<String> listStatus = List.of("active", "inactive");
+        request.setAttribute("listStatus", listStatus);
+        request.setAttribute("policy", p);
+        request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
+
     }
 
     /**
@@ -96,15 +104,37 @@ public class updatePolicyServlet extends HttpServlet {
         String coverage_amount_raw = request.getParameter("coverage_amount");
         String premium_amount_raw = request.getParameter("premium_amount");
         String status = request.getParameter("status");
-        List<String> listStatus = List.of("active", "inactive"); 
-        double coverage_amount = 0, premium_amount= 0;
+        List<String> listStatus = List.of("active", "inactive");      
+        List<Insurance_policy> listP = dao.getPolicyByInsuranceID(i.getInsurance_id());
+        coverage_amount_raw = coverage_amount_raw.replaceAll(",", "");
+        premium_amount_raw = premium_amount_raw.replaceAll(",", "");
+        double coverage_amount = 0, premium_amount = 0;
+        policy_name = policy_name.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+        description = description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+        
+        if (policy_name.isEmpty()){
+            request.setAttribute("error", "Policy Name must not null");
+            request.setAttribute("listStatus", listStatus);
+            request.setAttribute("policy", iP);
+            request.setAttribute("listPolicy", listP);
+            request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
+        }
+        if (description.trim().isEmpty()) {
+            request.setAttribute("error", "Description must not null");
+            request.setAttribute("listStatus", listStatus);
+            request.setAttribute("policy", iP);
+            request.setAttribute("listPolicy", listP);
+            request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
+        }
         try {
             coverage_amount = Double.parseDouble(coverage_amount_raw);
             premium_amount = Double.parseDouble(premium_amount_raw);
+
             if (coverage_amount <= 0 || premium_amount <= 0) {
                 request.setAttribute("error", "Coverage Amount and Premium Amount must be greater than 0!");
-               request.setAttribute("listStatus", listStatus);
+                request.setAttribute("listStatus", listStatus);
                 request.setAttribute("policy", iP);
+                request.setAttribute("listPolicy", listP);
                 request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
 
             }
@@ -112,24 +142,57 @@ public class updatePolicyServlet extends HttpServlet {
             request.setAttribute("error", "Coverage Amount and Premium Amount must be valid numbers!");
             request.setAttribute("listStatus", listStatus);
             request.setAttribute("policy", iP);
+            request.setAttribute("listPolicy", listP);
             request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
-            
+
+        }
+
+        policy_name = policy_name.trim().replaceAll("\\s+", " ");
+        Insurance_policy in = dao.getPolicyByName(policy_name);
+        if (in != null && in.getPolicy_id() != policy_id) {
+            request.setAttribute("error", "policy name " + policy_name + " existed!");
+            request.setAttribute("listStatus", listStatus);
+            request.setAttribute("policy", iP);
+            request.setAttribute("listPolicy", listP);
+            request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
         }
         
-            String policy_name_trim = policy_name.trim();
-            Insurance_policy in = dao.getPolicyByName(policy_name);
-            if (in != null && in.getPolicy_id() != policy_id) {
-                request.setAttribute("error", "policy name " + policy_name + " existed!");
-                request.setAttribute("listStatus", listStatus);
-                request.setAttribute("policy", iP);
-                request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
-            } 
-           
-            
-        Insurance_policy p = new Insurance_policy(policy_id, i.getInsurance_id(), policy_name_trim, description, status, coverage_amount, premium_amount);
+    Part filePart = request.getPart("file");
+String fileName = filePart.getSubmittedFileName();
+String image = iP.getImage(); // Lấy ảnh cũ nếu không có ảnh mới
+
+if (fileName != null && !fileName.isEmpty()) {
+    String fileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+    if (!fileExt.equals(".jpg") && !fileExt.equals(".jpeg") && !fileExt.equals(".png")) {
+        request.setAttribute("error", "Only JPG, JPEG, PNG files are allowed!");
+        request.setAttribute("policy", iP);
+        request.setAttribute("listPolicy", listP);
+        request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
+        return;
+    }
+
+    // Định nghĩa đường dẫn lưu file
+    String uploadDir = getServletContext().getRealPath("") + "images/InsurancePolicy";
+    File dir = new File(uploadDir);
+    if (!dir.exists()) {
+        dir.mkdirs();
+    }
+
+    String filePath = uploadDir + File.separator + fileName;
+    System.out.println("Saving file to: " + filePath); // Debug đường dẫn ảnh
+    filePart.write(filePath);
+
+    image = "images/InsurancePolicy/" + fileName; // Cập nhật ảnh mới
+} else {
+    System.out.println("No new image uploaded, keeping old image: " + image);
+}
+
+        Insurance_policy p = new Insurance_policy(policy_id, policy_name, description, status, image, coverage_amount, premium_amount);
         dao.updatePolicy(p);
-        String url = "managerPolicy?insurance_id=" + i.getInsurance_id();
-                response.sendRedirect(url);
+        session.setAttribute("showSuccessModal", true);
+        session.setAttribute("successMessage", "Policy '" + policy_name + "' update successfully!");
+        String url = "paginationInsurancePolicy?quantity=5";
+        response.sendRedirect(url);
     }
 
     /**

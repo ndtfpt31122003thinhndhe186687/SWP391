@@ -25,7 +25,7 @@ import model.Insurance_term;
  *
  * @author Windows
  */
-@WebServlet(name = "AddInsuranceTermServlet", urlPatterns = {"/addInsuranceTerm"})
+@WebServlet(name = "addInsuranceTermServlet", urlPatterns = {"/addInsuranceTerm"})
 public class AddInsuranceTermServlet extends HttpServlet {
 
     /**
@@ -55,9 +55,8 @@ public class AddInsuranceTermServlet extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -65,13 +64,13 @@ public class AddInsuranceTermServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
+        List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active"); 
         request.setAttribute("listPolicy", list);
-        request.getRequestDispatcher("addInsuranceTerm.jsp").forward(request, response);
+        request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
     }
 
     /**
@@ -97,6 +96,21 @@ public class AddInsuranceTermServlet extends HttpServlet {
         int policy_id = Integer.parseInt(policy_id_raw);
         Date start_date = null, end_date = null;
         java.sql.Date sqlStart_date = null, sqlEnd_date = null;
+        if(term_name.trim().isEmpty()){
+            request.setAttribute("error", "Term Name must be not null");
+            List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
+            request.setAttribute("listPolicy", list);
+             request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+            return;
+        }
+                if(term_description.trim().isEmpty()){
+            request.setAttribute("error", "Term Name must be not null");
+            List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
+            request.setAttribute("listPolicy", list);
+             request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+            return;
+        }
+        
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             dateFormat.setLenient(false); // Bật kiểm tra giá trị chặt chẽ
@@ -106,7 +120,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
                 request.setAttribute("error", "Start date must be before End date.");
                 List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
                 request.setAttribute("listPolicy", list);
-                request.getRequestDispatcher("addInsuranceTerm.jsp").forward(request, response);
+                 request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
                 return;
             }
             sqlStart_date = new java.sql.Date(start_date.getTime());
@@ -115,20 +129,20 @@ public class AddInsuranceTermServlet extends HttpServlet {
             request.setAttribute("error", "Invalid date format. Please use yyyy-MM-dd.");
             List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
             request.setAttribute("listPolicy", list);
-            request.getRequestDispatcher("addInsuranceTerm.jsp").forward(request, response);
+             request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
             return;
         }
         try {
-            String term_name_trim = term_name.trim();
-            Insurance_term termName = dao.getInsuranceTermByName(term_name_trim);
+            term_name = term_name.trim().replaceAll("\\s+", " ");
+            Insurance_term termName = dao.getInsuranceTermByName(term_name);
             if (termName != null) {
                 request.setAttribute("error", "Term name: " + term_name + " is existed!");
                 List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
                 request.setAttribute("listPolicy", list);
-                request.getRequestDispatcher("addInsuranceTerm.jsp").forward(request, response);
+                 request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
             } else {
                 Insurance_term t = new Insurance_term(i.getInsurance_id(),
-                        policy_id, term_name_trim, term_description, status, start_date, end_date);
+                        policy_id, term_name, term_description, status, start_date, end_date);
                 dao.insertInsuranceTerm(t);
                 String url = "managerInsuranceTerm?insurance_id=" + i.getInsurance_id();
                 response.sendRedirect(url);
