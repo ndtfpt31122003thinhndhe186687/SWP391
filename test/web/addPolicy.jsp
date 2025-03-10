@@ -63,13 +63,13 @@
         <h4>${requestScope.error}</h4>
         <form action="addPolicy" method="post">
             <label>Enter Policy Name</label>
-            <input type="text" name="policy_name" required />
+            <input type="text" name="policy_name" />
             <label>Enter Description</label>
-            <input type="text" name="description" required />
+            <input type="text" name="description" />
             <label>Enter Coverage Amount</label>
-            <input type="text" name="coverage_amount" required />
+            <input type="text" name="coverage_amount" />
             <label>Enter Premium Amount</label>
-            <input type="text" name="premium_amount" required />
+            <input type="text" name="premium_amount" />
             <label>Enter Status</label><br>
             <select class="filter-dropdown" name="status" >
                 <option value="active">Active</option>

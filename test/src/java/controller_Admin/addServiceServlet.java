@@ -70,7 +70,7 @@ public class addServiceServlet extends HttpServlet {
         }else {
             Services s = new Services(service_name, description, service_type, status);
             d.InsertService(s);
-            response.sendRedirect("service_management");
+            response.sendRedirect("service_management?&status=all&sort=service_name&type=services&page=1");
         }
     } 
 

@@ -71,7 +71,15 @@
 
     </head>
     <body>
-        <h1>Số tiền bạn cần trả cho hợp đồng ${cd.contract_id} là: </h1>
-        <h1>${money}</h1>  
+       <div class="container">
+        <h2>Thanh Toán Hợp Đồng Bảo Hiểm</h2>
+        <p>Số tiền cần thanh toán:</p>
+        <label>${money}</label>
+        <form action="VNPayInsurance" method="post">
+            <input type="hidden" name="orderInfo" value="Thanh toán bảo hiểm">
+            <input type="hidden" name="amount" value=${money}>
+            <button type="submit">Thanh Toán</button>
+        </form>
+    </div>
     </body>
 </html>

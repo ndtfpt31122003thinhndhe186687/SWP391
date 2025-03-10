@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller_Banker;
 
-import dal.DAO;
 import dal.DBContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,116 +14,107 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
 
-/**
- *
- * @author AD
- */
 @WebServlet(name = "CustomerListServlet", urlPatterns = {"/customerList"})
 public class CustomerListServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CustomerListServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CustomerListServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
     DBContext db = new DBContext();
     List<Customer> customers = new ArrayList<>();
     String search = request.getParameter("search");
+    
+    if (search == null) {
+        search = "";
+    } else {
+        // Trim whitespace and replace multiple spaces with a single space
+        search = search.trim().replaceAll("\\s+", " ");
+    }
 
-    try {
-        Connection conn = db.getConnection();
-        String sql;
+    String cardType = request.getParameter("cardType");
+    if (cardType == null) {
+        cardType = "";
+    }
 
-        if (search != null && !search.trim().isEmpty()) {
-            sql = "SELECT customer_id, full_name FROM customer WHERE full_name LIKE ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + search + "%");  // Sử dụng wildcard cho tìm kiếm
-            ResultSet rs = pstmt.executeQuery();
+    // Pagination: default current page = 1, pageSize = 10
+    int page = 1;
+    String pageParam = request.getParameter("page");
+    if (pageParam != null && !pageParam.isEmpty()) {
+        try {
+            page = Integer.parseInt(pageParam);
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+    }
+    int pageSize = 10;
+    int offset = (page - 1) * pageSize;
 
-            while (rs.next()) {
-                int customerId = rs.getInt("customer_id");
-                String fullName = rs.getString("full_name");
-                Customer customer = new Customer();
-                customer.setCustomer_id(customerId);
-                customer.setFull_name(fullName);
-                customers.add(customer);
-            }
+    int totalRecords = 0;
+    String sql, countSql;
+
+    try (Connection conn = db.getConnection()) {
+        if (!search.isEmpty() || !cardType.isEmpty()) {
+            sql = "SELECT customer_id, full_name, card_type FROM customer WHERE (full_name LIKE ? OR ? = '') AND (card_type = ? OR ? = '') ORDER BY customer_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            countSql = "SELECT COUNT(*) AS total FROM customer WHERE (full_name LIKE ? OR ? = '') AND (card_type = ? OR ? = '')";
         } else {
-            sql = "SELECT customer_id, full_name FROM customer";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
+            sql = "SELECT customer_id, full_name, card_type FROM customer ORDER BY customer_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            countSql = "SELECT COUNT(*) AS total FROM customer";
+        }
 
-            while (rs.next()) {
-                int customerId = rs.getInt("customer_id");
-                String fullName = rs.getString("full_name");
-                Customer customer = new Customer();
-                customer.setCustomer_id(customerId);
-                customer.setFull_name(fullName);
-                customers.add(customer);
+        // Get total record count
+        try (PreparedStatement countStmt = conn.prepareStatement(countSql)) {
+            if (!search.isEmpty() || !cardType.isEmpty()) {
+                countStmt.setString(1, "%" + search + "%");
+                countStmt.setString(2, search);
+                countStmt.setString(3, cardType);
+                countStmt.setString(4, cardType);
+            }
+            try (ResultSet rsCount = countStmt.executeQuery()) {
+                if (rsCount.next()) {
+                    totalRecords = rsCount.getInt("total");
+                }
+            }
+        }
+
+        // Get customer list with pagination
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            int idx = 1;
+            if (!search.isEmpty() || !cardType.isEmpty()) {
+                pstmt.setString(idx++, "%" + search + "%");
+                pstmt.setString(idx++, search);
+                pstmt.setString(idx++, cardType);
+                pstmt.setString(idx++, cardType);
+            }
+            pstmt.setInt(idx++, offset);
+            pstmt.setInt(idx++, pageSize);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Customer customer = new Customer();
+                    customer.setCustomer_id(rs.getInt("customer_id"));
+                    customer.setFull_name(rs.getString("full_name"));
+                    customer.setCard_type(rs.getString("card_type"));
+                    customers.add(customer);
+                }
             }
         }
     } catch (Exception e) {
         e.printStackTrace();
     }
 
+    int totalPages = (int) Math.ceil(totalRecords / (double) pageSize);
+
     request.setAttribute("customerList", customers);
+    request.setAttribute("search", search);
+    request.setAttribute("currentPage", page);
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("cardType", cardType);
     request.getRequestDispatcher("customerList.jsp").forward(request, response);
 }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

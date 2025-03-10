@@ -4,7 +4,6 @@
  */
 package controller_Marketer;
 
-import dal.DAO;
 import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,14 +12,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.News;
+import model.NewsCategory;
+import model.Staff;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "SearchNewsServlet", urlPatterns = {"/searchNews"})
+@WebServlet(name = "SearchNewsServlet", urlPatterns = {"/marketer/searchNews"})
 public class SearchNewsServlet extends HttpServlet {
 
     /**
@@ -61,16 +64,37 @@ public class SearchNewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAO_Marketer d=new DAO_Marketer();
-        List<News> list ;
+        DAO_Marketer d = new DAO_Marketer();
         String searchName = request.getParameter("searchName");
-        if (searchName != null && !searchName.trim().isEmpty()) {
-            list = d.getSearchNewsByTitle(searchName);
-            request.setAttribute("listN", list);
-        }else{
-            list=d.getAllNews();
+        String page_raw = request.getParameter("page");
+        String pageSize_raw = request.getParameter("pageSize");
+        if (searchName == null && searchName.trim().isEmpty()) {
+            searchName = "%";
+        } else {
+            searchName = searchName.trim().replaceAll("\\s+", " ");
+            if (searchName.contains(" ")) {
+                searchName = searchName.replace(" ", ""); 
+            }
+            searchName = "%" + searchName + "%";  
         }
-        request.setAttribute("listN", list);
+        HttpSession session = request.getSession();
+        Staff s = (Staff) session.getAttribute("account");
+        List<News> list = d.getSearchNewsByTitle(searchName, s.getStaff_id());
+        //paging
+        int pageSize = Integer.parseInt(pageSize_raw);
+        int totalNews = list.size();
+        int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
+        int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+        int start = (page - 1) * pageSize;
+        int end = Math.min(page * pageSize, totalNews);
+        List<News> listN = d.getListByPage(list, start, end);
+        request.setAttribute("listN", listN);
+        request.setAttribute("page", page);
+        request.setAttribute("totalPage", totalPage);
+        request.setAttribute("pageSize", pageSize);
+        List<NewsCategory> listNc = d.getAllNewsCategory();
+        request.setAttribute("searchName", searchName);  // Lưu lại giá trị tìm kiếm
+        request.setAttribute("listNc", listNc);
         request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
     }
 
@@ -85,7 +109,20 @@ public class SearchNewsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+//        DAO_Marketer d = new DAO_Marketer();
+//        String searchName = request.getParameter("searchName");
+//         if (searchName == null && searchName.trim().isEmpty()) {
+//            searchName = "%";
+//        } else {
+//            searchName = searchName.trim().replaceAll("\\s+", " ");
+//            searchName = "%" + searchName.replace(" ", "%") + "%";
+//        }
+//        HttpSession session = request.getSession();
+//        Staff s = (Staff) session.getAttribute("account");
+//        List<News> list = d.getSearchNewsByTitle(searchName, s.getStaff_id());
+//        request.setAttribute("listN", list);
+//        request.getRequestDispatcher("newsManagement.jsp").forward(request, response);
     }
 
     /**

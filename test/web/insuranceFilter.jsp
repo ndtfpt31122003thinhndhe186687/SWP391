@@ -38,7 +38,7 @@
         </style>
     </head>
     <body>
-        <h1>You do not have permission to access this page!</h1>
-        <a href="home">Back to home</a>
+        <h1>Bạn không có quyền truy cập!</h1>
+        <a href="home">Trở về trang chủ</a>
     </body>
 </html>

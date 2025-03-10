@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.ServiceTerms;
 import model.Services;
+import model.Term;
 
 /**
  *
@@ -64,6 +65,8 @@ public class AddServiceTerm extends HttpServlet {
         DAO_Admin d = new DAO_Admin();
         List<Services> listS = d.getAllServices();
         request.setAttribute("listS", listS);
+        List<Term> listTerms = d.getAllTerm();
+        request.setAttribute("listTerms", listTerms);
         request.getRequestDispatcher("addServiceTerm.jsp").forward(request, response);
     }
 
@@ -82,22 +85,52 @@ public class AddServiceTerm extends HttpServlet {
         String termName = request.getParameter("term_name");
         String description = request.getParameter("description");
         String contractTerms = request.getParameter("contract_terms");
-        String maxTermMonths_raw = request.getParameter("max_term_months");
+        String termId_raw = request.getParameter("term_id");
         String paymentPen_raw = request.getParameter("early_payment_penalty");
         String interestRate_raw = request.getParameter("interest_rate");
         String minPayment_raw = request.getParameter("min_payment");
         String minDeposit_raw = request.getParameter("min_deposit");
+        DAO_Admin d = new DAO_Admin();
+        if (termName != null) {
+            termName = termName.trim();
+        }
+        if (description != null) {
+            description = description.trim();
+        }
+        if (contractTerms != null) {
+            contractTerms = contractTerms.trim();
+        }
+        if (termName == null || description == null || contractTerms == null
+                || termName.matches(".*\\s{2,}.*") || description.matches(".*\\s{2,}.*") || contractTerms.matches(".*\\s{2,}.*")) {
+            request.setAttribute("err", "Vui lòng nhập lại. Khoảng cách giữa các từ chỉ cần 1 khoảng cách!");
+            List<Services> listS = d.getAllServices();
+            request.setAttribute("listS", listS);
+            List<Term> listTerms = d.getAllTerm();
+            request.setAttribute("listTerms", listTerms);
+            request.getRequestDispatcher("addServiceTerm.jsp").forward(request, response);
+            return;
+        }
         try {
+            Integer termId = (termId_raw == null || termId_raw.trim().isEmpty()) ? null : Integer.valueOf(termId_raw);
             int serviceId = Integer.parseInt(serviceId_raw);
-            int maxTermMonths = (maxTermMonths_raw == null || maxTermMonths_raw.isEmpty()) ? 0 : Integer.parseInt(maxTermMonths_raw);
             double paymentPen = (paymentPen_raw == null || paymentPen_raw.isEmpty()) ? 0.0 : Double.parseDouble(paymentPen_raw);
             double interestRate = (interestRate_raw == null || interestRate_raw.isEmpty()) ? 0.0 : Double.parseDouble(interestRate_raw);
             double minPayment = (minPayment_raw == null || minPayment_raw.isEmpty()) ? 0.0 : Double.parseDouble(minPayment_raw);
             double minDeposit = (minDeposit_raw == null || minDeposit_raw.isEmpty()) ? 0.0 : Double.parseDouble(minDeposit_raw);
-            ServiceTerms s = new ServiceTerms(serviceId, maxTermMonths, termName, description, contractTerms, paymentPen, interestRate, minPayment, minDeposit);
-            DAO_Admin d = new DAO_Admin();
+            // Kiểm tra xem service_term có bị trùng không
+            if (d.isDuplicateServiceTerm(termId, termName, serviceId, minDeposit,interestRate)) {
+                request.setAttribute("err", "Điều khoản dịch vụ đã tồn tại!");
+                List<Services> listS = d.getAllServices();
+                request.setAttribute("listS", listS);
+                List<Term> listTerms = d.getAllTerm();
+                request.setAttribute("listTerms", listTerms);
+                request.getRequestDispatcher("addServiceTerm.jsp").forward(request, response);
+                return;
+            }
+            ServiceTerms s = new ServiceTerms(termId, serviceId, termName, description, contractTerms,
+                    paymentPen, interestRate, minPayment, minDeposit);
             d.addServiceTerm(s);
-            response.sendRedirect("serviceTermManagement");
+            response.sendRedirect("serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4");
         } catch (Exception e) {
         }
 

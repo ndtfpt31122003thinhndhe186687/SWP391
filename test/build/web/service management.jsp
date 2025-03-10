@@ -52,6 +52,92 @@
                 background-color: #d32f2f;
                 color: white;
             }
+            .table {
+                border-collapse: collapse;
+                width: 100%;
+                background-color: #fff;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .table thead {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .table thead th {
+                padding: 12px;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            .table tbody tr {
+                transition: background 0.3s;
+            }
+
+            .table tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            .table td, .table th {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .badge {
+                font-size: 14px;
+                padding: 5px 10px;
+                border-radius: 12px;
+            }
+
+            .bg-success {
+                background-color: #28a745 !important;
+            }
+
+            .bg-danger {
+                background-color: #dc3545 !important;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 14px;
+                border-radius: 5px;
+                transition: 0.3s;
+            }
+
+            .btn:hover {
+                opacity: 0.8;
+            }
+
+            .pagination {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .pagination a {
+                text-decoration: none;
+                padding: 6px 12px;
+                border: 1px solid #007bff;
+                border-radius: 5px;
+                color: #007bff;
+                transition: 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .current-page {
+                padding: 6px 12px;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: white;
+                font-weight: bold;
+            }
         </style>
 
     </head>
@@ -177,7 +263,7 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="staff_management">
+                        <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Staff Management
                         </a>
@@ -204,6 +290,14 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
+                            <i class="me-2"></i>
+                            Service Term Management
+                        </a>
+                    </li>
+
+
                 </ul>
             </div>
         </nav>
@@ -213,6 +307,7 @@
                 <h1 class="h2 mb-0 text-danger"> Service Management</h1>
             </div>
 
+            <input type="hidden" name ="page" value="1"> 
             <!-- Tabs choose  -->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
@@ -236,6 +331,13 @@
                         <option value="service_name" ${requestScope.sort == 'service_name' ? 'selected' : ''}>Name</option>
                         <option value="service_type" ${requestScope.sort == 'service_type' ? 'selected' : ''}>Type</option>                   
                     </select>
+
+                    <label for="selectPageService">Show:</label>
+                    <select id="selectPageService" class="filter-dropdown" onchange="selectPageService()">
+                        <option value="2" ${requestScope.pageSize == '2' ? 'selected' : ''}>2</option>
+                        <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
+                        <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
+                    </select>
                 </div>       
             </c:if>  
 
@@ -252,6 +354,13 @@
                     <select id="sortTerm" class="filter-dropdown">
                         <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Name</option>
                         <option value="duration" ${requestScope.sort == 'duration' ? 'selected' : ''}>Duration</option>                   
+                    </select>
+
+                    <label for="selectPageTerm">Show:</label>
+                    <select id="selectPageTerm" class="filter-dropdown" onchange="selectPageTerm()">
+                        <option value="2" ${requestScope.pageSize == '2' ? 'selected' : ''}>2</option>
+                        <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
+                        <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
                     </select>
                 </div>       
             </c:if>      
@@ -295,8 +404,12 @@
                                             <td>${s.service_type}</td>
                                             <td><span class="badge ${s.status == 'active' ? 'bg-success' : 'bg-danger'}">${s.status}</span></td>
                                             <td>
-                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">Delete</a>
-                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">Update</a> 
+                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a> 
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -310,8 +423,12 @@
                                             <td>${s.service_type}</td>
                                             <td><span class="badge ${s.status == 'active' ? 'bg-success' : 'bg-danger'}">${s.status}</span></td>
                                             <td>
-                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">Delete</a>
-                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">Update</a> 
+                                                <a onclick="doDeleteService('${s.service_id}')" href="#" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                                <a href="updateService?id=${s.service_id}" class="btn btn-success btn-sm">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a> 
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -324,7 +441,7 @@
                             </c:if>
                         </tbody>
                     </table>
-                </div>
+                </div>  
             </c:if>
 
             <!-- View list term -->
@@ -363,14 +480,32 @@
                                 <td>${t.term_type}</td>    
                                 <td><span class="badge ${t.status == 'active' ? 'bg-success' : 'bg-danger'}">${t.status}</span></td>  
                                 <td>
-                                    <a onclick="doDeleteTerm('${t.term_id}')" href="#" class="btn btn-danger">Delete</a>
-                                    <a href="updateTerm?id=${t.term_id}" class="btn btn-success">Update</a> 
+                                    <a onclick="doDeleteTerm('${t.term_id}')" href="#" class="btn btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    <a href="updateTerm?id=${t.term_id}" class="btn btn-success">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a> 
                                 </td>
                             </tr>
                         </c:forEach>
                     </table>
                 </div>
+
             </c:if>
+            <div class="pagination">
+                <c:forEach begin="1" end="${totalPage}" var="i">
+                    <c:choose>
+                        <c:when test="${i == page}">
+                            <span class="current-page">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="service_management?&status=${status}&sort=${sort}&type=${param.type}&page=${i}&pageSize=${pageSize}">${i}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
+
         </main>
 
         <script type="text/javascript">
@@ -384,18 +519,29 @@
                     window.location = "deleteTerm?id=" + id;
                 }
             }
+
+            function selectPageService() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortService").value;
+                var pageSize = document.getElementById("selectPageService").value;
+                var type = '${param.type}';
+                window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
+            }
+
             function filterService() {
                 var status = document.getElementById("filterStatus").value;
                 var sort = document.getElementById("sortService").value;
+                var pageSize = document.getElementById("selectPageService").value;
                 var type = '${param.type}';
-                window.location.href = "ServiceFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+                window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
             }
 
             function sortService() {
                 var sort = document.getElementById("sortService").value;
                 var status = document.getElementById("filterStatus").value;
+                var pageSize = document.getElementById("selectPage").value;
                 var type = '${param.type}';
-                window.location.href = "ServiceFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+                window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
             }
 
             document.getElementById("sortService").onchange = sortService;
@@ -404,18 +550,28 @@
         </script>
 
         <script>
+            function selectPageTerm() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortTerm").value;
+                var pageSize = document.getElementById("selectPageTerm").value;
+                var type = '${param.type}';
+                window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
+            }
+
             function filterTerm() {
                 var status = document.getElementById("filterStatus").value;
                 var sort = document.getElementById("sortTerm").value;
+                var pageSize = document.getElementById("selectPageTerm").value;
                 var type = '${param.type}';
-                window.location.href = "TermFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+                window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
             }
 
             function sortTerm() {
                 var sort = document.getElementById("sortTerm").value;
                 var status = document.getElementById("filterStatus").value;
+                var pageSize = document.getElementById("selectPageTerm").value;
                 var type = '${param.type}';
-                window.location.href = "TermFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+                window.location.href = "service_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
             }
 
             document.getElementById("sortTerm").onchange = sortTerm;

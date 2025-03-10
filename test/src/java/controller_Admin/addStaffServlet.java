@@ -14,7 +14,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.security.SecureRandom;
+import java.util.Properties;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import model.Staff;
+import utils.Password;
 
 /**
  *
@@ -61,7 +72,6 @@ public class addStaffServlet extends HttpServlet {
         String full_name = request.getParameter("full_name");
         String email = request.getParameter("email");
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
         String phone_number = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
         String date_of_birth_raw = request.getParameter("date_of_birth");
@@ -87,14 +97,74 @@ public class addStaffServlet extends HttpServlet {
                 request.getRequestDispatcher("addStaff.jsp").forward(request, response);
             }
             else{
-                Staff s = new Staff(full_name, email, username, password,
+                String randomPassword = generateRandomPassword(10);
+                String hashedPassword = Password.toSHA1(randomPassword);
+                Staff s = new Staff(full_name, email, username, hashedPassword,
                         phone_number, gender, date_of_birth, address, role_id, status);
                 dao.insertBanker(s);
-                response.sendRedirect("staff_management");
+                sendEMailThread(email, randomPassword, username);
+                response.sendRedirect("staff_management?status=all&sort=full_name&type=&page=1&pageSize=2");
             }
         } catch (Exception e) {
         }
-    } 
+    }
+    private String generateRandomPassword(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            password.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return password.toString();
+    }
+    public void sendEmail(String recipientEmail, String password,String username) throws MessagingException {
+        String host = "smtp.gmail.com";
+        String senderEmail = "ducthinh20032003@gmail.com";
+        String senderPassword = "fjuk kgua lvis rzkq";
+
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(senderEmail));
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
+        message.setSubject("Your Account Password");       
+        message.setContent("<p>Dear Staff,</p>"
+        + "<p>Your username is: <b>" + username + "</b></p>"
+        + "<p>Your password is: <b>" + password + "</b></p>"
+        + "<p>Please change it after logging in.</p>"
+        + "<p>Click <a href='http://localhost:9999/test/login'>here</a> to log in.</p>"
+        + "<hr>"
+        + "<p>Best regards,</p>"
+        + "<p>YourBank Support Team</p>"
+        + "<p>Email: support@yourbank.com | Phone: +123 456 789</p>",
+        "text/html; charset=UTF-8");
+
+        Transport.send(message);
+    }
+    
+    private void sendEMailThread(String recipientEmail, String password,String username) {
+        Thread emailThread = new Thread(() -> {  // thread gửi mail khác luồng
+            try {
+                System.out.println("Sending email to: " + recipientEmail);
+                sendEmail(recipientEmail, password, username);
+
+            } catch (Exception e) {
+                e.printStackTrace();  // Log lỗi nếu có
+            }
+        });
+        emailThread.start();
+    }
+
 
     /** 
      * Handles the HTTP <code>POST</code> method.

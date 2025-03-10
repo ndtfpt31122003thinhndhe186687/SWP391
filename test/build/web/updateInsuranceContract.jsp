@@ -66,11 +66,11 @@
         <c:set var="c" value="${requestScope.contract}"/>
         <form action="updateInsuranceContract" method="post">
             <input type="hidden" name="contract_id" value="${contract.contract_id}">
-            Enter Status
+            Chọn trạng thái
             <select class="filter-dropdown" name="status">
-               <option value="active" ${c.status == 'active' ? 'selected' : ''}>Active</option>
-               <option value="expired" ${c.status == 'expired' ? 'selected' : ''}>Expired</option>
-               <option value="cancelled" ${c.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+               <option value="active" ${c.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+               <option value="expired" ${c.status == 'expired' ? 'selected' : ''}>Hết hạn</option>
+               <option value="cancelled" ${c.status == 'cancelled' ? 'selected' : ''}>Đã huỷ</option>
             </select>
             </br>
 

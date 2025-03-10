@@ -102,7 +102,7 @@
             <c:set var="s" value="${requestScope.serviceTerm}"/>
             <form action="updateServiceTerm" method="post">
 
-                <input type="hidden" name="term_id" value="${s.term_id}" />
+                <input type="hidden" name="serviceTerm_id" value="${s.serviceTerm_id}" />
 
                 <div class="form-group">
                     <label for="term_name">Term name:</label>
@@ -122,7 +122,11 @@
                 <c:if test="${s.service_id==1 || s.service_id==2}"> 
                     <div class="form-group">
                         <label for="max_term_months">Max term months:</label>
-                        <input type="number" id="max_term_months" name="max_term_months" value="${s.max_term_months}" min="0" required/>
+                        <select name="term_id" id="max_term_months">
+                            <c:forEach var="term" items="${requestScope.listTerms}">
+                                <option value="${term.term_id}" ${s.term_id==term.term_id? 'selected' : ''}>${term.duration} months</option>
+                            </c:forEach>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -157,7 +161,11 @@
                         <option value="inactive" ${s.status=="inactive" ? 'selected' : ''}>Inactive</option>
                     </select>
                 </div>
-
+                <c:if test="${not empty err}">
+                    <div>
+                        <p style="color: red;">${err}</p>
+                    </div>
+                </c:if>
                 <button type="submit">Update Service Term</button>
             </form>
         </div>

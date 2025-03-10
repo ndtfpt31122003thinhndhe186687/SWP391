@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller_Admin;
 
 import dal.DAO;
@@ -20,36 +19,39 @@ import model.Services;
  *
  * @author DELL
  */
-@WebServlet(name="updateServiceServlet", urlPatterns={"/updateService"})
+@WebServlet(name = "updateServiceServlet", urlPatterns = {"/updateService"})
 public class updateServiceServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateServiceServlet</title>");  
+            out.println("<title>Servlet updateServiceServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateServiceServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet updateServiceServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -57,21 +59,24 @@ public class updateServiceServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String id_raw = request.getParameter("id");
         int id;
         try {
-            id=Integer.parseInt(id_raw);
+            id = Integer.parseInt(id_raw);
             DAO_Admin d = new DAO_Admin();
             Services s = d.get_Service_BY_Service_id(id);
             request.setAttribute("service", s);
+            response.setContentType("text/html;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
             request.getRequestDispatcher("updateService.jsp").forward(request, response);
         } catch (Exception e) {
         }
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -79,7 +84,7 @@ public class updateServiceServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String service_id_raw = request.getParameter("service_id");
         String service_name = request.getParameter("service_name");
         String description = request.getParameter("description");
@@ -91,21 +96,22 @@ public class updateServiceServlet extends HttpServlet {
             service_id = Integer.parseInt(service_id_raw);
             Services services = d.get_Service_BY_Service_id(service_id);
             Services test = d.get_Service_BY_Service_name(service_name);
-            if(test != null){
-                request.setAttribute("error", "service name "+ service_name + " existed!!");
-                request.setAttribute("service",services);
+            if (test != null && !test.getService_name().equals(service_name)) {
+                request.setAttribute("error", "service name " + service_name + " existed!!");
+                request.setAttribute("service", services);
                 request.getRequestDispatcher("updateService.jsp").forward(request, response);
-            }else{
-            Services s = new Services(service_id, service_name, description, service_type, status);
-            d.UpdateService(s);
-            response.sendRedirect("service_management");
+            } else {
+                Services s = new Services(service_id, service_name, description, service_type, status);
+                d.UpdateService(s);
+                response.sendRedirect("service_management?&status=all&sort=service_name&type=services&page=1");
             }
         } catch (Exception e) {
         }
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

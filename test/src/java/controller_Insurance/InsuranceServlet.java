@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import model.Customer;
 import model.Insurance;
 import model.Insurance_policy;
 import model.Insurance_term;
@@ -62,15 +63,17 @@ public class InsuranceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         DAO_Insurance dao = new DAO_Insurance();
-        List<Insurance> list = new ArrayList<>();
+        List<Insurance> list = new ArrayList<>();     
         String action = request.getParameter("action");
                 if ("details".equals(action)) {
-            // Xử lý xem chi tiết dịch vụ
             String insurance_id_raw = request.getParameter("insurance_id");
             try {
                 int insurance_id = Integer.parseInt(insurance_id_raw);
                 Insurance insurance = dao.getInsuranceByID(insurance_id);
+                List<Customer> listC = dao.getInsuranceCustomerByInsuranceId(insurance_id);
+                
                 if (insurance != null) {
+                    request.setAttribute("listC", listC);
                     request.setAttribute("insurance", insurance);
                     request.getRequestDispatcher("insuranceDetails.jsp").forward(request, response);
                 } else {
@@ -80,7 +83,6 @@ public class InsuranceServlet extends HttpServlet {
                 response.sendRedirect("Insurance");
             }
         } else {
-            // Hiển thị danh sách dịch vụ
             try {
                 list = dao.getInsuranceByStatus();
                 request.setAttribute("ListInsurance", list);

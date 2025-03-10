@@ -15,6 +15,7 @@ public class Staff {
     public String full_name,email,username,password,
             phone_number,gender;
     public Date date_of_birth;
+    private String formattedDateOfBirth;
     public String address;
     public int role_id;
     public String status;
@@ -50,6 +51,15 @@ public class Staff {
         this.role_id = role_id;
         this.status = status;
     }
+
+    public String getFormattedDateOfBirth() {
+        return formattedDateOfBirth;
+    }
+
+    public void setFormattedDateOfBirth(String formattedDateOfBirth) {
+        this.formattedDateOfBirth = formattedDateOfBirth;
+    }
+    
 
     public int getStaff_id() {
         return staff_id;

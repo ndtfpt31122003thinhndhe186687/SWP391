@@ -1,7 +1,9 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<html lang="en">
+<html lang="vi">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -140,111 +142,124 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <c:if test="${sessionScope.account.role_id==1}">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="staff_management">
-                            <i class="bi-house-fill me-2"></i>
-                            Management
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="staff_management">
+                                <i class="bi-house-fill me-2"></i>
+                                Management
+                            </a>
+                        </li>
                     </c:if>
                     <c:if test="${sessionScope.account.role_id==2}">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="customerList">
-                            <i class="bi-house-fill me-2"></i>
-                            Management
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="customerList">
+                                <i class="bi-house-fill me-2"></i>
+                                Management
+                            </a>
+                        </li>
                     </c:if>
                     <c:if test="${sessionScope.account.role_id==4}">
                         <li class="nav-item">
-                        <a class="nav-link" href="list-insurance-contracts">
-                            <i class="bi-house-fill me-2"></i>
-                            List Insurance Contracts
-                        </a>
-                    </li>
+                            <a class="nav-link" href="list-insurance-contracts">
+                                <i class="bi-house-fill me-2"></i>
+                                List Insurance Contracts
+                            </a>
+                        </li>
                     </c:if>
-                    
+
                     <c:if test="${sessionScope.account.role_id==4}">
                         <li class="nav-item">
-                        <a class="nav-link" href="list-debt-customers">
-                            <i class="bi-wallet me-2"></i>
-                            List Debt Customer
-                        </a>
-                    </li>
+                            <a class="nav-link" href="list-debt-customers">
+                                <i class="bi-wallet me-2"></i>
+                                List Debt Customer
+                            </a>
+                        </li>
                     </c:if>
-                    
+
                     <c:if test="${sessionScope.account.role_id==4}">
                         <li class="nav-item">
-                        <a class="nav-link" href="list-transactions">
-                            <i class="bi-person me-2"></i>
-                            List Transactions
-                        </a>
-                    </li>
+                            <a class="nav-link" href="list-transactions">
+                                <i class="bi-person me-2"></i>
+                                List Transactions
+                            </a>
+                        </li>
                     </c:if>
-                    
+
                     <c:if test="${sessionScope.account.role_id==4}">
                         <li class="nav-item">
-                        <a class="nav-link" href="list-insurance-transactions">
-                            <i class="bi-person me-2"></i>
-                            List Insurance Transactions
-                        </a>
-                    </li>
+                            <a class="nav-link" href="list-insurance-transactions">
+                                <i class="bi-person me-2"></i>
+                                List Insurance Transactions
+                            </a>
+                        </li>
                     </c:if>
                     <c:if test="${sessionScope.account.role_id==4}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="amountStatistics">
-                            <i class="bi-person me-2"></i>
-                            Amount Statistics
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="amountStatistics">
+                                <i class="bi-person me-2"></i>
+                                Amount Statistics
+                            </a>
+                        </li>
                     </c:if>
                     <c:if test="${sessionScope.account.role_id==4}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="CustomerList_AServlet">
-                            <i class="bi-person me-2"></i>
-                            Accountant
-                        </a>
-                    </li>                   
+                        <li class="nav-item">
+                            <a class="nav-link" href="CustomerList_AServlet">
+                                <i class="bi-person me-2"></i>
+                                Accountant
+                            </a>
+                        </li>                   
                     </c:if>
                     <c:if test="${sessionScope.account.role_id==4}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="calculate">
-                            <i class="bi-person me-2"></i>
-                            Loan and Savings Interest Calculator
-                        </a>
-                    </li>                   
+                        <li class="nav-item">
+                            <a class="nav-link" href="calculate">
+                                <i class="bi-person me-2"></i>
+                                Loan and Savings Interest Calculator
+                            </a>
+                        </li>                   
                     </c:if>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="index.html">
                             <i class="bi-house-fill me-2"></i>
-                            Overview
+                            Tổng quan
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="wallet.html">
+                        <a class="nav-link" href="wallet">
                             <i class="bi-wallet me-2"></i>
-                            My Wallet
+                            Ví của tôi
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">
+                        <a class="nav-link" href="viewprofile">
                             <i class="bi-person me-2"></i>
-                            Profile
+                            Hồ sơ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="savingList">
+                            <i class="bi-person me-2"></i>
+                            Sổ tiết kiệm 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="loanList">
+                            <i class="bi-person me-2"></i>
+                            Vay 
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link active" href="setting.html">
                             <i class="bi-gear me-2"></i>
-                            Settings
+                            Cài đặt
+
                         </a>
                     </li>
                     <li class="nav-item border-top mt-auto pt-2">
                         <a class="nav-link" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
-                            Logout
+                            Đăng xuất
                         </a>
                     </li>
                 </ul>
@@ -275,31 +290,33 @@
                             <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                                 <h6 class="mb-4 text-danger"><a href="changepass">User Profile</a></h6>
 
-                                <form class="custom-form profile-form" action="changeInfor" method="post" >
-                                    <input class="form-control" type="text" name="profile-name" placeholder="Name">
-                                    <input class="form-control" type="email" name="profile-email" placeholder="Email">
-                                    <input class="form-control" type="number" name="profile-phone" placeholder="Phone"> 
-                                    <input class="form-control" type="text" name="profile-address" placeholder="Address">
-                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth (yyyy-MM-dd)">
+                                <form class="custom-form profile-form" action="changeInfor" method="post" enctype="multipart/form-data">
+                                    <input class="form-control" type="text" name="profile-name" placeholder="Name" value="${sessionScope.account.full_name}">
+                                    <input class="form-control" type="email" name="profile-email" placeholder="Email" value="${sessionScope.account.email}">
+                                    <input class="form-control" type="number" name="profile-phone" placeholder="Phone" value="${sessionScope.account.phone_number}">
+                                    <input class="form-control" type="text" name="profile-address" placeholder="Address" value="${sessionScope.account.address}">
+                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth (dd-MM-yyyy)" 
+                                           value="<fmt:formatDate value='${sessionScope.account.date_of_birth}' pattern='dd-MM-yyyy' />">
 
                                     <div class="input-group mb-1">
-                                        <img src="" class="profile-image img-fluid" alt="">
                                         <input type="file" class="form-control" name="profile-image">
+                                    </div>
+                                    <input type="hidden" name="oldImage" value="${sessionScope.account.profile_picture}">
+
+                                    <div class="d-flex">
+                                        <button type="button" class="form-control me-3 text-bg-danger">
+                                            Reset
+                                        </button>
+
+                                        <button type="submit" class="form-control ms-2 text-bg-danger">
+                                            Update
+                                        </button>
                                     </div>
                                     <c:if test="${not empty errorMessage}">
                                         <div style="color: red; font-weight: bold;">
                                             ${errorMessage}
                                         </div>
                                     </c:if>
-                                    <div class="d-flex">
-                                        <button type="button " class="form-control me-3 text-bg-danger">
-                                            Reset
-                                        </button>
-
-                                        <button type="submit" class="form-control me-3 text-bg-danger">
-                                            Update
-                                        </button>
-                                    </div> 
                                 </form>
                             </div>
 
@@ -361,7 +378,7 @@
                     <div class="row">
 
                         <div class="col-lg-12 col-12">
-                            <p class="copyright-text">Copyright � Mini Finance 2048 
+                            <p class="copyright-text">Copyright © Mini Finance 2048 
                                 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
                         </div>
 

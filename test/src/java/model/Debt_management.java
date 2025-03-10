@@ -17,6 +17,7 @@ public class Debt_management {
     public String notes;
     public String customerName;
     public String customerEmail;
+    public String card_type;
 
     public Debt_management() {
     }
@@ -28,6 +29,14 @@ public class Debt_management {
         this.debt_status = debt_status;
         this.overdue_days = overdue_days;
         this.notes = notes;
+    }
+
+    public String getCard_type() {
+        return card_type;
+    }
+
+    public void setCard_type(String card_type) {
+        this.card_type = card_type;
     }
 
     // Constructors

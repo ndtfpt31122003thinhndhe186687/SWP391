@@ -1,5 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 
 <html lang="en">
     <head>
@@ -52,6 +54,94 @@
                 background-color: #d32f2f;
                 color: white;
             }
+            .table {
+                border-collapse: collapse;
+                width: 100%;
+                background-color: #fff;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .table thead {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .table thead th {
+                padding: 12px;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            .table tbody tr {
+                transition: background 0.3s;
+            }
+
+            .table tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            .table td, .table th {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .badge {
+                font-size: 14px;
+                padding: 5px 10px;
+                border-radius: 12px;
+            }
+
+            .bg-success {
+                background-color: #28a745 !important;
+            }
+
+            .bg-danger {
+                background-color: #dc3545 !important;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 14px;
+                border-radius: 5px;
+                transition: 0.3s;
+            }
+
+            .btn:hover {
+                opacity: 0.8;
+            }
+
+            .pagination {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .pagination a {
+                text-decoration: none;
+                padding: 6px 12px;
+                border: 1px solid #007bff;
+                border-radius: 5px;
+                color: #007bff;
+                transition: 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .current-page {
+                padding: 6px 12px;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: white;
+                font-weight: bold;
+            }
+
+
         </style>
 
     </head>
@@ -177,14 +267,14 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="staff_management">
+                        <a class="nav-link active" aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Staff Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="service_management">
+                        <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
                             Service Management
                         </a>
@@ -203,9 +293,9 @@
                             Statistic Management
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link " href="serviceTermManagement">
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
                             <i class="me-2"></i>
                             Service Term Management
                         </a>
@@ -220,16 +310,18 @@
                 <h1 class="h2 mb-0 text-danger">Staff Management</h1>
             </div>
 
+            <input type="hidden" name ="page" value="1"> 
+
             <!-- Tabs choose staff -->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == null || param.type == 'bankers' ? 'active' : ''}" href="staff_management?type=bankers">Bankers</a>
+                    <a class="nav-link ${param.type == null || param.type == 'bankers' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">Bankers</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == 'marketers' ? 'active' : ''}" href="staff_management?type=marketers">Marketers</a>
+                    <a class="nav-link ${param.type == 'marketers' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=marketers&page=1&pageSize=2">Marketers</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == 'accountants' ? 'active' : ''}" href="staff_management?type=accountants">Accountants</a>
+                    <a class="nav-link ${param.type == 'accountants' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=accountants&page=1&pageSize=2">Accountants</a>
                 </li>
             </ul>
 
@@ -247,20 +339,33 @@
                     <option value="gender" ${requestScope.sort == 'gender' ? 'selected' : ''}>Gender</option>
                     <option value="date_of_birth" ${requestScope.sort == 'date_of_birth' ? 'selected' : ''}>DOB</option>
                 </select>
+
+                <label for="selectPage">Show:</label>
+                <select id="selectPage" class="filter-dropdown" onchange="selectPage()">
+                    <option value="2" ${requestScope.pageSize == '2' ? 'selected' : ''}>2</option>
+                    <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
+                    <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
+                </select>
             </div>    
 
-            <div class="search-bar">
-                <form action="searchStaff">
-                    <input type="text" placeholder="Search" name="searchName" >
-                    <input type="hidden" name="type" value="${param.type != null ? param.type : 'bankers'}">
-                    <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
-                </form>
-            </div>    
+
+
+
 
             <!-- View list staff -->
             <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addStaff.jsp">Add New</a>
-
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <form id="searchForm" class="d-flex">             
+                            <input type="text" class="form-control me-2" 
+                                   placeholder="Search by name" name="searchName" value="${param.searchName}" >
+                            <button type="submit" class="btn btn-danger">Search</button>
+                        </form> 
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-success mb-2" href="addStaff.jsp">Add New</a>
+                    </div>
+                </div>
                 <!-- Display search results if available -->
                 <c:if test="${not empty ListByName or not empty ListByPhone}">
                     <div class="search-results mb-4">
@@ -275,10 +380,7 @@
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Gender</th>
-                                        <th>DOB</th>
-                                        <th>Address</th>
+                                        <th>Phone</th>                                       
                                         <th>Role</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -290,9 +392,7 @@
                                         <td>${b.full_name}</td>
                                         <td>${b.email}</td>
                                         <td>${b.phone_number}</td>
-                                        <td>${b.gender}</td>
-                                        <td>${b.date_of_birth}</td>
-                                        <td>${b.address}</td>
+
                                         <td>
                                             <c:choose>
                                                 <c:when test="${b.role_id == 2}">Banker</c:when>
@@ -302,9 +402,14 @@
                                         </td>
                                         <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
                                         <td>
-                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
-                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
+                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success btn-sm">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a> 
                                         </td>
+
                                     </tr>
                                 </c:forEach>
                             </table>
@@ -319,10 +424,7 @@
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Gender</th>
-                                        <th>DOB</th>
-                                        <th>Address</th>
+                                        <th>Phone</th>                                       
                                         <th>Role</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -334,9 +436,7 @@
                                         <td>${b.full_name}</td>
                                         <td>${b.email}</td>
                                         <td>${b.phone_number}</td>
-                                        <td>${b.gender}</td>
-                                        <td>${b.date_of_birth}</td>
-                                        <td>${b.address}</td>
+
                                         <td>
                                             <c:choose>
                                                 <c:when test="${b.role_id == 2}">Banker</c:when>
@@ -346,9 +446,14 @@
                                         </td>
                                         <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
                                         <td>
-                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
-                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
+                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success btn-sm">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a> 
                                         </td>
+
                                     </tr>
                                 </c:forEach>
                             </table>
@@ -371,10 +476,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone</th>
-                                <th>Gender</th>
-                                <th>DOB</th>
-                                <th>Address</th>
+                                <th>Phone</th>                               
                                 <th>Role</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -385,10 +487,7 @@
                                 <td>${b.staff_id}</td>
                                 <td>${b.full_name}</td>
                                 <td>${b.email}</td>
-                                <td>${b.phone_number}</td>
-                                <td>${b.gender}</td>
-                                <td>${b.date_of_birth}</td>
-                                <td>${b.address}</td>
+                                <td>${b.phone_number}</td>                                                                                          
                                 <td>
                                     <c:choose>
                                         <c:when test="${b.role_id == 2}">Banker</c:when>
@@ -398,14 +497,32 @@
                                 </td>
                                 <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
                                 <td>
-                                    <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger">Delete</a>
-                                    <a href="updateStaff?id=${b.staff_id}" class="btn btn-success">Update</a> 
+                                    <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    <a href="updateStaff?id=${b.staff_id}" class="btn btn-success btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a> 
                                 </td>
                             </tr>
                         </c:forEach>
                     </table>
                 </c:if>
             </div>
+
+            <div class="pagination">
+                <c:forEach begin="1" end="${totalPage}" var="i">
+                    <c:choose>
+                        <c:when test="${i == page}">
+                            <span class="current-page">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="staff_management?&status=${status}&sort=${sort}&type=${param.type}&page=${i}&pageSize=${pageSize}">${i}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
+
         </main>
 
         <script type="text/javascript">
@@ -414,25 +531,62 @@
                     window.location = "deleteStaff?id=" + id;
                 }
             }
-                     
-            function filterStaff() {
+
+            document.getElementById("searchForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                var searchName = document.querySelector("input[name='searchName']").value;
                 var status = document.getElementById("filterStatus").value;
                 var sort = document.getElementById("sortStaff").value;
-                var type = '${param.type}';  
-                window.location.href = "StaffFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+                var pageSize = document.getElementById("selectPage").value;
+                var type = '${param.type}';
+
+                window.location.href = "staff_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize + "&searchName=" + encodeURIComponent(searchName);
+            });
+
+            function selectPage() {
+                var searchName = document.querySelector("input[name='searchName']").value;
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortStaff").value;
+                var pageSize = document.getElementById("selectPage").value;
+                var type = '${param.type}';
+
+                var search = searchName ? searchName.value.trim().replace(/\s+/g, " ") : "";
+                if (search !== "") {
+                    window.location.href = "staff_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize + "&searchName=" + encodeURIComponent(searchName);
+                } else {
+                    window.location.href = "staff_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize;
+                }
+
+
+
+            }
+
+            function filterStaff() {
+                var searchName = document.querySelector("input[name='searchName']").value;
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortStaff").value;
+                var pageSize = document.getElementById("selectPage").value;
+                var type = '${param.type}';
+                window.location.href = "staff_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize + "&searchName=" + encodeURIComponent(searchName);
+                ;
             }
 
             function sortStaff() {
+                var searchName = document.querySelector("input[name='searchName']").value;
                 var sort = document.getElementById("sortStaff").value;
                 var status = document.getElementById("filterStatus").value;
-                var type = '${param.type}';  
-                window.location.href = "StaffFilter?status=" + status + "&sort=" + sort + "&type=" + type;
+                var pageSize = document.getElementById("selectPage").value;
+                var type = '${param.type}';
+                window.location.href = "staff_management?status=" + status + "&sort=" + sort + "&type=" + type + "&page=1" + "&pageSize=" + pageSize + "&searchName=" + encodeURIComponent(searchName);
+                ;
             }
 
             document.getElementById("sortStaff").onchange = sortStaff;
-        </script>
 
-        </main>
+        </script>       
+
+
 
     </div>
 </div>

@@ -1,6 +1,6 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -166,48 +166,47 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
 
-                                        <li class="nav-item">
-                        <a class="nav-link " href="paginationInsurancePolicy?offset=1&quantity=5">
+                        <li class="nav-item">
+                        <a class="nav-link " href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Policy Management
+                            Quản lý chính sách bảo hiểm
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link " href="sortInsuranceTerm?sortInsuranceTerm=none&status=all&quantity=5&offset=1">
+                            <i class="me-2"></i>
+                            Quản lý điều khoản bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceCustomer?offset=1&quantity=5">
+                        <a class="nav-link" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Customer Management
+                             Quản lý khách hàng đã mua bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceContract?offset=1&quantity=5">
+                        <a class="nav-link" href="sortInsuranceContract?sortInsuranceContract=none&status=all&quantity=5&offset=1">
                             <i class=" me-2"></i>
-                            Insurance Contact Management
+                            Quản lý hợp đồng bảo hiểm
                         </a>
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="paginationInsuranceTransaction?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Transactions Management
+                            Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${account.insurance_id}">
-                            <i class="me-2"></i>
-                            Insurance Term Management
-                        </a>
-                    </li>
-
                 </ul>
             </div>
         </nav>
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Insurance Transactions Management</h1>
+                <h1 class="h2 mb-0 text-danger">Quản lý giao dịch bảo hiểm</h1>
             </div>
 
             <!-- Tabs choose staff -->
@@ -216,40 +215,38 @@
             <!-- View list staff -->
             <div class="mt-3">
                 <form action="sortInsuranceTransaction" method="get">
-                    <label>Sort by :</label>
+                    <label>Sắp xếp theo:</label>
                     <select class="filter-dropdown" name="sortInsuranceTransaction">
-                        <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>None</option>
-                        <option value="transaction_date" ${requestScope.sort == 'transaction_date' ? 'selected' : ''}>Transaction Date</option>
-                        <option value="amount" ${requestScope.sort == 'amount' ? 'selected' : ''}>Amount</option>
+                        <option value="none" ${requestScope.sortInsuranceTransaction == '' ? 'selected' : ''}>Không</option>
+                        <option value="transaction_date" ${requestScope.sortInsuranceTransaction == 'transaction_date' ? 'selected' : ''}>Ngày giao dịch</option>
+                        <option value="amount" ${requestScope.sortInsuranceTransaction == 'amount' ? 'selected' : ''}>Số tiền</option>
                     </select>
-                    <label>Filter by Transaction Type</label>
+                    <label>Hiện thông tin theo loại giao dịch</label>
                     <select class="filter-dropdown" name="transaction_type">                    
-                        <option value="all" ${requestScope.transaction_type == '' ? 'selected' : ''}>All</option>
-                        <option value="premium_payment" ${requestScope.transaction_type == 'premium_payment' ? 'selected' : ''}>Premium Payment</option>
-                        <option value="claim_payment" ${requestScope.transaction_type == 'claim_payment' ? 'selected' : ''}>Claim Payment</option>
+                        <option value="all" ${requestScope.transaction_type == '' ? 'selected' : ''}>Tất cả</option>
+                        <option value="premium_payment" ${requestScope.transaction_type == 'premium_payment' ? 'selected' : ''}>Thanh toán phí bảo hiểm</option>
+                        <option value="claim_payment" ${requestScope.transaction_type == 'claim_payment' ? 'selected' : ''}>Thanh toán yêu cầu bồi thường</option>
 
                     </select>
-                    <button type="submit">Find</button>
-                </form>
-                <form action="paginationInsuranceTransaction" method="get">
-                    <label>Select quantity transaction: </label>
+                        <label>Chọn số lượng giao dịch: </label>
                     <select class="filter-dropdown" name="quantity">                    
                         <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
                         <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
                     </select>
-                    <button type="submit">Find</button>
+                    <button type="submit">Tìm</button>
                 </form>
+               
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Transaction ID</th>
-                            <th>Contract ID</th>
-                            <th>Customer Name</th>
-                            <th>Transaction Date</th>
-                            <th>amount</th>
-                            <th>Transaction Type</th>
-                            <th>Notes</th>
+                            <th>ID giao dịch</th>
+                            <th>ID hợp đồng</th>
+                            <th>Họ và tên khách hàng</th>
+                            <th>Ngày giao dịch</th>
+                            <th>Số tiền</th>
+                            <th>Loại giao dịch</th>
+                            <th>Ghi chú</th>
 
 
                         </tr>
@@ -269,18 +266,21 @@
                     </c:forEach>
                 </table>
                 <c:forEach begin="1" end="${endP}" var="q">
-                    <a href="paginationInsuranceTransaction?offset=${q}&quantity=${quantity}">${q}</a>
+                    <a href="sortInsuranceTransaction?sortInsuranceTransaction=${sortInsuranceTransaction}&transaction_type=${transaction_type}&quantity=${quantity}&offset=${q}">${q}</a>
                 </c:forEach>
             </div>
         </main>
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                let formatNumbers = document.querySelectorAll(".format-number");
+                 let formatNumbers = document.querySelectorAll(".format-number");
                 formatNumbers.forEach(function (el) {
-                    let num = parseFloat(el.innerText);
+                    let num = parseFloat(el.innerText.replace(/,/g, ""));
                     if (!isNaN(num)) {
-                        el.innerText = num.toLocaleString("en-US");
+                        el.innerText = num.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }) + " VND";
                     }
                 });
             });

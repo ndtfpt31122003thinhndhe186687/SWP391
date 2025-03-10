@@ -92,7 +92,7 @@ public class updateTermServlet extends HttpServlet {
             duration = Integer.parseInt(duration_raw);
             Term term = d.get_Term_BY_Term_id(term_id);
             Term test =d.get_Term_BY_Term_name(term_name);
-            if(test != null){
+            if(test != null && !term.getTerm_name().equals(term_name)){
                 request.setAttribute("error", "term name "+ term_name+" existed!!");
                 request.setAttribute("term", term);
                 request.getRequestDispatcher("updateTerm.jsp").forward(request, response);

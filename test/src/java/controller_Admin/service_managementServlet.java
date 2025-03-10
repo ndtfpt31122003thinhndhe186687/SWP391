@@ -64,17 +64,74 @@ public class service_managementServlet extends HttpServlet {
             throws ServletException, IOException {
         DAO_Admin d = new DAO_Admin();
         String type = request.getParameter("type");
+        String status = request.getParameter("status");
+        String sortBy = request.getParameter("sort");
+        String page_raw = request.getParameter("page");
+        String pageSize_raw = request.getParameter("pageSize");
+        int pageSize;
+        List<Services> listService;
+        List<Term> listTerm;
         if (type == null) {
             type = "services";
         }
         if ("services".equals(type)) {
-            List<Services> list = d.getAllServices();
-            request.setAttribute("service", list);
+            listService = d.getAllServices();
+            status = (status == null) ? "all" : status;
+            sortBy = (sortBy == null) ? "service_name" : sortBy;
+            pageSize_raw = (pageSize_raw ==null) ? "2": pageSize_raw;
+            try {
+                if (status.equals("all")) {
+                    listService = d.get_All_Service_Sorted(sortBy);
+                } else {
+                    listService = d.get_All_Service_By_Status_Sorted(sortBy, status);
+                }
+                pageSize = Integer.parseInt(pageSize_raw);
+                int totalService = listService.size();
+                int totalPage = totalService % pageSize == 0
+                        ? (totalService / pageSize) : ((totalService / pageSize) + 1);
+                int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+                int start = (page - 1) * pageSize;
+                int end = Math.min(page * pageSize, totalService);
+                List<Services> listServicePage = d.getServiceByPage(listService, start, end);
+                request.setAttribute("service", listServicePage);
+                request.setAttribute("sort", sortBy);
+                request.setAttribute("status", status);
+                request.setAttribute("type", type);
+                request.setAttribute("page", page);
+                request.setAttribute("totalPage", totalPage);
+                request.setAttribute("pageSize", pageSize);
+            } catch (Exception e) {
+            }
         } else if ("term".equals(type)) {
-            List<Term> list = d.getAllTerm();
-            request.setAttribute("term", list);
+            listTerm = d.getAllTerm();
+            status = (status == null) ? "all" : status;
+            sortBy = (sortBy == null) ? "term_name" : sortBy;
+            pageSize_raw = (pageSize_raw ==null) ? "2": pageSize_raw;
+            try {
+                if (status.equals("all")) {
+                    listTerm = d.get_All_Term_Sorted(sortBy);
+                } else {
+                    listTerm = d.get_All_Term_By_Status_Sorted(sortBy, status);
+                }
+                 pageSize = Integer.parseInt(pageSize_raw);
+                int totalTerm = listTerm.size();
+                int totalPage = totalTerm % pageSize == 0 ? (totalTerm / pageSize)
+                        : ((totalTerm / pageSize) + 1);
+                int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+                int start = (page - 1) * pageSize;
+                int end = Math.min(page * pageSize, totalTerm);
+                List<Term> listTermPage = d.getTermByPage(listTerm, start, end);
+                request.setAttribute("term", listTermPage);
+                request.setAttribute("sort", sortBy);
+                request.setAttribute("status", status);
+                request.setAttribute("type", type);
+                request.setAttribute("page", page);
+                request.setAttribute("totalPage", totalPage);
+                request.setAttribute("pageSize", pageSize);
+            } catch (Exception e) {
+            }
         }
-        
+
         request.getRequestDispatcher("service management.jsp").forward(request, response);
     }
 

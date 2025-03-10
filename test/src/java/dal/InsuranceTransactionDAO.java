@@ -37,8 +37,8 @@ public class InsuranceTransactionDAO extends DAO {
                 transaction.setNotes(rs.getString("notes"));
                 
                 // Set additional display fields
-                transaction.setFull_name(rs.getString("customer_name"));
-                transaction.setTransaction_type(rs.getString("policy_name") + " (ID: " + rs.getInt("policy_id") + ")");
+                transaction.setCustomerName(rs.getString("customer_name"));
+                transaction.setContractInfo(rs.getString("policy_name") + " (ID: " + rs.getInt("policy_id") + ")");
                 
                 transactions.add(transaction);
             }

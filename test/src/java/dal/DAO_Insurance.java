@@ -229,7 +229,8 @@ public class DAO_Insurance extends DBContext {
                 String phone_number = rs.getString("phone_number");
                 String address = rs.getString("address");
                 String status = rs.getString("status");
-                Insurance in = new Insurance(insurance_id, insurance_name, email, phone_number, address, status);
+                Insurance in = new Insurance(insurance_id, insurance_name,
+                        email, phone_number, address, status);
                 return in;
             }
         } catch (Exception e) {
@@ -295,15 +296,19 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_policy> getPolicyByInsuranceIDAndStatus(int insurance_id, String status) {
+    public List<Insurance_policy> getPolicyByInsuranceIDAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_policy> list = new ArrayList<>();
         String sql = "select * from insurance_policy\n"
-                + "where insurance_id = ? and status = ?";
+                + "where insurance_id = ? and status = ?\n"
+                + "order by policy_id\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int policy_id = rs.getInt("policy_id");
@@ -468,16 +473,19 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_policy> sortInsurancePolicyByCoverageAmountAndStatus(int insurance_id, String status) {
+    public List<Insurance_policy> sortInsurancePolicyByCoverageAmountAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_policy> list = new ArrayList<>();
         String sql = "select * from insurance_policy\n"
                 + "where insurance_id = ? and status = ?\n"
-                + "order by coverage_amount desc";
+                + "order by coverage_amount desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id); // Đặt giá trị cho tham số ?
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int policy_id = rs.getInt("policy_id");
@@ -498,15 +506,18 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_policy> sortInsurancePolicyByCoverageAmount(int insurance_id) {
+    public List<Insurance_policy> sortInsurancePolicyByCoverageAmount(int insurance_id, int offset, int next) {
         List<Insurance_policy> list = new ArrayList<>();
         String sql = "select * from insurance_policy\n"
                 + "where insurance_id = ?\n"
-                + "order by coverage_amount desc";
+                + "order by coverage_amount desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, insurance_id); // Đặt giá trị cho tham số ?
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int policy_id = rs.getInt("policy_id");
@@ -527,15 +538,18 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_policy> sortInsurancePolicyByCreatedAt(int insurance_id) {
+    public List<Insurance_policy> sortInsurancePolicyByCreatedAt(int insurance_id, int offset, int next) {
         List<Insurance_policy> list = new ArrayList<>();
         String sql = "select * from insurance_policy\n"
                 + "where insurance_id = ? \n"
-                + "order by created_at desc";
+                + "order by created_at desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, insurance_id); // Đặt giá trị cho tham số ?
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int policy_id = rs.getInt("policy_id");
@@ -556,16 +570,19 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_policy> sortInsurancePolicyByCreatedAtAndStatus(int insurance_id, String status) {
+    public List<Insurance_policy> sortInsurancePolicyByCreatedAtAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_policy> list = new ArrayList<>();
         String sql = "select * from insurance_policy\n"
                 + "where insurance_id = ? and status = ?\n"
-                + "order by created_at desc";
+                + "order by created_at desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, insurance_id); // Đặt giá trị cho tham số ?
+            pre.setInt(1, insurance_id);
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int policy_id = rs.getInt("policy_id");
@@ -584,14 +601,31 @@ public class DAO_Insurance extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public int getTotalInsurancePolicyByStatus(int insurance_id, String status) {
+        String sql = "select COUNT(*) from insurance_policy\n"
+                + "where insurance_id = ? and status = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setString(2, status);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
     }
 
     public int getTotalInsurancePolicy(int insurance_id) {
         String sql = "select COUNT(*) from insurance_policy\n"
-                + "where insurance_id = ?";
+                + "where insurance_id = ? ";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 return rs.getInt(1);
@@ -648,6 +682,7 @@ public class DAO_Insurance extends DBContext {
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
+                int duration = rs.getInt("duration");
                 String full_name = rs.getString("full_name");
                 String service_name = rs.getString("service_name");
                 insurance_id = rs.getInt("insurance_id");
@@ -657,7 +692,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -666,23 +701,28 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_contract> getAllInsuranceContractByInsuranceIdAndStatus(int insurance_id, String status) {
+    public List<Insurance_contract> getAllInsuranceContractByInsuranceIdAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_contract> list = new ArrayList<>();
         String sql = "select * from insurance_contract\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join insurance on insurance.insurance_id = insurance_policy.insurance_id\n"
                 + "join customer on insurance_contract.customer_id = customer.customer_id\n"
                 + "join services on insurance_contract.service_id = services.service_id\n"
-                + "where insurance.insurance_id = ? and insurance_contract.status = ?";
+                + "where insurance.insurance_id = ? and insurance_contract.status = ?\n"
+                + "order by insurance_contract.contract_id\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
                 String full_name = rs.getString("full_name");
+                int duration = rs.getInt("duration");
                 String service_name = rs.getString("service_name");
                 insurance_id = rs.getInt("insurance_id");
                 String policy_name = rs.getString("policy_name");
@@ -691,7 +731,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -711,13 +751,15 @@ public class DAO_Insurance extends DBContext {
             while (rs.next()) {
                 contract_id = rs.getInt("contract_id");
                 int service_id = rs.getInt("service_id");
+                int customer_id = rs.getInt("customer_id");
                 int policy_id = rs.getInt("policy_id");
+                int duration = rs.getInt("duration");
                 String payment_frequency = rs.getString("payment_frequency");
                 String status = rs.getString("status");
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(contract_id, contract_id, service_id, policy_id, start_date, end_date, created_at, payment_frequency, status);
+                Insurance_contract contract = new Insurance_contract(contract_id, customer_id, duration, service_id, policy_id,start_date, end_date, created_at, payment_frequency, status);
                 return contract;
             }
 
@@ -757,6 +799,7 @@ public class DAO_Insurance extends DBContext {
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
+                int duration = rs.getInt("duration");
                 full_name = rs.getString("full_name");
                 String service_name = rs.getString("service_name");
                 insurance_id = rs.getInt("insurance_id");
@@ -766,7 +809,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -775,7 +818,7 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_contract> sortInsuranceContractByStartDateAndStatus(int insurance_id, String status) {
+    public List<Insurance_contract> sortInsuranceContractByStartDateAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_contract> list = new ArrayList<>();
         String sql = "select * from insurance_contract\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
@@ -783,15 +826,19 @@ public class DAO_Insurance extends DBContext {
                 + "join customer on insurance_contract.customer_id = customer.customer_id\n"
                 + "join services on insurance_contract.service_id = services.service_id\n"
                 + "where insurance.insurance_id = ? and insurance_contract.status = ?\n"
-                + "order by insurance_contract.start_date desc";
+                + "order by insurance_contract.start_date desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
+                int duration = rs.getInt("duration");
                 String full_name = rs.getString("full_name");
                 String service_name = rs.getString("service_name");
                 insurance_id = rs.getInt("insurance_id");
@@ -801,7 +848,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -810,7 +857,7 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_contract> sortInsuranceContractByStartDate(int insurance_id) {
+    public List<Insurance_contract> sortInsuranceContractByStartDate(int insurance_id, int offset, int next) {
         List<Insurance_contract> list = new ArrayList<>();
         String sql = "select * from insurance_contract\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
@@ -818,14 +865,18 @@ public class DAO_Insurance extends DBContext {
                 + "join customer on insurance_contract.customer_id = customer.customer_id\n"
                 + "join services on insurance_contract.service_id = services.service_id\n"
                 + "where insurance.insurance_id = ?\n"
-                + "order by insurance_contract.start_date desc";
+                + "order by insurance_contract.start_date desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
+                int duration = rs.getInt("duration");
                 String full_name = rs.getString("full_name");
                 String service_name = rs.getString("service_name");
                 insurance_id = rs.getInt("insurance_id");
@@ -835,7 +886,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -844,7 +895,7 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_contract> sortInsuranceContractByCreatedAtAndStatus(int insurance_id, String status) {
+    public List<Insurance_contract> sortInsuranceContractByCreatedAtAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_contract> list = new ArrayList<>();
         String sql = "select * from insurance_contract\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
@@ -852,15 +903,19 @@ public class DAO_Insurance extends DBContext {
                 + "join customer on insurance_contract.customer_id = customer.customer_id\n"
                 + "join services on insurance_contract.service_id = services.service_id\n"
                 + "where insurance.insurance_id = ? and insurance_contract.status = ?\n"
-                + "order by insurance_contract.created_at desc";
+                + "order by insurance_contract.created_at desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
+                int duration = rs.getInt("duration");
                 String full_name = rs.getString("full_name");
                 String service_name = rs.getString("service_name");
                 insurance_id = rs.getInt("insurance_id");
@@ -870,7 +925,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -879,7 +934,7 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_contract> sortInsuranceContractByCreatedAt(int insurance_id) {
+    public List<Insurance_contract> sortInsuranceContractByCreatedAt(int insurance_id, int offset, int next) {
         List<Insurance_contract> list = new ArrayList<>();
         String sql = "select * from insurance_contract\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
@@ -887,14 +942,18 @@ public class DAO_Insurance extends DBContext {
                 + "join customer on insurance_contract.customer_id = customer.customer_id\n"
                 + "join services on insurance_contract.service_id = services.service_id\n"
                 + "where insurance.insurance_id = ?\n"
-                + "order by insurance_contract.created_at desc";
+                + "order by insurance_contract.created_at desc\n"
+                + "offset ? row fetch next ? row only";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
+                int duration = rs.getInt("duration");
                 String full_name = rs.getString("full_name");
                 String service_name = rs.getString("service_name");
                 insurance_id = rs.getInt("insurance_id");
@@ -904,7 +963,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -918,6 +977,23 @@ public class DAO_Insurance extends DBContext {
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join insurance on insurance.insurance_id = insurance_policy.insurance_id\n"
                 + "where insurance.insurance_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    public int getTotalInsuranceContractByStatus(int insurance_id, String status) {
+        String sql = "select COUNT(*) from insurance_contract\n"
+                + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
+                + "join insurance on insurance.insurance_id = insurance_policy.insurance_id\n"
+                + "where insurance.insurance_id = ? and insurance_contract.status = ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
@@ -949,6 +1025,7 @@ public class DAO_Insurance extends DBContext {
             while (rs.next()) {
                 int contract_id = rs.getInt("contract_id");
                 insurance_id = rs.getInt("insurance_id");
+                int duration = rs.getInt("duration");
                 String payment_frequency = rs.getString("payment_frequency");
                 String status = rs.getString("status");
                 String full_name = rs.getString("full_name");
@@ -957,7 +1034,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract c = new Insurance_contract(insurance_id, contract_id, start_date,
+                Insurance_contract c = new Insurance_contract(insurance_id, contract_id, duration,start_date,
                         end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(c);
             }
@@ -967,23 +1044,45 @@ public class DAO_Insurance extends DBContext {
     }
 
     public void insertInsuranceContract(Insurance_contract c) {
-        String sql = "INSERT INTO insurance_contract (customer_id, service_id, policy_id, start_date, end_date, payment_frequency, status)\n"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, c.getCustomer_id());
-            pre.setInt(2, c.getService_id());
-            pre.setInt(3, c.getPolicy_id());
-            pre.setDate(4, new java.sql.Date(c.getStart_date().getTime()));
-            pre.setDate(5, new java.sql.Date(c.getEnd_date().getTime()));
-            pre.setString(6, c.getPayment_frequency());
-            pre.setString(7, c.getStatus());
-            pre.executeUpdate();
-            System.out.println("Add successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    String sql = "INSERT INTO insurance_contract (customer_id, service_id, policy_id, duration, start_date, end_date, payment_frequency, status) "
+               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    try  {
+        PreparedStatement pre = con.prepareStatement(sql);
+        pre.setInt(1, c.getCustomer_id());
+        pre.setInt(2, c.getService_id());
+        pre.setInt(3, c.getPolicy_id());
+        pre.setInt(4, c.getDuration());
+        pre.setDate(5, new java.sql.Date(c.getStart_date().getTime()));
+        pre.setDate(6, new java.sql.Date(c.getEnd_date().getTime()));
+        pre.setString(7, c.getPayment_frequency());
+        pre.setString(8, c.getStatus());
+        pre.executeUpdate();
+        System.out.println("Add insurance policy successfully!");
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+
+    
+    public int getLastInsertedContractId(int customer_id) {
+    String sql = "SELECT top 1 contract_id FROM insurance_contract WHERE customer_id = ? ORDER BY contract_id DESC";
+
+    try {
+        PreparedStatement pre = con.prepareStatement(sql);
+       pre.setInt(1, customer_id);
+        ResultSet rs = pre.executeQuery();
+
+        if (rs.next()) {
+            int contract_id = rs.getInt("contract_id");         
+            return contract_id;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
+
 
     // INSURANCE TRANSACTION
     public List<Insurance_transactions> getInsuranceTransactionByInsuranceID(int insurance_id) {
@@ -992,7 +1091,7 @@ public class DAO_Insurance extends DBContext {
                 + "join insurance_contract on insurance_transactions.contract_id = insurance_contract.contract_id\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join customer on insurance_transactions.customer_id = customer.customer_id\n"
-                + "where insurance_id = ?";
+                + "where insurance_id = ?\n";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
@@ -1015,17 +1114,21 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_transactions> getInsuranceTransactionByInsuranceIDAndTransactionType(int insurance_id, String transaction_type) {
+    public List<Insurance_transactions> getInsuranceTransactionByInsuranceIDAndTransactionType(int insurance_id, String transaction_type, int offset, int next) {
         List<Insurance_transactions> list = new ArrayList<>();
         String sql = "select * from insurance_transactions\n"
                 + "join insurance_contract on insurance_transactions.contract_id = insurance_contract.contract_id\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join customer on insurance_transactions.customer_id = customer.customer_id\n"
-                + "where insurance_id = ? and insurance_transactions.transaction_type = ?";
+                + "where insurance_id = ? and insurance_transactions.transaction_type = ?\n"
+                + "order by transaction_id\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, transaction_type);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1073,17 +1176,20 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_transactions> sortInsuranceTransactionByTransactionDate(int insurance_id) {
+    public List<Insurance_transactions> sortInsuranceTransactionByTransactionDate(int insurance_id, int offset, int next) {
         List<Insurance_transactions> list = new ArrayList<>();
         String sql = "select * from insurance_transactions\n"
                 + "join insurance_contract on insurance_transactions.contract_id = insurance_contract.contract_id\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join customer on insurance_transactions.customer_id = customer.customer_id\n"
                 + "where insurance_id = ?\n"
-                + "order by insurance_transactions.transaction_date desc";
+                + "order by insurance_transactions.transaction_date desc\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1102,18 +1208,22 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_transactions> sortInsuranceTransactionByTransactionDateAndTransactionType(int insurance_id, String transaction_type) {
+    public List<Insurance_transactions> sortInsuranceTransactionByTransactionDateAndTransactionType(int insurance_id, String transaction_type, int offset, int next) {
         List<Insurance_transactions> list = new ArrayList<>();
         String sql = "select * from insurance_transactions\n"
                 + "join insurance_contract on insurance_transactions.contract_id = insurance_contract.contract_id\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join customer on insurance_transactions.customer_id = customer.customer_id\n"
                 + "where insurance_id = ? and insurance_transactions.transaction_type = ?\n"
-                + "order by insurance_transactions.transaction_date desc";
+                + "order by insurance_transactions.transaction_date desc\n"
+                + "offset ? row fetch next ? row only";
+
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, transaction_type);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1132,17 +1242,20 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_transactions> sortInsuranceTransactionByAmount(int insurance_id) {
+    public List<Insurance_transactions> sortInsuranceTransactionByAmount(int insurance_id, int offset, int next) {
         List<Insurance_transactions> list = new ArrayList<>();
         String sql = "select * from insurance_transactions\n"
                 + "join insurance_contract on insurance_transactions.contract_id = insurance_contract.contract_id\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join customer on insurance_transactions.customer_id = customer.customer_id\n"
                 + "where insurance_id = ?\n"
-                + "order by insurance_transactions.amount desc";
+                + "order by insurance_transactions.amount desc\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1161,18 +1274,21 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_transactions> sortInsuranceTransactionByAmountAndTransactionType(int insurance_id, String transaction_type) {
+    public List<Insurance_transactions> sortInsuranceTransactionByAmountAndTransactionType(int insurance_id, String transaction_type, int offset, int next) {
         List<Insurance_transactions> list = new ArrayList<>();
         String sql = "select * from insurance_transactions\n"
                 + "join insurance_contract on insurance_transactions.contract_id = insurance_contract.contract_id\n"
                 + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
                 + "join customer on insurance_transactions.customer_id = customer.customer_id\n"
                 + "where insurance_id = ? and insurance_transactions.transaction_type = ?\n"
-                + "order by insurance_transactions.amount desc";
+                + "order by insurance_transactions.amount desc\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, transaction_type);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1199,6 +1315,24 @@ public class DAO_Insurance extends DBContext {
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    public int getTotalInsuranceTransactionByType(int insurance_id, String transaction_type) {
+        String sql = "select COUNT(*) from insurance_transactions\n"
+                + "join insurance_contract on insurance_transactions.contract_id = insurance_contract.contract_id\n"
+                + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_id = ? and transaction_type = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setString(2, transaction_type);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 return rs.getInt(1);
@@ -1241,6 +1375,23 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
+    public void insertInsuranceTransaction(Insurance_transactions t) {
+        String sql = "insert into insurance_transactions(contract_id,customer_id,amount,transaction_type,notes)\n"
+                + "VALUES(?,?,?,?,?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, t.getContract_id());
+            pre.setInt(2, t.getCustomer_id());
+            pre.setDouble(3, t.getAmount());
+            pre.setString(4, t.getTransaction_type());
+            pre.setString(5, t.getNotes());
+            pre.executeUpdate();
+            System.out.println("Add successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // INSURANCE CUSTOMER
     public List<Customer> getInsuranceCustomerByInsuranceId(int insurance_id) {
         List<Customer> list = new ArrayList<>();
@@ -1253,7 +1404,6 @@ public class DAO_Insurance extends DBContext {
             pre.setInt(1, insurance_id);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
-
                 insurance_id = rs.getInt("insurance_id");
                 int customer_id = rs.getInt("customer_id");
                 String full_name = rs.getString("full_name");
@@ -1304,7 +1454,7 @@ public class DAO_Insurance extends DBContext {
 
     public List<Customer> filterInsuranceCustomerByGender(int insurance_id, String gender) {
         List<Customer> list = new ArrayList<>();
-        String sql = "select * from customer\n"
+        String sql = "select distinct customer.*, insurance_contract_detail.insurance_id from customer\n"
                 + "join insurance_contract on customer.customer_id = insurance_contract.customer_id\n"
                 + "join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id\n"
                 + "where insurance_id = ? and gender = ?";
@@ -1340,6 +1490,24 @@ public class DAO_Insurance extends DBContext {
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    public int getTotalInsuranceCustomerByGender(int insurance_id, String gender) {
+        String sql = "select COUNT(*) from customer\n"
+                + "join insurance_contract on customer.customer_id = insurance_contract.customer_id\n"
+                + "join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id\n"
+                + "where insurance_id = ? and gender = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setString(2, gender);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 return rs.getInt(1);
@@ -1586,15 +1754,87 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_term> sortInsuranceTermByStartDate(int insurance_id) {
+    public List<Insurance_term> getInsuranceTermByInsuranceIDAndStatus(int insurance_id, int offset, int next, String status) {
+        List<Insurance_term> list = new ArrayList<>();
+        String sql = "select * from insurance_terms\n"
+                + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_terms.insurance_id = ? and insurance_terms.status = ? \n"
+                + "order by term_id\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int term_id = rs.getInt("term_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String term_name = rs.getString("term_name");
+                String term_description = rs.getString("term_description");
+                status = rs.getString("status");
+                String policy_name = rs.getString("policy_name");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                Date created_at = rs.getDate("created_at");
+                Insurance_term term = new Insurance_term(term_id, insurance_id, policy_id,
+                        term_name, term_description, status, policy_name, start_date, end_date, created_at);
+                list.add(term);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Insurance_term> sortInsuranceTermByInsuranceID(int insurance_id, int offset, int next) {
         List<Insurance_term> list = new ArrayList<>();
         String sql = "select * from insurance_terms\n"
                 + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
                 + "where insurance_terms.insurance_id = ?\n"
-                + "order by start_date";
+                + "order by term_id\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int term_id = rs.getInt("term_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String term_name = rs.getString("term_name");
+                String term_description = rs.getString("term_description");
+                String status = rs.getString("status");
+                String policy_name = rs.getString("policy_name");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                Date created_at = rs.getDate("created_at");
+                Insurance_term term = new Insurance_term(term_id, insurance_id, policy_id,
+                        term_name, term_description, status, policy_name, start_date, end_date, created_at);
+                list.add(term);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Insurance_term> sortInsuranceTermByStartDate(int insurance_id, int offset, int next) {
+        List<Insurance_term> list = new ArrayList<>();
+        String sql = "select * from insurance_terms\n"
+                + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_terms.insurance_id = ?\n"
+                + "order by start_date\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1616,16 +1856,19 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_term> sortInsuranceTermByStartDateAndStatus(int insurance_id, String status) {
+    public List<Insurance_term> sortInsuranceTermByStartDateAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_term> list = new ArrayList<>();
         String sql = "select * from insurance_terms\n"
                 + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
                 + "where insurance_terms.insurance_id = ? and insurance_terms.status = ?\n"
-                + "order by start_date";
+                + "order by start_date\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1647,15 +1890,18 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_term> sortInsuranceTermByCreatedAt(int insurance_id) {
+    public List<Insurance_term> sortInsuranceTermByCreatedAt(int insurance_id, int offset, int next) {
         List<Insurance_term> list = new ArrayList<>();
         String sql = "select * from insurance_terms\n"
                 + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
                 + "where insurance_terms.insurance_id = ?\n"
-                + "order by insurance_terms.created_at";
+                + "order by insurance_terms.created_at\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1677,16 +1923,19 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public List<Insurance_term> sortInsuranceTermByCreatedAtAndStatus(int insurance_id, String status) {
+    public List<Insurance_term> sortInsuranceTermByCreatedAtAndStatus(int insurance_id, String status, int offset, int next) {
         List<Insurance_term> list = new ArrayList<>();
         String sql = "select * from insurance_terms\n"
                 + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
                 + "where insurance_terms.insurance_id = ? and insurance_terms.status = ?\n"
-                + "order by insurance_terms.created_at";
+                + "order by insurance_terms.created_at\n"
+                + "offset ? row fetch next ? row only";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
             pre.setString(2, status);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 insurance_id = rs.getInt("insurance_id");
@@ -1706,6 +1955,23 @@ public class DAO_Insurance extends DBContext {
         } catch (Exception e) {
         }
         return list;
+    }
+
+    public int getTotalInsuranceTermByStatus(int insurance_id, String status) {
+        String sql = "select COUNT(*) from insurance_terms\n"
+                + "join insurance_policy on insurance_terms.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_terms.insurance_id = ? and insurance_terms.status = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setString(2, status);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
     }
 
     public int getTotalInsuranceTerm(int insurance_id) {
@@ -1857,12 +2123,9 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
-    public Insurance_contract_detail getInsuranceContractDetailByContractid(int contract_id,int insurance_id) {
+    public Insurance_contract_detail getInsuranceContractDetailByContractid(int contract_id, int insurance_id) {
         String sql = "select * from  insurance_contract_detail\n"
                 + "join insurance_contract  on insurance_contract_detail.contract_id = insurance_contract.contract_id\n"
-                + "join loan on insurance_contract.customer_id = loan.customer_id\n"
-                + "join service_terms on loan.serviceTerm_id = service_terms.serviceTerm_id\n"
-                + "join term on service_terms.term_id = term.term_id\n"
                 + "where insurance_contract_detail.contract_id = ? and insurance_contract_detail.insurance_id = ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
@@ -1871,7 +2134,7 @@ public class DAO_Insurance extends DBContext {
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 contract_id = rs.getInt("contract_id");
-                 insurance_id = rs.getInt("insurance_id");
+                insurance_id = rs.getInt("insurance_id");
                 int customer_id = rs.getInt("customer_id");
                 int service_id = rs.getInt("service_id");
                 int policy_id = rs.getInt("policy_id");
@@ -1913,45 +2176,24 @@ public class DAO_Insurance extends DBContext {
 
     public static void main(String[] args) {
         DAO_Insurance d = new DAO_Insurance();
+        int customer_id = 1;  // Thay bằng ID hợp lệ trong DB
+            int service_id = 0;   // Thay bằng ID hợp lệ
+            int policy_id = 3;    // Thay bằng ID hợp lệ
+            int duration = 12;    // 12 tháng
+            Date start_date = Date.valueOf("2025-02-23");
+            Date end_date = Date.valueOf("2026-02-23");
+            String payment_frequency = "monthly";  // Hoặc "yearly"
+            String status = "active";
 
-//        List<Insurance_contract_detail> c = d.getInsuranceContractDetailByCustomerIDAndInsuranceID(1, 1);
-//        for (Insurance_contract_detail insurance_contract_detail : c) {
-//            System.out.println(c);
-//        }
-        Insurance_contract_detail c = d.getInsuranceContractDetailByContractid(5, 1);
-        System.out.println(c);
+             
+            Insurance_contract ic = new Insurance_contract(customer_id, service_id, policy_id, 
+                    duration, start_date, end_date, payment_frequency, status);
+            d.insertInsuranceContract(ic);
+            int count = d.getLastInsertedContractId(customer_id);
+            Insurance_contract icd = d.getInsuranceContractById(count);
+            System.out.println(ic);
+            System.out.println(count);
+            System.out.println(icd);
 
-        //        List<Customer> c = d.getInsuranceCustomerByInsuranceId(2);
-//        System.out.println(c);
-//        int customer_id = 3;
-//        int service_id = 3;
-//        int policy_id = 4;
-//        int insurance_id = 2;
-//        int contract_id = 22;
-//        double cover = 50000;
-//        double pre = 10000;
-//        double paid = 1000;
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        java.util.Date utilStartDate = null;
-//        java.util.Date utilEndDate = null;
-//
-//        try {
-//            utilStartDate = sdf.parse("2025-03-01");
-//            utilEndDate = sdf.parse("2026-03-01");
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Ensure dates are parsed before converting
-//        if (utilStartDate != null && utilEndDate != null) {
-//            // Convert java.util.Date to java.sql.Date
-//            Date start = new Date(utilStartDate.getTime());
-//            Date end = new Date(utilEndDate.getTime());
-//            String pay = "monthly";
-//            String status = "active";
-//            Insurance_contract_detail con = new Insurance_contract_detail(contract_id, insurance_id, cover, pre, paid, utilStartDate, utilEndDate);
-//            d.insertContractDetail(con);
-//
-//        }
-    }
+    }   
 }

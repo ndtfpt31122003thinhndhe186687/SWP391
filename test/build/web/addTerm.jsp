@@ -111,6 +111,66 @@
                 margin-top: 5px;
                 display: none;
             }
+            /* Căn giữa nội dung */
+            .form-group-status {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;            
+            }
+
+            .radio-group {
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
+
+            /* Ẩn radio button mặc định */
+            .radio-input {
+                display: none;
+            }
+
+            /* Tạo nút toggle */
+            .radio-label {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 70px;
+                height: 35px;
+                border-radius: 20px;
+                background-color: #ccc;
+                cursor: pointer;
+                transition: background-color 0.3s ease-in-out;
+            }
+
+            .radio-label::before {
+                content: "";
+                position: absolute;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background-color: white;
+                top: 50%;
+                left: 3px;
+                transform: translateY(-50%);
+                transition: all 0.3s ease-in-out;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Khi radio được chọn */
+            .radio-input:checked + .radio-label {
+                background-color: #007bff;
+            }
+
+            .radio-input:checked + .radio-label::before {
+                left: calc(100% - 33px);
+            }
+
+            /* Màu đỏ khi chọn inactive */
+            .radio-input[value="inactive"]:checked + .radio-label {
+                background-color: #dc3545;
+            }
         </style>
     </head>
     <body>
@@ -140,13 +200,15 @@
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" required>
-                        <option value="">Select status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
+                <div class="form-group-status">
+                    <label>Status:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="active" name="status" value="active" class="radio-input" required>
+                        <label for="active" class="radio-label"></label>
+
+                        <input type="radio" id="inactive" name="status" value="inactive" class="radio-input" required>
+                        <label for="inactive" class="radio-label"></label>
+                    </div>
                 </div>
                 
                 <button type="submit">Add New Term</button>

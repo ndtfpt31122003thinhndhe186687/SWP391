@@ -84,7 +84,7 @@
     </head>
     <body>
          <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Chi Tiết Chính Sách Của Bảo Hiểm ${account.insurance_name}</h1>
+                <h1 class="h2 mb-0 text-danger">Chi Tiết Chính Sách Của Bảo Hiểm </h1>
             </div>
 
             <!-- Tabs choose staff -->

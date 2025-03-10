@@ -64,14 +64,13 @@ public class UpdateRequestCustomerServlet extends HttpServlet {
 
         try (Connection conn = db.getConnection()) {
             // Kiểm tra xem yêu cầu có status là pending hay không
-            String sql = "SELECT status FROM request WHERE customer_id = ? AND status = 'pending'";
+            String sql = "SELECT status FROM loan WHERE customer_id = ? AND status = 'pending'";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, customerId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
                 request.setAttribute("customer_id", customerId);
-                request.getRequestDispatcher("updaterequest.jsp").forward(request, response);
             } else {
                 // Nếu không tìm thấy yêu cầu pending thì chuyển hướng về trang danh sách
                 response.sendRedirect("customerrequest");
@@ -98,7 +97,7 @@ public class UpdateRequestCustomerServlet extends HttpServlet {
     DBContext db = new DBContext();
 
     // Cập nhật chỉ khi status là approved hoặc rejected
-    String sql = "UPDATE request SET status = ? WHERE customer_id = ? AND status = 'pending'";
+    String sql = "UPDATE loan SET status = ? WHERE customer_id = ? AND status = 'pending'";
     try (Connection conn = db.getConnection()) {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, status);

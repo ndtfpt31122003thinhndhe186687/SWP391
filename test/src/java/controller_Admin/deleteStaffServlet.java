@@ -63,7 +63,7 @@ public class deleteStaffServlet extends HttpServlet {
             id = Integer.parseInt(id_raw);
             DAO_Admin d = new DAO_Admin();
             d.deleteBanker(id);
-            response.sendRedirect("staff_management");
+            response.sendRedirect("staff_management?status=all&sort=full_name&type=&page=1&pageSize=2");
         } catch (Exception e) {
         }
     } 

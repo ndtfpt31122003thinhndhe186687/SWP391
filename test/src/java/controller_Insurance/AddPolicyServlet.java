@@ -95,50 +95,50 @@ public class AddPolicyServlet extends HttpServlet {
         String coverage_amount_raw = request.getParameter("coverage_amount");
         String premium_amount_raw = request.getParameter("premium_amount");
         String status = request.getParameter("status");
-         // Lấy file ảnh từ request
+
     Part fileImage = request.getPart("file");
     String fileName = fileImage.getSubmittedFileName();
 
-    // Kiểm tra nếu file hợp lệ (.jpg, .jpeg, .png)
+
     if (fileName != null && !fileName.isEmpty()) {
         String fileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
         if (!fileExt.equals(".jpg") && !fileExt.equals(".jpeg") && !fileExt.equals(".png")) {
-            request.setAttribute("error", "Only JPG, JPEG, PNG files are allowed!");
+            request.setAttribute("error", "Chỉ JPG, JPEG, PNG được chấp thuận!");
             request.setAttribute("listPolicy", list);
             request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
             return;
         }
 
-        // Định nghĩa đường dẫn lưu file
-        String uploadDir = getServletContext().getRealPath("") + "images/InsurancePolicy";
+
+        String uploadDir = getServletContext().getRealPath("") + "/InsurancePolicy";
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
-        // Lưu ảnh vào thư mục server
+
         String filePath = uploadDir + File.separator + fileName;
         fileImage.write(filePath);
     }
 
-    // Lưu đường dẫn ảnh vào database
-    String image = "images/InsurancePolicy/" + fileName;
+
+    String image = fileName;
         coverage_amount_raw = coverage_amount_raw.replaceAll(",", "");
         premium_amount_raw = premium_amount_raw.replaceAll(",", "");
         double coverage_amount, premium_amount;
         
         
-        policy_name = policy_name.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+        
         description = description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
         if (policy_name.trim().isEmpty()) {
-            request.setAttribute("error", "Policy Name must be not null");
+            request.setAttribute("error", "Tên không được để trống");
             request.setAttribute("listPolicy", list);
             request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
             return;
         }
 
         if (description.trim().isEmpty()) {
-            request.setAttribute("error", "Description must be not null");
+            request.setAttribute("error", "Mô tả không được để trống");
             request.setAttribute("listPolicy", list);
             request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
             return;
@@ -148,13 +148,13 @@ public class AddPolicyServlet extends HttpServlet {
             coverage_amount = Double.parseDouble(coverage_amount_raw);
             premium_amount = Double.parseDouble(premium_amount_raw);
             if (coverage_amount <= 0 || premium_amount <= 0) {
-                request.setAttribute("error", "Coverage Amount and Premium Amount must be greater than 0!");
+                request.setAttribute("error", "Tiền được nhận và tiền cần đóng phải lớn hơn 0!");
                 request.setAttribute("listPolicy", list);
                 request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
                 return;
             }
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Coverage Amount and Premium Amount is number");
+            request.setAttribute("error", "Tiền được nhận và tiền cần đóng phải là số thực");
             request.setAttribute("listPolicy", list);
             request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
             return;
@@ -164,15 +164,15 @@ public class AddPolicyServlet extends HttpServlet {
             policy_name = policy_name.trim().replaceAll("\\s+", " ");
             Insurance_policy in = dao.getPolicyByName(policy_name);
             if (in != null) {
-                request.setAttribute("error", "policy name " + policy_name + " existed!");
+                request.setAttribute("error", "Tên " + policy_name + " đã tồn tại!");
                 request.setAttribute("listPolicy", list);
                 request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
             } else {
                 Insurance_policy p = new Insurance_policy(i.getInsurance_id(), policy_name, description, status, coverage_amount, premium_amount,image);
                 dao.insertPolicy(p);
                 session.setAttribute("showSuccessModal", true);
-                session.setAttribute("successMessage", "Policy '" + policy_name + "' added successfully!");
-                String url = "paginationInsurancePolicy?quantity=5";
+                session.setAttribute("successMessage", "Chính sách '" + policy_name + "' đã được thêm thành công!");
+                String url = "sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5";
                 response.sendRedirect(url);
             }
         } catch (Exception e) {

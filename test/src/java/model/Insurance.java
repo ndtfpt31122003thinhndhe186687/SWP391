@@ -63,10 +63,9 @@ public class Insurance {
         this.address = address;
         this.status = status;
     }
-
-
-
     
+    
+
 
 
     public int getPolicy_id() {
@@ -149,9 +148,6 @@ public class Insurance {
         this.status = status;
     }
 
-
-
-   
     @Override
     public String toString() {
         return "Insurance{" + "insurance_id=" + insurance_id + ", role_id=" + role_id + ", policy_id=" + policy_id + ", username=" + username + ", password=" + password + ", insurance_name=" + insurance_name + ", email=" + email + ", phone_number=" + phone_number + ", address=" + address + ", status=" + status + '}';

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller_Banker;
 
 import dal.DBContext;
@@ -11,117 +7,133 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
 
-/**
- *
- * @author AD
- */
 @WebServlet(name = "CustomerRequestServlet", urlPatterns = {"/customerrequest"})
 public class CustomerRequestServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CustomerRequestServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CustomerRequestServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String searchQuery = request.getParameter("search"); // Lấy giá trị tìm kiếm từ request
+        // Get search value from request (if any)
+        String searchQuery = request.getParameter("search");
+        if (searchQuery == null) {
+            searchQuery = "";
+        } else {
+            // Trim whitespace and replace multiple spaces with a single space
+            searchQuery = searchQuery.trim().replaceAll("\\s+", " ");
+        }
+        
+        // Get card type from request (if any)
+        String cardType = request.getParameter("card_type");
+        if (cardType == null) {
+            cardType = "";
+        }
+        
+        // Get page number from request, default is 1
+        int page = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+        int pageSize = 10;
+        int offset = (page - 1) * pageSize;
+        
         DBContext db = new DBContext();
         List<Customer> customers = new ArrayList<>();
-
-        // Câu truy vấn chỉ lấy các khách hàng có yêu cầu với status là 'pending'
-        String sql = "SELECT c.customer_id, c.full_name FROM customer c " +
-                     "JOIN request r ON c.customer_id = r.customer_id " +
-                     "WHERE r.status = 'pending'";
-
-        // Nếu có tìm kiếm theo tên hoặc ID
-        if (searchQuery != null && !searchQuery.isEmpty()) {
-            sql += " AND (c.full_name LIKE ? OR c.customer_id = ?)";
+        int totalRecords = 0;
+        
+        // Construct base SQL query
+        String baseSql = "SELECT c.customer_id, c.full_name, c.card_type " +
+                         "FROM customer c " +
+                         "JOIN loan r ON c.customer_id = r.customer_id " +
+                         "WHERE r.status = 'pending' ";
+        
+        // Add search condition if applicable
+        boolean hasSearch = !searchQuery.isEmpty();
+        if (hasSearch) {
+            baseSql += "AND (c.full_name LIKE ? OR CAST(c.customer_id AS VARCHAR(20)) = ?) ";
         }
-
+        
+        // Add card type filter if applicable
+        boolean hasCardTypeFilter = !cardType.isEmpty();
+        if (hasCardTypeFilter) {
+            baseSql += "AND LOWER(c.card_type) = LOWER(?) ";
+        }
+        
+        // Add ORDER BY and pagination (OFFSET-FETCH for SQL Server)
+        String sql = baseSql + "ORDER BY c.customer_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        // Query to count total records (without pagination)
+        String countSql = "SELECT COUNT(*) AS total FROM (" + baseSql + ") AS filtered_results";
+        
         try (Connection conn = db.getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-
-            if (searchQuery != null && !searchQuery.isEmpty()) {
-                pstmt.setString(1, "%" + searchQuery + "%");
-                pstmt.setString(2, searchQuery);
+            // Get total record count
+            try (PreparedStatement countStmt = conn.prepareStatement(countSql)) {
+                int idx = 1;
+                if (hasSearch) {
+                    String pattern = "%" + searchQuery + "%";
+                    countStmt.setString(idx++, pattern);
+                    countStmt.setString(idx++, searchQuery);
+                }
+                if (hasCardTypeFilter) {
+                    countStmt.setString(idx++, cardType.toLowerCase());
+                }
+                try (ResultSet rsCount = countStmt.executeQuery()) {
+                    if (rsCount.next()) {
+                        totalRecords = rsCount.getInt("total");
+                    }
+                }
             }
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                Customer customer = new Customer();
-                customer.setCustomer_id(rs.getInt("customer_id"));
-                customer.setFull_name(rs.getString("full_name"));
-                customers.add(customer);
+            
+            // Get customer list with pagination
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                int idx = 1;
+                if (hasSearch) {
+                    String pattern = "%" + searchQuery + "%";
+                    pstmt.setString(idx++, pattern);
+                    pstmt.setString(idx++, searchQuery);
+                }
+                if (hasCardTypeFilter) {
+                    pstmt.setString(idx++, cardType.toLowerCase());
+                }
+                pstmt.setInt(idx++, offset);
+                pstmt.setInt(idx++, pageSize);
+                
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        Customer customer = new Customer();
+                        customer.setCustomer_id(rs.getInt("customer_id"));
+                        customer.setFull_name(rs.getString("full_name"));
+                        customer.setCard_type(rs.getString("card_type"));
+                        customers.add(customer);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
+        int totalPages = (int) Math.ceil(totalRecords / (double) pageSize);
+        
         request.setAttribute("listcustomer", customers);
-        request.setAttribute("search", searchQuery); // Để hiển thị lại kết quả tìm kiếm
+        request.setAttribute("search", searchQuery);
+        request.setAttribute("card_type", cardType);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("requestcustomer.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        doGet(request, response);
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

@@ -1,5 +1,6 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html lang="en">
     <head>
@@ -22,7 +23,122 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+        <style>
+            .filter-sort-bar {
+                margin-bottom: 20px;
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
+            .filter-sort-bar label {
+                font-weight: bold;
+                color: #333;
+            }
+            .filter-dropdown {
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                font-size: 14px;
+            }
+            .filter-dropdown:focus {
+                border-color: #d32f2f;
+                outline: none;
+            }
+            .filter-dropdown:hover {
+                background-color: #f0f0f0;
+            }
+            .filter-dropdown option:hover {
+                background-color: #d32f2f;
+                color: white;
+            }
+            .table {
+                border-collapse: collapse;
+                width: 100%;
+                background-color: #fff;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            }
 
+            .table thead {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .table thead th {
+                padding: 12px;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            .table tbody tr {
+                transition: background 0.3s;
+            }
+
+            .table tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            .table td, .table th {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .badge {
+                font-size: 14px;
+                padding: 5px 10px;
+                border-radius: 12px;
+            }
+
+            .bg-success {
+                background-color: #28a745 !important;
+            }
+
+            .bg-danger {
+                background-color: #dc3545 !important;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 14px;
+                border-radius: 5px;
+                transition: 0.3s;
+            }
+
+            .btn:hover {
+                opacity: 0.8;
+            }
+
+            .pagination {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .pagination a {
+                text-decoration: none;
+                padding: 6px 12px;
+                border: 1px solid #007bff;
+                border-radius: 5px;
+                color: #007bff;
+                transition: 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .current-page {
+                padding: 6px 12px;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: white;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
@@ -105,12 +221,12 @@
 
                             <div class="d-flex flex-column">
                                 <c:if test="${sessionScope.account.role_id==6}">
-                                <small>${sessionScope.account.customer_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.customer_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if>
                                 <c:if test="${sessionScope.account.role_id==1}">
-                                <small>${sessionScope.account.staff_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.staff_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if> 
                             </div>
                         </div>
@@ -146,19 +262,19 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="staff_management">
+                        <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Staff Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="service_management">
+                        <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
                             Service Management
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link active" href="transaction_management">
                             <i class=" me-2"></i>
@@ -172,7 +288,15 @@
                             Statistic Management
                         </a>
                     </li>
-                    
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
+                            <i class="me-2"></i>
+                            Service Term Management
+                        </a>
+                    </li>
+
+
                 </ul>
             </div>
         </nav>
@@ -181,14 +305,40 @@
             <div class="title-group mb-3">
                 <h1 class="h2 mb-0 text-danger">Transaction Management</h1>
             </div>
-            
+
+            <input type="hidden" name ="page" value="1"> 
+
+            <div class="filter-sort-bar">
+                <label for="filterStatus">Filter by Status:</label>
+                <select id="filterStatus" class="filter-dropdown" onchange="filterTransaction()">
+                    <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
+                    <option value="deposit" ${requestScope.status == 'deposit' ? 'selected' : ''}>Deposit</option>
+                    <option value="withdrawal" ${requestScope.status == 'withdrawal' ? 'selected' : ''}>Withdrawal</option>                  
+                </select>
+
+                <label for="sortTransaction">Sort by:</label>
+                <select id="sortTransaction" class="filter-dropdown">
+                    <option value="full_name" ${requestScope.sort == 'full_name' ? 'selected' : ''}>Customer Name</option>
+                    <option value="service_name" ${requestScope.sort == 'service_name' ? 'selected' : ''}>Service name</option>
+                    <option value="amount" ${requestScope.sort == 'amount' ? 'selected' : ''}>Amount</option>
+                    <option value="transaction_date" ${requestScope.sort == 'transaction_date' ? 'selected' : ''}>Date</option>
+                </select>
+
+                <label for="selectPage">Show:</label>
+                <select id="selectPage" class="filter-dropdown" onchange="selectPage()">
+                    <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
+                    <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
+                    <option value="20" ${requestScope.pageSize == '20' ? 'selected' : ''}>20</option>
+                </select>
+            </div>  
+
             <div class="search-bar">
                 <form action="searchTransaction">
                     <input type="text" placeholder="Search" name="searchName" >                  
                     <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
                 </form>
             </div>    
-            
+
             <!-- View list transaction -->
             <div class="mt-3">
                 <table class="table table-bordered">
@@ -207,19 +357,71 @@
                             <td>${b.transaction_id}</td>
                             <td>${b.customer_name}</td>
                             <td>${b.service_name}</td>
-                            <td>${b.amount} $</td>
-                            <td>${b.transaction_date}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${b.transaction_type == 'deposit'}">
+                                        <span style="color: green;">
+                                            +<fmt:formatNumber value="${b.amount}" type="number" groupingUsed="true" /> $
+                                        </span>
+                                    </c:when>
+                                    <c:when test="${b.transaction_type == 'withdrawal'}">
+                                        <span style="color: red;">
+                                            -<fmt:formatNumber value="${b.amount}" type="number" groupingUsed="true" /> $
+                                        </span>
+                                    </c:when>                                   
+                                </c:choose>
+                            </td>
+                            <td>
+                                <fmt:formatDate value="${b.transaction_date}" pattern="dd/MM/yyyy"/>
+                            </td>
                             <td>${b.transaction_type}</td>                          
                         </tr>
                     </c:forEach>
                 </table>
             </div>
+
+            <div class="pagination">
+                <c:forEach begin="1" end="${totalPage}" var="i">
+                    <c:choose>
+                        <c:when test="${i == page}">
+                            <span class="current-page">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="transaction_management?&status=${status}&sort=${sort}&page=${i}&pageSize=${pageSize}">${i}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
         </main>
 
-        
+        <script type="text/javascript">
+            function selectPage() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortTransaction").value;
+                var pageSize = document.getElementById("selectPage").value;
+                window.location.href = "transaction_management?status=" + status + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+            }
 
-                       
-        </main>
+            function filterTransaction() {
+                var status = document.getElementById("filterStatus").value;
+                var sort = document.getElementById("sortTransaction").value;
+                var pageSize = document.getElementById("selectPage").value;
+                window.location.href = "transaction_management?status=" + status + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+            }
+
+            function sortTransaction() {
+                var sort = document.getElementById("sortTransaction").value;
+                var status = document.getElementById("filterStatus").value;
+                var pageSize = document.getElementById("selectPage").value;
+                window.location.href = "transaction_management?status=" + status + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+            }
+
+            document.getElementById("sortTransaction").onchange = sortTransaction;
+        </script>            
+
+
+
+
 
     </div>
 </div>

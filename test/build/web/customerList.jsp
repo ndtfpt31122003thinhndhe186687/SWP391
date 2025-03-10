@@ -1,5 +1,5 @@
 <!doctype html>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html lang="en">
     <head>
@@ -45,7 +45,14 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="customerrequest">
                                     <i class="bi-person-plus me-2"></i>
-                                    Customer Requests
+                                    Customer Loan Requests
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="requestsaving">
+                                    <i class="bi-piggy-bank me-2"></i>
+                                    Customer Saving Requests
                                 </a>
                             </li>
                         </ul>
@@ -59,9 +66,20 @@
 
                     <div class="mt-3">
                         <form action="customerList" method="get" class="mb-3">
-                            <div class="input-group">
-                                <input type="text" name="search" class="form-control" placeholder="Search" required>
-                                <button type="submit" class="btn btn-primary">Search</button>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" name="search" class="form-control" placeholder="Search by name" value="${search}">
+                                </div>
+                                <div class="col-md-4">
+                                    <select name="cardType" class="form-select">
+                                        <option value="">All Card Types</option>
+                                        <option value="debit" ${cardType == 'debit' ? 'selected' : ''}>Debit</option>
+                                        <option value="credit" ${cardType == 'credit' ? 'selected' : ''}>Credit</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                                </div>
                             </div>
                         </form>
 
@@ -70,6 +88,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
+                                    <th>Card Type</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -78,6 +97,7 @@
                                     <tr>
                                         <td>${customer.customer_id}</td>
                                         <td>${customer.full_name}</td>
+                                        <td>${customer.card_type}</td>
                                         <td>
                                             <a href="customerDetails?id=${customer.customer_id}" class="btn btn-primary btn-sm">View Details</a>
                                         </td>
@@ -85,6 +105,28 @@
                                 </c:forEach>
                             </tbody>
                         </table>
+
+                        <!-- Pagination Controls -->
+                        <nav aria-label="Page navigation" class="mt-4">
+                          <ul class="pagination justify-content-center">
+                            <c:if test="${currentPage > 1}">
+                              <li class="page-item">
+                                <a class="page-link" href="customerList?page=${currentPage - 1}&search=${search}&cardType=${cardType}">Previous</a>
+                              </li>
+                            </c:if>
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                              <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                <a class="page-link" href="customerList?page=${i}&search=${search}&cardType=${cardType}">${i}</a>
+                              </li>
+                            </c:forEach>
+                            <c:if test="${currentPage < totalPages}">
+                              <li class="page-item">
+                                <a class="page-link" href="customerList?page=${currentPage + 1}&search=${search}&cardType=${cardType}">Next</a>
+                              </li>
+                            </c:if>
+                          </ul>
+                        </nav>
+
                     </div>
                 </main>
             </div>

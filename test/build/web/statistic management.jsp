@@ -127,12 +127,12 @@
 
                             <div class="d-flex flex-column">
                                 <c:if test="${sessionScope.account.role_id==6}">
-                                <small>${sessionScope.account.customer_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.customer_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if>
                                 <c:if test="${sessionScope.account.role_id==1}">
-                                <small>${sessionScope.account.staff_id}</small>
-                                <small>${sessionScope.account.email}</small>
+                                    <small>${sessionScope.account.staff_id}</small>
+                                    <small>${sessionScope.account.email}</small>
                                 </c:if> 
                             </div>
                         </div>
@@ -168,19 +168,19 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="staff_management">
+                        <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Staff Management
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="service_management">
+                        <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
                             Service Management
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" href="transaction_management">
                             <i class=" me-2"></i>
@@ -194,7 +194,15 @@
                             Statistic Management
                         </a>
                     </li>
-                    
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
+                            <i class="me-2"></i>
+                            Service Term Management
+                        </a>
+                    </li>
+
+
                 </ul>
             </div>
         </nav>

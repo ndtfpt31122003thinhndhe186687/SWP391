@@ -64,9 +64,7 @@ public class ManagerInsuranceTermServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        List<Insurance_term> list = dao.getInsuranceTermByInsuranceID(i.getInsurance_id());
-        List<Insurance_policy> listP = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active"); 
-        request.setAttribute("listPolicy", listP);
+        List<Insurance_term> list = dao.getInsuranceTermByInsuranceID(i.getInsurance_id());        
         request.setAttribute("listTerm", list);
         request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
     } 

@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller_Admin;
 
 import dal.DAO_Admin;
@@ -19,24 +18,27 @@ import model.Staff;
  *
  * @author DELL
  */
-@WebServlet(name="searchStaffServlet", urlPatterns={"/searchStaff"})
+@WebServlet(name = "searchStaffServlet", urlPatterns = {"/searchStaff"})
 public class SearchStaffServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-       
-    } 
+            throws ServletException, IOException {
+
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -44,13 +46,17 @@ public class SearchStaffServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String search = request.getParameter("searchName");
         String type = request.getParameter("type");
-        
+        String status = request.getParameter("status");
+        String sort = request.getParameter("sort");
+        String page = request.getParameter("page");
+        String pageSize = request.getParameter("pageSize");
+
         // Determine role_id based on staff type
         int role_id;
-        switch(type != null ? type : "bankers") {
+        switch (type != null ? type : "bankers") {
             case "marketers":
                 role_id = 3;
                 break;
@@ -61,7 +67,7 @@ public class SearchStaffServlet extends HttpServlet {
                 role_id = 2;
                 break;
         }
-        
+
         DAO_Admin d = new DAO_Admin();
         search = search.trim().toLowerCase().replaceAll("\\s+", " ");
         search = "%" + search.replace(" ", "%") + "%";
@@ -70,13 +76,18 @@ public class SearchStaffServlet extends HttpServlet {
         request.setAttribute("searchName", search);
         request.setAttribute("ListByName", ListByName);
         request.setAttribute("ListByPhone", ListByPhone);
-        request.setAttribute("type", type); // Keep the current type for tab highlighting
-        
-        request.getRequestDispatcher("staff management.jsp").forward(request, response);
-    } 
+        request.setAttribute("type", type); 
+        request.setAttribute("status", status);
+        request.setAttribute("sort", sort);
+        request.setAttribute("page", page);
+        request.setAttribute("pageSize", pageSize);
 
-    /** 
+        request.getRequestDispatcher("staff management.jsp").forward(request, response);
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -84,12 +95,13 @@ public class SearchStaffServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         doGet(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

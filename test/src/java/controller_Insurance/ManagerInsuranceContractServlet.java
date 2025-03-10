@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Insurance;
 import model.Insurance_contract;
+import model.Insurance_contract_detail;
 
 /**
  *
@@ -63,7 +64,7 @@ public class ManagerInsuranceContractServlet extends HttpServlet {
         DAO_Insurance d = new DAO_Insurance();
               HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        List<Insurance_contract> listC = d.getAllInsuranceContractByInsuranceId(i.getInsurance_id());
+        List<Insurance_contract> listC = d.getAllInsuranceContractByInsuranceId(i.getInsurance_id());        
         request.setAttribute("listC", listC);
         request.getRequestDispatcher("managerInsuranceContract.jsp").forward(request, response);
     } 

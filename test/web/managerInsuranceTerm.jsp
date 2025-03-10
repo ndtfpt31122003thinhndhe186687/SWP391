@@ -55,7 +55,7 @@
                 border-color: #b02a37 !important;
             }
             .modal-dialog {
-                max-width: 600px; /* Điều chỉnh kích thước modal */
+                max-width: 900px; /* Điều chỉnh kích thước modal */
             }
 
             .modal-content {
@@ -85,7 +85,8 @@
             }
 
             .modal-body input,
-            .modal-body select {
+            .modal-body select,
+            .modal-body textarea{
                 width: 100%;
                 font-size: 16px;
                 padding: 10px;
@@ -224,37 +225,37 @@
                 <ul class="nav flex-column h-100">
 
                     <li class="nav-item">
-                        <a class="nav-link " href="paginationInsurancePolicy?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Policy Management
+                            Quản lý chính sách bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceCustomer?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTerm?sortInsuranceTerm=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Customer Management
+                            Quản lý điều khoản bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceContract?offset=1&quantity=5">
+                        <a class="nav-link" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
+                            <i class="me-2"></i>
+                            Quản lý khách hàng đã mua bảo hiểm
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="sortInsuranceContract?sortInsuranceContract=none&status=all&quantity=5&offset=1">
                             <i class=" me-2"></i>
-                            Insurance Contact Management
+                            Quản lý hợp đồng bảo hiểm
                         </a>
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="paginationInsuranceTransaction?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Transactions Management
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${account.insurance_id}">
-                            <i class="me-2"></i>
-                            Insurance Term Management
+                            Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
                 </ul>
@@ -263,7 +264,7 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Insurance Term Management</h1>
+                <h1 class="h2 mb-0 text-danger">Quản lý điều khoản bảo hiểm</h1>
             </div>
 
             <!-- Tabs choose staff -->
@@ -271,65 +272,88 @@
 
             <!-- View list staff -->
             <div class="mt-3">
-                <button class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#addInsuranceTermModal">Add New Term</button>
+                <button class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#addInsuranceTermModal">Thêm điều khoản mới</button>
                 <form action="sortInsuranceTerm" method="get">
-                    <label>Sort by :</label>
+                    <label>Sắp xếp theo:</label>
                     <select class="filter-dropdown" name="sortInsuranceTerm">
-                        <option value="none" ${requestScope.sortInsuranceTerm == '' ? 'selected' : ''}>None</option>    
-                        <option value="created_at" ${requestScope.sortInsuranceTerm == 'created_at' ? 'selected' : ''}>Created At</option>
-                        <option value="start_date" ${requestScope.sortInsuranceTerm == 'start_date' ? 'selected' : ''}>Start Date</option>
+                        <option value="none" ${requestScope.sortInsuranceTerm == '' ? 'selected' : ''}>Không</option>    
+                        <option value="created_at" ${requestScope.sortInsuranceTerm == 'created_at' ? 'selected' : ''}>Ngày tạo</option>
+                        <option value="start_date" ${requestScope.sortInsuranceTerm == 'start_date' ? 'selected' : ''}>Ngày bắt đầu</option>
                     </select>
-                    <label>Filter by Status:</label>
+                    <label>Hiện thông tin theo trạng thái:</label>
                     <select class="filter-dropdown" name="status">                    
-                        <option value="all" ${requestScope.status == '' ? 'selected' : ''}>All</option>
-                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
-                        <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                        <option value="all" ${requestScope.status == '' ? 'selected' : ''}>Tất cả</option>
+                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                        <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Ngừng hoạt động</option>
 
                     </select>
-                    <button type="submit">Find</button>
-                </form>
-                <form action="paginationInsuranceTerm" method="get">
-                    <label>Select quantity term: </label>
+                    <br>
+                    <label>Chọn số lượng điều khoản:</label>
                     <select class="filter-dropdown" name="quantity">                    
                         <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
                         <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
                     </select>
-                    <button type="submit">Find</button>
+                    <button type="submit">Tìm</button>
                 </form>
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Term ID</th>
-                            <th>Term Name</th>
-                            <th>Term Description</th>
-                            <th>Policy Name</th>
-                            <th>Status</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Created At</th>
-                            <th>Action</th>
+                            <th>ID điều khoản</th>
+                            <th>Tên điều khoản</th>
+                            <th>Tên chính sách</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <c:forEach items="${listTerm}" var="T">
                         <tr>
                             <td>${T.term_id}</td>
-                            <td>${T.term_name}</td>
-                            <td>${T.term_description}</td>
+                            <!-- Khi click vào term_name, modal sẽ hiện lên -->
+                            <td>
+                                <a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#termModal${T.term_id}">
+                                    ${T.term_name}
+                                </a>
+                            </td>
                             <td>${T.policy_name}</td>
                             <td>${T.status}</td> 
-                            <td>${T.start_date}</td> 
-                            <td>${T.end_date}</td>
                             <td>${T.created_at}</td>
                             <td>
-                                <a href="#" onclick="doDelete('${T.term_id}')" class="btn btn-danger">Delete</a>
-                                <a href="updateInsuranceTerm?term_id=${T.term_id}" class="btn btn-success">Update</a> 
+                                <a href="#" onclick="doDelete('${T.term_id}')" class="btn btn-danger">Xoá</a>
+                                <a href="updateInsuranceTerm?term_id=${T.term_id}" class="btn btn-success">Sửa</a> 
                             </td>
                         </tr>
+
+                        <!-- Modal hiển thị thông tin chi tiết -->
+                        <div class="modal fade" id="termModal${T.term_id}" tabindex="-1" aria-labelledby="termModalLabel${T.term_id}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="termModalLabel${T.term_id}">Chi tiết điều khoản: ${T.term_name}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                   <div class="modal-body text-start">
+                                        <p><strong>ID Điều khoản:</strong> ${T.term_id}</p>
+                                        <p><strong>Mô tả:</strong> ${T.term_description}</p>
+                                        <p><strong>Tên Chính sách:</strong> ${T.policy_name}</p>
+                                        <p><strong>Trạng thái:</strong> ${T.status}</p>
+                                        <p><strong>Ngày bắt đầu:</strong> ${T.start_date}</p>
+                                        <p><strong>Ngày kết thúc:</strong> ${T.end_date}</p>
+                                        <p><strong>Ngày tạo:</strong> ${T.created_at}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </c:forEach>
                 </table>
+
                 <c:forEach begin="1" end="${endP}" var="q">
-                    <a href="paginationInsuranceTerm?offset=${q}&quantity=${quantity}">${q}</a>
+                    <a href="sortInsuranceTerm?sortInsuranceTerm=${sortInsuranceTerm}&status=${status}&quantity=${quantity}&offset=${q}">${q}</a>
                 </c:forEach>
             </div>
 
@@ -337,7 +361,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addInsuranceTermModallLabel">Add a New Insurance Term</h5>
+                            <h5 class="modal-title" id="addInsuranceTermModallLabel">Thêm điều khoản mới</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -347,7 +371,7 @@
                             <div class="alert alert-danger"><%= error %></div>
                             <% } %>
                             <form id="addInsuranceTermModalForm" action="addInsuranceTerm" method="post">
-                                <label>Enter Policy ID</label> <br>
+                                <label>Chọn tên chính sách</label> <br>
                                 <select class="filter-dropdown" name="policy_id"  >
                                     <c:if test ="${not empty listPolicy}">
                                         <c:forEach var="p" items="${requestScope.listPolicy}">
@@ -358,21 +382,21 @@
                                 </select>
 
                                 <br>
-                                <label>Enter Term Name</label>                                
-                                <textarea name="term_name" id="editor1" required></textarea><br>
-                                <label>Enter Term Description</label>
-                                <textarea name="term_description" id="editor2"  required></textarea><br>
-                                <label>Enter Start Date</label>
+                                <label>Nhập tên điều khoản</label>                                
+                                <textarea name="term_name" required></textarea><br>
+                                <label>Nhập mô tả</label>
+                                <textarea name="term_description" id="editor"  required></textarea><br>
+                                <label>Nhập ngày bắt đầu</label>
                                 <input type="text" name="start_date" placeholder="yyyy-MM-d" required/>
-                                <label>Enter End Date</label>
+                                <label>Nhập ngày kết thúc</label>
                                 <input type="text" name="end_date" placeholder="yyyy-MM-d" required/>
-                                <label>Enter Status</label><br>
+                                <label>Nhập trạng thái</label><br>
                                 <select class="filter-dropdown" name="status" >
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="active">Hoạt động</option>
+                                    <option value="inactive">Ngừng hoạt động</option>
                                 </select>
                                 <br>
-                                <button type="submit" class="btn btn-danger mt-3">Add Insurance Term</button>
+                                <button type="submit" class="btn btn-danger mt-3">Thêm điều khoản</button>
                             </form>
                         </div>
 
@@ -384,7 +408,7 @@
 
         <script type="text/javascript">
             function doDelete(id) {
-                if (confirm("Are you sure to delete ID '" + id + "'?")) {
+                if (confirm("Bạn có chắc chắn muốn xoá ID '" + id + "'?")) {
                     window.location = "deleteInsuranceTerm?term_id=" + id;
                 }
             }
@@ -410,7 +434,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">Success</h5>
+                        <h5 class="modal-title" id="successModalLabel">Thành công</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -438,8 +462,8 @@
         %>
         <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
         <script>
-            CKEDITOR.replace('editor1');
-            CKEDITOR.replace('editor2');
+
+            CKEDITOR.replace('editor');
         </script>
         </main>
 

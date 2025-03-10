@@ -4,8 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import model.Customer;
 import model.ServiceTerms;
+import model.News;
 import model.Services;
 import model.Staff;
 import model.Term;
@@ -106,8 +106,9 @@ public class DAO_Admin extends DBContext {
     }
 
     public void deleteBanker(int id) {
-        String sql = "delete from news where staff_id= ?;"
-                + " delete from request where staff_id = ? "
+        String sql = "set nocount on; "
+                + "delete from news where staff_id= ?;"
+                + "delete from request where staff_id = ?;"
                 + "delete from staff where staff_id=?;";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
@@ -226,7 +227,7 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
+
     public Staff get_Staff_By_Email(String email) {
         String sql = "select * from staff where email=?";
         try {
@@ -253,7 +254,7 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
+
     public Staff get_Staff_By_Phone(String phone) {
         String sql = "select * from staff where phone_number=?";
         try {
@@ -280,7 +281,6 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
 
     // get all staff sorted 
     public List<Staff> get_All_Staff_Sorted(int role_id, String sortBy) {
@@ -335,6 +335,168 @@ public class DAO_Admin extends DBContext {
                 s.setStatus(rs.getString(12));
                 list.add(s);
             }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Staff> searchStaffByFullName(String fullName, int role_id) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "SELECT * FROM staff WHERE full_name LIKE ? AND role_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + fullName + "%");
+            pre.setInt(2, role_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching staff by full name: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Staff> searchStaffByPhone(String phoneNumber, int role_id) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "SELECT * FROM staff WHERE phone_number LIKE ? AND role_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + phoneNumber + "%");
+            pre.setInt(2, role_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching staff by phone: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Staff> getListStaffByConditions(String search, String sortBy, int role_id, String status) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "select * from staff where (1=1)";
+
+        if (role_id > 0) {
+            sql = sql + " and role_id = ?";
+        }
+
+        if (status != null && !status.isEmpty() && !status.equals("all")) {
+            sql = sql + " and status= ?";
+        }
+        if (search != null && !search.isEmpty()) {
+            sql = sql + " and full_name LIKE ?";
+        }
+
+        sql = sql + " order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            int index = 1;
+            if (role_id > 0) {
+                pre.setInt(index++, role_id);
+            }
+            if (status != null && !status.isEmpty() && !status.equals("all")) {
+                pre.setString(index++, status);
+            }
+            if (search != null && !search.isEmpty()) {
+                pre.setString(index++, "%" + search + "%");
+            }
+
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+            System.out.println(sql);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Staff> getListStaffByConditions(List<Staff> staff, String search, String sortBy, int role_id, String status) {
+        List<Staff> list = new ArrayList<>();
+        String sql = "select * from staff where (1=1)";
+
+        if (role_id > 0) {
+            sql = sql + " and role_id = ?";
+        }
+
+        if (status != null && !status.isEmpty() && !status.equals("all")) {
+            sql = sql + " and status= ?";
+        }
+        if (search != null && !search.isEmpty()) {
+            sql = sql + " and full_name LIKE ?";
+        }
+
+        sql = sql + " order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            int index = 1;
+            if (role_id > 0) {
+                pre.setInt(index++, role_id);
+            }
+            if (status != null && !status.isEmpty() && !status.equals("all")) {
+                pre.setString(index++, status);
+            }
+            if (search != null && !search.isEmpty()) {
+                pre.setString(index++, "%" + search + "%");
+            }
+
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Staff s = new Staff();
+                s.setStaff_id(rs.getInt(1));
+                s.setFull_name(rs.getString(2));
+                s.setEmail(rs.getString(3));
+                s.setUsername(rs.getString(4));
+                s.setPassword(rs.getString(5));
+                s.setPhone_number(rs.getString(6));
+                s.setGender(rs.getString(7));
+                s.setDate_of_birth(rs.getDate(8));
+                s.setAddress(rs.getString(9));
+                s.setRole_id(rs.getInt(10));
+                s.setStatus(rs.getString(12));
+                list.add(s);
+            }
+            System.out.println(sql);
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -425,8 +587,6 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    
-    
 
     public List<Term> getAllTerm() {
         List<Term> list = new ArrayList<>();
@@ -488,13 +648,11 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    
-    
 
     public List<Transaction> getAllTransaction() {
         List<Transaction> list = new ArrayList<>();
-        String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount,t.transaction_date,t.transaction_type \n" +
-"from transactions t join customer c on t.customer_id=c.customer_id join services s on t.service_id=s.service_id";
+        String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount,t.transaction_date,t.transaction_type \n"
+                + "from transactions t join customer c on t.customer_id=c.customer_id join services s on t.service_id=s.service_id";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
@@ -513,11 +671,11 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    
-    public List<Transaction> getTransactionByCustomerName(String name){
+
+    public List<Transaction> getTransactionByCustomerName(String name) {
         List<Transaction> list = new ArrayList<>();
-         String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount,t.transaction_date,t.transaction_type \n" +
-"from transactions t join customer c on t.customer_id=c.customer_id join services s on t.service_id=s.service_id where c.full_name like ?";
+        String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount,t.transaction_date,t.transaction_type \n"
+                + "from transactions t join customer c on t.customer_id=c.customer_id join services s on t.service_id=s.service_id where c.full_name like ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, "%" + name + "%");
@@ -537,7 +695,59 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    
+
+    public List<Transaction> getAllTransactionSorted(String sortBy) {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount"
+                + ",t.transaction_date,t.transaction_type \n"
+                + "from transactions t join customer c on "
+                + "t.customer_id=c.customer_id join services s on "
+                + "t.service_id=s.service_id order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Transaction t = new Transaction();
+                t.setTransaction_id(rs.getInt(1));
+                t.setCustomer_name(rs.getString(2));
+                t.setService_name(rs.getString(3));
+                t.setAmount(rs.getDouble(4));
+                t.setTransaction_date(rs.getDate(5));
+                t.setTransaction_type(rs.getString(6));
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Transaction> getAllTransactionByTypeSorted(String sortBy, String type) {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "select t.transaction_id,c.full_name,s.service_name,t.amount"
+                + ",t.transaction_date,t.transaction_type \n"
+                + "from transactions t join customer c on "
+                + "t.customer_id=c.customer_id join services s on "
+                + "t.service_id=s.service_id where transaction_type = ? order by " + sortBy + " asc";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, type);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Transaction t = new Transaction();
+                t.setTransaction_id(rs.getInt(1));
+                t.setCustomer_name(rs.getString(2));
+                t.setService_name(rs.getString(3));
+                t.setAmount(rs.getDouble(4));
+                t.setTransaction_date(rs.getDate(5));
+                t.setTransaction_type(rs.getString(6));
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
 
     public void InsertService(Services s) {
         String sql = "insert into services values(?,?,?,?)";
@@ -889,70 +1099,12 @@ public class DAO_Admin extends DBContext {
         return list;
     }
 
-    public List<Staff> searchStaffByFullName(String fullName, int role_id) {
-        List<Staff> list = new ArrayList<>();
-        String sql = "SELECT * FROM staff WHERE full_name LIKE ? AND role_id = ?";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setString(1, "%" + fullName + "%");
-            pre.setInt(2, role_id);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                Staff s = new Staff();
-                s.setStaff_id(rs.getInt(1));
-                s.setFull_name(rs.getString(2));
-                s.setEmail(rs.getString(3));
-                s.setUsername(rs.getString(4));
-                s.setPassword(rs.getString(5));
-                s.setPhone_number(rs.getString(6));
-                s.setGender(rs.getString(7));
-                s.setDate_of_birth(rs.getDate(8));
-                s.setAddress(rs.getString(9));
-                s.setRole_id(rs.getInt(10));
-                s.setStatus(rs.getString(12));
-                list.add(s);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error searching staff by full name: " + e.getMessage());
-        }
-        return list;
-    }
-
-    public List<Staff> searchStaffByPhone(String phoneNumber, int role_id) {
-        List<Staff> list = new ArrayList<>();
-        String sql = "SELECT * FROM staff WHERE phone_number LIKE ? AND role_id = ?";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setString(1, "%" + phoneNumber + "%");
-            pre.setInt(2, role_id);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                Staff s = new Staff();
-                s.setStaff_id(rs.getInt(1));
-                s.setFull_name(rs.getString(2));
-                s.setEmail(rs.getString(3));
-                s.setUsername(rs.getString(4));
-                s.setPassword(rs.getString(5));
-                s.setPhone_number(rs.getString(6));
-                s.setGender(rs.getString(7));
-                s.setDate_of_birth(rs.getDate(8));
-                s.setAddress(rs.getString(9));
-                s.setRole_id(rs.getInt(10));
-                s.setStatus(rs.getString(12));
-                list.add(s);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error searching staff by phone: " + e.getMessage());
-        }
-        return list;
-    }
-
     public List<Services> searchServiceByName(String search) {
         List<Services> list = new ArrayList<>();
         String sql = "select * from services where LOWER(service_name) like LOWER(?)";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setString(1,  search );
+            pre.setString(1, search);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 Services s = new Services();
@@ -974,9 +1126,9 @@ public class DAO_Admin extends DBContext {
         String sql = "select * from term where term_name like ?";
         try {
             PreparedStatement pre = con.prepareCall(sql);
-            pre.setString(1, "%"+ search+ "%");
+            pre.setString(1, "%" + search + "%");
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Term t = new Term();
                 t.setTerm_id(rs.getInt(1));
                 t.setTerm_name(rs.getString(2));
@@ -990,31 +1142,240 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
+
+    public List<Staff> getStaffByPage(List<Staff> list, int start, int end) {
+        List<Staff> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
+
+    public List<Services> getServiceByPage(List<Services> list, int start, int end) {
+        List<Services> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
+
+    public List<Term> getTermByPage(List<Term> list, int start, int end) {
+        List<Term> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
+
+    public List<Transaction> getTransactionByPage(List<Transaction> list, int start, int end) {
+        List<Transaction> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
     
-    //get list service_term
-    public List<ServiceTerms> getAllServiceTerms() {
+    // servicer Term - phong
+    public List<ServiceTerms> getFilteredServiceTerms(String serviceName, String sortBy) {
         List<ServiceTerms> list = new ArrayList<>();
-        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
-                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
-                + "from service_terms st join services s on st.service_id=s.service_id";
+        String sql = "SELECT st.*, s.service_name, t.duration FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id WHERE 1=1";
+
+        // Điều kiện lọc theo tên dịch vụ
+        if (serviceName != null && !serviceName.isEmpty() && !serviceName.equals("all")) {
+            sql += " AND s.service_name = ?";
+        }
+
+        // Xử lý sắp xếp
+        if (sortBy != null && !sortBy.isEmpty() && !sortBy.equals("all")) {
+            if (sortBy.equals("service_name")) {
+                sql += " ORDER BY s.service_name";
+            } else if (sortBy.equals("duration")) {
+                sql += " ORDER BY t.duration";
+            } else {
+                sql += " ORDER BY st." + sortBy; // Các cột khác mặc định trong bảng service_terms
+            }
+        }
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            if (serviceName != null && !serviceName.isEmpty() && !serviceName.equals("all")) {
+                ps.setString(1, serviceName);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ServiceTerms term = new ServiceTerms();
+                term.setTerm_id(rs.getInt("term_id"));
+                term.setService_name(rs.getString("service_name"));
+                term.setService_id(rs.getInt("service_id"));
+                term.setTerm_name(rs.getString("term_name"));
+                term.setDescription(rs.getString("description"));
+                term.setContract_terms(rs.getString("contract_terms"));
+                term.setDuration(rs.getInt("duration"));
+                term.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                term.setInterest_rate(rs.getDouble("interest_rate"));
+                term.setMin_payment(rs.getDouble("min_payment"));
+                term.setMin_deposit(rs.getDouble("min_deposit"));
+                term.setCreated_at(rs.getTimestamp("created_at"));
+                term.setStatus(rs.getString("status"));
+                term.setServiceTerm_id(rs.getInt("serviceTerm_id"));
+                list.add(term);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+    public void addServiceTerm(ServiceTerms s) {
+        String sql = "INSERT INTO service_terms (service_id, term_name, description, contract_terms, early_payment_penalty, interest_rate, min_payment, min_deposit,term_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, s.getService_id());
+            pre.setString(2, s.getTerm_name());
+            pre.setString(3, s.getDescription());
+            pre.setString(4, s.getContract_terms());
+            pre.setDouble(5, s.getEarly_payment_penalty());
+            pre.setDouble(6, s.getInterest_rate());
+            pre.setDouble(7, s.getMin_payment());
+            pre.setDouble(8, s.getMin_deposit());
+            if (s.getTerm_id() == null) {
+                pre.setNull(9, java.sql.Types.INTEGER);
+            } else {
+                pre.setInt(9, s.getTerm_id());
+            }
+            pre.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+    
+    //kiem tra trung lap
+    public boolean isDuplicateServiceTerm(int termId, String termName, int serviceId, double minDeposit,double interest_rate) {
+        String query = "SELECT COUNT(*) FROM service_terms WHERE term_id = ? AND term_name = ? "
+                + "AND service_id = ? AND min_deposit = ? and interest_rate=?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, termId);
+            ps.setString(2, termName);
+            ps.setInt(3, serviceId);
+            ps.setDouble(4, minDeposit);
+            ps.setDouble(5, interest_rate);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT(*) > 0, nghĩa là đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+// Xóa service_term (chỉ xóa khi không active)
+    public void deleteServiceTerm(int serviceTerm_id) {
+        String sql = "DELETE FROM service_terms WHERE serviceTerm_id = ? AND status NOT IN ('active')";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, serviceTerm_id);
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+// Lấy thông tin service term bằng term_id
+    public ServiceTerms getServiceTermById(int servicetTerm_id) {
+        String sql = "SELECT st.*, t.duration, s.service_name FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id WHERE st.serviceTerm_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, servicetTerm_id);
             ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 ServiceTerms s = new ServiceTerms();
+                s.setServiceTerm_id(rs.getInt("serviceTerm_id"));
                 s.setTerm_id(rs.getInt("term_id"));
-                s.setTerm_name(rs.getString("term_name"));
-                s.setService_name(rs.getString("service_name"));
                 s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setTerm_name(rs.getString("term_name"));
                 s.setDescription(rs.getString("description"));
                 s.setContract_terms(rs.getString("contract_terms"));
-                s.setMax_term_months(rs.getInt("max_term_months"));
+                s.setDuration(rs.getInt("duration"));
                 s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
                 s.setInterest_rate(rs.getDouble("interest_rate"));
                 s.setMin_payment(rs.getDouble("min_payment"));
                 s.setMin_deposit(rs.getDouble("min_deposit"));
                 s.setStatus(rs.getString("status"));
-                s.setCreated_at(rs.getDate("created_at"));
+                s.setCreated_at(rs.getTimestamp("created_at"));
+                return s;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+// Cập nhật service_term
+    public void updateServiceTerm(ServiceTerms s) {
+        String sql = "UPDATE service_terms SET "
+                + "term_id= ?,term_name = ?, description = ?, contract_terms = ?, "
+                + "early_payment_penalty = ?, interest_rate = ?, "
+                + "min_payment = ?, min_deposit = ?, status = ? "
+                + "WHERE serviceTerm_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            if (s.getTerm_id() == null) {
+                pre.setNull(1, java.sql.Types.INTEGER);
+            } else {
+                pre.setInt(1, s.getTerm_id());
+            }
+            pre.setString(2, s.getTerm_name());
+            pre.setString(3, s.getDescription());
+            pre.setString(4, s.getContract_terms());
+            pre.setDouble(5, s.getEarly_payment_penalty());
+            pre.setDouble(6, s.getInterest_rate());
+            pre.setDouble(7, s.getMin_payment());
+            pre.setDouble(8, s.getMin_deposit());
+            pre.setString(9, s.getStatus());
+            pre.setInt(10, s.getServiceTerm_id());
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+// Tìm kiếm service_term theo tên
+    public List<ServiceTerms> getServiceTermByName(String termName) {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "SELECT st.*, s.service_name, t.duration FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id "
+                + "WHERE st.term_name LIKE ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, "%" + termName + "%");
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                ServiceTerms s = new ServiceTerms();
+                s.setServiceTerm_id(rs.getInt("serviceTerm_id"));
+                s.setTerm_id(rs.getInt("term_id"));
+                s.setService_id(rs.getInt("service_id"));
+                s.setService_name(rs.getString("service_name"));
+                s.setTerm_name(rs.getString("term_name"));
+                s.setDescription(rs.getString("description"));
+                s.setContract_terms(rs.getString("contract_terms"));
+                s.setDuration(rs.getInt("duration"));
+                s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
+                s.setInterest_rate(rs.getDouble("interest_rate"));
+                s.setMin_payment(rs.getDouble("min_payment"));
+                s.setMin_deposit(rs.getDouble("min_deposit"));
+                s.setStatus(rs.getString("status"));
+                s.setCreated_at(rs.getTimestamp("created_at"));
                 list.add(s);
             }
         } catch (SQLException e) {
@@ -1023,101 +1384,46 @@ public class DAO_Admin extends DBContext {
         return list;
     }
 
-    //add new service_term
-    public void addServiceTerm(ServiceTerms s) {
-        String sql = "INSERT INTO service_terms (service_id, term_name, description, contract_terms, max_term_months, early_payment_penalty, interest_rate, min_payment, min_deposit)"
-                + "values (?,?,?,?,?,?,?,?,?)";
+// Lấy tất cả service_terms
+    public List<ServiceTerms> getAllServiceTerms() {
+        List<ServiceTerms> list = new ArrayList<>();
+        String sql = "SELECT st.*, s.service_name, t.duration FROM service_terms st "
+                + "LEFT JOIN services s ON st.service_id = s.service_id "
+                + "LEFT JOIN term t ON st.term_id = t.term_id";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, s.getService_id());
-            pre.setString(2, s.getTerm_name());
-            pre.setString(3, s.getDescription());
-            pre.setString(4, s.getContract_terms());
-            pre.setInt(5, s.getMax_term_months());
-            pre.setDouble(6, s.getEarly_payment_penalty());
-            pre.setDouble(7, s.getInterest_rate());
-            pre.setDouble(8, s.getMin_payment());
-            pre.setDouble(9, s.getMin_deposit());
-            pre.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
-
-    //delete service_term
-    public void deleteServiceTerm(int term_id) {
-        String sql = "delete from service_terms where term_id=? and status not in ('active')";
-
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, term_id);
-            pre.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
-
-    //get service term by term_id
-    public ServiceTerms getServiceTermByTermId(int term_id) {
-        String sql = "select st.term_id,st.service_id,s.service_name,st.term_name,st.description,st.contract_terms,\n"
-                + "st.max_term_months,st.early_payment_penalty,st.interest_rate,st.min_payment,st.min_deposit,st.status,st.created_at\n"
-                + "from service_terms st join services s on st.service_id=s.service_id where term_id=?";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, term_id);
             ResultSet rs = pre.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 ServiceTerms s = new ServiceTerms();
+                s.setServiceTerm_id(rs.getInt("serviceTerm_id"));
                 s.setTerm_id(rs.getInt("term_id"));
-                s.setTerm_name(rs.getString("term_name"));
                 s.setService_id(rs.getInt("service_id"));
                 s.setService_name(rs.getString("service_name"));
+                s.setTerm_name(rs.getString("term_name"));
                 s.setDescription(rs.getString("description"));
                 s.setContract_terms(rs.getString("contract_terms"));
-                s.setMax_term_months(rs.getInt("max_term_months"));
+                s.setDuration(rs.getInt("duration"));
                 s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
                 s.setInterest_rate(rs.getDouble("interest_rate"));
                 s.setMin_payment(rs.getDouble("min_payment"));
                 s.setMin_deposit(rs.getDouble("min_deposit"));
                 s.setStatus(rs.getString("status"));
-                s.setCreated_at(rs.getDate("created_at"));
-                return s;
+                s.setCreated_at(rs.getTimestamp("created_at"));
+                list.add(s);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
-        return null;
+        return list;
     }
 
-    public void updateServiceTerm(ServiceTerms s) {
-        String sql = "UPDATE service_terms \n"
-                + "SET \n"
-                + "    term_name = ?, \n"
-                + "    description = ?, \n"
-                + "    contract_terms = ?, \n"
-                + "    max_term_months = ?, \n"
-                + "    early_payment_penalty = ?, \n"
-                + "    interest_rate = ?, \n"
-                + "    min_payment = ?, \n"
-                + "    min_deposit = ?,\n"
-                + "    [status] = ?\n"
-                + "WHERE term_id = ?;";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setString(1, s.getTerm_name());
-            pre.setString(2, s.getDescription());
-            pre.setString(3, s.getContract_terms());
-            pre.setInt(4, s.getMax_term_months());
-            pre.setDouble(5, s.getEarly_payment_penalty());
-            pre.setDouble(6, s.getInterest_rate());
-            pre.setDouble(7, s.getMin_payment());
-            pre.setDouble(8, s.getMin_deposit());
-            pre.setString(9, s.getStatus());
-            pre.setInt(10, s.getTerm_id());
-            pre.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
+    //page
+    public List<ServiceTerms> getListByPage(List<ServiceTerms> list, int start, int end) {
+        List<ServiceTerms> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
         }
+        return arr;
     }
 
     // Main method for testing
@@ -1125,10 +1431,10 @@ public class DAO_Admin extends DBContext {
         DAO_Admin d = new DAO_Admin();
 //        String date ="2000-12-31";
 //        Date sqlDate = java.sql.Date.valueOf(date);
-         List<Transaction> t = d.getTransactionByCustomerName("A");
-        for (Transaction transaction : t) {
-            System.out.println(transaction);
+        d.deleteBanker(10);
+        List<Staff> list = d.getAllBanker(2);
+        for (Staff staff : list) {
+            System.out.println(staff);
         }
-         
     }
 }

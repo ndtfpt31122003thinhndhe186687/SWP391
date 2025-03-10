@@ -132,7 +132,7 @@
         <c:set var="t" value="${requestScope.term}"/>
         <form action="updateInsuranceTerm" method="post">            
             <input type="hidden" name="term_id" value="${t.term_id}">
-            <label>Enter Policy Name</label>
+            <label>Chọn tên chính sách</label>
             <select class="filter-dropdown" name="policy_id" >
                 <c:if test ="${not empty listPolicy}">
                     <c:forEach var="p" items="${requestScope.listPolicy}">
@@ -142,31 +142,32 @@
             </select>
             <br>
             <br>
-            <label>Enter Term Name</label>
-            <textarea name="term_name" id="editor1" required>${t.term_name}</textarea>
+            <label>Nhập tên</label>
+            <textarea name="term_name" required>${t.term_name}</textarea>
             <br>
-            <label>Enter Term Description</label>
+            <label>Nhận mô tả</label>
             <textarea name="term_description" id="editor2" required>${t.term_description}</textarea>
             <br>
-            <label>Enter Start Date</label>
+            <label>Nhập ngày bắt đầu</label>
             <input type="text" name="start_date" value="${t.start_date}" required/>
             <br>
-            <label>Enter End Date</label>
+            <label>Nhận ngày kết thúc</label>
             <input type="text" name="end_date" value="${t.end_date}" required/>
             <br>
-            <label>Enter Status</label>
-            <select class="filter-dropdown" name="status" >                
-                <c:forEach var="s" items="${listStatus}">
-                    <option value="${s}" ${s == t.status ? 'selected' : ''}>${s}</option>
-                </c:forEach>   
+            <label>Chọn trạng thái</label>
+            <select class="filter-dropdown" name="status">                
+                <option value="active" ${t.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                <option value="inactive" ${t.status == 'inactive' ? 'selected' : ''}>Ngừng hoạt động</option>
             </select>
+
+
             <br>
             <br>
             <button type="submit">Update</button>
         </form>
         <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
         <script>
-            CKEDITOR.replace('editor1');
+
             CKEDITOR.replace('editor2');
         </script>
     </body>

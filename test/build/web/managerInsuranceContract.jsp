@@ -1,6 +1,6 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -166,38 +166,38 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
 
-                                        <li class="nav-item">
-                        <a class="nav-link " href="paginationInsurancePolicy?offset=1&quantity=5">
+                    <li class="nav-item">
+                        <a class="nav-link " href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Policy Management
+                            Quản lý chính sách bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceCustomer?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTerm?sortInsuranceTerm=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Customer Management
+                            Quản lý điều khoản bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceContract?offset=1&quantity=5">
+                        <a class="nav-link" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
+                            <i class="me-2"></i>
+                            Quản lý khách hàng đã mua bảo hiểm
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="sortInsuranceContract?sortInsuranceContract=none&status=all&quantity=5&offset=1">
                             <i class=" me-2"></i>
-                            Insurance Contact Management
+                            Quản lý hợp đồng bảo hiểm
                         </a>
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="paginationInsuranceTransaction?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Transactions Management
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${account.insurance_id}">
-                            <i class="me-2"></i>
-                            Insurance Term Management
+                            Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
                 </ul>
@@ -206,7 +206,7 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Insurance Contract Management</h1>
+                <h1 class="h2 mb-0 text-danger">Quản lý hợp đồng bảo hiểm</h1>
             </div>
 
             <!-- Tabs choose staff -->
@@ -215,70 +215,71 @@
             <!-- View list staff -->
             <div class="mt-3">
                 <form action="sortInsuranceContract" method="get">
-                    <label>Sort by :</label>
+                    <label>Sắp xếp theo :</label>
                     <select class="filter-dropdown" name="sortInsuranceContract">
-                        <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>None</option>
-                        <option value="start_date" ${requestScope.sort == 'start_date' ? 'selected' : ''}>Start At</option>
-                        <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Created At</option>
+                        <option value="none" ${requestScope.sort == '' ? 'selected' : ''}>Không</option>
+                        <option value="start_date" ${requestScope.sort == 'start_date' ? 'selected' : ''}>Ngày bắt đầu</option>
+                        <option value="created_at" ${requestScope.sort == 'created_at' ? 'selected' : ''}>Ngày tạo</option>
                     </select>
-                    <label>Filter by Status:</label>
+                    <label>Hiện thông tin theo trạng thái:</label>
                     <select class="filter-dropdown" name="status">                    
-                        <option value="all" ${requestScope.status == '' ? 'selected' : ''}>All</option>
-                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
-                        <option value="expired" ${requestScope.status == 'expired' ? 'selected' : ''}>Expired</option>
-                        <option value="cancelled" ${requestScope.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                        <option value="all" ${requestScope.status == '' ? 'selected' : ''}>Tất cả</option>
+                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                        <option value="expired" ${requestScope.status == 'expired' ? 'selected' : ''}>Hết hạn</option>
+                        <option value="cancelled" ${requestScope.status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
                     </select>
-                    <button type="submit">Find</button>
-                </form>
-                <form action="paginationInsuranceContract" method="get">
-                    <label>Select quantity contract: </label>
+                    <br>
+                    <label>Chọn số lượng hợp đồng: </label>
                     <select class="filter-dropdown" name="quantity">                    
                         <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
                         <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
                     </select>
-                    <button type="submit">Find</button>
-                </form>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Contract ID</th>
-                            <th>Customer Name</th>
-                            <th>Service Name </th>
-                            <th>Policy Name</th>
-                            <th>Payment Frequency</th>
-                            <th>Status</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Created At</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <c:forEach items="${listC}" var="C">
-                        <tr>
-                            <td>${C.contract_id}</td>
-                            <td>${C.full_name}</td>
-                            <td>${C.service_name}</td>
-                            <td>${C.policy_name}</td>
-                            <td>${C.payment_frequency}</td>
-                            <td>${C.status}</td> 
-                            <td>${C.start_date}</td> 
-                            <td>${C.end_date}</td>
-                            <td>${C.created_at}</td>
-                            <td>
+                    <button type="submit">Tìm</button>              
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID hợp đồng</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên dịch vụ</th>
+                                <th>Tên chính sách</th>
+                                <th>Trả theo</th>
+                                <th>Trạng thái</th>
+                                <th>Thời gian (Tháng)</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày kết thúc</th>
+                                <th>Ngày tạo</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <c:forEach items="${listC}" var="C">
+                            <tr>
+                                <td>
+                                    <a href="InsuranceContractDetail?contract_id=${C.contract_id}" class="btn btn-link text-danger">
+                                        ${C.contract_id}
+                                    </a>
+                                </td>
+                                <td>${C.full_name}</td>
+                                <td>${C.service_name}</td>
+                                <td>${C.policy_name}</td>
+                                <td>${C.payment_frequency}</td>
+                                <td>${C.status}</td> 
+                                <td>${C.duration}</td> 
+                                <td>${C.start_date}</td> 
+                                <td>${C.end_date}</td>
+                                <td>${C.created_at}</td>
+                                <td>
 
-                                <a href="updateInsuranceContract?contract_id=${C.contract_id}" class="btn btn-success">Update</a> 
-                            </td>
-                        </tr>
+                                    <a href="updateInsuranceContract?contract_id=${C.contract_id}" class="btn btn-success">Sửa</a> 
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                    <c:forEach begin="1" end="${endP}" var="q">
+                        <a href="sortInsuranceContract?sortInsuranceContract=${sortInsuranceContract}&status=${status}&quantity=${quantity}&offset=${q}">${q}</a>
                     </c:forEach>
-                </table>
-                <c:forEach begin="1" end="${endP}" var="q">
-                    <a href="paginationInsuranceContract?offset=${q}&quantity=${quantity}">${q}</a>
-                </c:forEach>
             </div>
         </main>
-
-
 
 
         </main>

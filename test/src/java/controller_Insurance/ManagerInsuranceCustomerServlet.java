@@ -63,7 +63,7 @@ public class ManagerInsuranceCustomerServlet extends HttpServlet {
         DAO_Insurance d = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        List<Customer> listC = d.getInsuranceCustomerByInsuranceId(i.getInsurance_id());
+        List<Customer> listC = d.getInsuranceCustomerByInsuranceId(i.getInsurance_id());        
         request.setAttribute("listC", listC);
         request.getRequestDispatcher("managerInsuranceCustomer.jsp").forward(request, response);
     } 

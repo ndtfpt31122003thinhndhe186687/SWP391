@@ -59,46 +59,85 @@ public class sortInsurancePolicyServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String sort = request.getParameter("sortInsurancePolicy");
-        String status = request.getParameter("status");
-         HttpSession session = request.getSession();
-        Insurance i = (Insurance) session.getAttribute("account");
-        DAO_Insurance dao = new DAO_Insurance();
-        List<Insurance_policy> list = new ArrayList<>();
-        if(sort.equals("none") && status.equals("all")){
-            list = dao.getPolicyByInsuranceID(i.getInsurance_id());
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    DAO_Insurance dao = new DAO_Insurance();
+    HttpSession session = request.getSession();
+    Insurance i = (Insurance) session.getAttribute("account");
+
+    String sort = request.getParameter("sortInsurancePolicy");
+    String status = request.getParameter("status");
+    String quantity_raw = request.getParameter("quantity");
+    String offset_raw = request.getParameter("offset");
+
+    int offset = 1;
+    int quantity = 5;
+
+    try {
+        if (offset_raw != null) {
+            offset = Integer.parseInt(offset_raw);
         }
-        else if(sort.equals("none") && status.equals("active")){
-            list = dao.getPolicyByInsuranceIDAndStatus(i.getInsurance_id(), status);
+        if (quantity_raw != null) {
+            quantity = Integer.parseInt(quantity_raw);
         }
-        else if(sort.equals("none") && status.equals("inactive")){
-            list = dao.getPolicyByInsuranceIDAndStatus(i.getInsurance_id(), status);
+    } catch (NumberFormatException e) {
+        e.printStackTrace();
+
+    }
+    
+    int count = 0;
+    if(status.equals("all")){
+        count = dao.getTotalInsurancePolicy(i.getInsurance_id());
+    }
+    else{
+     count = dao.getTotalInsurancePolicyByStatus(i.getInsurance_id(), status);
+    }
+    
+    int endPage = count / quantity;
+        if (count % quantity != 0) {
+            endPage++;
         }
-        else if(sort.equals("created_at") && status.equals("active")){
-            list = dao.sortInsurancePolicyByCreatedAtAndStatus(i.getInsurance_id(), status);
+
+    
+    List<Insurance_policy> list = new ArrayList<>();
+
+    if (sort.equals("none")) {
+        if (status.equals("all")) {
+            list = dao.paginationInsurancePolicy(i.getInsurance_id(), offset, quantity);
+        } else {
+            list = dao.getPolicyByInsuranceIDAndStatus(i.getInsurance_id(), status, offset, quantity);
         }
-        else if(sort.equals("created_at") && status.equals("inactive")){
-            list = dao.sortInsurancePolicyByCreatedAtAndStatus(i.getInsurance_id(), status);
+    } else {
+        switch (sort) {
+            case "created_at":
+                if (status.equals("all")) {
+                    list = dao.sortInsurancePolicyByCreatedAt(i.getInsurance_id(), offset, quantity);
+                } else {
+                    list = dao.sortInsurancePolicyByCreatedAtAndStatus(i.getInsurance_id(), status, offset, quantity);
+                }
+                break;
+            case "coverage_amount":
+                if (status.equals("all")) {
+                    list = dao.sortInsurancePolicyByCoverageAmount(i.getInsurance_id(), offset, quantity);
+                } else {
+                    list = dao.sortInsurancePolicyByCoverageAmountAndStatus(i.getInsurance_id(), status, offset, quantity);
+                }
+                break;
+            default:
+                list = dao.paginationInsurancePolicy(i.getInsurance_id(), offset, quantity);
+                break;
         }
-         else if(sort.equals("created_at") && status.equals("all")){
-            list = dao.sortInsurancePolicyByCreatedAt(i.getInsurance_id());
-        }
-        else if(sort.equals("coverage_amount") && status.equals("active")){
-            list = dao.sortInsurancePolicyByCoverageAmountAndStatus(i.getInsurance_id(),status);
-        }
-        else if(sort.equals("coverage_amount") && status.equals("inactive")){
-            list = dao.sortInsurancePolicyByCoverageAmountAndStatus(i.getInsurance_id(),status);
-        }
-        else if(sort.equals("coverage_amount") && status.equals("all")){
-            list = dao.sortInsurancePolicyByCoverageAmount(i.getInsurance_id());
-        }
-        request.setAttribute("listPolicy", list);
-        request.setAttribute("sortInsurancePolicy", sort);
-        request.setAttribute("status", status);
-        request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
-    } 
+    }
+
+    
+    request.setAttribute("listPolicy", list);
+    request.setAttribute("sortInsurancePolicy", sort);
+    request.setAttribute("status", status);
+    request.setAttribute("quantity", quantity);
+    request.setAttribute("endP", endPage);
+    request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
+}
+
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -111,7 +150,7 @@ public class sortInsurancePolicyServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-        
+
     }
   
     

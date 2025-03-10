@@ -1,6 +1,6 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -166,40 +166,40 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
 
-                                        <li class="nav-item">
-                        <a class="nav-link " href="paginationInsurancePolicy?offset=1&quantity=5">
+                    <li class="nav-item">
+                        <a class="nav-link " href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Policy Management
+                            Quản lý chính sách bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceCustomer?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTerm?sortInsuranceTerm=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Customer Management
+                            Quản lý điều khoản bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceContract?offset=1&quantity=5">
+                        <a class="nav-link" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
+                            <i class="me-2"></i>
+                            Quản lý khách hàng đã mua bảo hiểm
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="sortInsuranceContract?sortInsuranceContract=none&status=all&quantity=5&offset=1">
                             <i class=" me-2"></i>
-                            Insurance Contact Management
+                            Quản lý hợp đồng bảo hiểm
                         </a>
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="paginationInsuranceTransaction?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Transactions Management
+                            Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${account.insurance_id}">
-                            <i class="me-2"></i>
-                            Insurance Term Management
-                        </a>
-                    </li>s
 
                 </ul>
             </div>
@@ -207,7 +207,7 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Insurance Customer Management</h1>
+                <h1 class="h2 mb-0 text-danger">Quản lý khách hàng đã mua bảo hiểm</h1>
             </div>
 
             <!-- Tabs choose staff -->
@@ -216,36 +216,35 @@
             <!-- View list staff -->
             <div class="mt-3">
                 <form action="filterInsuranceCustomer" method="get">
-                    <label>Filter by Gender:</label>
+                    <label>Hiện thông tin theo giới tính: </label>
                     <select class="filter-dropdown" name="gender">                    
-                        <option value="all" ${requestScope.gender == '' ? 'selected' : ''}>All</option>
-                        <option value="male" ${requestScope.gender == 'male' ? 'selected' : ''}>Male</option>
-                        <option value="female" ${requestScope.gender == 'female' ? 'selected' : ''}>Female</option>                   
+                        <option value="all" ${requestScope.gender == '' ? 'selected' : ''}>Tất cả</option>
+                        <option value="male" ${requestScope.gender == 'male' ? 'selected' : ''}>Nam</option>
+                        <option value="female" ${requestScope.gender == 'female' ? 'selected' : ''}>Nữ</option>                   
                     </select>
-                    <button type="submid">Find</button>
-                </form>
-                <form action="paginationInsuranceCustomer" method="get">
-                    <label>Select quantity customer: </label>
+                    <label>Chọn số lượng khách hàng: </label>
                     <select class="filter-dropdown" name="quantity">                    
                         <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
                         <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
                     </select>
-                    <button type="submit">Find</button>
+                    <button type="submid">Tìm</button>
                 </form>
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Customer id</th>
-                            <th>Full name</th>
+                            <th>ID khách hàng</th>
+                            <th>Họ và tên</th>
                             <th>Email</th>
-                            <th>Username</th>
-                            <th>Phone number</th>
-                            <th>Address</th>
-                            <th>Gender</th>
+                            <th>Tên người dùng</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th>Giới tính</th>
                         </tr>
                     </thead>
-                    <c:forEach items="${listC}" var="C">
+                   
+                    <c:forEach items="${listC}" var="C" varStatus="status">
                         <tr>
                             <td>${C.customer_id}</td>
                             <td>${C.full_name}</td>
@@ -254,12 +253,13 @@
                             <td>${C.phone_number}</td>
                             <td>${C.address}</td> 
                             <td>${C.gender}</td>
-
                         </tr>
+                        
                     </c:forEach>
+
                 </table>
                 <c:forEach begin="1" end="${endP}" var="q">
-                    <a href="paginationInsuranceCustomer?offset=${q}&quantity=${quantity}">${q}</a>
+                    <a href="filterInsuranceCustomer?gender=${gender}&quantity=${quantity}&offset=${q}">${q}</a>
                 </c:forEach>
             </div>
         </main>

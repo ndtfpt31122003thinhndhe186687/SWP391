@@ -84,6 +84,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
@@ -96,15 +97,16 @@ public class AddInsuranceTermServlet extends HttpServlet {
         int policy_id = Integer.parseInt(policy_id_raw);
         Date start_date = null, end_date = null;
         java.sql.Date sqlStart_date = null, sqlEnd_date = null;
+        term_description = term_description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
         if(term_name.trim().isEmpty()){
-            request.setAttribute("error", "Term Name must be not null");
+            request.setAttribute("error", "Tên không được để trống");
             List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
             request.setAttribute("listPolicy", list);
              request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
             return;
         }
                 if(term_description.trim().isEmpty()){
-            request.setAttribute("error", "Term Name must be not null");
+            request.setAttribute("error", "Mô tả không được để trống");
             List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
             request.setAttribute("listPolicy", list);
              request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
@@ -117,7 +119,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
             start_date = dateFormat.parse(start_date_raw);
             end_date = dateFormat.parse(end_date_raw);
             if (!start_date.before(end_date)) {
-                request.setAttribute("error", "Start date must be before End date.");
+                request.setAttribute("error", "Ngày bắt đầu phải trước ngày kết thúc");
                 List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
                 request.setAttribute("listPolicy", list);
                  request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
@@ -126,7 +128,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
             sqlStart_date = new java.sql.Date(start_date.getTime());
             sqlEnd_date = new java.sql.Date(end_date.getTime());
         } catch (ParseException e) {
-            request.setAttribute("error", "Invalid date format. Please use yyyy-MM-dd.");
+            request.setAttribute("error", "Sai định dạng. Định dạng đúng: yyyy-MM-dd.");
             List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
             request.setAttribute("listPolicy", list);
              request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
@@ -136,7 +138,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
             term_name = term_name.trim().replaceAll("\\s+", " ");
             Insurance_term termName = dao.getInsuranceTermByName(term_name);
             if (termName != null) {
-                request.setAttribute("error", "Term name: " + term_name + " is existed!");
+                request.setAttribute("error", "Tên : " + term_name + " đã tồn tại!");
                 List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
                 request.setAttribute("listPolicy", list);
                  request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);

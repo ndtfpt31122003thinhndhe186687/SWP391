@@ -60,21 +60,53 @@ public class filterInsuranceCustomerServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String gender = request.getParameter("gender");
-         HttpSession session = request.getSession();
-        Insurance i = (Insurance) session.getAttribute("account");
-        DAO_Insurance dao = new DAO_Insurance();
+    throws ServletException, IOException {       
+         DAO_Insurance dao = new DAO_Insurance();
         List<Customer> list = new ArrayList<>();
+         HttpSession session = request.getSession();
+         Insurance i = (Insurance) session.getAttribute("account");
+         String gender = request.getParameter("gender");      
+        String quantity_raw = request.getParameter("quantity");
+        String offset_raw = request.getParameter("offset");
+        int offset = 1;
+        int quantity = 5;
+
+        try {
+            if (offset_raw != null) {
+                offset = Integer.parseInt(offset_raw);
+            }
+            if (quantity_raw != null) {
+                quantity = Integer.parseInt(quantity_raw);
+            }
+        } catch (NumberFormatException e) {
+
+            return;
+        }
+        int count = 0;
+        if(gender.equals("all")){
+         count = dao.getTotalInsuranceCustomer(i.getInsurance_id());
+        }
+        else{
+            count = dao.getTotalInsuranceCustomerByGender(i.getInsurance_id(), gender);
+        }
+        int endPage = count / quantity;
+        if (count % quantity != 0) {
+            endPage++;
+        }
+       
         if(gender.equals("all")){
            list = dao.getInsuranceCustomerByInsuranceId(i.getInsurance_id());
         }
         else if(gender.equals("female")){
            list = dao.filterInsuranceCustomerByGender(i.getInsurance_id(), gender);
+           
         }
         else if(gender.equals("male")){
            list = dao.filterInsuranceCustomerByGender(i.getInsurance_id(), gender);
         }
+      
+        request.setAttribute("quantity", quantity);
+        request.setAttribute("endP", endPage);
         request.setAttribute("listC", list);
         request.setAttribute("gender", gender);
         request.getRequestDispatcher("managerInsuranceCustomer.jsp").forward(request, response);

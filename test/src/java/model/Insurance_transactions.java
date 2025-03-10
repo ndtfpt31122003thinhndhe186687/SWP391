@@ -15,7 +15,7 @@ public class Insurance_transactions {
     public Date transaction_date;
     public double amount;
     public String transaction_type,notes,full_name;
-
+    public String customerName,contractInfo;
     public Insurance_transactions() {
     }
 
@@ -29,10 +29,6 @@ public class Insurance_transactions {
         this.notes = notes;
         this.full_name = full_name;
     }
-
-
-
-    
     public Insurance_transactions(int transaction_id, int contract_id, int customer_id,int insurance_id, Date transaction_date, double amount, String transaction_type, String notes) {
         this.transaction_id = transaction_id;
         this.contract_id = contract_id;
@@ -42,6 +38,32 @@ public class Insurance_transactions {
         this.amount = amount;
         this.transaction_type = transaction_type;
         this.notes = notes;
+    }
+
+    public Insurance_transactions( int contract_id, int customer_id, double amount, String transaction_type, String notes) {
+        this.contract_id = contract_id;
+        this.customer_id = customer_id;
+        this.amount = amount;
+        this.transaction_type = transaction_type;
+        this.notes = notes;
+    }
+    
+    
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getContractInfo() {
+        return contractInfo;
+    }
+
+    public void setContractInfo(String contractInfo) {
+        this.contractInfo = contractInfo;
     }
 
     public String getFull_name() {

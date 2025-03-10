@@ -61,48 +61,73 @@ public class sortInsuranceContractServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        DAO_Insurance dao = new DAO_Insurance();
+        List<Insurance_contract> list = new ArrayList<>();
         String sort = request.getParameter("sortInsuranceContract");
         String status = request.getParameter("status");
          HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        DAO_Insurance dao = new DAO_Insurance();
-        List<Insurance_contract> list = new ArrayList<>();
-        if(sort.equals("none") && status.equals("all")){
-            list = dao.getAllInsuranceContractByInsuranceId(i.getInsurance_id());
+        String quantity_raw = request.getParameter("quantity");
+        String offset_raw = request.getParameter("offset");
+        int offset = 1;
+        int quantity = 5;
+
+        try {
+            if (offset_raw != null) {
+                offset = Integer.parseInt(offset_raw);
+            }
+            if (quantity_raw != null) {
+                quantity = Integer.parseInt(quantity_raw);
+            }
+        } catch (NumberFormatException e) {
+
+            return;
         }
-        else if(sort.equals("none") && status.equals("active")){
-            list = dao.getAllInsuranceContractByInsuranceIdAndStatus(i.getInsurance_id(),status);
+        int count = 0;
+        if(status.equals("all")){
+         count = dao.getTotalInsuranceContract(i.getInsurance_id());
         }
-        else if(sort.equals("none") && status.equals("expired")){
-            list = dao.getAllInsuranceContractByInsuranceIdAndStatus(i.getInsurance_id(),status);
+        else{
+            count = dao.getTotalInsuranceContractByStatus(i.getInsurance_id(), status);
         }
-        else if(sort.equals("none") && status.equals("cancelled")){
-            list = dao.getAllInsuranceContractByInsuranceIdAndStatus(i.getInsurance_id(),status);
+        int endPage = count / quantity;
+        if (count % quantity != 0) {
+            endPage++;
         }
-        else if(sort.equals("start_date") && status.equals("all")){
-            list = dao.sortInsuranceContractByStartDate(i.getInsurance_id());
+        if(sort.equals("none")){
+            if(status.equals("all")){
+                list = dao.paginationInsuranceContract(i.getInsurance_id(), offset, quantity);
+            }
+            else{
+                list = dao.getAllInsuranceContractByInsuranceIdAndStatus(i.getInsurance_id(), status, offset, quantity);
+            }
         }
-        else if(sort.equals("start_date") && status.equals("active")){
-            list = dao.sortInsuranceContractByStartDateAndStatus(i.getInsurance_id(), status);
+        else{
+            switch (sort) {
+                case "start_date":
+                    if(status.equals("all")){
+                        list = dao.sortInsuranceContractByStartDate(i.getInsurance_id(), offset, quantity);
+                    }
+                    else{
+                        list = dao.sortInsuranceContractByStartDateAndStatus(i.getInsurance_id(), status, offset, quantity);
+                    }
+                    break;
+                case "created_at":
+                    if(status.equals("all")){
+                        list = dao.sortInsuranceContractByCreatedAt(i.getInsurance_id(), offset, quantity);
+                    }
+                    else{
+                        list = dao.sortInsuranceContractByCreatedAtAndStatus(i.getInsurance_id(), status, offset, quantity);
+                    }
+                    break;
+                default:
+                    list = dao.paginationInsuranceContract(i.getInsurance_id(), offset, quantity);
+                    break;
+            }
         }
-        else if(sort.equals("start_date") && status.equals("expired")){
-            list = dao.sortInsuranceContractByStartDateAndStatus(i.getInsurance_id(), status);
-        }
-        else if(sort.equals("start_date") && status.equals("cancelled")){
-            list = dao.sortInsuranceContractByStartDateAndStatus(i.getInsurance_id(), status);
-        }
-        else if(sort.equals("created_at") && status.equals("all")){
-            list = dao.sortInsuranceContractByCreatedAt(i.getInsurance_id());
-        }
-         else if(sort.equals("created_at") && status.equals("active")){
-            list = dao.sortInsuranceContractByCreatedAtAndStatus(i.getInsurance_id(), status);
-        }
-        else if(sort.equals("created_at") && status.equals("expired")){
-            list = dao.sortInsuranceContractByCreatedAtAndStatus(i.getInsurance_id(), status);
-        }
-        else if(sort.equals("created_at") && status.equals("cancelled")){
-            list = dao.sortInsuranceContractByCreatedAtAndStatus(i.getInsurance_id(), status);
-        }
+               
+        request.setAttribute("quantity", quantity);
+        request.setAttribute("endP", endPage);
         request.setAttribute("listC", list);
         request.setAttribute("status", status);
         request.setAttribute("sort", sort);

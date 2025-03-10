@@ -113,29 +113,43 @@
     </form>
 
 
-    <script>
-        // Gọi hàm filterContracts() khi trang vừa tải để chọn hợp đồng đầu tiên của policy mặc định
-        window.onload = filterContracts;
-    </script>
+
         <script>
-        function filterContracts() {
-            var policyId = document.getElementById("policySelect").value;
-            var contractSelect = document.getElementById("contractSelect");
+    function filterContracts() {
+        var policySelect = document.getElementById("policySelect");
+        var contractSelect = document.getElementById("contractSelect");
 
-            // Xóa tất cả các option cũ
-            contractSelect.innerHTML = "";
+        // Lấy ID chính sách đang được chọn
+        var policyId = policySelect.value;
 
-            // Lặp qua danh sách hợp đồng và hiển thị hợp đồng phù hợp
-            var contracts = document.querySelectorAll(".contractOption");
-            contracts.forEach(function(option) {
-                if (option.getAttribute("data-policy-id") === policyId) {
-                    var newOption = document.createElement("option");
-                    newOption.value = option.value;
-                    newOption.text = option.textContent;
-                    contractSelect.appendChild(newOption);
-                }
-            });
+        // Xóa tất cả các option cũ trong danh sách hợp đồng
+        contractSelect.innerHTML = "";
+
+        // Lặp qua danh sách hợp đồng và thêm hợp đồng phù hợp
+        var contracts = document.querySelectorAll(".contractOption");
+        var hasValidContract = false;
+
+        contracts.forEach(function(option) {
+            if (option.getAttribute("data-policy-id") === policyId) {
+                var newOption = document.createElement("option");
+                newOption.value = option.value;
+                newOption.text = option.textContent;
+                contractSelect.appendChild(newOption);
+                hasValidContract = true;
+            }
+        });
+
+        // Nếu có hợp đồng hợp lệ, chọn hợp đồng đầu tiên
+        if (hasValidContract) {
+            contractSelect.selectedIndex = 0;
         }
-    </script>
+    }
+
+    // Khi trang tải, tự động gọi filterContracts để hiển thị hợp đồng đầu tiên
+    window.onload = function() {
+        filterContracts();
+    };
+</script>
+
 </body>
 </html>

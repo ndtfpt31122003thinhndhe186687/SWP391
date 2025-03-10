@@ -70,46 +70,46 @@
         </style>
     </head>
     <body>
-        <h1>Update a Policy</h1>
+        <h1>Cập nhật chính sách</h1>
         <h4>${requestScope.error}</h4>
         <c:set var="p" value="${requestScope.policy}"/>
         <form action="updatePolicy" method="post" enctype="multipart/form-data">
             <input type="hidden" name="policy_id" value="${p.policy_id}">
 
-            Enter Policy Name  
-            <textarea name="policy_name" id="editor1">${p.policy_name}</textarea><br>
+            Nhập tên
+            <textarea name="policy_name" >${p.policy_name}</textarea><br>
 
-            Enter Description  
+            Nhập mô tả  
             <textarea name="description" id="editor2">${p.description}</textarea><br>
 
-            Enter Coverage Amount  
+            Nhập số tiền được nhận 
             <input type="text" name="coverage_amount" class="format-number" value="${p.coverage_amount}" /><br>
 
-            Enter Premium Amount  
+            Nhập số tiền cần đóng 
             <input type="text" name="premium_amount" class="format-number" value="${p.premium_amount}" /><br>
 
-            Enter Status
+            Chọn trạng thái
             <select class="filter-dropdown" name="status">
-                <option value="active" ${p.status == 'active' ? 'selected' : ''}>Active</option>
-                <option value="inactive" ${p.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                <option value="active" ${p.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                <option value="inactive" ${p.status == 'inactive' ? 'selected' : ''}>Ngừng hoạt động</option>
             </select>
             </br>
             <div class="form-group">
-    <label for="file">Current Image</label><br>
+    <label for="file">Ảnh hiện tại</label><br>
     <c:if test="${not empty p.image}">
         <img src="${p.image}" alt="Current Image" width="150" height="150" style="border-radius: 5px; object-fit: cover;"><br>
     </c:if>
-    <label for="file">Upload New Image</label>
+    <label for="file">Tải ảnh mới</label>
     <input type="file" name="file" id="file" accept="image/png, image/jpg, image/jpeg">
 </div>
 
-            <button type="submit">Update</button>
+            <button type="submit">Cập nhật</button>
         </form>
 
         <main>
             <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
             <script>
-                CKEDITOR.replace('editor1');
+               
                 CKEDITOR.replace('editor2');
             </script>
             <script>

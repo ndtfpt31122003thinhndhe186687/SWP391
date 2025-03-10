@@ -102,15 +102,15 @@ public class updateStaffServlet extends HttpServlet {
             Staff Username = dao.get_Staff_By_Username(username);
             Staff Email = dao.get_Staff_By_Email(email);
             Staff Phone = dao.get_Staff_By_Phone(phone_number);
-            if(Username != null){
+            if(Username != null && !staff.getUsername().equals(username)){
                 request.setAttribute("staff", staff);
                 request.setAttribute("error","username "+ username+" existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
-            }else if (Email != null){
+            }else if (Email != null && !staff.getEmail().equals(email)){
                 request.setAttribute("staff", staff);
                 request.setAttribute("error","emai "+ email+" existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
-            }else if (Phone !=null){
+            }else if (Phone !=null && !staff.getPhone_number().equals(phone_number)){
                 request.setAttribute("staff", staff);
                 request.setAttribute("error","phone number "+ phone_number+" existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
@@ -118,7 +118,7 @@ public class updateStaffServlet extends HttpServlet {
             Staff s = new Staff(staff_id, full_name, email, password, username,
                     phone_number, gender, date_of_birth, address, role_id, status);
             dao.updateBanker(s);
-            response.sendRedirect("staff_management");
+           response.sendRedirect("staff_management?status=all&sort=full_name&type=&page=1&pageSize=2");
             }
         } catch (NumberFormatException e) {
             System.out.println(e);

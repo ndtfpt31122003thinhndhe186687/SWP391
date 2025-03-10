@@ -213,39 +213,41 @@
                 <ul class="nav flex-column h-100">
 
                     <li class="nav-item">
-                        <a class="nav-link " href="paginationInsurancePolicy?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Policy Management
+                            Quản lý chính sách bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceCustomer?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTerm?sortInsuranceTerm=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Customer Management
+                            Quản lý điều khoản bảo hiểm
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="paginationInsuranceContract?offset=1&quantity=5">
+                        <a class="nav-link" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
+                            <i class="me-2"></i>
+                            Quản lý khách hàng đã mua bảo hiểm
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="sortInsuranceContract?sortInsuranceContract=none&status=all&quantity=5&offset=1">
                             <i class=" me-2"></i>
-                            Insurance Contact Management
+                            Quản lý hợp đồng bảo hiểm
                         </a>
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="paginationInsuranceTransaction?offset=1&quantity=5">
+                        <a class="nav-link " href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                            Insurance Transactions Management
+                            Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link " href="managerInsuranceTerm?insurance_id=${account.insurance_id}">
-                            <i class="me-2"></i>
-                            Insurance Term Management
-                        </a>
-                    </li>
+
 
 
                 </ul>
@@ -254,7 +256,7 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Insurance Policy Management</h1>
+                <h1 class="h2 mb-0 text-danger">Quản lý chính sách bảo hiểm</h1>
             </div>
 
             <!-- Tabs choose staff -->
@@ -262,65 +264,80 @@
 
             <!-- View list staff -->
             <div class="mt-3">
-                <button class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#addPolicyModal">Add New Policy</button>
+                <button class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#addPolicyModal">Thêm chính sách mới</button>
                 <form action="sortInsurancePolicy" method="get">
-                    <label>Sort by :</label>
+                    <label>Sắp xếp theo :</label>
                     <select class="filter-dropdown" name="sortInsurancePolicy">
-                        <option value="none" ${requestScope.sortInsurancePolicy == '' ? 'selected' : ''}>None</option>    
-                        <option value="created_at" ${requestScope.sortInsurancePolicy == 'created_at' ? 'selected' : ''}>Created At</option>
-                        <option value="coverage_amount" ${requestScope.sortInsurancePolicy == 'coverage_amount' ? 'selected' : ''}>Coverage Amount</option>
+                        <option value="none" ${requestScope.sortInsurancePolicy == '' ? 'selected' : ''}>Không</option>    
+                        <option value="created_at" ${requestScope.sortInsurancePolicy == 'created_at' ? 'selected' : ''}>Ngày tạo</option>
+                        <option value="coverage_amount" ${requestScope.sortInsurancePolicy == 'coverage_amount' ? 'selected' : ''}>Số tiền được nhận</option>
                     </select>
-                    <label>Filter by Status:</label>
+                    <label>Hiện thông tin theo trạng thái:</label>
                     <select class="filter-dropdown" name="status">                    
-                        <option value="all" ${requestScope.status == '' ? 'selected' : ''}>All</option>
-                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
-                        <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                        <option value="all" ${requestScope.status == '' ? 'selected' : ''}>Tất cả</option>
+                        <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                        <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Ngừng hoạt động</option>
 
                     </select>
-                    <button type="submit">Find</button>
-                </form>
-                <form action="paginationInsurancePolicy" method="get">
-                    <label>Select quantity policy: </label>
+                    <br>
+                    <label>Chọn số lượng chính sách: </label>
                     <select class="filter-dropdown" name="quantity">                    
                         <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
                         <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
                     </select>
-                    <button type="submit">Find</button>
+                    <button type="submit">Tìm</button>
                 </form>
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Policy ID</th>
-                            <th>Policy Name</th>
-                            <th>Description</th>
-                            <th>Coverage Amount</th>
-                            <th>Premium Amount</th>
-                            <th>Status</th>
-                            <th>Image</th>
-                            <th>Created At</th>
-                            <th>Action</th>
+                            <th>ID chính sách</th>
+                            <th>Tên chính sách</th>                          
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <c:forEach items="${listPolicy}" var="P">
                         <tr>
                             <td>${P.policy_id}</td>
-                            <td>${P.policy_name}</td>
-                            <td>${P.description}</td>
-                            <td class="format-number">${P.coverage_amount}</td>
-                            <td class="format-number">${P.premium_amount}</td> 
+                            <td><a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#policyModal${P.policy_id}">${P.policy_name}</a></td>
                             <td>${P.status}</td> 
-                            <td> <img src="${P.image}" alt="Policy Image" width="100" height="100" style="object-fit: cover; border-radius: 5px;"></td>
                             <td>${P.created_at}</td>
                             <td>
-                                <a href="#" onclick="doDelete('${P.policy_id}')"  class="btn btn-danger">Delete</a>
-                                <a href="updatePolicy?policy_id=${P.policy_id}" class="btn btn-success">Update</a> 
+                                <a href="#" onclick="doDelete('${P.policy_id}')" class="btn btn-danger">Xoá</a>
+                                <a href="updatePolicy?policy_id=${P.policy_id}" class="btn btn-success">Sửa</a> 
                             </td>
                         </tr>
+
+                        <div class="modal fade" id="policyModal${P.policy_id}" tabindex="-1" aria-labelledby="policyModalLabel${P.policy_id}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="policyModalLabel${P.policy_id}">Chi tiết chính sách: ${P.policy_name}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>ID Chính sách:</strong> ${P.policy_id}</p>
+                                        <p><strong>Mô tả:</strong> ${P.description}</p>
+                                        <p><strong>Số tiền được nhận:</strong> <span class="format-number">${P.coverage_amount}</span></p>
+                                        <p><strong>Số tiền cần đóng:</strong> <span class="format-number">${P.premium_amount}</span></p>
+                                        <p><strong>Trạng thái:</strong> ${P.status}</p>
+                                        <p><strong>Ngày tạo:</strong> ${P.created_at}</p>
+                                        <p><strong>Ảnh:</strong></p>
+                                        <img src="InsurancePolicy/${P.image}" alt="Ảnh chính sách" width="100%" style="object-fit: cover; border-radius: 5px;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </c:forEach>
                 </table>
                 <c:forEach begin="1" end="${endP}" var="q">
-                    <a href="paginationInsurancePolicy?offset=${q}&quantity=${quantity}">${q}</a>
+                    <a href="sortInsurancePolicy?sortInsurancePolicy=${sortInsurancePolicy}&status=${status}&quantity=${quantity}&offset=${q}">${q}</a>
                 </c:forEach>
             </div>
 
@@ -328,7 +345,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addPolicyModalLabel">Add a New Policy</h5>
+                            <h5 class="modal-title" id="addPolicyModalLabel">Thêm chính sách mới</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -337,29 +354,29 @@
                             <div class="alert alert-danger"><%= error %></div>
                             <% } %>
                             <form id="addPolicyForm" action="addPolicy" method="post" enctype="multipart/form-data">
-                                <label>Enter Policy Name</label>
+                                <label>Nhập tên</label>
                                 <textarea name="policy_name"  required class="form-control"></textarea>
 
-                                <label>Enter Description</label>
+                                <label>Nhập mô tả</label>
                                 <textarea name="description" id="editor1" required class="form-control"></textarea>
 
 
-                                <label>Enter Coverage Amount</label>
+                                <label>Nhập số tiền được nhận</label>
                                 <input type="text" name="coverage_amount" required class="form-control" />
 
-                                <label>Enter Premium Amount</label>
+                                <label>Nhập số tiền cần đóng</label>
                                 <input type="text" name="premium_amount" required class="form-control" />
-                                
-                                <label>Status</label>
+
+                                <label>Trạng thái</label>
                                 <select class="form-control" name="status">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="active">Hoạt động</option>
+                                    <option value="inactive">Ngừng hoạt động</option>
                                 </select>
                                 <div class="form-group">
-                                            <label for="file">Image</label>
-                                            <input style="margin-bottom: 5px;margin-top: 5px;" type="file" name="file" id="file" accept="image/png, image/jpg, image/jpeg">
-                                        </div>
-                                <button type="submit" class="btn btn-danger mt-3">Add Policy</button>
+                                    <label for="file">Ảnh</label>
+                                    <input style="margin-bottom: 5px;margin-top: 5px;" type="file" name="file" id="file" accept="image/png, image/jpg, image/jpeg">
+                                </div>
+                                <button type="submit" class="btn btn-danger mt-3">Thêm chính sách</button>
                             </form>
                         </div>
                     </div>
@@ -373,7 +390,7 @@
 
         <script type="text/javascript">
             function doDelete(id) {
-                if (confirm("Are you sure to delete ID '" + id + "'?")) {
+                if (confirm("Bạn có chắc chắn muốn xoá '" + id + "'?")) {
                     window.location = "deletePolicy?policy_id=" + id;
                 }
             }
@@ -400,7 +417,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">Success</h5>
+                        <h5 class="modal-title" id="successModalLabel">Thành công</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -426,12 +443,12 @@
             }
         %>
 
-<script src="ckfinder/ckfinder.js"></script>
-<script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+        <script src="ckfinder/ckfinder.js"></script>
+        <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
 
-<script>
-    CKEDITOR.replace('editor1');
-</script>
+        <script>
+            CKEDITOR.replace('editor1');
+        </script>
 
 
 
@@ -440,8 +457,9 @@
             document.addEventListener("DOMContentLoaded", function () {
                 function formatNumberInput(input) {
                     input.addEventListener("input", function () {
-                        let cursorPosition = input.selectionStart; 
-                        let rawValue = input.value.replace(/,/g, "").replace(/[^0-9.]/g, ''); 
+                        let rawValue = input.value.replace(/,/g, "").replace(/[^0-9.]/g, '');
+                        let cursorPosition = input.selectionStart; // Lưu vị trí con trỏ
+                        let beforeCursor = input.value.slice(0, cursorPosition).replace(/,/g, ""); // Phần trước con trỏ
 
                         if (!isNaN(rawValue) && rawValue !== "") {
                             let formattedValue = Number(rawValue).toLocaleString("en-US", {
@@ -449,12 +467,30 @@
                                 maximumFractionDigits: 2
                             });
 
+                            // Tính lại vị trí con trỏ
+                            let newCursorPos = 0;
+                            let countDigits = 0;
+                            for (let i = 0; i < formattedValue.length; i++) {
+                                if (formattedValue[i].match(/[0-9]/))
+                                    countDigits++;
+                                if (countDigits >= beforeCursor.length) {
+                                    newCursorPos = i + 1;
+                                    break;
+                                }
+                            }
+
                             input.value = formattedValue;
 
                             setTimeout(() => {
-                                input.selectionStart = input.selectionEnd = cursorPosition;
+                                input.selectionStart = input.selectionEnd = newCursorPos;
                             }, 0);
                         }
+                    });
+
+                    // Format khi load trang
+                    input.value = Number(input.value.replace(/,/g, "") || 0).toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
                     });
                 }
 
@@ -466,6 +502,7 @@
                 if (premiumAmountInput)
                     formatNumberInput(premiumAmountInput);
 
+                // 📌 Định dạng hiển thị số có VND (Không ảnh hưởng đến input)
                 let formatNumbers = document.querySelectorAll(".format-number");
                 formatNumbers.forEach(function (el) {
                     let num = parseFloat(el.innerText.replace(/,/g, ""));
@@ -473,10 +510,11 @@
                         el.innerText = num.toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2
-                        });
+                        }) + " VND";
                     }
                 });
             });
+
         </script>
 
 

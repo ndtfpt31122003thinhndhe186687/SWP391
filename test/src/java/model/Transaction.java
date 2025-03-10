@@ -14,6 +14,7 @@ public class Transaction {
     public double amount;
     public Date transaction_date;
     public String transaction_type;
+    public String formatted_transaction_date;
 
     public Transaction() {
     }
@@ -25,6 +26,14 @@ public class Transaction {
         this.amount = amount;
         this.transaction_date = transaction_date;
         this.transaction_type = transaction_type;
+    }
+
+    public String getFormatted_transaction_date() {
+        return formatted_transaction_date;
+    }
+
+    public void setFormatted_transaction_date(String formatted_transaction_date) {
+        this.formatted_transaction_date = formatted_transaction_date;
     }
 
     public int getCustomer_id() {

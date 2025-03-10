@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Windows
  */
 public class Insurance_contract {
-    public int contract_id,customer_id,service_id,policy_id, insurance_id;
+    public int contract_id,customer_id,service_id,policy_id, insurance_id, duration;
     public Date start_date,end_date,created_at;
     public String payment_frequency,status, full_name,service_name, policy_name;
 
@@ -23,10 +23,11 @@ public class Insurance_contract {
         this.status = status;
     }
 
-    public Insurance_contract(int customer_id, int service_id, int policy_id, Date start_date, Date end_date, String payment_frequency, String status) {
+    public Insurance_contract(int customer_id, int service_id, int policy_id, int duration,Date start_date, Date end_date, String payment_frequency, String status) {
         this.customer_id = customer_id;
         this.service_id = service_id;
         this.policy_id = policy_id;
+        this.duration = duration;
         this.start_date = start_date;
         this.end_date = end_date;
         this.payment_frequency = payment_frequency;
@@ -34,9 +35,10 @@ public class Insurance_contract {
     }
 
     
-    public Insurance_contract(int insurance_id ,int contract_id, Date start_date, Date end_date, Date created_at, String payment_frequency, String status, String full_name, String service_name, String policy_name) {
+    public Insurance_contract(int insurance_id ,int contract_id, int duration,Date start_date, Date end_date, Date created_at, String payment_frequency, String status, String full_name, String service_name, String policy_name) {
         this.contract_id = contract_id;
         this.insurance_id = insurance_id;
+        this.duration = duration;
         this.start_date = start_date;
         this.end_date = end_date;
         this.created_at = created_at;
@@ -48,10 +50,11 @@ public class Insurance_contract {
     }
 
     
-    public Insurance_contract(int contract_id, int customer_id, int service_id, int policy_id, Date start_date, Date end_date, Date created_at, String payment_frequency, String status) {
+    public Insurance_contract(int contract_id, int customer_id, int duration,int service_id, int policy_id, Date start_date, Date end_date, Date created_at, String payment_frequency, String status) {
         this.contract_id = contract_id;
         this.customer_id = customer_id;
         this.service_id = service_id;
+        this.duration = duration;
         this.policy_id = policy_id;
         this.start_date = start_date;
         this.end_date = end_date;
@@ -60,18 +63,18 @@ public class Insurance_contract {
         this.status = status;
     }
 
-    public Insurance_contract(int contract_id, int customer_id, int service_id, int policy_id, int insurance_id, Date start_date, Date end_date, Date created_at, String payment_frequency, String status) {
-        this.contract_id = contract_id;
-        this.customer_id = customer_id;
-        this.service_id = service_id;
-        this.policy_id = policy_id;
-        this.insurance_id = insurance_id;
-        this.start_date = start_date;
-        this.end_date = end_date;
-        this.created_at = created_at;
-        this.payment_frequency = payment_frequency;
-        this.status = status;
-    }
+//    public Insurance_contract(int contract_id, int customer_id, int service_id, int policy_id, int insurance_id, Date start_date, Date end_date, Date created_at, String payment_frequency, String status) {
+//        this.contract_id = contract_id;
+//        this.customer_id = customer_id;
+//        this.service_id = service_id;
+//        this.policy_id = policy_id;
+//        this.insurance_id = insurance_id;
+//        this.start_date = start_date;
+//        this.end_date = end_date;
+//        this.created_at = created_at;
+//        this.payment_frequency = payment_frequency;
+//        this.status = status;
+//    }
 
     public String getFull_name() {
         return full_name;
@@ -179,10 +182,20 @@ public class Insurance_contract {
         this.status = status;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     @Override
     public String toString() {
-        return "Insurance_contract{" + "contract_id=" + contract_id + ", customer_id=" + customer_id + ", service_id=" + service_id + ", policy_id=" + policy_id + ", insurance_id=" + insurance_id + ", start_date=" + start_date + ", end_date=" + end_date + ", created_at=" + created_at + ", payment_frequency=" + payment_frequency + ", status=" + status + ", full_name=" + full_name + ", service_name=" + service_name + ", policy_name=" + policy_name + '}';
+        return "Insurance_contract{" + "contract_id=" + contract_id + ", customer_id=" + customer_id + ", service_id=" + service_id + ", policy_id=" + policy_id + ", insurance_id=" + insurance_id + ", duration=" + duration + ", start_date=" + start_date + ", end_date=" + end_date + ", created_at=" + created_at + ", payment_frequency=" + payment_frequency + ", status=" + status + ", full_name=" + full_name + ", service_name=" + service_name + ", policy_name=" + policy_name + '}';
     }
+
+  
 
 
 

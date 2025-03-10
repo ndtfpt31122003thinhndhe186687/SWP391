@@ -26,7 +26,7 @@
             .service-header {
                 background: linear-gradient(135deg, #dc3545, #c82333);
                 color: white;
-                padding: 3rem 0;
+                padding: 1rem 0;
                 margin-bottom: 2rem;
                 text-align: center;
             }
@@ -178,11 +178,124 @@
                 box-shadow: 0 3px 6px rgba(192, 57, 43, 0.5);
             }
 
+            /* menu */
+            /* Giao diện chính */
+            .navigation_primary {
+                background-color: white;
+                padding: 10px 20px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
 
+            .navigation_primary-wrapper {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
 
+            /* Logo */
+            .header-logo a {
+                font-size: 22px;
+                font-weight: bold;
+                color: red;
+                text-decoration: none;
+            }
+
+            /* Menu chính */
+            .navigation_primary-menu {
+                display: flex;
+                gap: 20px;
+            }
+
+            .navigation_primary-item a {
+                text-decoration: none;
+                color: black;
+                font-weight: 500;
+                padding: 8px 12px;
+                transition: color 0.3s ease-in-out;
+            }
+
+            .navigation_primary-item a:hover {
+                color: red;
+                text-decoration: underline;
+            }
+
+            /* Nút đăng nhập */
+            .navigation_primary-actions a {
+                background-color: red;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 5px;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            .navigation_primary-actions a:hover {
+                background-color: darkred;
+            }
+            
+            .navigation_secondary-actions a {
+                padding: 8px 16px;
+                border-radius: 5px;
+                font-weight: bold;
+                text-decoration: red;
+            }
+                     
+            .fin {
+                color: red;
+            }
+
+            .bank {
+                color: black;
+            }
         </style>
     </head>
-    <body>
+    <body>       
+        <div class="navigation_primary">
+            <div class="navigation_primary-wrapper">
+                <!-- Logo -->
+                <div class="header-logo">                 
+                    <a href="home" class="banner_taital">
+                        <span class="fin">FIN</span>
+                        <span class="bank">BANK</span>                  
+                    </a>
+                </div>
+
+                <!-- Menu -->
+                <div class="navigation_primary-menu">
+                    <div class="navigation_primary-item"> <a href="#">Chi tiêu</a> </div>
+                    <div class="navigation_primary-item"> <a href="#">Tiết kiệm</a> </div>
+                    <div class="navigation_primary-item"> <a href="#">Vay</a> </div>
+                    <div class="navigation_primary-item"> <a href="#">Bảo hiểm</a> </div>
+                    <div class="navigation_primary-item"> <a href="#">Thông tin mới</a> </div>
+                </div>
+
+                <!-- Nút đăng nhập -->
+                <c:if test="${sessionScope.account == null}">
+                    <div class="navigation_primary-actions">
+                        <a href="login">Đăng nhập →</a>
+                    </div>
+                </c:if>
+                <c:if test="${sessionScope.account != null}">
+                    <c:if test="${sessionScope.account.role_id !=5}">     
+                        <div class="navigation_secondary-actions">
+                            <a>
+                                Xin chào ${sessionScope.account.full_name}
+                            </a>
+                            <a href="logout">Đăng xuất</a>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${sessionScope.account.role_id == 5}">
+                        <div class="navigation_secondary-actions">
+                            <a >Xin chào ${sessionScope.account.insurance_name}</a>                                          
+                        <a href="logout">Đăng xuất</a>
+                        </div>
+                        </c:if>
+                    </c:if>   
+            </div>
+        </div>
 
         <!-- Header Section -->
         <div class="service-header">
@@ -191,18 +304,6 @@
                 <p class="lead">Discover our range of financial services</p>
             </div>
         </div>
-
-        <!-- Navigation Bar -->
-        <nav style="text-align: center; margin: 20px 0;">
-            <ul style="list-style-type: none; padding: 0; display: inline-block;">
-                <li style="display: inline; margin: 0 15px;"><a href="home">Home</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="about.jsp">About</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="services.jsp">Services</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="team.jsp">Team</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="contact.jsp">Contact Us</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="news.jsp">News</a></li>
-            </ul>
-        </nav>
 
         <!-- Main Content -->
         <div class="container">
@@ -214,16 +315,16 @@
                             <div class="card-body text-center">
                                 <div class="service-icon">
                                     <c:choose>
-                                        <c:when test="${s.service_type == 'Saving'}">
+                                        <c:when test="${s.service_type == 'saving'}">
                                             <i class="bi bi-piggy-bank"></i>
                                         </c:when>
-                                        <c:when test="${s.service_type == 'Loan'}">
+                                        <c:when test="${s.service_type == 'loan'}">
                                             <i class="bi bi-cash-coin"></i>
                                         </c:when>
-                                        <c:when test="${s.service_type == 'Deposit'}">
+                                        <c:when test="${s.service_type == 'deposit'}">
                                             <i class="bi bi-safe"></i>
                                         </c:when>
-                                        <c:when test="${s.service_type == 'Withdrawal'}">
+                                        <c:when test="${s.service_type == 'withdrawal'}">
                                             <i class="bi bi-cash-stack"></i>
                                         </c:when>
                                     </c:choose>
@@ -231,16 +332,16 @@
                                 <h3 class="service-title">${s.service_name}</h3>
                                 <div class="service-type-badge ${s.service_type.toLowerCase()}">
                                     <c:choose>
-                                        <c:when test="${s.service_type == 'Saving'}">
+                                        <c:when test="${s.service_type == 'saving'}">
                                             Savings
                                         </c:when>
-                                        <c:when test="${s.service_type == 'Loan'}">
+                                        <c:when test="${s.service_type == 'loan'}">
                                             Loans
                                         </c:when>
-                                        <c:when test="${s.service_type == 'Deposit'}">
+                                        <c:when test="${s.service_type == 'deposit'}">
                                             Deposits
                                         </c:when>
-                                        <c:when test="${s.service_type == 'Withdrawal'}">
+                                        <c:when test="${s.service_type == 'withdrawal'}">
                                             Withdrawals
                                         </c:when>
                                     </c:choose>
@@ -274,6 +375,9 @@
                 </div>
             </c:if>
         </div>
+        <div class="text-center mt-4">
+                <a href="unsecuredloans.jsp" class="btn btn-primary">Apply for Unsecured Loans</a>
+            </div>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

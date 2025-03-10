@@ -62,41 +62,74 @@ public class sortInsuranceTransactionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        DAO_Insurance dao = new DAO_Insurance();
+        List<Insurance_transactions> list = new ArrayList<>();
        String sort = request.getParameter("sortInsuranceTransaction");
         String transaction_type = request.getParameter("transaction_type");
          HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        DAO_Insurance dao = new DAO_Insurance();
-        List<Insurance_transactions> list = new ArrayList<>();
-        if(sort.equals("none") && transaction_type.equals("all")){
-            list = dao.getInsuranceTransactionByInsuranceID(i.getInsurance_id());
+        String quantity_raw = request.getParameter("quantity");
+        String offset_raw = request.getParameter("offset");
+        int offset = 1;
+        int quantity = 5;
+
+        try {
+            if (offset_raw != null) {
+                offset = Integer.parseInt(offset_raw);
+            }
+            if (quantity_raw != null) {
+                quantity = Integer.parseInt(quantity_raw);
+            }
+        } catch (NumberFormatException e) {
+            return;
         }
-        else if(sort.equals("none") && transaction_type.equals("premium_payment")){
-            list = dao.getInsuranceTransactionByInsuranceIDAndTransactionType(i.getInsurance_id(),transaction_type);
+        int count = 0;
+        if(transaction_type.equals("all")){
+         count = dao.getTotalInsuranceTransaction(i.getInsurance_id());
         }
-        else if(sort.equals("none") && transaction_type.equals("claim_payment")){
-            list = dao.getInsuranceTransactionByInsuranceIDAndTransactionType(i.getInsurance_id(),transaction_type);
+        else{
+            count = dao.getTotalInsuranceTransactionByType(i.getInsurance_id(), transaction_type);
         }
-        else if(sort.equals("transaction_date") && transaction_type.equals("all")){
-            list = dao.sortInsuranceTransactionByTransactionDate(i.getInsurance_id());
+        int endPage = count / quantity;
+        if (count % quantity != 0) {
+            endPage++;
         }
-        else if(sort.equals("transaction_date") && transaction_type.equals("premium_payment")){
-            list = dao.sortInsuranceTransactionByTransactionDateAndTransactionType(i.getInsurance_id(),transaction_type);
+        
+        if(sort.equals("none")){
+            if(transaction_type.equals("all")){
+                list = dao.paginationInsuranceTransaction(i.getInsurance_id(), offset, quantity);
+            }
+            else{
+                list = dao.getInsuranceTransactionByInsuranceIDAndTransactionType(i.getInsurance_id(), transaction_type, offset, quantity);
+            }
         }
-         else if(sort.equals("transaction_date") && transaction_type.equals("claim_payment")){
-            list = dao.sortInsuranceTransactionByTransactionDateAndTransactionType(i.getInsurance_id(),transaction_type);
+        else{
+            switch (sort) {
+                case "transaction_date":
+                    if(transaction_type.equals("all")){
+                        list = dao.sortInsuranceTransactionByTransactionDate(i.getInsurance_id(), offset, quantity);
+                    }
+                    else{
+                        list = dao.sortInsuranceTransactionByTransactionDateAndTransactionType(i.getInsurance_id(), transaction_type, offset, quantity);
+                    }
+                    break;
+                case "amount":
+                    if(transaction_type.equals("all")){
+                        list = dao.sortInsuranceTransactionByAmount(i.getInsurance_id(), offset, quantity);
+                    }
+                    else{
+                        list = dao.sortInsuranceTransactionByAmountAndTransactionType(i.getInsurance_id(), transaction_type, offset, quantity);
+                    }
+                    break;
+                default:
+                    throw new AssertionError();
+            }
         }
-        else if(sort.equals("amount") && transaction_type.equals("all")){
-            list = dao.sortInsuranceTransactionByAmount(i.getInsurance_id());
-        }
-         else if(sort.equals("amount") && transaction_type.equals("premium_payment")){
-            list = dao.sortInsuranceTransactionByAmountAndTransactionType(i.getInsurance_id(),transaction_type);
-        }
-        else if(sort.equals("amount") && transaction_type.equals("claim_payment")){
-            list = dao.sortInsuranceTransactionByAmountAndTransactionType(i.getInsurance_id(),transaction_type);
-        }
+        
+       request.setAttribute("quantity", quantity);
+        request.setAttribute("endP", endPage);
         request.setAttribute("listT", list);
-        request.setAttribute("sort", sort);
+        request.setAttribute("sortInsuranceTransaction", sort);
         request.setAttribute("transaction_type", transaction_type);
         request.getRequestDispatcher("managerInsuranceTransaction.jsp").forward(request, response);
     } 

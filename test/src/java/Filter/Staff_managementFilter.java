@@ -18,13 +18,14 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Customer;
 import model.Staff;
 
 /**
  *
  * @author DELL
  */
-@WebFilter(filterName = "Staff_managementFilter", urlPatterns = {"/staff_management"})
+@WebFilter(filterName = "Staff_managementFilter", urlPatterns = {"/admin/*"})
 public class Staff_managementFilter implements Filter {
 
     private static final boolean debug = true;
@@ -104,15 +105,25 @@ public class Staff_managementFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession();
-        Staff staff = (Staff)session.getAttribute("account");
-        // check login and role 
-        if(staff !=null && staff.getRole_id()==1){
-            // if staff is admin , accept 
-            chain.doFilter(request, response);
-        }else {
-            ((HttpServletResponse)response).sendRedirect("home");
+
+        Object account = session.getAttribute("account"); // Lấy account từ session
+
+        if (account != null) {
+            int roleId = -1;
+            if (account instanceof Staff) {
+                roleId = ((Staff) account).getRole_id();
+            } else if (account instanceof Customer) {
+                roleId = ((Customer) account).getRole_id();
+            }
+
+            if (roleId == 1) {
+
+                chain.doFilter(request, response);
+            } else {
+                ((HttpServletResponse) response).sendRedirect("home");
+            }
         }
-        
+
 //        if (debug) {
 //            log("Staff_managementFilter:doFilter()");
 //        }
@@ -143,7 +154,6 @@ public class Staff_managementFilter implements Filter {
 //            }
 //            sendProcessingError(problem, response);
 //        }
-
     }
 
     /**
