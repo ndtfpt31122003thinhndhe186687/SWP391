@@ -1,6 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -56,7 +57,7 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
                     Mini Finance
                 </a>
@@ -166,13 +167,13 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
 
-                        <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link " href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
                             Quản lý chính sách bảo hiểm
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link " href="sortInsuranceTerm?sortInsuranceTerm=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
@@ -183,7 +184,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
                             <i class="me-2"></i>
-                             Quản lý khách hàng đã mua bảo hiểm
+                            Quản lý khách hàng đã mua bảo hiểm
                         </a>
                     </li>
 
@@ -198,6 +199,18 @@
                         <a class="nav-link " href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
                             <i class="me-2"></i>
                             Quản lý giao dịch bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerStatisticInsurance?${account.insurance_id}">
+                            <i class="me-2"></i>
+                            Quản lý thống kê của bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerInsuranceFeedback">
+                            <i class="me-2"></i>
+                            Quản lý phản hồi bảo hiểm
                         </a>
                     </li>
                 </ul>
@@ -228,7 +241,7 @@
                         <option value="claim_payment" ${requestScope.transaction_type == 'claim_payment' ? 'selected' : ''}>Thanh toán yêu cầu bồi thường</option>
 
                     </select>
-                        <label>Chọn số lượng giao dịch: </label>
+                    <label>Chọn số lượng giao dịch: </label>
                     <select class="filter-dropdown" name="quantity">                    
                         <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
                         <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
@@ -236,7 +249,7 @@
                     </select>
                     <button type="submit">Tìm</button>
                 </form>
-               
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -244,25 +257,36 @@
                             <th>ID hợp đồng</th>
                             <th>Họ và tên khách hàng</th>
                             <th>Ngày giao dịch</th>
-                            <th>Số tiền</th>
-                            <th>Loại giao dịch</th>
-                            <th>Ghi chú</th>
 
 
                         </tr>
                     </thead>
                     <c:forEach items="${listT}" var="T">
                         <tr>
-                            <td>${T.transaction_id}</td>
+                            <td><a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#transactionModal${T.transaction_id}">${T.transaction_id}</a></td>
                             <td>${T.contract_id}</td>
                             <td>${T.full_name}</td>
-                            <td>${T.transaction_date}</td>
-                            <td class="format-number">${T.amount}</td>
-                            <td>${T.transaction_type}</td> 
-                            <td>${T.notes}</td> 
-
+                            <td><fmt:formatDate value="${T.transaction_date}" pattern="dd-MM-yyyy" /></td>
 
                         </tr>
+                        <div class="modal fade" id="transactionModal${T.transaction_id}" tabindex="-1" aria-labelledby="transactionModalLabel${T.transaction_id}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="transactionModalLabel${T.transaction_id}">Chi tiết giao dịch:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">                      
+                                        <p><strong>Số tiền:</strong> <span><fmt:formatNumber value="${T.amount}" pattern="#,##0.00" />VND</span></p>
+                                        <p><strong>Loại giao dịch:</strong> ${T.transaction_type == 'premium_payment' ? 'Thanh toán phí bảo hiểm' : 'Bồi thường bảo hiểm'}</span></p>
+                                        <p><strong>Ghi chú:</strong> ${T.notes}</p>                                      
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </c:forEach>
                 </table>
                 <c:forEach begin="1" end="${endP}" var="q">
@@ -271,20 +295,7 @@
             </div>
         </main>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                 let formatNumbers = document.querySelectorAll(".format-number");
-                formatNumbers.forEach(function (el) {
-                    let num = parseFloat(el.innerText.replace(/,/g, ""));
-                    if (!isNaN(num)) {
-                        el.innerText = num.toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }) + " VND";
-                    }
-                });
-            });
-        </script>
+
 
 
         </main>

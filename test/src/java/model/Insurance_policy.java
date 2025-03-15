@@ -22,6 +22,11 @@ public class Insurance_policy {
     public Insurance_policy() {
     }
 
+    public Insurance_policy(int policy_id, String policy_name) {
+        this.policy_id = policy_id;
+        this.policy_name = policy_name;
+    }
+
     public Insurance_policy(int insurance_id, String policy_name, String description, String status, double coverage_amount, double premium_amount, String image) {
         this.insurance_id = insurance_id;
         this.policy_name = policy_name;
@@ -139,11 +144,13 @@ public class Insurance_policy {
     public void setImage(String image) {
         this.image = image;
     }
-    
-    
+
     @Override
     public String toString() {
-        return "Insurance_policy{" + "policy_id=" + policy_id + ", insurance_id=" + insurance_id + ", policy_name=" + policy_name + ", description=" + description + ", status=" + status + ", coverage_amount=" + coverage_amount + ", premium_amount=" + premium_amount + ", created_at=" + created_at + '}';
+        return "Insurance_policy{" + "policy_id=" + policy_id + ", insurance_id=" + insurance_id + ", policy_name=" + policy_name + ", description=" + description + ", status=" + status + ", image=" + image + ", coverage_amount=" + coverage_amount + ", premium_amount=" + premium_amount + ", created_at=" + created_at + '}';
     }
+    
+    
+   
     
 }

@@ -105,13 +105,15 @@ public class AddInsuranceTermFilter implements Filter {
                 HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession();
-        Insurance i = (Insurance) session.getAttribute("account");
-        if(i != null && i.getRole_id() == 5){
-            chain.doFilter(request, response);
-        }
-        else{
+        Object account = session.getAttribute("account");
+        if (account instanceof Insurance) {
+    Insurance insuranceAccount = (Insurance) account; // Ép kiểu về Insurance
+    if (insuranceAccount.getRole_id() == 5) {
+        chain.doFilter(request, response);
+        return;
+    }
+}
             res.sendRedirect("insuranceFilter.jsp");
-        }
         
         
 //        if (debug) {

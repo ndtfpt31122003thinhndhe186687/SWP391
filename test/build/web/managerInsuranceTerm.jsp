@@ -1,7 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -114,7 +114,7 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
                     Mini Finance
                 </a>
@@ -258,6 +258,18 @@
                             Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerStatisticInsurance?${account.insurance_id}">
+                            <i class="me-2"></i>
+                            Quản lý thống kê của bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerInsuranceFeedback">
+                            <i class="me-2"></i>
+                            Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -313,13 +325,13 @@
                             <td>${T.term_id}</td>
                             <!-- Khi click vào term_name, modal sẽ hiện lên -->
                             <td>
-                                <a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#termModal${T.term_id}">
+                                <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#termModal${T.term_id}">
                                     ${T.term_name}
                                 </a>
                             </td>
                             <td>${T.policy_name}</td>
-                            <td>${T.status}</td> 
-                            <td>${T.created_at}</td>
+                            <td>${T.status == 'active' ? 'Hoạt động' : 'Ngừng hoạt động'}</td> 
+                            <td><fmt:formatDate value="${T.created_at}" pattern="dd-MM-yyyy" /></td>
                             <td>
                                 <a href="#" onclick="doDelete('${T.term_id}')" class="btn btn-danger">Xoá</a>
                                 <a href="updateInsuranceTerm?term_id=${T.term_id}" class="btn btn-success">Sửa</a> 
@@ -334,14 +346,13 @@
                                         <h5 class="modal-title" id="termModalLabel${T.term_id}">Chi tiết điều khoản: ${T.term_name}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                   <div class="modal-body text-start">
+                                    <div class="modal-body text-start">
                                         <p><strong>ID Điều khoản:</strong> ${T.term_id}</p>
                                         <p><strong>Mô tả:</strong> ${T.term_description}</p>
                                         <p><strong>Tên Chính sách:</strong> ${T.policy_name}</p>
                                         <p><strong>Trạng thái:</strong> ${T.status}</p>
-                                        <p><strong>Ngày bắt đầu:</strong> ${T.start_date}</p>
-                                        <p><strong>Ngày kết thúc:</strong> ${T.end_date}</p>
-                                        <p><strong>Ngày tạo:</strong> ${T.created_at}</p>
+                                        <p><strong>Ngày bắt đầu:</strong> <fmt:formatDate value="${T.start_date}" pattern="dd-MM-yyyy" /></p>
+                                        <p><strong>Ngày kết thúc:</strong> <fmt:formatDate value="${T.end_date}" pattern="dd-MM-yyyy" /></p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -387,9 +398,9 @@
                                 <label>Nhập mô tả</label>
                                 <textarea name="term_description" id="editor"  required></textarea><br>
                                 <label>Nhập ngày bắt đầu</label>
-                                <input type="text" name="start_date" placeholder="yyyy-MM-d" required/>
+                                <input type="date" name="start_date" required/>
                                 <label>Nhập ngày kết thúc</label>
-                                <input type="text" name="end_date" placeholder="yyyy-MM-d" required/>
+                                <input type="date" name="end_date"  required/>
                                 <label>Nhập trạng thái</label><br>
                                 <select class="filter-dropdown" name="status" >
                                     <option value="active">Hoạt động</option>

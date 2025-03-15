@@ -79,7 +79,7 @@
 </head>
 <body>
     <h1>Chọn bảo hiểm bạn muốn thanh toán:</h1>
-<form action="calculatorInsurance" method="post">
+<form action="calculatorInsurance" method="get">
         <label>Chọn tên chính sách</label>    
         <select class="filter-dropdown" name="policy_id" id="policySelect" onchange="filterContracts()">
             <c:set var="uniquePolicies" value="" />

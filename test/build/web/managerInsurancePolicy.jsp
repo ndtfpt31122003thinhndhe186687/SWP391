@@ -1,6 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -93,6 +94,11 @@
             .modal-footer {
                 border-top: none;
             }
+            p {
+    white-space: pre-wrap; /* Giữ khoảng trắng và xuống dòng */
+    word-wrap: break-word;  /* Xuống dòng nếu quá dài */
+    max-width: 100%;        /* Không cho vượt quá chiều rộng */
+}
 
 
         </style>
@@ -102,7 +108,7 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
                     Mini Finance
                 </a>
@@ -246,7 +252,18 @@
                             Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerStatisticInsurance?${account.insurance_id}">
+                            <i class="me-2"></i>
+                            Quản lý thống kê của bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerInsuranceFeedback">
+                            <i class="me-2"></i>
+                            Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
 
 
 
@@ -302,9 +319,9 @@
                     <c:forEach items="${listPolicy}" var="P">
                         <tr>
                             <td>${P.policy_id}</td>
-                            <td><a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#policyModal${P.policy_id}">${P.policy_name}</a></td>
-                            <td>${P.status}</td> 
-                            <td>${P.created_at}</td>
+                            <td><a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#policyModal${P.policy_id}">${P.policy_name}</a></td>
+                            <td>${P.status == 'active' ? 'Hoạt động' : 'Ngừng hoạt động'}</td>
+                            <td><fmt:formatDate value="${P.created_at}" pattern="dd-MM-yyyy" /></td>
                             <td>
                                 <a href="#" onclick="doDelete('${P.policy_id}')" class="btn btn-danger">Xoá</a>
                                 <a href="updatePolicy?policy_id=${P.policy_id}" class="btn btn-success">Sửa</a> 
@@ -319,12 +336,10 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p><strong>ID Chính sách:</strong> ${P.policy_id}</p>
                                         <p><strong>Mô tả:</strong> ${P.description}</p>
-                                        <p><strong>Số tiền được nhận:</strong> <span class="format-number">${P.coverage_amount}</span></p>
-                                        <p><strong>Số tiền cần đóng:</strong> <span class="format-number">${P.premium_amount}</span></p>
+                                        <p><strong>Số tiền được nhận:</strong> <span><fmt:formatNumber value="${P.coverage_amount}" pattern="#,##0.00" />VND</span></p>
+                                        <p><strong>Số tiền cần đóng:</strong> <span><fmt:formatNumber value="${P.premium_amount}" pattern="#,##0.00" />VND</span></p>
                                         <p><strong>Trạng thái:</strong> ${P.status}</p>
-                                        <p><strong>Ngày tạo:</strong> ${P.created_at}</p>
                                         <p><strong>Ảnh:</strong></p>
                                         <img src="InsurancePolicy/${P.image}" alt="Ảnh chính sách" width="100%" style="object-fit: cover; border-radius: 5px;">
                                     </div>
@@ -362,10 +377,10 @@
 
 
                                 <label>Nhập số tiền được nhận</label>
-                                <input type="text" name="coverage_amount" required class="form-control" />
+                                <input type="text" id="coverage_amount" name="coverage_amount" required class="form-control" />
 
                                 <label>Nhập số tiền cần đóng</label>
-                                <input type="text" name="premium_amount" required class="form-control" />
+                                <input type="text" id="premium_amount" name="premium_amount" required class="form-control" />
 
                                 <label>Trạng thái</label>
                                 <select class="form-control" name="status">
@@ -450,72 +465,24 @@
             CKEDITOR.replace('editor1');
         </script>
 
-
-
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                function formatNumberInput(input) {
-                    input.addEventListener("input", function () {
-                        let rawValue = input.value.replace(/,/g, "").replace(/[^0-9.]/g, '');
-                        let cursorPosition = input.selectionStart; // Lưu vị trí con trỏ
-                        let beforeCursor = input.value.slice(0, cursorPosition).replace(/,/g, ""); // Phần trước con trỏ
-
-                        if (!isNaN(rawValue) && rawValue !== "") {
-                            let formattedValue = Number(rawValue).toLocaleString("en-US", {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            });
-
-                            // Tính lại vị trí con trỏ
-                            let newCursorPos = 0;
-                            let countDigits = 0;
-                            for (let i = 0; i < formattedValue.length; i++) {
-                                if (formattedValue[i].match(/[0-9]/))
-                                    countDigits++;
-                                if (countDigits >= beforeCursor.length) {
-                                    newCursorPos = i + 1;
-                                    break;
-                                }
-                            }
-
-                            input.value = formattedValue;
-
-                            setTimeout(() => {
-                                input.selectionStart = input.selectionEnd = newCursorPos;
-                            }, 0);
-                        }
-                    });
-
-                    // Format khi load trang
-                    input.value = Number(input.value.replace(/,/g, "") || 0).toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
+            <script>
+                function formatCurrencyInput(element) {
+                    let rawValue = element.value.replace(/\D/g, ""); // Chỉ giữ lại số
+                    if (rawValue.length > 0) {
+                        element.value = Number(rawValue).toLocaleString("vi-VN");
+                    } else {
+                        element.value = "";
+                    }
                 }
 
-                let coverageAmountInput = document.querySelector("input[name='coverage_amount']");
-                let premiumAmountInput = document.querySelector("input[name='premium_amount']");
-
-                if (coverageAmountInput)
-                    formatNumberInput(coverageAmountInput);
-                if (premiumAmountInput)
-                    formatNumberInput(premiumAmountInput);
-
-                // 📌 Định dạng hiển thị số có VND (Không ảnh hưởng đến input)
-                let formatNumbers = document.querySelectorAll(".format-number");
-                formatNumbers.forEach(function (el) {
-                    let num = parseFloat(el.innerText.replace(/,/g, ""));
-                    if (!isNaN(num)) {
-                        el.innerText = num.toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }) + " VND";
-                    }
+                document.getElementById("coverage_amount").addEventListener("input", function () {
+                    formatCurrencyInput(this);
                 });
-            });
 
-        </script>
+                document.getElementById("premium_amount").addEventListener("input", function () {
+                    formatCurrencyInput(this);
+                });
+            </script>  
 
 
 

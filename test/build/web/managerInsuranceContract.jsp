@@ -1,6 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -56,7 +57,7 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
                     Mini Finance
                 </a>
@@ -200,6 +201,18 @@
                             Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerStatisticInsurance?${account.insurance_id}">
+                            <i class="me-2"></i>
+                            Quản lý thống kê của bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerInsuranceFeedback">
+                            <i class="me-2"></i>
+                            Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -262,12 +275,12 @@
                                 <td>${C.full_name}</td>
                                 <td>${C.service_name}</td>
                                 <td>${C.policy_name}</td>
-                                <td>${C.payment_frequency}</td>
-                                <td>${C.status}</td> 
+                                <td>${C.payment_frequency == 'monthly' ? 'Tháng' : (C.payment_frequency == 'quarterly' ? 'Quý' : 'Năm')}</td>
+                                <td>${C.status == 'active' ? 'Hoạt động' : (C.status == 'expired' ? 'Hết hạn' : 'Đã huỷ')}</td> 
                                 <td>${C.duration}</td> 
-                                <td>${C.start_date}</td> 
-                                <td>${C.end_date}</td>
-                                <td>${C.created_at}</td>
+                                <td><fmt:formatDate value="${C.start_date}" pattern="dd-MM-yyyy" /></td> 
+                                <td><fmt:formatDate value="${C.end_date}" pattern="dd-MM-yyyy" /></td>
+                                <td><fmt:formatDate value="${C.created_at}" pattern="dd-MM-yyyy" /></td>
                                 <td>
 
                                     <a href="updateInsuranceContract?contract_id=${C.contract_id}" class="btn btn-success">Sửa</a> 

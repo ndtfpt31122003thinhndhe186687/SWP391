@@ -6,6 +6,7 @@ package controller_Insurance;
 
 import dal.DAO_Insurance;
 import dal.DAO_Loan;
+import dal.SavingDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -75,6 +76,7 @@ public class buyInsuranceServlet extends HttpServlet {
             throws ServletException, IOException {
         DAO_Insurance dao = new DAO_Insurance();
         DAO_Loan daoL = new DAO_Loan();
+
         HttpSession session = request.getSession();
         Customer c = (Customer) session.getAttribute("account");
         String insurance_id_raw = request.getParameter("insurance_id");
@@ -104,6 +106,7 @@ public class buyInsuranceServlet extends HttpServlet {
             throws ServletException, IOException {
         DAO_Insurance dao = new DAO_Insurance();
         DAO_Loan daoL = new DAO_Loan();
+        SavingDAO daoS = new SavingDAO();
         HttpSession session = request.getSession();
         Customer c = (Customer) session.getAttribute("account");
         List<Loan> listL = daoL.getListLoanByCustomerId(c.getCustomer_id());
@@ -116,10 +119,13 @@ public class buyInsuranceServlet extends HttpServlet {
         String policy_id_raw = request.getParameter("policy_id");
         String coverage_amount_raw = request.getParameter("coverage_amount");
         String premium_amount_raw = request.getParameter("premium_amount");
-        String paid_amount_raw = request.getParameter("paid_amount");
+        String paid_amount_raw = request.getParameter("paid_amount");       
         String payment_frequency = request.getParameter("payment_frequency");
         String duration_raw = request.getParameter("duration");
         String loan_id_raw = request.getParameter("loan_id");
+         coverage_amount_raw = coverage_amount_raw.replaceAll("\\.", "");
+        premium_amount_raw = premium_amount_raw.replaceAll("\\.", "");
+        paid_amount_raw = paid_amount_raw.replaceAll("\\.", "");             
         int policy_id = 0, duration = 0, insurance_id = 0, loan_id = 0;
         int service_id = 2;
         double coverage_amount = 0, premium_amount = 0, paid_amount = 0;
@@ -128,19 +134,16 @@ public class buyInsuranceServlet extends HttpServlet {
         policy_id = Integer.parseInt(policy_id_raw);
         insurance_id = Integer.parseInt(insurance_id_raw);
         duration = Integer.parseInt(duration_raw);
-        loan_id = Integer.parseInt(loan_id_raw);
-
-        try {
-            coverage_amount = Double.parseDouble(coverage_amount_raw);
+        loan_id = Integer.parseInt(loan_id_raw);       
+        coverage_amount = Double.parseDouble(coverage_amount_raw);
             premium_amount = Double.parseDouble(premium_amount_raw);
-            paid_amount = Double.parseDouble(paid_amount_raw);
-        } catch (Exception e) {
-        }
-
         List<Insurance_policy> listP = dao.getPolicyByInsuranceIDAndActive(insurance_id, "active");
-
-        if (coverage_amount <= 0 || premium_amount <= 0 || paid_amount <= 0) {
-            request.setAttribute("error", "Tiền được nhận, tiền cần đóng và số tiền nộp phải lớn hơn 0!");
+       
+        try {
+            
+            paid_amount = Double.parseDouble(paid_amount_raw);
+        } catch (NumberFormatException e) {
+             request.setAttribute("error", "Số tiền nộp phải là số!");
             request.setAttribute("insurance_id", insurance_id);
             request.setAttribute("listLoan", listL);
             request.setAttribute("listPolicy", listP);
@@ -148,8 +151,27 @@ public class buyInsuranceServlet extends HttpServlet {
             return;
         }
         
-        if(paid_amount > premium_amount){
+
+        if (paid_amount < 0) {
+            request.setAttribute("error", "Số tiền nộp phải lớn hoặc bằng 0!");
+            request.setAttribute("insurance_id", insurance_id);
+            request.setAttribute("listLoan", listL);
+            request.setAttribute("listPolicy", listP);
+            request.getRequestDispatcher("buyInsurance.jsp").forward(request, response);
+            return;
+        }
+
+        if (paid_amount > premium_amount) {
             request.setAttribute("error", "Tiền cần đóng phải nhỏ hơn tiền cần nộp");
+            request.setAttribute("insurance_id", insurance_id);
+            request.setAttribute("listLoan", listL);
+            request.setAttribute("listPolicy", listP);
+            request.getRequestDispatcher("buyInsurance.jsp").forward(request, response);
+            return;
+        }
+
+        if (paid_amount > c.getAmount()) {
+            request.setAttribute("error", "Tài khoản của bạn không đủ tiền để thanh toán");
             request.setAttribute("insurance_id", insurance_id);
             request.setAttribute("listLoan", listL);
             request.setAttribute("listPolicy", listP);
@@ -191,8 +213,8 @@ public class buyInsuranceServlet extends HttpServlet {
         }
 
         if (payment_frequency.equals("quarterly")) {
-            if (duration < 4) {
-                request.setAttribute("error", "Thời hạn hợp đồng phải lớn hơn 4");
+            if (duration < 3) {
+                request.setAttribute("error", "Thời hạn hợp đồng phải lớn hơn hoặc bằng 3 khi chọn trả theo quý");
                 request.setAttribute("insurance_id", insurance_id);
                 request.setAttribute("listLoan", listL);
                 request.setAttribute("listPolicy", listP);
@@ -202,7 +224,7 @@ public class buyInsuranceServlet extends HttpServlet {
         }
         if (payment_frequency.equals("annually")) {
             if (duration < 12) {
-                request.setAttribute("error", "Thời hạn hợp đồng phải lớn hơn 12");
+                request.setAttribute("error", "Thời hạn hợp đồng phải lớn hơn hoặc bằng 12 khi chọn trả theo năm");
                 request.setAttribute("insurance_id", insurance_id);
                 request.setAttribute("listLoan", listL);
                 request.setAttribute("listPolicy", listP);
@@ -210,35 +232,31 @@ public class buyInsuranceServlet extends HttpServlet {
                 return;
             }
         }
-        
 
-        Insurance_contract ic = new Insurance_contract(c.getCustomer_id(), service_id, policy_id,
-                duration, start_date, end_date, payment_frequency, "active");
-        
+        Insurance_contract ic = new Insurance_contract(c.getCustomer_id(), service_id, policy_id, duration,
+                start_date, end_date, payment_frequency, "active");
 
-        int contract_id = dao.getLastInsertedContractId(c.getCustomer_id()); // Lấy ID sau khi insert
+        Loan loanNew = daoL.getLoanByLoanIdAndInsuranceID(loan_id, insurance_id, policy_id);
+        if (loanNew != null) {
+            request.setAttribute("error", "Khoản vay này đã mua chính sách bảo hiểm");
+            request.setAttribute("insurance_id", insurance_id);
+            request.setAttribute("listLoan", listL);
+            request.setAttribute("listPolicy", listP);
+            request.getRequestDispatcher("buyInsurance.jsp").forward(request, response);
+            return;
+        }
 
-        Insurance_contract_detail icd = new Insurance_contract_detail(contract_id, insurance_id, coverage_amount,
-                premium_amount, paid_amount, start_date, end_date);
-        
+        dao.insertInsuranceContract(ic);
+        int contract_id = dao.getLastInsertedContractId(c.getCustomer_id());
+
+        Insurance_contract_detail icd = new Insurance_contract_detail(contract_id, insurance_id, coverage_amount, premium_amount, paid_amount,
+                start_date, end_date);
 
         Insurance_transactions it = new Insurance_transactions(contract_id, c.getCustomer_id(), paid_amount,
                 "premium_payment", "Premium payment.");
-        Loan loanNew = daoL.getLoanByLoanIdAndInsuranceID(loan_id, insurance_id, policy_id);
-        if(loanNew == null){
-           dao.insertInsuranceContract(ic);
-           dao.insertContractDetail(icd);
-           dao.insertInsuranceTransaction(it);
-        }
-        else{
-             request.setAttribute("error", "Khoản vay này đã mua bảo hiểm");
-                request.setAttribute("insurance_id", insurance_id);
-                request.setAttribute("listLoan", listL);
-                request.setAttribute("listPolicy", listP);
-                request.getRequestDispatcher("buyInsurance.jsp").forward(request, response);
-                return;
-        }
-        
+        dao.insertContractDetail(icd);
+        dao.insertInsuranceTransaction(it);
+        daoS.updateAmount(c.getCustomer_id(), paid_amount);
         session.setAttribute("showSuccessModal", true);
         session.setAttribute("successMessage", "Bạn đã mua bảo hiểm thành công!");
         response.sendRedirect("home.jsp");

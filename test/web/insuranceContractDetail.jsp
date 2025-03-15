@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,30 +91,17 @@
 
         <input type="hidden" value="${d.insurance_id}" />
 
-        <label>Số tiền được nhận</label>
-        <input type="text" class="format-number" value="${d.coverageAmount}" readonly/><br>
+        <p><strong>Số tiền được nhận:</strong> 
+            <span><fmt:formatNumber value="${d.coverageAmount}" pattern="#,##0.00" />VND</span></p>
 
-        <label>Số tiền cần đóng</label>
-        <input type="text" class="format-number" value="${d.premiumAmount}" readonly/><br>
+       <p><strong>Số tiền cần đóng:</strong> 
+           <span><fmt:formatNumber value="${d.premiumAmount}" pattern="#,##0.00" />VND</span></p>
 
-        <label>Số tiền đã đóng</label>
-        <input type="text" class="format-number" value="${d.paidAmount}" readonly/><br>
+         <p><strong>Số tiền đã nộp:</strong> 
+             <span><fmt:formatNumber value="${d.paidAmount}" pattern="#,##0.00" />VND</span></p>
 
     </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let formatNumbers = document.querySelectorAll(".format-number");
-        formatNumbers.forEach(function (el) {
-            let num = parseFloat(el.value.replace(/,/g, ""));
-            if (!isNaN(num)) {
-                el.value = num.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }) + " VND";
-            }
-        });
-    });
-</script>
+
 
 </body>
 </html>

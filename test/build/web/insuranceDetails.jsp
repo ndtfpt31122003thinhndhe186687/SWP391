@@ -7,6 +7,7 @@
         <title>Chi Tiết Bảo Hiểm</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
             :root {
                 --primary-color: #dc3545;
@@ -144,6 +145,12 @@
 
                                 <div class="detail-label">Tên Bảo Hiểm</div>
                                 <div class="detail-value">${insurance.insurance_name}</div>
+                                <div class="detail-label">Đánh giá</div>
+                                <div class="detail-value">
+                                    <c:forEach begin="1" end="${star}">
+                                        <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    </c:forEach>
+                                </div>
                                 <div class="detail-label">Chính sách</div>
                                 <a class="detail-label" href="InsurancePolicyDetails?insurance_id=${insurance.insurance_id}" >Xem thêm</a>
                                 <div class="detail-label">Điều khoản</div>
@@ -174,7 +181,10 @@
                                     <c:if test="${sessionScope.account.role_id == 0}">
                                         <c:forEach var="C" items="${listC}">
                                             <c:if test="${C.customer_id == sessionScope.account.customer_id}">
-                                                <a href="calculatorInsurance?insurance_id=${insurance.insurance_id}" class="btn btn-apply me-3">
+                                                <a href="feedbackInsurance?insurance_id=${insurance.insurance_id}" class="btn btn-apply me-3">
+                                                    <i class="bi bi-check-circle"></i> Phản hồi 
+                                                </a>
+                                                <a href="chooseInsurancePolicy?insurance_id=${insurance.insurance_id}" class="btn btn-apply me-3">
                                                     <i class="bi bi-check-circle"></i> Nộp tiền bảo hiểm
                                                 </a>
                                             </c:if>

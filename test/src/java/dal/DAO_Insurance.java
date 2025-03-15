@@ -9,6 +9,7 @@ import model.Customer;
 import model.Insurance;
 import model.Insurance_contract;
 import model.Insurance_contract_detail;
+import model.Insurance_feedback;
 import model.Insurance_policy;
 import model.Insurance_term;
 import model.Insurance_transactions;
@@ -357,6 +358,34 @@ public class DAO_Insurance extends DBContext {
         return null;
     }
 
+    public Insurance_policy getPolicyByImage(String image) {
+        String sql = "select * from insurance_policy\n"
+                + "where image = ?";
+
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, image);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int policy_id = rs.getInt("policy_id");
+                int insurance_id = rs.getInt("insurance_id");
+                String policy_name = rs.getString("policy_name");
+                String description = rs.getString("description");
+                double coverage_amount = rs.getDouble("coverage_amount");
+                double premium_amount = rs.getDouble("premium_amount");
+                String status = rs.getString("status");
+                Date created_at = rs.getDate("created_at");
+                image = rs.getString("image");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, policy_name, description, status, coverage_amount, premium_amount, created_at, image);
+                return policy;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
     public Insurance_policy getPolicyById(int policy_id) {
         String sql = "select * from insurance_policy\n"
                 + "where policy_id = ?";
@@ -666,6 +695,31 @@ public class DAO_Insurance extends DBContext {
         return list;
     }
 
+    public List<Insurance_policy> gePolicyByCustomerID(int insurance_id, int customer_id) {
+        List<Insurance_policy> list = new ArrayList<>();
+        String sql = "select distinct insurance_contract.policy_id, insurance_policy.policy_name from customer\n"
+                + "join insurance_contract on customer.customer_id = insurance_contract.customer_id\n"
+                + "join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id\n"
+                + "join insurance_policy on insurance_contract.policy_id = insurance_policy.policy_id\n"
+                + "where insurance_contract_detail.insurance_id = ? and customer.customer_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, customer_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+
+                int policy_id = rs.getInt("policy_id");
+                String policy_name = rs.getString("policy_name");
+                Insurance_policy p = new Insurance_policy(policy_id, policy_name);
+                list.add(p);
+
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
     // INSURANCE CONTRACT
     public List<Insurance_contract> getAllInsuranceContractByInsuranceId(int insurance_id) {
         List<Insurance_contract> list = new ArrayList<>();
@@ -692,7 +746,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -731,7 +785,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -759,7 +813,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(contract_id, customer_id, duration, service_id, policy_id,start_date, end_date, created_at, payment_frequency, status);
+                Insurance_contract contract = new Insurance_contract(contract_id, customer_id, duration, service_id, policy_id, start_date, end_date, created_at, payment_frequency, status);
                 return contract;
             }
 
@@ -809,7 +863,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -848,7 +902,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -886,7 +940,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -925,7 +979,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -963,7 +1017,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration,start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
+                Insurance_contract contract = new Insurance_contract(insurance_id, contract_id, duration, start_date, end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(contract);
             }
         } catch (Exception e) {
@@ -997,6 +1051,7 @@ public class DAO_Insurance extends DBContext {
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, insurance_id);
+            pre.setString(2, status);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 return rs.getInt(1);
@@ -1034,7 +1089,7 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 Date created_at = rs.getDate("created_at");
-                Insurance_contract c = new Insurance_contract(insurance_id, contract_id, duration,start_date,
+                Insurance_contract c = new Insurance_contract(insurance_id, contract_id, duration, start_date,
                         end_date, created_at, payment_frequency, status, full_name, service_name, policy_name);
                 list.add(c);
             }
@@ -1044,45 +1099,43 @@ public class DAO_Insurance extends DBContext {
     }
 
     public void insertInsuranceContract(Insurance_contract c) {
-    String sql = "INSERT INTO insurance_contract (customer_id, service_id, policy_id, duration, start_date, end_date, payment_frequency, status) "
-               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO insurance_contract (customer_id, service_id, policy_id, duration, start_date, end_date, payment_frequency, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    try  {
-        PreparedStatement pre = con.prepareStatement(sql);
-        pre.setInt(1, c.getCustomer_id());
-        pre.setInt(2, c.getService_id());
-        pre.setInt(3, c.getPolicy_id());
-        pre.setInt(4, c.getDuration());
-        pre.setDate(5, new java.sql.Date(c.getStart_date().getTime()));
-        pre.setDate(6, new java.sql.Date(c.getEnd_date().getTime()));
-        pre.setString(7, c.getPayment_frequency());
-        pre.setString(8, c.getStatus());
-        pre.executeUpdate();
-        System.out.println("Add insurance policy successfully!");
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
-    
-    public int getLastInsertedContractId(int customer_id) {
-    String sql = "SELECT top 1 contract_id FROM insurance_contract WHERE customer_id = ? ORDER BY contract_id DESC";
-
-    try {
-        PreparedStatement pre = con.prepareStatement(sql);
-       pre.setInt(1, customer_id);
-        ResultSet rs = pre.executeQuery();
-
-        if (rs.next()) {
-            int contract_id = rs.getInt("contract_id");         
-            return contract_id;
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, c.getCustomer_id());
+            pre.setInt(2, c.getService_id());
+            pre.setInt(3, c.getPolicy_id());
+            pre.setInt(4, c.getDuration());
+            pre.setDate(5, new java.sql.Date(c.getStart_date().getTime()));
+            pre.setDate(6, new java.sql.Date(c.getEnd_date().getTime()));
+            pre.setString(7, c.getPayment_frequency());
+            pre.setString(8, c.getStatus());
+            pre.executeUpdate();
+            System.out.println("Add insurance policy successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-    return 0;
-}
 
+    public int getLastInsertedContractId(int customer_id) {
+        String sql = "SELECT top 1 contract_id FROM insurance_contract WHERE customer_id = ? ORDER BY contract_id DESC";
+
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, customer_id);
+            ResultSet rs = pre.executeQuery();
+
+            if (rs.next()) {
+                int contract_id = rs.getInt("contract_id");
+                return contract_id;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     // INSURANCE TRANSACTION
     public List<Insurance_transactions> getInsuranceTransactionByInsuranceID(int insurance_id) {
@@ -1373,6 +1426,23 @@ public class DAO_Insurance extends DBContext {
         } catch (Exception e) {
         }
         return list;
+    }
+
+    public int countTransactionByCustomerIDAndContractID(int customer_id, int contract_id) {
+        String sql = "select COUNT(*) from insurance_transactions\n"
+                + "where contract_id = ? and customer_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, contract_id);
+            pre.setInt(2, customer_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public void insertInsuranceTransaction(Insurance_transactions t) {
@@ -2174,26 +2244,372 @@ public class DAO_Insurance extends DBContext {
         }
     }
 
+    public void updateInsuranceContractDetail(double amount, int contract_id, int insurance_id) {
+        String sql = "update insurance_contract_detail\n"
+                + "set PaidAmount = PaidAmount + ?\n"
+                + "where contract_id = ? and insurance_id = ? ";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setDouble(1, amount);
+            pre.setInt(2, contract_id);
+            pre.setInt(3, insurance_id);
+            pre.executeUpdate();
+            System.out.println("update succesfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // FeedBack Insurance
+        public List<Insurance_feedback> getListFeedbackByInsuranceID(int insurance_id) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select feedbackInsurance.*,customer.full_name,insurance_policy.policy_name from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                int customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+        
+    public List<Insurance_feedback> getAllFeedbackByInsuranceID(int insurance_id, int offset, int next) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select feedbackInsurance.*,customer.full_name,insurance_policy.policy_name from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ?\n"
+                + "order by feedback_id\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                int customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void insertFeedbackInsurance(Insurance_feedback f) {
+        String sql = "insert into feedbackInsurance(customer_id,insurance_id,policy_id,feedback_content,feedback_rate)\n"
+                + "VALUES(?,?,?,?,?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, f.getCustomer_id());
+            pre.setInt(2, f.getInsurance_id());
+            pre.setInt(3, f.getPolicy_id());
+            pre.setString(4, f.getFeedback_content());
+            pre.setInt(5, f.getFeedback_rate());
+            pre.executeUpdate();
+            System.out.println("Insert succesfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Insurance_feedback> getAllFeedbackByInsuranceIDAndPolicyID(int insurance_id, int policy_id, int offset, int next) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select feedbackInsurance.*,customer.full_name,insurance_policy.policy_name from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ? and feedbackInsurance.policy_id = ?\n"
+                + "order by feedback_id\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, policy_id);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                int customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+        public List<Insurance_feedback> getAllPolicyIDByFeedback(int insurance_id) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select distinct feedbackInsurance.policy_id ,insurance_policy.policy_name from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ?";
+
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int policy_id = rs.getInt("policy_id");
+                String policy_name = rs.getString("policy_name");
+               
+                Insurance_feedback f = new Insurance_feedback(policy_id,policy_name);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Insurance_feedback> getAllFeedbackByInsuranceIDAndCustomerID(int insurance_id, int customer_id, int offset, int next) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select feedbackInsurance.*,customer.full_name,insurance_policy.policy_name from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ? and feedbackInsurance.customer_id = ?\n"
+                + "order by feedback_id\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, customer_id);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+        public int getTotalInsuranceFeedback(int insurance_id) {
+        String sql = "select COUNT(*) from feedbackInsurance\n"
+                + "where insurance_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+        
+    public int getTotalInsuranceFeedbackByPolicy_id(int insurance_id, int policy_id) {
+        String sql = "select COUNT(*) from feedbackInsurance\n"
+                + "where insurance_id = ? and policy_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, policy_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    public List<Insurance_feedback> sortAllFeedbackByFeedbackDate(int insurance_id, int offset, int next) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select feedbackInsurance.*,customer.full_name,insurance_policy.policy_name from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ?\n"
+                + "order by feedback_date\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                int customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Insurance_feedback> sortAllFeedbackByFeedbackRate(int insurance_id, int offset, int next) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select feedbackInsurance.*,customer.full_name,insurance_policy.policy_name from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ?\n"
+                + "order by feedback_rate\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, (offset - 1) * next);
+            pre.setInt(3, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                int customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                int policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Insurance_feedback> sortFeedbackByFeedbackDateAndPolicyID(int insurance_id, int policy_id, int offset, int next) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select * from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ? and feedbackInsurance.policy_id = ?\n"
+                + "order by feedback_date\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, policy_id);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                int customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Insurance_feedback> sortFeedbackByFeedbackRateAndPolicyID(int insurance_id, int policy_id, int offset, int next) {
+        List<Insurance_feedback> list = new ArrayList<>();
+        String sql = "select * from feedbackInsurance\n"
+                + "join customer on feedbackInsurance.customer_id = customer.customer_id\n"
+                + "join insurance_policy on feedbackInsurance.policy_id = insurance_policy.policy_id\n"
+                + "where feedbackInsurance.insurance_id = ? and feedbackInsurance.policy_id = ?\n"
+                + "order by feedback_rate\n"
+                + "offset ? row fetch next ? row only";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, policy_id);
+            pre.setInt(3, (offset - 1) * next);
+            pre.setInt(4, next);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int feedback_id = rs.getInt("feedback_id");
+                int customer_id = rs.getInt("customer_id");
+                insurance_id = rs.getInt("insurance_id");
+                policy_id = rs.getInt("policy_id");
+                String full_name = rs.getString("full_name");
+                String policy_name = rs.getString("policy_name");
+                String feedback_content = rs.getString("feedback_content");
+                Date feedback_date = rs.getDate("feedback_date");
+                int feedback_rate = rs.getInt("feedback_rate");
+                Insurance_feedback f = new Insurance_feedback(feedback_id, customer_id, insurance_id,
+                        policy_id, full_name, policy_name, feedback_content, feedback_date, feedback_rate);
+                list.add(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         DAO_Insurance d = new DAO_Insurance();
-        int customer_id = 1;  // Thay bằng ID hợp lệ trong DB
-            int service_id = 0;   // Thay bằng ID hợp lệ
-            int policy_id = 3;    // Thay bằng ID hợp lệ
-            int duration = 12;    // 12 tháng
-            Date start_date = Date.valueOf("2025-02-23");
-            Date end_date = Date.valueOf("2026-02-23");
-            String payment_frequency = "monthly";  // Hoặc "yearly"
-            String status = "active";
-
-             
-            Insurance_contract ic = new Insurance_contract(customer_id, service_id, policy_id, 
-                    duration, start_date, end_date, payment_frequency, status);
-            d.insertInsuranceContract(ic);
-            int count = d.getLastInsertedContractId(customer_id);
-            Insurance_contract icd = d.getInsuranceContractById(count);
-            System.out.println(ic);
-            System.out.println(count);
-            System.out.println(icd);
-
-    }   
+        List<Insurance_feedback> list = d.getAllPolicyIDByFeedback(1);
+        for (Insurance_feedback insurance_feedback : list) {
+            System.out.println(insurance_feedback);
+        }
+    }
 }

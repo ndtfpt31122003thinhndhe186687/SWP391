@@ -5,6 +5,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +13,7 @@
         <title>Thanh Toán</title>
         <style>
     /* Toàn bộ trang với tone màu đỏ chủ đạo */
-    body {
+    body,a {
         font-family: Arial, sans-serif;
         background-color: #fff5f5; /* Nền màu đỏ nhạt */
         color: #D32F2F; /* Màu chữ chính */
@@ -73,13 +74,17 @@
     <body>
        <div class="container">
         <h2>Thanh Toán Hợp Đồng Bảo Hiểm</h2>
+        <h4>${requestScope.error}</h4>
         <p>Số tiền cần thanh toán:</p>
-        <label>${money}</label>
-        <form action="VNPayInsurance" method="post">
-            <input type="hidden" name="orderInfo" value="Thanh toán bảo hiểm">
+        <label><span><fmt:formatNumber value="${money}" pattern="#,##0.00" />VND</label>
+        <form action="calculatorInsurance" method="post">
             <input type="hidden" name="amount" value=${money}>
+            <input type="hidden" name="contract_id" value=${contract_id}>
+            <input type="hidden" name="insurance_id" value=${insurance_id}>
             <button type="submit">Thanh Toán</button>
         </form>
+            <br>
+            <a href="home.jsp">Trở về trang chủ</a>
     </div>
     </body>
 </html>

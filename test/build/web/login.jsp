@@ -51,7 +51,7 @@
                                 <div class="col-lg-6">
                                     <div class="p-5">
                                         <div class="text-center">
-                                            <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                            <h1 class="h4 text-gray-900 mb-4">Chào mừng trở lại</h1>
                                         </div>
                                         <div id="logreg-forms">
                                             <form class="form-signin" action="login" method="post">
@@ -63,18 +63,13 @@
                                                     <input name="pass"  type="password"  id="inputPassword" class="form-control" placeholder="Password" required="">
                                                 </div>
                                                 <select name="role">
-                                                    <option value="customer">Customer</option>
-                                                    <option value="staff">Staff</option>
-                                                    <option value="insurance">Insurance</option>
+                                                    <option value="customer">Khách hàng</option>
+                                                    <option value="staff">Nhân viên</option>
+                                                    <option value="insurance">Bảo hiểm</option>
                                                 </select>
-                                                <div class="form-group">
-                                                    <div class="custom-control custom-checkbox small">
-                                                        <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                        <label class="custom-control-label" for="customCheck">Remember
-                                                            Me</label>
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i>Login</button>
+                                                <br>
+                                                <br>
+                                                <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i>Đăng nhập</button>
                                                 <hr>
                                             </form>
                                             <hr>

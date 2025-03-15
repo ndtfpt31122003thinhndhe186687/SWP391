@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -118,7 +119,7 @@
             <input type="hidden" name="insurance_id" value="${insurance_id}" />
             <div class="container">
                 <label>Chọn ID khoản vay</label>
-                <select class="filter-dropdown" name="loan_id">
+                <select id="loanDropdown" class="filter-dropdown" name="loan_id" onchange="updateLoanDetails()">
                     <c:if test ="${not empty listLoan}">                        
                         <c:forEach var="l" items="${requestScope.listLoan}">
                             <option value="${l.loan_id}">${l.loan_id}</option>  
@@ -141,13 +142,13 @@
                 </select>
 
                 <label>Số tiền được nhận</label>
-                <input type="text" id="coverageAmount" name="coverage_amount" required readonly />
+                <input type="text" id="coverageAmount" name="coverage_amount"  required readonly /> VND
 
                 <label>Số tiền cần đóng</label>
-                <input type="text" id="premiumAmount" name="premium_amount" required readonly />
+                <input type="text" id="premiumAmount" name="premium_amount"  required readonly /> VND
 
                 <label>Nhập số tiền nộp</label>
-                <input type="text" name="paid_amount" required />
+                <input type="text" id="paidAmount" name="paid_amount" required />
 
                 <label>Trả theo</label>
                 <select name="payment_frequency">
@@ -155,6 +156,12 @@
                     <option value="quarterly">Quý</option>
                     <option value="annually">Năm</option>
                 </select>
+
+                <label>Ngày bắt đầu hợp đồng vay</label>
+                <input type="text" id="start_date" name="start_date" required readonly />
+
+                <label>Ngày kết thúc hợp đồng vay</label>
+                <input type="text" id="end_date" name="end_date" required readonly />
 
                 <label>Nhập thời hạn hợp đồng (Tháng)</label>
                 <input type="text" name="duration" required/>
@@ -164,15 +171,19 @@
     </div>
 
 
+    
     <script>
-// Lưu danh sách policy vào JavaScript object
         var policies = {};
         <c:forEach var="p" items="${requestScope.listPolicy}">
-        policies["${p.policy_id}"] = {
-            coverage_amount: "${p.coverage_amount}",
-            premium_amount: "${p.premium_amount}"
-        };
-        </c:forEach>;
+    <c:set var="formattedCoverage" value="${p.coverage_amount}"/>
+    <c:set var="formattedPremium" value="${p.premium_amount}"/>
+    <fmt:formatNumber value="${formattedCoverage}" pattern="#,##0" var="formattedCoverage"/>
+    <fmt:formatNumber value="${formattedPremium}" pattern="#,##0" var="formattedPremium"/>
+    policies["${p.policy_id}"] = {
+        coverage_amount: "${formattedCoverage}",
+        premium_amount: "${formattedPremium}"
+    };
+</c:forEach>
 
         function updatePolicyDetails() {
             var selectedPolicy = document.getElementById("policyDropdown").value;
@@ -182,12 +193,40 @@
             }
         }
 
-// Khi trang vừa tải xong, tự động cập nhật thông tin policy đầu tiên
+        var loans = {};
+        <c:forEach var="l" items="${requestScope.listLoan}">
+        <fmt:formatDate value="${l.start_date}" pattern="dd-MM-yyyy" var="formattedStartDate"/>
+        <fmt:formatDate value="${l.end_date}" pattern="dd-MM-yyyy" var="formattedEndDate"/>
+        loans["${l.loan_id}"] = {
+            start_date: "${formattedStartDate}",
+            end_date: "${formattedEndDate}"
+        };
+        </c:forEach>;
+
+        function updateLoanDetails() {
+            var selectedLoan = document.getElementById("loanDropdown").value;
+            if (selectedLoan && loans[selectedLoan]) {
+                document.getElementById("start_date").value = loans[selectedLoan].start_date;
+                document.getElementById("end_date").value = loans[selectedLoan].end_date;
+            }
+        }
+
         window.onload = function () {
             updatePolicyDetails();
+            updateLoanDetails();
         };
-
     </script>
+    
+ <script>
+                document.getElementById("paidAmount").addEventListener("input", function () {               
+                let rawValue = this.value.replace(/\./g, "");
+                if (!isNaN(rawValue) && rawValue.length > 0) {
+                    this.value = Number(rawValue).toLocaleString("vi-VN");
+                } else {
+                    this.value = "";
+                }
+            });
+            </script>
 
 </body>
 </html>

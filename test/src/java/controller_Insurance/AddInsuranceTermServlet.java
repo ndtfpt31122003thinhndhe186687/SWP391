@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 import model.Insurance;
 import model.Insurance_policy;
@@ -55,8 +57,9 @@ public class AddInsuranceTermServlet extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -64,11 +67,11 @@ public class AddInsuranceTermServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-        List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active"); 
+        List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
         request.setAttribute("listPolicy", list);
         request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
     }
@@ -88,6 +91,8 @@ public class AddInsuranceTermServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        List<Insurance_term> listT = dao.getInsuranceTermByInsuranceID(i.getInsurance_id());
+        List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
         String policy_id_raw = request.getParameter("policy_id");
         String term_name = request.getParameter("term_name");
         String term_description = request.getParameter("term_description");
@@ -98,40 +103,54 @@ public class AddInsuranceTermServlet extends HttpServlet {
         Date start_date = null, end_date = null;
         java.sql.Date sqlStart_date = null, sqlEnd_date = null;
         term_description = term_description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
-        if(term_name.trim().isEmpty()){
+        if (term_name.trim().isEmpty()) {
             request.setAttribute("error", "Tên không được để trống");
-            List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
             request.setAttribute("listPolicy", list);
-             request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+            request.setAttribute("listTerm", listT);
+            request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
             return;
         }
-                if(term_description.trim().isEmpty()){
+        if (term_description.trim().isEmpty()) {
             request.setAttribute("error", "Mô tả không được để trống");
-            List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
             request.setAttribute("listPolicy", list);
-             request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+            request.setAttribute("listTerm", listT);
+            request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
             return;
         }
-        
+
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             dateFormat.setLenient(false); // Bật kiểm tra giá trị chặt chẽ
             start_date = dateFormat.parse(start_date_raw);
             end_date = dateFormat.parse(end_date_raw);
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+            Date todayDate = today.getTime();
+            if (start_date.before(todayDate)) {
+                request.setAttribute("error", "Ngày bắt đầu phải từ hôm nay trở đi.");
+                request.setAttribute("listPolicy", list);
+                request.setAttribute("listTerm", listT);
+                request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+                return;
+            }
+
             if (!start_date.before(end_date)) {
                 request.setAttribute("error", "Ngày bắt đầu phải trước ngày kết thúc");
-                List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
                 request.setAttribute("listPolicy", list);
-                 request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+                request.setAttribute("listTerm", listT);
+                request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
                 return;
             }
             sqlStart_date = new java.sql.Date(start_date.getTime());
             sqlEnd_date = new java.sql.Date(end_date.getTime());
         } catch (ParseException e) {
             request.setAttribute("error", "Sai định dạng. Định dạng đúng: yyyy-MM-dd.");
-            List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
             request.setAttribute("listPolicy", list);
-             request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+            request.setAttribute("listTerm", listT);
+            request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
             return;
         }
         try {
@@ -139,14 +158,17 @@ public class AddInsuranceTermServlet extends HttpServlet {
             Insurance_term termName = dao.getInsuranceTermByName(term_name);
             if (termName != null) {
                 request.setAttribute("error", "Tên : " + term_name + " đã tồn tại!");
-                List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
                 request.setAttribute("listPolicy", list);
-                 request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+                request.setAttribute("listTerm", listT);
+                request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
+                return;
             } else {
                 Insurance_term t = new Insurance_term(i.getInsurance_id(),
                         policy_id, term_name, term_description, status, start_date, end_date);
                 dao.insertInsuranceTerm(t);
-                String url = "managerInsuranceTerm?insurance_id=" + i.getInsurance_id();
+                session.setAttribute("showSuccessModal", true);
+                session.setAttribute("successMessage", "Điều khoản " + term_name + " đã được thêm thành công!");
+                String url = "sortInsuranceTerm?sortInsuranceTerm=none&status=all&quantity=5";
                 response.sendRedirect(url);
             }
         } catch (Exception e) {

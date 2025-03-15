@@ -195,12 +195,10 @@
         <!-- Navigation Bar -->
         <nav style="text-align: center; margin: 20px 0;">
             <ul style="list-style-type: none; padding: 0; display: inline-block;">
-                <li style="display: inline; margin: 0 15px;"><a href="home">Home</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="about.jsp">About</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="Service">Services</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="team.jsp">Team</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="home">Trang Chủ</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="Service">Dịch vụ</a></li>
                 <li style="display: inline; margin: 0 15px;"><a href="Insurance">Bảo Hiểm</a></li>
-                <li style="display: inline; margin: 0 15px;"><a href="news.jsp">News</a></li>
+                <li style="display: inline; margin: 0 15px;"><a href="news">Tin Tức</a></li>
             </ul>
         </nav>
 
@@ -213,7 +211,7 @@
                         <div class="card-body text-center">
                         <div class="insurance-card ${i.status != 'active' ? 'insurance-inactive' : ''}">
                             <div class="card-body text-center">
-                                <h3 class="insurance-title">${i.insurance_name}</h3>
+                                <h3 class="insurance-title">${i.insurance_name}</h3>                               
                             </div>
                             <div class="insurance-footer">
                                 <c:if test="${i.status == 'active'}">

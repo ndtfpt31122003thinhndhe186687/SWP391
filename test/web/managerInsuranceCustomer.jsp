@@ -56,7 +56,7 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
                     Mini Finance
                 </a>
@@ -200,7 +200,18 @@
                             Quản lý giao dịch bảo hiểm
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link " href="managerStatisticInsurance?${account.insurance_id}">
+                            <i class="me-2"></i>
+                            Quản lý thống kê của bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerInsuranceFeedback">
+                            <i class="me-2"></i>
+                            Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -243,7 +254,7 @@
                             <th>Giới tính</th>
                         </tr>
                     </thead>
-                   
+
                     <c:forEach items="${listC}" var="C" varStatus="status">
                         <tr>
                             <td>${C.customer_id}</td>
@@ -254,7 +265,7 @@
                             <td>${C.address}</td> 
                             <td>${C.gender}</td>
                         </tr>
-                        
+
                     </c:forEach>
 
                 </table>

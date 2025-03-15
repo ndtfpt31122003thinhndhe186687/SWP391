@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -32,7 +33,7 @@
                 text-align: left;
                 width: 50%;
             }
-            input, select {
+            input, select,textarea {
                 display: block;
                 margin: 15px 0;
                 padding: 10px;
@@ -82,11 +83,14 @@
             Nhập mô tả  
             <textarea name="description" id="editor2">${p.description}</textarea><br>
 
-            Nhập số tiền được nhận 
-            <input type="text" name="coverage_amount" class="format-number" value="${p.coverage_amount}" /><br>
+           <fmt:formatNumber value="${p.coverage_amount}" pattern="#,##0" var="formattedCoverage"/>
+<fmt:formatNumber value="${p.premium_amount}" pattern="#,##0" var="formattedPremium"/>
 
-            Nhập số tiền cần đóng 
-            <input type="text" name="premium_amount" class="format-number" value="${p.premium_amount}" /><br>
+Nhập số tiền được nhận 
+<input type="text" id="coverage_amount" name="coverage_amount" value="${formattedCoverage}" /><br>
+
+Nhập số tiền cần đóng 
+<input type="text" id="premium_amount" name="premium_amount" value="${formattedPremium}" /><br>
 
             Chọn trạng thái
             <select class="filter-dropdown" name="status">
@@ -95,13 +99,13 @@
             </select>
             </br>
             <div class="form-group">
-    <label for="file">Ảnh hiện tại</label><br>
-    <c:if test="${not empty p.image}">
-        <img src="${p.image}" alt="Current Image" width="150" height="150" style="border-radius: 5px; object-fit: cover;"><br>
-    </c:if>
-    <label for="file">Tải ảnh mới</label>
-    <input type="file" name="file" id="file" accept="image/png, image/jpg, image/jpeg">
-</div>
+                <label for="file">Ảnh hiện tại</label><br>
+                <c:if test="${not empty p.image}">
+                    <img src="InsurancePolicy/${p.image}" alt="Current Image" width="150" height="150" style="border-radius: 5px; object-fit: cover;"><br>
+                </c:if>
+                <label for="file">Tải ảnh mới</label>
+                <input type="file" name="file" id="file" accept="image/png, image/jpg, image/jpeg">
+            </div>
 
             <button type="submit">Cập nhật</button>
         </form>
@@ -109,42 +113,30 @@
         <main>
             <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
             <script>
-               
+
                 CKEDITOR.replace('editor2');
             </script>
+          
+
             <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    let formatNumbers = document.querySelectorAll(".format-number");
-                    formatNumbers.forEach(function (el) {
-                        let num = parseFloat(el.value.replace(/,/g, ''));
-                        if (!isNaN(num)) {
-                            el.value = num.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                        }
-                    });
+                function formatCurrencyInput(element) {
+                    let rawValue = element.value.replace(/\D/g, ""); // Chỉ giữ lại số
+                    if (rawValue.length > 0) {
+                        element.value = Number(rawValue).toLocaleString("vi-VN");
+                    } else {
+                        element.value = "";
+                    }
+                }
 
-                    formatNumbers.forEach(function (el) {
-                        el.addEventListener("input", function () {
-                            let cursorPosition = this.selectionStart;
-
-                            let rawValue = this.value.replace(/,/g, "").replace(/[^0-9.]/g, '');
-
-                            if (!isNaN(rawValue) && rawValue !== "") {
-                                let formattedValue = Number(rawValue).toLocaleString("en-US", {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                });
-
-                                this.value = formattedValue;
-
-
-                                setTimeout(() => {
-                                    this.selectionStart = this.selectionEnd = cursorPosition;
-                                }, 0);
-                            }
-                        });
-                    });
+                document.getElementById("coverage_amount").addEventListener("input", function () {
+                    formatCurrencyInput(this);
                 });
-            </script>
+
+                document.getElementById("premium_amount").addEventListener("input", function () {
+                    formatCurrencyInput(this);
+                });
+            </script>  
+
 
 
         </main>

@@ -123,8 +123,16 @@ public class AddPolicyServlet extends HttpServlet {
 
 
     String image = fileName;
-        coverage_amount_raw = coverage_amount_raw.replaceAll(",", "");
-        premium_amount_raw = premium_amount_raw.replaceAll(",", "");
+    Insurance_policy imageP = dao.getPolicyByImage(image);
+    if(imageP != null){
+         request.setAttribute("error", "Ảnh " + image + " đã tồn tại");
+            request.setAttribute("listPolicy", list);
+            request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
+            return;
+    }
+    
+        coverage_amount_raw = coverage_amount_raw.replaceAll("\\.", "");
+        premium_amount_raw = premium_amount_raw.replaceAll("\\.", "");
         double coverage_amount, premium_amount;
         
         
@@ -153,6 +161,13 @@ public class AddPolicyServlet extends HttpServlet {
                 request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
                 return;
             }
+             if (coverage_amount < premium_amount) {
+                request.setAttribute("error", "Tiền được nhận phải lớn hơn tiền cần đóng");
+                request.setAttribute("listPolicy", list);
+                request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
+                return;
+            }
+            
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Tiền được nhận và tiền cần đóng phải là số thực");
             request.setAttribute("listPolicy", list);
@@ -167,6 +182,7 @@ public class AddPolicyServlet extends HttpServlet {
                 request.setAttribute("error", "Tên " + policy_name + " đã tồn tại!");
                 request.setAttribute("listPolicy", list);
                 request.getRequestDispatcher("managerInsurancePolicy.jsp").forward(request, response);
+                return;
             } else {
                 Insurance_policy p = new Insurance_policy(i.getInsurance_id(), policy_name, description, status, coverage_amount, premium_amount,image);
                 dao.insertPolicy(p);

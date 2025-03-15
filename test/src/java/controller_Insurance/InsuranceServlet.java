@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
 import model.Insurance;
+import model.Insurance_feedback;
 import model.Insurance_policy;
 import model.Insurance_term;
 
@@ -71,8 +72,19 @@ public class InsuranceServlet extends HttpServlet {
                 int insurance_id = Integer.parseInt(insurance_id_raw);
                 Insurance insurance = dao.getInsuranceByID(insurance_id);
                 List<Customer> listC = dao.getInsuranceCustomerByInsuranceId(insurance_id);
+                List<Insurance_feedback> listF = dao.getListFeedbackByInsuranceID(insurance_id);
+                
+                int count = dao.getTotalInsuranceFeedback(insurance_id);
+                int point = 0, star = 0;
+                for (Insurance_feedback insurance_feedback : listF) {
+                    point += insurance_feedback.getFeedback_rate();
+                }
+                if(point != 0){
+                star = point / count;
+                }
                 
                 if (insurance != null) {
+                    request.setAttribute("star", star);
                     request.setAttribute("listC", listC);
                     request.setAttribute("insurance", insurance);
                     request.getRequestDispatcher("insuranceDetails.jsp").forward(request, response);

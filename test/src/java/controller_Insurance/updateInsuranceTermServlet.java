@@ -163,6 +163,8 @@
             Insurance_term t = new Insurance_term(term_id, i.getInsurance_id(), 
                     policy_id, term_name, term_description, status, start_date, end_date);
             dao.updateInsuranceTerm(t);
+            session.setAttribute("showSuccessModal", true);
+                session.setAttribute("successMessage", "Điều khoản " + term_name + " đã được sửa     thành công!");
             String url = "managerInsuranceTerm?insurance_id=" +i.getInsurance_id();
             response.sendRedirect(url);
         }

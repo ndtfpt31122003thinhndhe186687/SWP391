@@ -202,7 +202,7 @@ public class DAO_Loan extends DBContext {
         return null;
     }
        public Loan getLoanByLoanIdAndInsuranceID(int loan_id, int insurance_id, int policy_id) {
-        String sql = "select distinct loan_id, insurance_id, policy_id from loan \n" +
+        String sql = "select loan_id, insurance_id, policy_id from loan \n" +
 "join insurance_contract on loan.customer_id = insurance_contract.customer_id\n" +
 "join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id\n" +
 "where loan.customer_id = ? and insurance_contract_detail.insurance_id = ? and insurance_contract.policy_id = ?";

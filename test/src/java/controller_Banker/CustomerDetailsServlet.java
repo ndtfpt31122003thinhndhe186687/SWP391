@@ -62,7 +62,7 @@ public class CustomerDetailsServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String customerIdParam = request.getParameter("id");
+        String customerIdParam = request.getParameter("id");      
         int customerId = Integer.parseInt(customerIdParam);
 
         DBContext db = new DBContext();

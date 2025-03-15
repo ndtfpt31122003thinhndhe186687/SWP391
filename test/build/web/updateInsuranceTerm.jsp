@@ -163,7 +163,7 @@
 
             <br>
             <br>
-            <button type="submit">Update</button>
+            <button type="submit">Sửa</button>
         </form>
         <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
         <script>
