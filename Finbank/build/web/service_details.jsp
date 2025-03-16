@@ -11,18 +11,18 @@
             :root {
                 --primary-color: #dc3545;
             }
-            
+
             body {
                 background-color: #f8f9fa;
             }
-            
+
             .service-header {
                 background: linear-gradient(135deg, #dc3545, #c82333);
                 color: white;
                 padding: 3rem 0;
                 margin-bottom: 2rem;
             }
-            
+
             .detail-card {
                 background: white;
                 border: none;
@@ -30,23 +30,23 @@
                 border-radius: 12px;
                 overflow: hidden;
             }
-            
+
             .detail-header {
                 background-color: #f8f9fa;
                 padding: 1.5rem;
                 border-bottom: 1px solid #dee2e6;
             }
-            
+
             .detail-body {
                 padding: 2rem;
             }
-            
+
             .detail-icon {
                 font-size: 4rem;
                 color: var(--primary-color);
                 margin-bottom: 1.5rem;
             }
-            
+
             .service-type-badge {
                 display: inline-block;
                 padding: 0.5rem 1.5rem;
@@ -55,38 +55,38 @@
                 font-weight: 500;
                 margin: 1rem 0;
             }
-            
+
             .service-type-badge.saving {
                 background-color: #fff5f5;
                 color: #dc3545;
             }
-            
+
             .service-type-badge.loan {
                 background-color: #fce8e6;
                 color: #c82333;
             }
-            
+
             .service-type-badge.deposit {
                 background-color: #ffe6e6;
                 color: #bd2130;
             }
-            
+
             .service-type-badge.withdrawal {
                 background-color: #ffecec;
                 color: #a71d2a;
             }
-            
+
             .detail-label {
                 color: #5f6368;
                 font-weight: 500;
                 margin-bottom: 0.5rem;
             }
-            
+
             .detail-value {
                 font-size: 1.1rem;
                 margin-bottom: 1.5rem;
             }
-            
+
             .btn-apply {
                 background-color: var(--primary-color);
                 color: white;
@@ -96,12 +96,12 @@
                 font-weight: 500;
                 transition: background-color 0.3s;
             }
-            
+
             .btn-apply:hover {
                 background-color: #c82333;
                 color: white;
             }
-            
+
             .btn-back {
                 color: var(--primary-color);
                 background-color: transparent;
@@ -111,7 +111,7 @@
                 font-weight: 500;
                 transition: all 0.3s;
             }
-            
+
             .btn-back:hover {
                 background-color: var(--primary-color);
                 color: white;
@@ -201,14 +201,45 @@
 
                     <div class="text-center mt-4">
                         <c:if test="${service.status == 'active'}">
-                            <a href="SendLoanRequest" class="btn btn-apply me-3">
-                                <i class="bi bi-check-circle"></i> Apply Now
-                            </a>
+                            <c:choose>
+                                <c:when test="${service.service_type == 'savings'}">
+                                    <a href="sendSavingsApplication" class="btn btn-apply me-3" onclick="showAlert(event)">
+                                        <i class="bi bi-check-circle"></i> Apply for Savings
+                                    </a>
+                                </c:when>
+                                <c:when test="${service.service_type == 'loan'}">
+                                    <a href="" class="btn btn-apply me-3">
+                                        <i class="bi bi-check-circle"></i> Apply for Loan
+                                    </a>
+                                </c:when>
+                                <c:when test="${service.service_type == 'deposit'}">
+                                    <a href="" class="btn btn-apply me-3">
+                                        <i class="bi bi-check-circle"></i> Apply for Deposit
+                                    </a>
+                                </c:when>
+                                <c:when test="${service.service_type == 'withdrawal'}">
+                                    <a href="" class="btn btn-apply me-3">
+                                        <i class="bi bi-check-circle"></i> Apply for Withdrawal
+                                    </a>
+                                </c:when>
+                            </c:choose>
                         </c:if>
+                        <script>
+                            function showAlert(event) {
+                                var cardType = "<c:out value='${sessionScope.account.card_type}' />";
+                                if (cardType === "credit") {
+                                    event.preventDefault(); // Ngăn chuyển trang
+                                    alert("Bạn không thể sử dụng dịch vụ này khi thẻ của bạn là thẻ credit.");
+                                }
+                            }
+                        </script>
+
                         <a href="Service" class="btn btn-back">
                             <i class="bi bi-arrow-left"></i> Back to Services
                         </a>
+
                     </div>
+
                 </div>
             </div>
         </div>

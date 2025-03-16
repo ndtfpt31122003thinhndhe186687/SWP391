@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import model.ServiceTerms;
 import model.News;
+import model.NewsCategory;
 import model.Services;
 import model.Staff;
 import model.Term;
@@ -1174,7 +1175,7 @@ public class DAO_Admin extends DBContext {
         }
         return arr;
     }
-    
+
     // servicer Term - phong
     public List<ServiceTerms> getFilteredServiceTerms(String serviceName, String sortBy) {
         List<ServiceTerms> list = new ArrayList<>();
@@ -1228,7 +1229,6 @@ public class DAO_Admin extends DBContext {
         return list;
     }
 
-
     public void addServiceTerm(ServiceTerms s) {
         String sql = "INSERT INTO service_terms (service_id, term_name, description, contract_terms, early_payment_penalty, interest_rate, min_payment, min_deposit,term_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -1253,9 +1253,9 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
+
     //kiem tra trung lap
-    public boolean isDuplicateServiceTerm(int termId, String termName, int serviceId, double minDeposit,double interest_rate) {
+    public boolean isDuplicateServiceTerm(int termId, String termName, int serviceId, double minDeposit, double interest_rate) {
         String query = "SELECT COUNT(*) FROM service_terms WHERE term_id = ? AND term_name = ? "
                 + "AND service_id = ? AND min_deposit = ? and interest_rate=?";
         try (PreparedStatement ps = con.prepareStatement(query)) {
@@ -1273,7 +1273,6 @@ public class DAO_Admin extends DBContext {
         }
         return false;
     }
-
 
 // Xóa service_term (chỉ xóa khi không active)
     public void deleteServiceTerm(int serviceTerm_id) {
@@ -1426,15 +1425,131 @@ public class DAO_Admin extends DBContext {
         return arr;
     }
 
+    public List<NewsCategory> getAllNewsCategory() {
+        List<NewsCategory> list = new ArrayList<>();
+        String sql = "select * from news_category";
+
+        try (PreparedStatement st = con.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                NewsCategory n = new NewsCategory();
+                n.setCategory_id(rs.getInt("category_id"));
+                n.setCategory_name(rs.getString("category_name"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    //get all news to approved or rejected
+    public List<News> getNewsFilterPending(int category_id, String sortBy) {
+        List<News> list = new ArrayList<>();
+        String sql = "SELECT n.*, c.category_name, s.full_name FROM news n "
+                + "JOIN news_category c ON n.category_id = c.category_id "
+                + "JOIN staff s ON n.staff_id = s.staff_id "
+                + "WHERE n.status='pending'";
+
+        if (category_id > 0) {
+            sql += " AND n.category_id = ?";
+        }
+
+        // Sắp xếp theo ngày tạo giảm dần
+        if (sortBy != null && !sortBy.equals("all") && !sortBy.isEmpty()) {
+            sql += " ORDER BY n.created_at DESC, n." + sortBy;
+        } else {
+            sql += " ORDER BY n.created_at DESC";
+        }
+
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            int index = 1;
+            if (category_id > 0) {
+                st.setInt(index++, category_id);
+            }
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                News n = new News();
+                n.setNews_id(rs.getInt("news_id"));
+                n.setTitle(rs.getString("title"));
+                n.setContent(rs.getString("content"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setUpdated_at(rs.getDate("updated_at"));
+                n.setStatus(rs.getString("status"));
+                n.setCategory_name(rs.getString("category_name"));
+                n.setCategory_id(rs.getInt("category_id"));
+                n.setPicture(rs.getString("picture"));
+                n.setStaff_name(rs.getString("full_name"));
+                list.add(n);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    //update status 
+    public boolean updateNewsStatus(int newsId, String status) {
+        String sql = "UPDATE news SET status = ? WHERE news_id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, status);
+            ps.setInt(2, newsId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành côn
+
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public List<News> getListNewsByPage(List<News> list, int start, int end) {
+        List<News> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
+
+    // Search news by title
+    public List<News> getSearchNewsByTitle(String title) {
+        List<News> list = new ArrayList<>();
+        String sql = "SELECT n.*, c.category_name,s.full_name FROM news n "
+                + "JOIN news_category c ON n.category_id = c.category_id "
+                + "JOIN staff s ON n.staff_id = s.staff_id "
+                + "WHERE n.title LIKE ?";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setString(1, "%" + title + "%");
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    News n = new News();
+                    n.setNews_id(rs.getInt("news_id"));
+                    n.setStaff_id(rs.getInt("staff_id"));
+                    n.setTitle(rs.getString("title"));
+                    n.setContent(rs.getString("content"));
+                    n.setCreated_at(rs.getDate("created_at"));
+                    n.setUpdated_at(rs.getDate("updated_at"));
+                    n.setStatus(rs.getString("status"));
+                    n.setCategory_id(rs.getInt("category_id"));
+                    n.setCategory_name(rs.getString("category_name"));
+                    n.setPicture(rs.getString("picture"));
+                    n.setStaff_name(rs.getString("full_name"));
+                    list.add(n);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // Main method for testing
     public static void main(String[] args) {
         DAO_Admin d = new DAO_Admin();
 //        String date ="2000-12-31";
 //        Date sqlDate = java.sql.Date.valueOf(date);
-        d.deleteBanker(10);
-        List<Staff> list = d.getAllBanker(2);
-        for (Staff staff : list) {
-            System.out.println(staff);
-        }
+        List<News> list = d.getNewsFilterPending(0, "title");
+        System.out.println(list);
     }
 }

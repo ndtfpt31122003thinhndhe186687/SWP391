@@ -1,6 +1,9 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 
 <html lang="en">
     <head>
@@ -138,6 +141,27 @@
                 color: white;
                 font-weight: bold;
             }
+            .news-content {
+                max-width: 300px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .news-image {
+                width: 100px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+            }
+            .table-actions {
+                white-space: nowrap;
+            }
+
+            .table-actions button {
+                margin-right: 5px; /* Khoảng cách giữa hai nút */
+            }
+
         </style>
     </head>
     <body>
@@ -276,7 +300,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="transaction_management">
+                        <a class="nav-link" href="transaction_management">
                             <i class=" me-2"></i>
                             Transaction Management
                         </a>
@@ -292,14 +316,14 @@
                     <li class="nav-item">
                         <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
                             <i class="me-2"></i>
-                            Qu?n l� d?ch v?
+                            Quản lí dịch vụ
                         </a>
                     </li>
-                    
-                      <li class="nav-item">
-                        <a class="nav-link " href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
                             <i class="me-2"></i>
-                            Ki?m duy?t tin t?c
+                            Kiểm duyệt tin tức
                         </a>
                     </li>
 
@@ -310,126 +334,185 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Transaction Management</h1>
+                <h1 class="h2 mb-0 text-danger">Kiểm duyệt tin tức</h1>
             </div>
 
             <input type="hidden" name ="page" value="1"> 
 
             <div class="filter-sort-bar">
-                <label for="filterStatus">Filter by Status:</label>
-                <select id="filterStatus" class="filter-dropdown" onchange="filterTransaction()">
-                    <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
-                    <option value="deposit" ${requestScope.status == 'deposit' ? 'selected' : ''}>Deposit</option>
-                    <option value="withdrawal" ${requestScope.status == 'withdrawal' ? 'selected' : ''}>Withdrawal</option>                  
+                <label for="filterCategory">Lọc theo Danh mục</label>
+                <select id="filterCategory" class="filter-dropdown" onchange="filterCategory()">
+                    <option value="0" ${requestScope.categoryId == 0 ? 'selected' : ''}}>All </option>        
+                    <c:forEach var="n" items="${requestScope.listNc}">
+                        <option value="${n.category_id}" ${requestScope.categoryId == n.category_id ? 'selected':''}>${n.category_name}</option>        
+                    </c:forEach>
                 </select>
 
-                <label for="sortTransaction">Sort by:</label>
-                <select id="sortTransaction" class="filter-dropdown">
-                    <option value="full_name" ${requestScope.sort == 'full_name' ? 'selected' : ''}>Customer Name</option>
-                    <option value="service_name" ${requestScope.sort == 'service_name' ? 'selected' : ''}>Service name</option>
-                    <option value="amount" ${requestScope.sort == 'amount' ? 'selected' : ''}>Amount</option>
-                    <option value="transaction_date" ${requestScope.sort == 'transaction_date' ? 'selected' : ''}>Date</option>
+                <label for="sortNews">Sắp xếp theo:</label>
+                <select id="sortNews" class="filter-dropdown" onchange="sortNews()">
+                    <option value="all" ${requestScope.sort == 'all' ? 'selected' : ''}>All</option>
+                    <option value="title" ${requestScope.sort == 'title' ? 'selected' : ''}>Tiêu đề</option>
+                    <option value="content" ${requestScope.sort == 'content' ? 'selected' : ''}>Nội dung</option>
                 </select>
 
-                <label for="selectPage">Show:</label>
-                <select id="selectPage" class="filter-dropdown" onchange="selectPage()">
-                    <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
-                    <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
-                    <option value="20" ${requestScope.pageSize == '20' ? 'selected' : ''}>20</option>
+                <label for="pageSize">Số bài mỗi trang:</label>
+                <select id="pageSize" class="filter-dropdown" onchange="changePageSize()">
+                    <option value="4" ${requestScope.pageSize == 4 ? 'selected' : ''}>4</option>
+                    <option value="8" ${requestScope.pageSize == 8 ? 'selected' : ''}>8</option>
+                    <option value="12" ${requestScope.pageSize == 12 ? 'selected' : ''}>12</option>
                 </select>
+
             </div>  
 
             <div class="search-bar">
-                <form action="searchTransaction">
-                    <input type="text" placeholder="Search" name="searchName" >                  
+                <form action="searchNews">
+                    <input type="text" placeholder="Search" name="searchName" id="searchName" value="${param.searchName}"> 
+                    <input type="hidden" name="page" value="${page}">
+                    <input type="hidden" name="pageSize" value="${pageSize}">
                     <button style="background-color: #d32f2f; color: white; border: none; padding: 5px 10px;">Search</button>
                 </form>
             </div>    
 
-            <!-- View list transaction -->
             <div class="mt-3">
                 <table class="table table-bordered">
                     <thead>
-                        <tr>
-                            <th>Transaction id</th>
-                            <th>Customer name</th>
-                            <th>Service name</th>
-                            <th>Amount</th>
-                            <th>Transaction date</th>
-                            <th>Transaction type</th>
+                        <tr>                      
+                            <th>Thể loại Tin tức</th>
+                            <th>Tiêu đề</th>
+                            <th>Nội dung</th>
+                            <th>Hình ảnh</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
-                    <c:forEach items="${requestScope.data}" var="b">
+                    <c:forEach items="${requestScope.listN}" var="news">
                         <tr>
-                            <td>${b.transaction_id}</td>
-                            <td>${b.customer_name}</td>
-                            <td>${b.service_name}</td>
+                            <td>${news.category_name}</td>
                             <td>
-                                <c:choose>
-                                    <c:when test="${b.transaction_type == 'deposit'}">
-                                        <span style="color: green;">
-                                            +<fmt:formatNumber value="${b.amount}" type="number" groupingUsed="true" /> $
-                                        </span>
-                                    </c:when>
-                                    <c:when test="${b.transaction_type == 'withdrawal'}">
-                                        <span style="color: red;">
-                                            -<fmt:formatNumber value="${b.amount}" type="number" groupingUsed="true" /> $
-                                        </span>
-                                    </c:when>                                   
-                                </c:choose>
+                                <a href="#" class="news-title news-content" 
+                                   onclick="showNewsModal('${news.category_name}',
+                                                   '${fn:escapeXml(news.title)}',
+                                                   `${fn:escapeXml(news.content)}`,
+                                                   '${news.staff_name}',
+                                                   '${news.created_at}',
+                                                   '${news.updated_at}',
+                                                   '${news.picture}')">
+                                    ${news.getTitle()}
+                                </a>
                             </td>
+                            <td class="news-content">${news.content}</td>
                             <td>
-                                <fmt:formatDate value="${b.transaction_date}" pattern="dd/MM/yyyy"/>
+                                <img src="<%= request.getContextPath() %>/imageNews/${news.picture}" alt="News Image" class="news-image">
                             </td>
-                            <td>${b.transaction_type}</td>                          
+                            <td class="table-actions">
+                                <form action="newsApproval" method="post">
+                                    <input type="hidden" name="news_id" value="${news.news_id}" />
+                                    <button type="submit" name="action" value="approved" class="btn btn-success">Approve</button>
+                                    <button type="submit" name="action" value="rejected" class="btn btn-danger">Reject</button>
+                                </form>
+                            </td>
                         </tr>
                     </c:forEach>
+
+                    <div id="newsModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                         width: 50%; max-height: 80vh; overflow-y: auto; background: white; padding: 20px; border: 2px solid black;
+                         box-shadow: 0px 0px 10px gray;">
+                        <p><strong>Thể loại:</strong> <span id="modalCategory"></span></p>
+                        <p><strong>Tiêu đề:</strong> <span id="modalTitle"></span></p>
+                        <p><strong>Nội dung:</strong></p>
+                        <div id="modalContent" style="max-height: 50vh; overflow-y: auto; border: 1px solid #ddd; padding: 10px;"></div>
+                        <p><strong>Người viết: </strong> <span id="modalStaff"></span></p>
+                        <p><strong>Được tạo lúc:</strong> <span id="modalCreatedAt"></span></p>
+                        <p><strong>Được cập nhật lúc:</strong> <span id="modalUpdatedAt"></span></p>
+                        <p><strong>Hình ảnh:</strong></p>
+                        <img id="modalImage" src="" style="max-width: 100%; display: none;" />
+                        <br>
+                        <button onclick="closeModal()" style="margin-top: 10px; padding: 5px 10px; background-color: #d32f2f;
+                                color: white; border: none; border-radius: 5px;">Close</button>
+                    </div>
                 </table>
             </div>
 
             <div class="pagination">
-                <c:forEach begin="1" end="${totalPage}" var="i">
-                    <c:choose>
-                        <c:when test="${i == page}">
-                            <span class="current-page">${i}</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="transaction_management?&status=${status}&sort=${sort}&page=${i}&pageSize=${pageSize}">${i}</a>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
+                <c:if test="${not empty param.searchName}">
+                    <c:forEach begin="1" end="${totalPage}" var="i">
+                        <c:choose>
+                            <c:when test="${i == page}">
+                                <span class="current-page">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="searchNews?searchName=${param.searchName}&page=${i}&pageSize=${pageSize}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty param.searchName}">      
+                    <c:forEach begin="1" end="${totalPage}" var="i">
+                        <c:choose>
+                            <c:when test="${i == page}">
+                                <span class="current-page">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="newsResponse?categoryId=${categoryId}&status=${status}&sort=${sort}&page=${i}&pageSize=${pageSize}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </c:if>
             </div>
         </main>
 
         <script type="text/javascript">
-            function selectPage() {
-                var status = document.getElementById("filterStatus").value;
-                var sort = document.getElementById("sortTransaction").value;
-                var pageSize = document.getElementById("selectPage").value;
-                window.location.href = "transaction_management?status=" + status + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+            function filterCategory() {
+                var categoryId = document.getElementById("filterCategory").value;
+                var sort = document.getElementById("sortNews").value;
+                var pageSize = document.getElementById("pageSize").value;
+                window.location.href = "newsResponse?categoryId=" + categoryId + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+            }
+            function sortNews() {
+                var categoryId = document.getElementById("filterCategory").value;
+                var sort = document.getElementById("sortNews").value;
+                var pageSize = document.getElementById("pageSize").value;
+                window.location.href = "newsResponse?categoryId=" + categoryId + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+            }
+            function changePageSize() {
+                var categoryId = document.getElementById("filterCategory").value;
+                var pageSize = document.getElementById("pageSize").value;
+                var sort = document.getElementById("sortNews").value;
+                var searchInput = document.getElementById("searchName");
+
+                var searchName = searchInput ? searchInput.value.trim().replace(/\s+/g, " ") : "";
+
+                if (searchName !== "") {
+                    window.location.href = "searchNews?searchName=" + encodeURIComponent(searchName) + "&page=1&pageSize=" + pageSize;
+                } else {
+                    window.location.href = "newsResponse?categoryId=" + categoryId + "&sort=" + sort + "&page=1&pageSize=" + pageSize;
+                }
+            }
+            function showNewsModal(category, title, content, staff, createdAt, updatedAt, image) {
+                function formatDate(dateString) {
+                    let date = new Date(dateString);
+                    return date.toLocaleDateString("vi-VN");
+                }
+                document.getElementById("modalTitle").innerText = title;
+                document.getElementById("modalCategory").innerText = category;
+                document.getElementById("modalContent").innerHTML = content;
+                document.getElementById("modalStaff").innerText = staff;
+                document.getElementById("modalCreatedAt").innerText = formatDate(createdAt);
+                document.getElementById("modalUpdatedAt").innerText = formatDate(updatedAt);
+                let imgElement = document.getElementById("modalImage");
+                if (image && image !== "null") {
+                    imgElement.src = "<%= request.getContextPath() %>/imageNews/" + image;
+                    imgElement.style.display = "block";
+                } else {
+                    imgElement.style.display = "none";
+                }
+
+                document.getElementById("newsModal").style.display = "block";
             }
 
-            function filterTransaction() {
-                var status = document.getElementById("filterStatus").value;
-                var sort = document.getElementById("sortTransaction").value;
-                var pageSize = document.getElementById("selectPage").value;
-                window.location.href = "transaction_management?status=" + status + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
+            function closeModal() {
+                document.getElementById("newsModal").style.display = "none";
             }
-
-            function sortTransaction() {
-                var sort = document.getElementById("sortTransaction").value;
-                var status = document.getElementById("filterStatus").value;
-                var pageSize = document.getElementById("selectPage").value;
-                window.location.href = "transaction_management?status=" + status + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
-            }
-
-            document.getElementById("sortTransaction").onchange = sortTransaction;
         </script>            
-
-
-
-
-
     </div>
 </div>
 

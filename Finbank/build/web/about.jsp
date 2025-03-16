@@ -35,9 +35,129 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
         <title>Interest Rates</title>
         <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .fin {
+                color: red;
+            }
 
+            .bank {
+                color: black;
+            }
+
+            /* Chỉnh kích thước Navbar */
+            .navbar {
+                padding: 5px 10px; /* Giảm padding để navbar nhỏ hơn */
+                font-size: 20px; /* Giảm kích thước chữ */
+            }
+
+            .navbar .navbar-nav .nav-item {
+                margin: 0 5px; /* Giảm khoảng cách giữa các mục */
+            }
+
+            .navbar .navbar-nav .nav-link {
+                padding: 8px 10px;
+                font-size: 15px; /* Giảm kích thước chữ */
+                text-transform: none; /* Không in hoa để nhìn nhỏ gọn hơn */
+            }
+
+            .search{
+                margin-right: 300px;
+                margin-top: 16px;
+            }
+
+            /* Nút tìm kiếm nhỏ hơn */
+            .search input {
+                width: 220px;
+                padding: 5px ;
+                font-size: 13px;
+                margin-top: 25px;
+            }
+
+            .search button {
+                padding: 5px 10px;
+                font-size: 13px;
+            }
+
+            /* Chuông thông báo */
+            .notification-bell {
+                position: relative;
+                cursor: pointer;
+                font-size: 24px;
+                margin-right: 20px;
+            }
+
+            /* Badge số lượng thông báo */
+            .notification-bell .badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: red;
+                color: white;
+                font-size: 12px;
+                padding: 3px 6px;
+                border-radius: 50%;
+            }
+
+            /* Hộp thông báo */
+            #alert-container {
+                position: absolute;
+                top: 40px;
+                right: 20px;
+                width: 250px;
+                background: white;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                padding: 10px;
+                display: none;
+            }
+
+            .alert {
+                padding: 8px;
+                margin: 5px 0;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+
+            /* Màu sắc từng loại thông báo */
+            .alert-info {
+                background: #d9edf7;
+                color: #31708f;
+            }
+            .alert-warning {
+                background: #fcf8e3;
+                color: #8a6d3b;
+            }
+            .alert-success {
+                background: #dff0d8;
+                color: #3c763d;
+            }
+
+            /* Hiển thị khi mở */
+            .hidden {
+                display: none;
+            }
+            .user-section {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                float:right;
+                margin-top: 30px;
+            }
+
+            /* Dropdown Menu */
+            .notification-menu {
+                min-width: 280px;
+                border-radius: 10px;
+                box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+                padding: 8px 0;
+                overflow: hidden;
+            }
         </style>
+
     </head>
+
     <body>
         <!--header section start -->
         <div class="header_section">
@@ -50,145 +170,180 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="home.jsp">Home</a>
+                                <a class="nav-link" href="home">Trang chủ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="about.jsp">About</a>
+                                <a class="nav-link" href="about.jsp">Giới thiệu</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="Service">Services</a>
+                                <a class="nav-link" href="Service">Dịch vụ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="team.html">Team</a>
+                                <a class="nav-link" href="Insurance">Bảo Hiểm</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact.html">Liên hệ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Contact Us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="news">News</a>
+                                <a class="nav-link" href="news">Tin tức</a>
                             </li>
                         </ul>
                     </div>
                 </nav>
             </div>
-            <!--search section-->
 
+
+            <!--search section-->
             <div class="search">
                 <form action="">
                     <input type="text" placeholder="What do you need to search??"  name="searchvalue">
-                    <button type="submit" class="site-btn">SEARCH</button>
+                    <button type="submit" class="site-btn">Tìm kiếm</button>
                 </form>
             </div>
 
-            <!-- Login/logout -->
-            <div class="login">
-                <c:if test="${sessionScope.account != null}">
-                    <c:if test="${sessionScope.account.role_id !=5}">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Hello ${sessionScope.account.full_name}
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
-                                    <c:if test="${sessionScope.account.role_id==3}">
-                                    <li><a class="dropdown-item" href="marketer/newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Manage news</a></li>
-                                    </c:if>
-                                <li><a class="dropdown-item" href="logout">Logout</a></li>
-                            </ul>
-                        </li>
-                    </c:if>
 
-                    <c:if test="${sessionScope.account.role_id == 5}">
-                        <li class="">
-                            <a class="" href="changeInfor">Hello ${sessionScope.account.insurance_name}</a>
-
-                        </li>
-                        <li><a href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">Manage insurance policy</a></li>
-                        <li><a class="dropdown-item" href="logout">Logout</a></li>
+            <!-- Gộp đăng nhập và thông báo vào một khối -->
+            <div class="user-section">
+                <div class="login">
+                    <c:if test="${sessionScope.account != null}">
+                        <c:if test="${sessionScope.account.role_id !=5}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Xin chào ${sessionScope.account.full_name}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="balanceCustomer">Xem hồ sơ</a></li>
+                                        <c:if test="${sessionScope.account.role_id==3}">
+                                        <li><a class="dropdown-item" href="marketer/newsManage">Quản lí tin tức</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.account.role_id==1}">
+                                        <li><a class="dropdown-item" href="staff_management">Quản lý</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.account.role_id==2}">
+                                        <li><a class="dropdown-item" href="customerList">Quản lý</a></li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.account.role_id==4}">
+                                        <li><a class="dropdown-item" href="staff_management">Quản lý</a></li>
+                                        </c:if>
+                                    <li><a class="dropdown-item" href="logout">Đăng xuất</a></li>
+                                </ul>
+                            </li>
+                        </c:if>
+                        <c:if test="${sessionScope.account.role_id == 5}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Xin chào ${sessionScope.account.insurance_name}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="managerPolicy">Quản lý bảo hiểm</a></li>
+                                    <li><a class="dropdown-item" href="logout">Đăng xuất</a></li>
+                                </ul>
+                            </li>                          
                         </c:if>
                     </c:if>    
                     <c:if test="${sessionScope.account == null}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login">Login</a>
-                    </li>
-                </c:if>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login">Đăng nhập</a>
+                        </li>
+                    </c:if>
+                </div>
+
+                <div class="dropdown notification-dropdown" style="margin-left: 15px">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        🔔 Thông báo
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
+                        <li class="dropdown-header">📌 Thông báo gần đây</li>
+                        <li><a class="dropdown-item" href="#"><span>📢</span> Bạn vừa đăng nhập.</a></li>
+                        <li><a class="dropdown-item" href="#"><span>⚠️</span> Bạn đã thay đổi mật khẩu.</a></li>
+                        <li><a class="dropdown-item" href="#"><span>✅</span> Cập nhật hồ sơ thành công.</a></li>
+                        <li class="dropdown-footer"><a href="#">Xem tất cả</a></li>
+                    </ul>
+                </div>
             </div>
+
+
         </div>
         <!--header section end -->
 
-       <!-- About Section Start -->
-<div class="services_section layout_padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <h1 class="services_taital">WELCOME TO FINANCIAL SERVICES</h1>
-                <p class="services_text">At Financial Services, we are committed to providing secure, innovative, and customer-friendly financial solutions. Our mission is to empower individuals and businesses with the right financial tools for a brighter future.</p>
-                <div class="moremore_bt"><a href="#">Learn More</a></div>
-            </div>
-            <div class="col-md-4">
-                <img src="images/img-1.png" class="image_1" alt="Financial Services">
-            </div>
-        </div>
+        <!-- About Section Start -->
+        <div class="services_section layout_padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1 class="services_taital">CHÀO MỪNG BẠN ĐẾN VỚI FINBANK</h1>
+                        <p class="services_text">
+                            Tại Dịch Vụ Tài Chính, chúng tôi cam kết mang đến những giải pháp tài chính an toàn, hiện đại và thân thiện với khách hàng. Với sứ mệnh hỗ trợ cá nhân và doanh nghiệp tiếp cận các công cụ tài chính tối ưu, chúng tôi không ngừng đổi mới để giúp bạn xây dựng một tương lai vững chắc.
+                            Ngân hàng chúng tôi cung cấp đa dạng các dịch vụ như gửi tiết kiệm, cho vay, đầu tư, bảo hiểm và thanh toán trực tuyến. Chúng tôi luôn đặt lợi ích của khách hàng lên hàng đầu, đảm bảo các giao dịch diễn ra minh bạch, nhanh chóng và an toàn.
+                            Với đội ngũ chuyên gia tài chính giàu kinh nghiệm cùng hệ thống công nghệ hiện đại, chúng tôi cam kết mang lại những trải nghiệm tài chính tốt nhất, giúp bạn quản lý tài chính cá nhân và doanh nghiệp hiệu quả hơn.
+                            Hãy cùng chúng tôi khám phá những giải pháp tài chính phù hợp với nhu cầu của bạn!
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="images/img-1.png" class="image_1" alt="Financial Services">
+                    </div>
+                </div>
 
-        <!-- Our Impact Section -->
-        <div class="row text-center mt-4">
-            <div class="col-md-4">
-                <h3>📅 10+ Years</h3>
-                <p>of Excellence</p>
-            </div>
-            <div class="col-md-4">
-                <h3>💰 $1B+</h3>
-                <p>in Transactions</p>
-            </div>
-            <div class="col-md-4">
-                <h3>👥 500K+</h3>
-                <p>Happy Customers</p>
-            </div>
-        </div>
+                <!-- Our Impact Section -->
+                <div class="row text-center mt-4">
+                    <div class="col-md-4">
+                        <h3>📅 10+ Years</h3>
+                        <p>Kinh nghiệm</p>  
+                    </div>
+                    <div class="col-md-4">
+                        <h3>💰 $1B+</h3>
+                        <p>Trong Giao dịch</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>👥 500K+</h3>
+                        <p>Khách hàng hài lòng</p>
+                    </div>
+                </div>
 
-        <!-- Interest Rates Section -->
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <h2 class="services_taital">📈 Interest Rates</h2>
-                <p class="services_text">Stay updated with the latest interest rates for loans and savings to make informed financial decisions.</p>
-                <table class="table table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Type</th>
-                            <th>Download Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>🏦 Loan Interest Rate</td>
-                            <td><button class="btn btn-primary" onclick="showPDF('loan')">📄 Download</button></td>
-                        </tr>
-                        <tr>
-                            <td>💰 Saving Interest Rate</td>
-                            <td><button class="btn btn-success" onclick="showPDF('saving')">📄 Download</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Interest Rates Section -->
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <h2 class="services_taital">📈 Các gói dịch vụ</h2>
+                        <p class="services_text">Cập nhật thông tin mới nhất về lãi suất cho vay và tiết kiệm để đưa ra quyết định tài chính sáng suốt.</p>
+                        <table class="table table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Loại</th>
+                                    <th>Xem chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>🏦 Lãi suất vay</td>
+                                    <td><button class="btn btn-primary" onclick="showPDF('loan')">📄 Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>💰 Lãi suất gửi tiết kiệm</td>
+                                    <td><button class="btn btn-success" onclick="showPDF('saving')">📄 Download</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Testimonials Section -->
+                <div class="testimonial-section mt-5">
+                    <h2 class="services_taital text-center">💬 What Our Clients Say</h2>
+                    <div class="testimonial text-center">
+                        <p>"Financial Services made managing my savings and loans effortless. Their customer support is excellent!"</p>
+                        <h4>— Emily Carter</h4>
+                    </div>
+                </div>
+
+                <!-- Call-To-Action -->
+                <div class="cta-section text-center mt-5">
+                    <h2>Ready to take control of your finances?</h2>
+                    <a href="login" class="btn btn-lg btn-warning">Get Started Now</a>
+                </div>
             </div>
         </div>
-
-        <!-- Testimonials Section -->
-        <div class="testimonial-section mt-5">
-            <h2 class="services_taital text-center">💬 What Our Clients Say</h2>
-            <div class="testimonial text-center">
-                <p>"Financial Services made managing my savings and loans effortless. Their customer support is excellent!"</p>
-                <h4>— Emily Carter</h4>
-            </div>
-        </div>
-
-        <!-- Call-To-Action -->
-        <div class="cta-section text-center mt-5">
-            <h2>Ready to take control of your finances?</h2>
-            <a href="login" class="btn btn-lg btn-warning">Get Started Now</a>
-        </div>
-    </div>
-</div>
-<!-- About Section End -->
+        <!-- About Section End -->
 
 
 

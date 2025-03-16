@@ -297,7 +297,14 @@
                     <li class="nav-item">
                         <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
                             <i class="me-2"></i>
-                            Service Term Management
+                            Qu?n lí d?ch v?
+                        </a>
+                    </li>
+                    
+                       <li class="nav-item">
+                        <a class="nav-link " href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
+                            <i class="me-2"></i>
+                            Ki?m duy?t tin t?c
                         </a>
                     </li>
 

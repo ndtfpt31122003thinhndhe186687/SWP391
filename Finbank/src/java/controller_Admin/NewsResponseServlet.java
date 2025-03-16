@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller_SavingDepositService;
+package controller_Admin;
 
-import dal.SavingDAO;
+import dal.DAO_Admin;
+import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,19 +13,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import model.Customer;
-import model.Savings;
+import model.News;
+import model.NewsCategory;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "WithdrawSavingServlet", urlPatterns = {"/withdrawSaving"})
-public class WithdrawSavingServlet extends HttpServlet {
+@WebServlet(name = "NewsResponseServlet", urlPatterns = {"/newsResponse"})
+public class NewsResponseServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +41,10 @@ public class WithdrawSavingServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet WithdrawSavingServlet</title>");
+            out.println("<title>Servlet NewsResponseServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet WithdrawSavingServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet NewsResponseServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,7 +62,36 @@ public class WithdrawSavingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String sortBy = request.getParameter("sort");
+        String page_raw = request.getParameter("page");
+        String pageSize_raw = request.getParameter("pageSize");
+        String categoryId_raw = request.getParameter("categoryId");
+        List<News> list;
+        DAO_Admin d = new DAO_Admin();
+        sortBy = (sortBy == null) ? "all" : sortBy;
+        try {
+            int categoryId = Integer.parseInt(categoryId_raw);
+            list = d.getNewsFilterPending(categoryId, sortBy);
+            request.setAttribute("sort", sortBy);
+            request.setAttribute("categoryId", categoryId);
 
+            int pageSize = Integer.parseInt(pageSize_raw);
+            int totalNews = list.size();
+            int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
+            int page = (page_raw == null) ? 1 : Integer.parseInt(page_raw);
+            int start = (page - 1) * pageSize;
+            int end = Math.min(page * pageSize, totalNews);
+            List<News> listN = d.getListNewsByPage(list, start, end);
+            request.setAttribute("listN", listN);
+            request.setAttribute("page", page);
+            request.setAttribute("totalPage", totalPage);
+            request.setAttribute("pageSize", pageSize);
+            List<NewsCategory> listNc = d.getAllNewsCategory();
+            request.setAttribute("listNc", listNc);
+            request.getRequestDispatcher("newsResponse.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
     }
 
     /**
@@ -78,25 +105,7 @@ public class WithdrawSavingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String savingId_raw = request.getParameter("saving_id");
-        int savingId = Integer.parseInt(savingId_raw);
-        SavingDAO d = new SavingDAO();
-        HttpSession session = request.getSession();
-        // Kiểm tra xem khoản tiết kiệm đã đến hạn chưa
-        boolean isMatured = d.checkMaturity(savingId);
-        if (isMatured) {
-            d.getInterest(savingId);
-            d.withdrawSavings(savingId);
-            session.setAttribute("successMessage", "Rút tiền thành công! Hãy kiểm tra số dư tài khoản!");
-            response.sendRedirect("home");
-        } else {
-            //request.setAttribute("error", "Khoản tiết kiệm chưa đến hạn, không thể rút!");
-            d.withdrawSavingsEarly(savingId);
-            session.setAttribute("successMessage", "Rút tiền thành công nhưng chưa đến hạn nên bạn sẽ không có lãi! Hãy kiểm tra số dư tài khoản!");
-            response.sendRedirect("home");
-        }
-            
-        
+        processRequest(request, response);
     }
 
     /**

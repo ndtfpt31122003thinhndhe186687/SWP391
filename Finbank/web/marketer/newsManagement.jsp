@@ -191,6 +191,7 @@
                     <option value="draft" ${requestScope.status == 'draft' ? 'selected' : ''}>Draft</option>
                     <option value="approved" ${requestScope.status == 'approved' ? 'selected' : ''}>Approved</option>
                     <option value="pending" ${requestScope.status == 'pending' ? 'selected' : ''}>Pending</option>
+                    <option value="rejected" ${requestScope.status == 'rejected' ? 'selected' : ''}>Rejected</option>
                 </select>
 
                 <label for="sortNews">Sắp xếp theo:</label>

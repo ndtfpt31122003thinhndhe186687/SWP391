@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller_SavingDepositService;
+package controller_Admin;
 
-import dal.SavingDAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,19 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import model.Customer;
-import model.Savings;
 
 /**
  *
  * @author Acer Nitro Tiger
  */
-@WebServlet(name = "WithdrawSavingServlet", urlPatterns = {"/withdrawSaving"})
-public class WithdrawSavingServlet extends HttpServlet {
+@WebServlet(name = "NewsApprovalServlet", urlPatterns = {"/newsApproval"})
+public class NewsApprovalServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +37,10 @@ public class WithdrawSavingServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet WithdrawSavingServlet</title>");
+            out.println("<title>Servlet NewsApprovalServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet WithdrawSavingServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet NewsApprovalServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,7 +58,7 @@ public class WithdrawSavingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**
@@ -78,25 +72,17 @@ public class WithdrawSavingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String savingId_raw = request.getParameter("saving_id");
-        int savingId = Integer.parseInt(savingId_raw);
-        SavingDAO d = new SavingDAO();
-        HttpSession session = request.getSession();
-        // Kiểm tra xem khoản tiết kiệm đã đến hạn chưa
-        boolean isMatured = d.checkMaturity(savingId);
-        if (isMatured) {
-            d.getInterest(savingId);
-            d.withdrawSavings(savingId);
-            session.setAttribute("successMessage", "Rút tiền thành công! Hãy kiểm tra số dư tài khoản!");
-            response.sendRedirect("home");
-        } else {
-            //request.setAttribute("error", "Khoản tiết kiệm chưa đến hạn, không thể rút!");
-            d.withdrawSavingsEarly(savingId);
-            session.setAttribute("successMessage", "Rút tiền thành công nhưng chưa đến hạn nên bạn sẽ không có lãi! Hãy kiểm tra số dư tài khoản!");
-            response.sendRedirect("home");
-        }
-            
+        int newsId = Integer.parseInt(request.getParameter("news_id"));
+        String action = request.getParameter("action");
         
+        String status = action.equals("approved") ? "approved" : "rejected";
+        
+        DAO_Admin d = new DAO_Admin();
+        boolean isUpdated = d.updateNewsStatus(newsId, status);
+        
+        if (isUpdated) {
+            response.sendRedirect("newsResponse?categoryId=0&sort=all&page=1&pageSize=4");
+        }
     }
 
     /**

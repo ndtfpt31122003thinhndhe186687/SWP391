@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +40,7 @@
             padding: 0;
             background: #f9f9f9;
         }
-       
+
         .header, .footer {
             background-color: #cc0000;
             color: white;
@@ -189,7 +192,7 @@
         </div>
     </div>
     <!--header section end -->
-    
+
     <div style="height: 50px;"></div> <!-- Thêm kho?ng tr?ng -->
 
     <div class="article-container">
@@ -197,20 +200,20 @@
         <div class="article-date">
             <fmt:formatDate value="${newsDetail.created_at}" pattern="dd-MM-yyyy" />
         </div>
-        <div class="article-content">
-            ${firstPart}
-        </div>
+
         <div class="article-image">
             <img src="imageNews/${newsDetail.picture}" alt="News Image">
         </div>
+
         <div class="article-content">
-            ${secondPart}
+            <c:out value="${newsDetail.content}" escapeXml="false"/>
         </div>
+
         <div class="related-articles">
             <h3>Related Articles</h3>
             <c:forEach items="${requestScope.listRelatedNews}" var="related">
-            <div class="related-item"><a href="newsDetail?news_id=${related.news_id}">${related.title}</a></div>
-            </c:forEach>
+                <div class="related-item"><a href="newsDetail?news_id=${related.news_id}">${related.title}</a></div>
+                </c:forEach>
         </div>
     </div>
     <!--footer section start -->
