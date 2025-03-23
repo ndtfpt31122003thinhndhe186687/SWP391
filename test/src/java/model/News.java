@@ -16,7 +16,7 @@ public class News {
     public String content, title, status;
     public Date created_at, updated_at;
     public int category_id;
-    public String category_name,picture;
+    public String category_name,picture,staff_name;
 
     public News(String content, String title) {
         this.content = content;
@@ -115,5 +115,14 @@ public class News {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
+
+    public String getStaff_name() {
+        return staff_name;
+    }
+
+    public void setStaff_name(String staff_name) {
+        this.staff_name = staff_name;
+    }
+    
 
 }

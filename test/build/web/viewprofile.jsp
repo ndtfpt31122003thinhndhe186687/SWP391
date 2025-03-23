@@ -92,7 +92,7 @@
                 <ul class="dropdown-menu bg-white shadow">
                     <li>
                         <div class="dropdown-menu-profile-thumb d-flex">
-                            <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
+                            <img src="imageCustomer/${customer.profile_picture}" class="profile-image img-fluid me-3" alt="">
 
                             <div class="d-flex flex-column">
                                 <small>${sessionScope.account.full_name}</small>
@@ -130,90 +130,15 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <c:if test="${sessionScope.account.role_id==1}">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="staff_management">
-                                <i class="bi-house-fill me-2"></i>
-                                Management
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==2}">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="customerList">
-                                <i class="bi-house-fill me-2"></i>
-                                Management
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-insurance-contracts">
-                                <i class="bi-house-fill me-2"></i>
-                                List Insurance Contracts
-                            </a>
-                        </li>
-                    </c:if>
-
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-debt-customers">
-                                <i class="bi-wallet me-2"></i>
-                                List Debt Customer
-                            </a>
-                        </li>
-                    </c:if>
-
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-transactions">
-                                <i class="bi-person me-2"></i>
-                                List Transactions
-                            </a>
-                        </li>
-                    </c:if>
-
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-insurance-transactions">
-                                <i class="bi-person me-2"></i>
-                                List Insurance Transactions
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="amountStatistics">
-                                <i class="bi-person me-2"></i>
-                                Amount Statistics
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="CustomerList_AServlet">
-                                <i class="bi-person me-2"></i>
-                                Accountant
-                            </a>
-                        </li>                   
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="calculate">
-                                <i class="bi-person me-2"></i>
-                                Loan and Savings Interest Calculator
-                            </a>
-                        </li>                   
-                    </c:if>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="index.html">
+                        <a class="nav-link" aria-current="page" href="balanceCustomer">
                             <i class="bi-house-fill me-2"></i>
                             Tổng quan
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="wallet.html">
+                        <a class="nav-link" href="wallet">
                             <i class="bi-wallet me-2"></i>
                             Ví của tôi
                         </a>
@@ -231,9 +156,21 @@
                             Sổ tiết kiệm 
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="loanList">
+                            <i class="bi-person me-2"></i>
+                            Vay 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                                <a class="nav-link" href="CustomerInsuranceList">
+                                    <i class="bi-gear me-2"></i>
+                                    Bảo hiểm
+                                </a>
+                            </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="changeInfor">
+                        <a class="nav-link " href="changeInfor">
                             <i class="bi-gear me-2"></i>
                             Cài đặt
 

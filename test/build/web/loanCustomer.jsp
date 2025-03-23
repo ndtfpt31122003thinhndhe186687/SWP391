@@ -11,7 +11,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Mini Finance - Profile Page</title>
+        <title>Vay</title>
 
         <!-- CSS FILES -->      
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,6 +98,7 @@
     </head>
 
     <body>
+        <fmt:setLocale value="vi_VN"/>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="index.html">
@@ -211,13 +212,14 @@
                     <div class="position-sticky py-4 px-3 sidebar-sticky">
                         <ul class="nav flex-column h-100">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="index.html">
+                                <a class="nav-link " aria-current="page" href="balanceCustomer">
                                     <i class="bi-house-fill me-2"></i>
-                                    Tổng quan                                </a>
+                                    Tổng quan
+                                </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="wallet.html">
+                                <a class="nav-link" href="wallet">
                                     <i class="bi-wallet me-2"></i>
                                     Ví của tôi
                                 </a>
@@ -229,28 +231,33 @@
                                     Hồ sơ
                                 </a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link " href="savingList">
+                                <a class="nav-link" href="savingList">
                                     <i class="bi-person me-2"></i>
                                     Sổ tiết kiệm 
                                 </a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link active" href="loanList">
+                                <a class="nav-link " href="loanList">
                                     <i class="bi-person me-2"></i>
                                     Vay 
                                 </a>
                             </li>
-
+                            
                             <li class="nav-item">
-                                <a class="nav-link" href="changeInfor">
+                                <a class="nav-link active" href="CustomerInsuranceList">
                                     <i class="bi-gear me-2"></i>
-                                    Cài đặt
+                                    Bảo hiểm
                                 </a>
                             </li>
 
+                            <li class="nav-item">
+                                <a class="nav-link " href="changeInfor">
+                                    <i class="bi-gear me-2"></i>
+                                    Cài đặt
+
+                                </a>
+                            </li>
                             <li class="nav-item border-top mt-auto pt-2">
                                 <a class="nav-link" href="logout">
                                     <i class="bi-box-arrow-left me-2"></i>
@@ -267,7 +274,9 @@
                     </div>
                     <div class="custom-block custom-block-balance">
                         <small>Tổng số tiền vay</small>
-                        <h2 class="mt-2 mb-3"><fmt:formatNumber value="${totalLoan}" pattern="#,##0.00"/>VND</h2>
+                        <h2 class="mt-2 mb-3">                          
+                            <fmt:formatNumber value="${totalLoan}" pattern="#,###"/> VND
+                        </h2>
                         <div class="savings-list">
                             <c:forEach var="loan" items="${loanList}">
                                 <div class="savings-item">
@@ -277,7 +286,9 @@
                                     <div id="${loan.loan_id}" class="savings-details" style="display: none;">
                                         <div class="savings-table">
                                             <div class="row"><span class="label">Số tiền đã vay:</span>
-                                                <span class="value"><fmt:formatNumber value="${loan.amount}" pattern="#,##0.00" />VND</span>
+                                                <span class="value">
+                                                    <fmt:formatNumber value="${loan.amount}" pattern="#,###" />VND                                                    
+                                                </span>
                                             </div>
                                             <div class="row"><span class="label">Ngày bắt đầu:</span>
                                                 <span class="value"> <fmt:formatDate value="${loan.start_date}" pattern="dd-MM-yyyy" /></span>
@@ -285,15 +296,35 @@
                                             <div class="row"><span class="label">Ngày kết thúc:</span>
                                                 <span class="value"><fmt:formatDate value="${loan.end_date}" pattern="dd-MM-yyyy" /></span>
                                             </div>
-                                                <div class="row"><span class="label">Ảnh:</span><span class="value"><img src="imageAsset/${loan.asset_image}" width="500px"/></span>
+                                            <div class="row"><span class="label">Ảnh:</span><span class="value"><img src="imageAsset/${loan.asset_image}" width="500px"/></span>
                                             </div>
                                             <div class="row"><span class="label">Giá trị tài sản:</span>
-                                                <span class="value"><fmt:formatNumber value="${loan.value_asset}" pattern="#,##0.00" />VND</span>
-                                            </div>                                         
+                                                <span class="value"><fmt:formatNumber value="${loan.value_asset}" pattern="#,###" />VND</span>
+                                            </div>  
+                                            <div class="row"><span class="label">Trạng thái:</span>
+                                                <span class="value">
+                                                    <c:if test="${loan.status =='pending'}" >
+                                                        Đang chờ xử lý
+                                                    </c:if>
+                                                    <c:if test="${loan.status =='approved'}" >
+                                                        Chấp nhận
+                                                    </c:if>
+                                                    <c:if test="${loan.status =='rejected'}" >
+                                                        Từ chối
+                                                    </c:if>
+                                                    <c:if test="${loan.status =='complete'}" >
+                                                        Hoàn thành
+                                                    </c:if>
+                                                </span>
+                                            </div> 
                                         </div>
-                                        <form action="loanList?id=${loan.loan_id}" method="post">                     
-                                            <button class="btn btn-danger btn-sm">Trả nợ</button>
-                                        </form>
+                                        <c:if test ="${loan.status !='pending'}">
+                                            <form action="loanList" method="post">
+                                                <input type="hidden" name="id" value="${loan.loan_id}" />
+                                                <input type="hidden" name="status" value="${loan.status}" />
+                                                <button class="btn btn-danger btn-sm">Trả nợ</button>
+                                            </form>
+                                        </c:if>
                                     </div>
                                 </div>
                             </c:forEach>

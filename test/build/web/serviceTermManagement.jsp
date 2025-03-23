@@ -257,6 +257,20 @@
                             Service Term Management
                         </a>
                     </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link " href="feedback_management">
+                            <i class="me-2"></i>
+                            Qu?n lý ph?n h?i
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
+                            <i class="me-2"></i>
+                            Ki?m duy?t tin t?c
+                        </a>
+                    </li>
 
                 </ul>
             </div>

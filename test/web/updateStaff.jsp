@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Update Staff Information</title>
+        <title>Cập nhật thông tin nhân viên</title>
         <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <style>
@@ -179,83 +179,89 @@
             }
         </style>
     </head>
-    <body>
+    <body>      
         <div class="container">
-            <h1>Update Staff Information</h1>
-            <h4 class="error-message">${requestScope.error}</h4>
+            <h1>Cập nhật thông tin nhân viên</h1>
+            <c:if test ="${not empty requestScope.error}">
+                <h4 class="error-message">${requestScope.error}</h4>
+            </c:if>
             <c:set var="s" value="${requestScope.staff}"/>
             <form action="updateStaff" method="post" id="staffForm" onsubmit="return validateForm()">
                 <div class="form-group">
-                    <label for="staff_id">Staff ID:</label>
-                    <input type="number" id="staff_id" readonly name="staff_id" value="${s.staff_id}"/>
+                    <label for="staff_id">ID Nhân viên:</label>
+                    <input type="number" readonly name="staff_id" value="${s.staff_id}"/>                  
                 </div>
 
                 <div class="form-group">
-                    <label for="full_name">Full Name:</label>
+                    <label for="full_name">Họ và tên</label>
                     <input type="text" id="full_name" name="full_name" value="${s.full_name}" />
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>                 
                     <input type="email" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" value="${s.email}" />
-                    <div class="invalid-feedback" id="email-feedback">Please enter a valid email address.</div>
+                    <div class="invalid-feedback" id="email-feedback">Hãy điền địa chỉ email hợp lệ .</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="username">Username:</label>
+                    <label for="username">Tên đăng nhập</label>
                     <input type="text" id="username" name="username" value="${s.username}" />
 
                 </div>
 
                 <div class="form-group">
-                    <label for="phone_number">Phone Number:</label>
+                    <label for="phone_number">Số điện thoại:</label>
                     <input type="tel" id="phone_number" name="phone_number" required 
                            pattern="[0-9]{10}" maxlength="10" value="${s.phone_number}"  />
-                    <div class="invalid-feedback" id="phone-feedback">Please enter a valid 10-digit phone number.</div>
+                    <div class="invalid-feedback" id="phone-feedback">Hãy điền số điện thoại chứa 10 số hợp lệ.</div>
                 </div>
 
                 <div class="form-group">
-                    <label>Gender:</label>
+                    <label>Giới tính</label>
                     <div style="display: flex; gap: 20px; align-items: center;">
                         <input type="radio" id="male" name="gender" value="male" class="custom-radio" required
                                ${s.gender == 'male' ? 'checked' : ''}>
-                        <label for="male"><i class="fa-solid fa-mars" style="color:blue"></i> Male</label>
+                        <label for="male"><i class="fa-solid fa-mars" style="color:blue"></i> Nam</label>
 
                         <input type="radio" id="female" name="gender" value="female" class="custom-radio" required
                                ${s.gender == 'female' ? 'checked' : ''}>
-                        <label for="female"><i class="fa-solid fa-venus" style="color:red"></i> Female</label>
+                        <label for="female"><i class="fa-solid fa-venus" style="color:red"></i> Nữ</label>
                     </div>
                 </div>        
 
                 <div class="form-group">
-                    <label for="date_of_birth">Date of Birth:</label>
+                    <label for="date_of_birth">Ngày sinh:</label>
                     <input type="date" id="date_of_birth" name="date_of_birth" value="${s.date_of_birth}" />
                 </div>
 
                 <div class="form-group">
-                    <label for="address">Address:</label>
+                    <label for="address">Địa chỉ:</label>
                     <input type="text" id="address" name="address" value="${s.address}" />
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="role_id">Role ID:</label>
-                    <input type="number" id="role_id" name="role_id" value="${s.role_id}" />
+                    <label for="role_id">Chức vụ:</label>                  
+                    <select id="role_id" name="role_id" required >
+                        <option value="2" ${s.role_id == 2 ? "selected" : ""}>Nhân viên</option>
+                        <option value="3" ${s.role_id == 3 ? "selected" : ""}>Tiếp thị</option>
+                        <option value="4" ${s.role_id == 4 ? "selected" : ""}>Kế toán</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Status:</label>
+                    <label>Trạng thái:</label>
                     <div style="display: flex; gap: 20px; align-items: center;">
                         <input type="radio" id="active" name="status" value="active" class="custom-radio" required
                                ${s.status == "active" ? "checked" : ""}>
-                        <label for="active"><i class="fa-solid fa-circle-check"></i> Active</label>
+                        <label for="active"><i class="fa-solid fa-circle-check"></i> Hoạt động</label>
 
                         <input type="radio" id="inactive" name="status" value="inactive" class="custom-radio" required
                                ${s.status == "inactive" ? "checked" : ""}>
-                        <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Inactive</label>
+                        <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Không hoạt động</label>
                     </div>
                 </div>        
 
-                <button type="submit">Update Staff Information</button>
+                <button type="submit">Cập nhật</button>
             </form>
         </div>
         <script>
@@ -274,8 +280,8 @@
                 } else {
                     full_nameFeedback.style.display = 'none';
                 }
-                
-               
+
+
                 // Email validation
                 const email = document.getElementById('email');
                 const emailFeedback = document.getElementById('email-feedback');

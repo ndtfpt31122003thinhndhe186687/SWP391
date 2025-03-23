@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <head>
 
@@ -32,11 +33,121 @@
     <link rel="stylesheet" href="css/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
     <style>
+
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
         }
+        /* Chỉnh kích thước Navbar */
+        .navbar {
+            padding: 5px 10px; /* Giảm padding để navbar nhỏ hơn */
+            font-size: 20px; /* Giảm kích thước chữ */
+        }
+
+        .navbar .navbar-nav .nav-item {
+            margin: 0 5px; /* Giảm khoảng cách giữa các mục */
+        }
+
+        .navbar .navbar-nav .nav-link {
+            padding: 8px 10px;
+            font-size: 15px; /* Giảm kích thước chữ */
+            text-transform: none; /* Không in hoa để nhìn nhỏ gọn hơn */
+        }
+
+        .search{
+            margin-right: 400px;
+            margin-top: 16px;
+        }
+
+        /* Nút tìm kiếm nhỏ hơn */
+        .search input {
+            width: 220px;
+            padding: 5px ;
+            font-size: 13px;
+            margin-top: 25px;
+        }
+
+        .search button {
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+
+        /* Chuông thông báo */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 24px;
+            margin-right: 20px;
+        }
+
+        /* Badge số lượng thông báo */
+        .notification-bell .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 50%;
+        }
+
+        /* Hộp thông báo */
+        #alert-container {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            width: 250px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            display: none;
+        }
+
+        .alert {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* Màu sắc từng loại thông báo */
+        .alert-info {
+            background: #d9edf7;
+            color: #31708f;
+        }
+        .alert-warning {
+            background: #fcf8e3;
+            color: #8a6d3b;
+        }
+        .alert-success {
+            background: #dff0d8;
+            color: #3c763d;
+        }
+
+        /* Hiển thị khi mở */
+        .hidden {
+            display: none;
+        }
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            float:right;
+            margin-top: 30px;
+        }
+
+        /* Dropdown Menu */
+        .notification-menu {
+            min-width: 280px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            overflow: hidden;
+        }
+
         .category-filter {
             margin-bottom: 20px;
             padding: 10px;
@@ -204,74 +315,112 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="home.jsp">Home</a>
+                            <a class="nav-link" href="home">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
+                            <a class="nav-link" href="about.jsp">Giới thiệu</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="Service">Services</a>
+                            <a class="nav-link" href="Service">Dịch vụ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="team.html">Team</a>
+                            <a class="nav-link" href="Insurance">Bảo Hiểm</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">Liên hệ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="news">News</a>
+                            <a class="nav-link" href="news">Tin tức</a>
                         </li>
                     </ul>
                 </div>
             </nav>
         </div>
-        <!--search section-->
 
+
+        <!--search section-->
         <div class="search">
             <form action="">
                 <input type="text" placeholder="What do you need to search??"  name="searchvalue">
-                <button type="submit" class="site-btn">SEARCH</button>
+                <button type="submit" class="site-btn">Tìm kiếm</button>
             </form>
         </div>
 
-        <!-- Login/logout -->
-        <div class="login">
-            <c:if test="${sessionScope.account != null}">
-                <c:if test="${sessionScope.account.role_id !=5}">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Hello ${sessionScope.account.full_name}
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="changeInfor">View profile</a></li>
-                                <c:if test="${sessionScope.account.role_id==3}">
-                                <li><a class="dropdown-item" href="marketer/newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Manage news</a></li>
-                                </c:if>
-                            <li><a class="dropdown-item" href="logout">Logout</a></li>
-                        </ul>
-                    </li>
-                </c:if>
 
-                <c:if test="${sessionScope.account.role_id == 5}">
-                    <li class="">
-                        <a class="" href="changeInfor">Hello ${sessionScope.account.insurance_name}</a>
-
-                    </li>
-                    <li><a href="managerPolicy?insurance_id=${sessionScope.account.insurance_id}">Manage insurance policy</a></li>
-                    <li><a class="dropdown-item" href="logout">Logout</a></li>
+        <!-- Gộp đăng nhập và thông báo vào một khối -->
+        <div class="user-section">
+            <div class="login">
+                <c:if test="${sessionScope.account != null}">
+                    <c:if test="${sessionScope.account.role_id !=5}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Xin chào ${sessionScope.account.full_name}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="balanceCustomer">Xem hồ sơ</a></li>
+                                    <c:if test="${sessionScope.account.role_id==3}">
+                                    <li><a class="dropdown-item" href="marketer/newsManage">Quản lí tin tức</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.account.role_id==1}">
+                                    <li><a class="dropdown-item" href="staff_management">Quản lý</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.account.role_id==2}">
+                                    <li><a class="dropdown-item" href="customerList">Quản lý</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.account.role_id==4}">
+                                    <li><a class="dropdown-item" href="staff_management">Quản lý</a></li>
+                                    </c:if>
+                                <li><a class="dropdown-item" href="logout">Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    </c:if>
+                    <c:if test="${sessionScope.account.role_id == 5}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Xin chào ${sessionScope.account.insurance_name}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="managerPolicy">Quản lý bảo hiểm</a></li>
+                                <li><a class="dropdown-item" href="logout">Đăng xuất</a></li>
+                            </ul>
+                        </li>                          
                     </c:if>
                 </c:if>    
                 <c:if test="${sessionScope.account == null}">
-                <li class="nav-item">
-                    <a class="nav-link" href="login">Login</a>
-                </li>
-            </c:if>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login">Đăng nhập</a>
+                    </li>
+                </c:if>
+            </div>
+
+            <div class="dropdown notification-dropdown" style="margin-left: 15px">
+                <button class="btn btn-light dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    🔔 Thông báo
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
+                    <li class="dropdown-header">📌 Thông báo gần đây</li>
+                        <c:choose>
+                            <c:when test="${not empty requestScope.listNotify}">
+                                <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
+                                <li><a class="dropdown-item" href="#">${n.message}</a></li>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                            <li class="dropdown-item text-center text-muted">Không có thông báo nào</li>
+                            </c:otherwise>
+                        </c:choose>
+                    <li class="dropdown-footer text-center"><a href="notificationsList">Xem tất cả</a></li>
+                </ul>
+            </div>
         </div>
+
+
     </div>
     <!--header section end -->
     <div>
         <div class="category-filter">
-            <label>Choose category:</label>
+            <label>Chọn thể loại:</label>
             <div class="category-list">
                 <button onclick="filterCategory(0)" class="${category_id == 0 ? 'active' : ''}">All</button>
                 <c:forEach var="n" items="${requestScope.listNc}">
@@ -349,7 +498,7 @@
             </div>
             <!-- copyright section start -->
             <div class="copyright_section">
-                <div class="copyright_text">Copyright � Vietnam Technological
+                <div class="copyright_text">Copyright © Vietnam Technological
                 </div>
             </div>
             <!-- copyright section end -->

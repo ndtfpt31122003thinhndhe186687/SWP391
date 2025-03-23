@@ -147,9 +147,14 @@
                                 <div class="detail-value">${insurance.insurance_name}</div>
                                 <div class="detail-label">Đánh giá</div>
                                 <div class="detail-value">
+                                    <c:if test="${star > 0}">
                                     <c:forEach begin="1" end="${star}">
                                         <i class="fa-solid fa-star" style="color: gold;"></i>
                                     </c:forEach>
+                                    </c:if>
+                                        <c:if test="${star == 0}">
+                                            <label>Chưa có đánh giá</label>
+                                        </c:if>
                                 </div>
                                 <div class="detail-label">Chính sách</div>
                                 <a class="detail-label" href="InsurancePolicyDetails?insurance_id=${insurance.insurance_id}" >Xem thêm</a>
@@ -178,7 +183,7 @@
                         <div class="text-center mt-4">
                             <c:if test="${sessionScope.account != null}">
                                 <c:if test="${insurance.status == 'active'}">
-                                    <c:if test="${sessionScope.account.role_id == 0}">
+                                    <c:if test="${sessionScope.account.role_id == 6}">
                                         <c:forEach var="C" items="${listC}">
                                             <c:if test="${C.customer_id == sessionScope.account.customer_id}">
                                                 <a href="feedbackInsurance?insurance_id=${insurance.insurance_id}" class="btn btn-apply me-3">

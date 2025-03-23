@@ -51,6 +51,12 @@
                 background-color: #b02a37 !important;
                 border-color: #b02a37 !important;
             }
+            .feedback-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
         </style>
 
     </head>
@@ -67,7 +73,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchInsuranceTransaction" method="post" role="form">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchInsuranceFeedback" method="get" role="form">
                 <input class="form-control bg-white text-dark" name="search_customer_name" type="text" placeholder="Search" aria-label="Search">
             </form>
 
@@ -276,11 +282,11 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="feedbackModalLabel${F.feedback_id}">Chi tiết giao dịch:</h5>
+                                        <h5 class="modal-title" id="feedbackModalLabel${F.feedback_id}">Chi tiết phản hồi:</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">                                                              
-                                        <p><strong>Ghi chú:</strong> ${F.feedback_content}</p>                                      
+                                    <div class="modal-body feedback-content">                                                              
+                                        <p><strong>Nội dung phản hồi:</strong> ${F.feedback_content}</p>                                      
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>

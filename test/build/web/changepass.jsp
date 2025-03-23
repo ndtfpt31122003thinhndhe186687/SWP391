@@ -139,37 +139,50 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="index.html">
+                     <li class="nav-item">
+                        <a class="nav-link " aria-current="page" href="balanceCustomer">
                             <i class="bi-house-fill me-2"></i>
-                            Overview
+                            T?ng quan
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="wallet.html">
+                        <a class="nav-link" href="wallet">
                             <i class="bi-wallet me-2"></i>
-                            My Wallet
+                            Ví c?a tôi
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">
+                        <a class="nav-link" href="viewprofile">
                             <i class="bi-person me-2"></i>
-                            Profile
+                            H? s?
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="savingList">
+                            <i class="bi-person me-2"></i>
+                            S? ti?t ki?m 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="loanList">
+                            <i class="bi-person me-2"></i>
+                            Vay 
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="setting.html">
+                        <a class="nav-link active" href="changeInfor">
                             <i class="bi-gear me-2"></i>
-                            Settings
+                            Cài ??t
+
                         </a>
                     </li>
                     <li class="nav-item border-top mt-auto pt-2">
                         <a class="nav-link" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
-                            Logout
+                            ??ng xu?t
                         </a>
                     </li>
                 </ul>

@@ -51,7 +51,7 @@ public class CustomerRequestServlet extends HttpServlet {
         int totalRecords = 0;
         
         // Construct base SQL query
-        String baseSql = "SELECT c.customer_id, c.full_name, c.card_type " +
+        String baseSql = "SELECT r.loan_id,c.customer_id, c.full_name, c.card_type " +
                          "FROM customer c " +
                          "JOIN loan r ON c.customer_id = r.customer_id " +
                          "WHERE r.status = 'pending' ";
@@ -112,6 +112,7 @@ public class CustomerRequestServlet extends HttpServlet {
                         customer.setCustomer_id(rs.getInt("customer_id"));
                         customer.setFull_name(rs.getString("full_name"));
                         customer.setCard_type(rs.getString("card_type"));
+                        customer.setLoan_id(rs.getInt("loan_id"));
                         customers.add(customer);
                     }
                 }

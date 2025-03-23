@@ -98,6 +98,7 @@
     </head>
 
     <body>
+        <fmt:setLocale value="vi_VN"/>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="index.html">
@@ -267,7 +268,7 @@
                     </div>
                     <div class="custom-block custom-block-balance">
                         <small>Tổng số tiền vay</small>
-                        <h2 class="mt-2 mb-3"><fmt:formatNumber value="${totalLoan}" pattern="#,##0.00"/>VND</h2>
+                        <h2 class="mt-2 mb-3"><fmt:formatNumber value="${totalLoan}" pattern="#,###"/>VND</h2>
                         <div class="savings-list">
                             <c:forEach var="loan" items="${list}">
                                 <div class="savings-item">                              
@@ -277,16 +278,16 @@
                                                 <span class="value">${loan.loan_payments_id}</span>
                                             </div>
                                             <div class="row"><span class="label">Số tiền gốc:</span>
-                                                <span class="value"><fmt:formatNumber value="${loan.principal_amount}" pattern="#,##0.00" />VND</span>
+                                                <span class="value"><fmt:formatNumber value="${loan.principal_amount}" pattern="#,###" />VND</span>
                                             </div>
                                             <div class="row"><span class="label">Số tiền lãi:</span>
-                                                <span class="value"><fmt:formatNumber value="${loan.interest_amount}" pattern="#,##0.00" />VND</span>
+                                                <span class="value"><fmt:formatNumber value="${loan.interest_amount}" pattern="#,###" />VND</span>
                                             </div>
                                             <div class="row"><span class="label">Tổng gốc + lãi:</span>
-                                                <span class="value"><fmt:formatNumber value="${loan.payment_amount}" pattern="#,##0.00" />VND</span>
+                                                <span class="value"><fmt:formatNumber value="${loan.payment_amount}" pattern="#,###" />VND</span>
                                             </div>
                                             <div class="row"><span class="label">Số gốc còn lại:</span>
-                                                <span class="value"><fmt:formatNumber value="${loan.remaining_amount}" pattern="#,##0.00" />VND</span>
+                                                <span class="value"><fmt:formatNumber value="${loan.remaining_amount}" pattern="#,###" />VND</span>
                                             </div>
                                             <div class="row"><span class="label">Ngày trả nợ:</span>
                                                 <span class="value"> <fmt:formatDate value="${loan.payment_date}" pattern="dd-MM-yyyy" /></span>

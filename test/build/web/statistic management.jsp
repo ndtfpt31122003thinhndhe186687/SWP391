@@ -1,6 +1,6 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Mini Finance - Settings</title>
+        <title>Thống kê</title>
 
         <!-- CSS FILES -->      
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,71 +50,14 @@
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="">
-                    <i class="bi-box"></i>
-                    Mini Finance
+                    <i class="bi-bank"></i>
+                    Finbank
                 </a>
             </div>
 
             <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
-                <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
-            </form>
-
-            <div class="navbar-nav me-lg-2">
-                <div class="nav-item text-nowrap d-flex align-items-center">
-                    <div class="dropdown ps-3">
-                        <a class="nav-link dropdown-toggle text-center text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="navbarLightDropdownMenuLink">
-                            <i class="bi-bell"></i>
-                            <span class="position-absolute start-100 translate-middle p-1 bg-white border border-danger rounded-circle">
-                                <span class="visually-hidden">New alerts</span>
-                            </span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-lg-end notifications-block-wrap bg-white text-danger shadow" aria-labelledby="navbarLightDropdownMenuLink">
-                            <small class="text-danger">Notifications</small>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-check-circle-fill"></i>
-                                    </div>
-                                    <div>
-                                        <span>Your account has been created successfully.</span>
-                                        <p>12 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-folder"></i>
-                                    </div>
-                                    <div>
-                                        <span>Please check. We have sent a Daily report.</span>
-                                        <p>10 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-question-circle"></i>
-                                    </div>
-                                    <div>
-                                        <span>Account verification failed.</span>
-                                        <p>1 hour ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
 
             <div class="dropdown px-3">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -140,19 +83,19 @@
                     <li>
                         <a class="dropdown-item" href="profile.html">
                             <i class="bi-person me-2"></i>
-                            Profile
+                            Hồ sơ
                         </a>
                     </li>
                     <li>
                         <a class="dropdown-item" href="setting.html">
                             <i class="bi-gear me-2"></i>
-                            Settings
+                            Cài đặt
                         </a>
                     </li>
                     <li class="border-top mt-3 pt-2 mx-4">
                         <a class="dropdown-item ms-0 me-0" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
-                            Logout
+                            Đăng xuất
                         </a>
                     </li>
                 </ul>
@@ -168,95 +111,115 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
+                        <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">
                             <i class="me-2"></i>
-                            Staff Management
+                            Quản lý nhân viên
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="service_management?type=services">
+                        <a class="nav-link " href="service_management?type=services">
                             <i class="me-2"></i>
-                            Service Management
+                            Quản lý dịch vụ
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="transaction_management">
+                        <a class="nav-link " href="transaction_management">
                             <i class=" me-2"></i>
-                            Transaction Management
+                            Quản lý giao dịch
                         </a>
-                    </li>                   
+                    </li>    
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="statistic_management">
+                        <a class="nav-link" href="insurance_management">
+                            <i class=" me-2"></i>
+                            Quản lý bảo hiểm
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="serviceprovider_management">
+                            <i class=" me-2"></i>
+                            Quản lý nhà cung cấp dịch vụ
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active " href="statistic_management">
                             <i class="me-2"></i>
-                            Statistic Management
+                            Thống kê
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
                             <i class="me-2"></i>
-                            Service Term Management
+                            Quản lý điều khoản
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link " href="feedback_management">
+                            <i class="me-2"></i>
+                            Quản lý phản hồi
                         </a>
                     </li>
 
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
+                            <i class="me-2"></i>
+                            Kiểm duyệt tin tức 
+                        </a>
+                    </li>    
                 </ul>
             </div>
         </nav>
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Statistics Dashboard</h1>
+                <h1 class="h2 mb-0 text-danger">Bảng thống kê</h1>
             </div>
 
             <!-- Total Statistics Section -->
             <div class="row statistic-section">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="statistic-card">
-                        <div class="statistic-title">Total Customers</div>
+                        <div class="statistic-title">Tổng số khách hàng</div>
                         <div class="statistic-value">${totalCustomers}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="statistic-card">
-                        <div class="statistic-title">Total Staff</div>
+                        <div class="statistic-title">Tổng số nhân viên</div>
                         <div class="statistic-value">${totalStaff}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="statistic-card">
-                        <div class="statistic-title">Total Insurance</div>
+                        <div class="statistic-title">Tổng số bên bảo hiểm </div>
                         <div class="statistic-value">${totalInsurance}</div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="statistic-card">
-                        <div class="statistic-title">Total Feedback</div>
-                        <div class="statistic-value">${totalFeedback}</div>
-                    </div>
-                </div>
+                </div>              
             </div>
 
             <!-- Active Counts Section -->
             <div class="row statistic-section">
                 <div class="col-md-4">
                     <div class="statistic-card">
-                        <div class="statistic-title">Active Customers</div>
+                        <div class="statistic-title">Số khách hàng hoạt động</div>
                         <div class="statistic-value">${activeCustomers}</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="statistic-card">
-                        <div class="statistic-title">Active Staff</div>
+                        <div class="statistic-title">Số nhân viên hoạt động</div>
                         <div class="statistic-value">${activeStaff}</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="statistic-card">
-                        <div class="statistic-title">Active Services</div>
+                        <div class="statistic-title">Số dich vụ hoạt động </div>
                         <div class="statistic-value">${activeServices}</div>
                     </div>
                 </div>
@@ -267,14 +230,14 @@
                 <!-- Gender Distribution -->
                 <div class="col-md-6">
                     <div class="statistic-card">
-                        <div class="statistic-title">Gender Distribution</div>
+                        <div class="statistic-title">Phân bố giới tính</div>
                         <table class="table">
                             <tr>
-                                <td>Male Customers:</td>
+                                <td>Khách hàng nam:</td>
                                 <td class="statistic-value">${maleCustomers}</td>
                             </tr>
                             <tr>
-                                <td>Female Customers:</td>
+                                <td>Khách hàng nữ:</td>
                                 <td class="statistic-value">${femaleCustomers}</td>
                             </tr>
                         </table>
@@ -284,14 +247,14 @@
                 <!-- Card Type Distribution -->
                 <div class="col-md-6">
                     <div class="statistic-card">
-                        <div class="statistic-title">Card Type Distribution</div>
+                        <div class="statistic-title">Loại thẻ</div>
                         <table class="table">
                             <tr>
-                                <td>Credit Cards:</td>
+                                <td>Thẻ tín dụng:</td>
                                 <td class="statistic-value">${creditCards}</td>
                             </tr>
                             <tr>
-                                <td>Debit Cards:</td>
+                                <td>Thẻ ghi nợ:</td>
                                 <td class="statistic-value">${debitCards}</td>
                             </tr>
                         </table>
@@ -303,18 +266,18 @@
             <div class="row statistic-section">
                 <div class="col-12">
                     <div class="statistic-card">
-                        <div class="statistic-title">Request Status Distribution</div>
+                        <div class="statistic-title">Trạng thái yêu cầu:</div>
                         <table class="table">
                             <tr>
-                                <td>Pending Requests:</td>
+                                <td>Yêu cầu đang chờ xử lý:</td>
                                 <td class="statistic-value">${pendingRequests}</td>
                             </tr>
                             <tr>
-                                <td>Approved Requests:</td>
+                                <td>Yêu cầu đồng ý:</td>
                                 <td class="statistic-value">${approvedRequests}</td>
                             </tr>
                             <tr>
-                                <td>Rejected Requests:</td>
+                                <td>Yêu cầu từ chối:</td>
                                 <td class="statistic-value">${rejectedRequests}</td>
                             </tr>
                         </table>

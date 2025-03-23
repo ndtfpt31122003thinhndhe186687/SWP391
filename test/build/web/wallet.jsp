@@ -94,17 +94,57 @@
                 <div class="position-sticky py-4 px-3 sidebar-sticky">
                     <ul class="nav flex-column h-100">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <i class="bi-house-fill me-2"></i>
-                                Overview
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="wallet">
-                                <i class="bi-wallet me-2"></i>
-                                My Wallet
-                            </a>
-                        </li>
+                        <a class="nav-link " aria-current="page" href="balanceCustomer">
+                            <i class="bi-house-fill me-2"></i>
+                            Tổng quan
+                        </a>
+                    </li>
+
+                    <li class="nav-item active">
+                        <a class="nav-link" href="wallet">
+                            <i class="bi-wallet me-2"></i>
+                            Ví của tôi
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="viewprofile">
+                            <i class="bi-person me-2"></i>
+                            Hồ sơ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="savingList">
+                            <i class="bi-person me-2"></i>
+                            Sổ tiết kiệm 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="loanList">
+                            <i class="bi-person me-2"></i>
+                            Vay 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                                <a class="nav-link" href="CustomerInsuranceList">
+                                    <i class="bi-gear me-2"></i>
+                                    Bảo hiểm
+                                </a>
+                            </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="changeInfor">
+                            <i class="bi-gear me-2"></i>
+                            Cài đặt
+
+                        </a>
+                    </li>
+                    <li class="nav-item border-top mt-auto pt-2">
+                        <a class="nav-link" href="logout">
+                            <i class="bi-box-arrow-left me-2"></i>
+                            Đăng xuất
+                        </a>
+                    </li>
                     </ul>
                 </div>
             </nav>

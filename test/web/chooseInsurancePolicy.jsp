@@ -100,7 +100,7 @@
         <div style="display: none;">
             <c:forEach var="c" items="${requestScope.listCD}">                  
                 <option class="contractOption" data-policy-id="${c.policy_id}" value="${c.contract_id}">
-                    ${c.contract_id}
+                    ${c.contract_name}
                 </option>
             </c:forEach>
         </div>

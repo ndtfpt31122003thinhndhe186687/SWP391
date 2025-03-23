@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Add New Term</title>
+        <title>Thêm kỳ hạn</title>
         <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
         <style>
             :root {
@@ -119,99 +119,98 @@
                 justify-content: center;            
             }
 
-            .radio-group {
-                display: flex;
-                gap: 20px;
-                align-items: center;
-            }
-
-            /* Ẩn radio button mặc định */
-            .radio-input {
-                display: none;
-            }
-
-            /* Tạo nút toggle */
-            .radio-label {
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 70px;
-                height: 35px;
-                border-radius: 20px;
-                background-color: #ccc;
-                cursor: pointer;
-                transition: background-color 0.3s ease-in-out;
-            }
-
-            .radio-label::before {
-                content: "";
-                position: absolute;
-                width: 30px;
-                height: 30px;
+            input[type="radio"].custom-radio {
+                appearance: none; /* Ẩn radio mặc định */
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                width: 16px;
+                height: 16px;
+                border: 2px solid #888; /* Viền mặc định */
                 border-radius: 50%;
-                background-color: white;
-                top: 50%;
-                left: 3px;
-                transform: translateY(-50%);
-                transition: all 0.3s ease-in-out;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                outline: none;
+                cursor: pointer;
+                position: relative;
             }
 
             /* Khi radio được chọn */
-            .radio-input:checked + .radio-label {
-                background-color: #007bff;
+            input[type="radio"].custom-radio:checked {
+                border: 6px solid transparent; /* Ẩn viền ngoài khi chọn */
             }
 
-            .radio-input:checked + .radio-label::before {
-                left: calc(100% - 33px);
+            /* Màu sắc theo từng loại */
+            input#male.custom-radio:checked {
+                background-color: blue;
             }
 
-            /* Màu đỏ khi chọn inactive */
-            .radio-input[value="inactive"]:checked + .radio-label {
-                background-color: #dc3545;
+            input#female.custom-radio:checked {
+                background-color: red;
+            }
+
+            input#active.custom-radio:checked {
+                background-color: green;
+            }
+
+            input#inactive.custom-radio:checked {
+                background-color: red;
+            }
+
+            /* Mặc định label có màu xám */
+            label[for="male"], label[for="female"], label[for="active"], label[for="inactive"] {
+                font-weight: bold;
+                transition: color 0.3s ease-in-out;
+                cursor: pointer;
+            }
+
+            /* Khi chọn Active -> Màu xanh lá */
+            input#active.custom-radio:checked + label[for="active"] {
+                color: green;
+            }
+
+            /* Khi chọn Inactive -> Màu đỏ */
+            input#inactive.custom-radio:checked + label[for="inactive"] {
+                color: red;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Add New Term</h1>
+            <h1>Thêm kỳ hạn mới</h1>
             <h4 class="error-message">${requestScope.error}</h4>
             <form action="addTerm" method="get" id="termForm" onsubmit="return validateForm()">
                 <div class="form-group">
-                    <label for="term_name">Term Name:</label>
+                    <label for="term_name">Tên kỳ hạn:</label>
                     <input type="text" id="term_name" name="term_name" required />
                 </div>
                 
                 <div class="form-group">
-                    <label for="duration">Duration:</label>
+                    <label for="duration">Thời gian:</label>
                     <input type="number" id="duration" name="duration" required min="1" 
                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-                    <div class="invalid-feedback" id="duration-feedback">Please enter a valid number for duration.</div>
+                    <div class="invalid-feedback" id="duration-feedback">Hãy nhập đúng giá trị hợp lệ .</div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="term_type">Term Type:</label>
+                    <label for="term_type">Loại kỳ hạn:</label>
                     <select id="term_type" name="term_type" required>
-                        <option value="">Select term type</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="quarterly">Quarterly</option>
-                        <option value="annually">Annually</option>
+                        <option value="">Chọn loại kỳ hạn </option>
+                        <option value="monthly">Tháng</option>
+                        <option value="quarterly">Quý</option>
+                        <option value="annually">Năm</option>
                     </select>
                 </div>
                 
-                <div class="form-group-status">
-                    <label>Status:</label>
-                    <div class="radio-group">
-                        <input type="radio" id="active" name="status" value="active" class="radio-input" required>
-                        <label for="active" class="radio-label"></label>
+                <div class="form-group">
+                    <label>Trạng thái:</label>
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <input type="radio" id="active" name="status" value="active" class="custom-radio" required>
+                        <label for="active"><i class="fa-solid fa-circle-check"></i> Hoạt động</label>
 
-                        <input type="radio" id="inactive" name="status" value="inactive" class="radio-input" required>
-                        <label for="inactive" class="radio-label"></label>
+                        <input type="radio" id="inactive" name="status" value="inactive" class="custom-radio" required>
+                        <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Không hoạt động</label>
                     </div>
                 </div>
                 
-                <button type="submit">Add New Term</button>
+                <button type="submit">Thêm mới</button>
             </form>
         </div>
 

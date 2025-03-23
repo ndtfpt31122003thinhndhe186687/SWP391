@@ -62,19 +62,20 @@
         </style>
     </head>
     <body>
-        <h1>Update a Insurance contract</h1>
+        <h1>Cập nhập hợp đồng bảo hiểm</h1>
         <c:set var="c" value="${requestScope.contract}"/>
         <form action="updateInsuranceContract" method="post">
             <input type="hidden" name="contract_id" value="${contract.contract_id}">
             Chọn trạng thái
             <select class="filter-dropdown" name="status">
+                <option value="pending" ${c.status == 'pending' ? 'selected' : ''}>Chưa giải quyết</option>
                <option value="active" ${c.status == 'active' ? 'selected' : ''}>Hoạt động</option>
                <option value="expired" ${c.status == 'expired' ? 'selected' : ''}>Hết hạn</option>
                <option value="cancelled" ${c.status == 'cancelled' ? 'selected' : ''}>Đã huỷ</option>
             </select>
             </br>
 
-            <button type="submit">Update</button>
+            <button type="submit">Cập nhập</button>
         </form>
     </body>
 </html>

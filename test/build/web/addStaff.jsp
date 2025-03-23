@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Add New Staff</title>
+        <title>Thêm nhân viên mới</title>
         <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -175,76 +175,74 @@
     </head>
     <body>
         <div class="container">
-            <h1>Add New Staff</h1>
+            <h1>Thêm nhân viên</h1>
             <h4 class="error-message">${requestScope.error}</h4>
             <form action="addStaff" method="get" id="staffForm" onsubmit="return validateForm()">
                 <div class="form-group">
-                    <label for="full_name">Full Name:</label>
+                    <label for="full_name">Họ và tên:</label>
                     <input type="text" id="full_name" name="full_name" required  />
-                    <div class="invalid-feedback" id="full_name-feedback">Please enter a valid full name.</div>
+                    <div class="invalid-feedback" id="full_name-feedback">Hãy điền đúng họ tên hợp lệ.</div>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
-                    <div class="invalid-feedback" id="email-feedback">Please enter a valid email address.</div>
+                    <div class="invalid-feedback" id="email-feedback">Hãy điền địa chỉ email hợp lệ .</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="username">Username:</label>
+                    <label for="username">Tên đăng nhập:</label>
                     <input type="text" id="username" name="username" required />
                 </div>
               
                 <div class="form-group">
-                    <label for="phone_number">Phone Number:</label>
+                    <label for="phone_number">Số điện thoại:</label>
                     <input type="tel" id="phone_number" name="phone_number" required 
                            pattern="[0-9]{10}" maxlength="10" />
-                    <div class="invalid-feedback" id="phone-feedback">Please enter a valid 10-digit phone number.</div>
+                    <div class="invalid-feedback" id="phone-feedback">Hãy điền số điện thoại chứa 10 số hợp lệ.</div>
                 </div>
 
                 <div class="form-group">
-                    <label>Gender:</label>
+                    <label>Giới tính:</label>
                     <div style="display: flex; gap: 20px; align-items: center;">
                         <input type="radio" id="male" name="gender" value="male" class="custom-radio" required>
-                        <label for="male"><i class="fa-solid fa-mars" style="color:blue"></i> Male</label>
+                        <label for="male"><i class="fa-solid fa-mars" style="color:blue"></i> Nam</label>
 
                         <input type="radio" id="female" name="gender" value="female" class="custom-radio" required>
-                        <label for="female"><i class="fa-solid fa-venus" style="color:red"></i> Female</label>
+                        <label for="female"><i class="fa-solid fa-venus" style="color:red"></i> Nữ</label>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="date_of_birth">Date of Birth:</label>
+                    <label for="date_of_birth">Ngày sinh:</label>
                     <input type="date" id="date_of_birth" name="date_of_birth" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="address">Address:</label>
+                    <label for="address">Địa chỉ:</label>
                     <input type="text" id="address" name="address" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="role_id">Role ID:</label>                  
+                    <label for="role_id">Chức vụ:</label>                  
                     <select id="role_id" name="role_id" required>
-                        <option value="2">Banker</option>
-                        <option value="3">Marketer</option>
-                        <option value="4">Accountant</option>
+                        <option value="2">Nhân viên</option>
+                        <option value="3">Tiếp thị</option>
+                        <option value="4">Kế toán</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Status:</label>
+                    <label>Trạng thái:</label>
                     <div style="display: flex; gap: 20px; align-items: center;">
                         <input type="radio" id="active" name="status" value="active" class="custom-radio" required>
-                        <label for="active"><i class="fa-solid fa-circle-check"></i> Active</label>
+                        <label for="active"><i class="fa-solid fa-circle-check"></i> Hoạt động</label>
 
                         <input type="radio" id="inactive" name="status" value="inactive" class="custom-radio" required>
-                        <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Inactive</label>
+                        <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Không hoạt động</label>
                     </div>
                 </div>
-
-
-                <button type="submit">Add New Staff</button>
+                <button type="submit">Thêm mới</button>
             </form>
         </div>
 

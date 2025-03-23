@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
@@ -20,30 +20,39 @@
                 height: 100vh;
             }
             .sidebar {
-                width: 250px;
-                background-color: #b71c1c;
-                color: white;
-                padding: 20px;
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
+                width: 250px; /* Độ rộng sidebar */
+                background-color: #b22222; /* Màu nền */
+                color: white; /* Màu chữ */
+                position: fixed; /* Giữ sidebar cố định bên trái */
+                top: 0;
+                left: 0;
+                height: 100vh; /* Chiều cao toàn màn hình */
+                padding-top: 20px;
             }
+
             .sidebar h2 {
                 text-align: center;
                 margin-bottom: 20px;
             }
+
             .sidebar a {
-                text-decoration: none;
+                display: block; /* Hiển thị mỗi link trên một dòng */
                 color: white;
-                padding: 10px;
-                display: block;
-                background: #d32f2f;
-                border-radius: 5px;
-                text-align: center;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             }
+
             .sidebar a:hover {
-                background: #c62828;
+                background-color: #8b0000;
             }
+
+            /* Để tránh nội dung bị che bởi sidebar */
+            .content {
+                margin-left: 260px; /* Dịch nội dung sang phải để không đè lên sidebar */
+                padding: 20px;
+            }
+
             .content {
                 flex: 1;
                 padding: 20px;
@@ -158,7 +167,7 @@
     <body>
         <div class="sidebar">
             <h2>Tin tức Ngân hàng</h2>      
-            <a href="<%= request.getContextPath() %>/home">Trở về Trang chủ</a>
+            <a href="<%= request.getContextPath() %>/home.jsp">Trở về Trang chủ</a>
             <a href="newsManage?staff_id=${sessionScope.account.role_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Bảng điều khiển</a>
             <a href="addNews">Thêm Tin tức</a>
             <a href="newsStatistic">Thống kê tin tức</a>
@@ -182,6 +191,7 @@
                     <option value="draft" ${requestScope.status == 'draft' ? 'selected' : ''}>Draft</option>
                     <option value="approved" ${requestScope.status == 'approved' ? 'selected' : ''}>Approved</option>
                     <option value="pending" ${requestScope.status == 'pending' ? 'selected' : ''}>Pending</option>
+                    <option value="rejected" ${requestScope.status == 'rejected' ? 'selected' : ''}>Rejected</option>
                 </select>
 
                 <label for="sortNews">Sắp xếp theo:</label>
@@ -200,7 +210,7 @@
             </div>
 
             <div class="search-bar">
-                <form action="searchNews" method="get">
+              <form action="${pageContext.request.contextPath}/marketer/searchNews" method="get">
                     <input type="text" placeholder="Tìm kiếm tin tức theo tiêu đề" name="searchName" id="searchName" value="${param.searchName}">
                     <input type="hidden" name="page" value="${page}">
                     <input type="hidden" name="pageSize" value="${pageSize}">
@@ -229,21 +239,24 @@
                             <td>
                                 <a href="#" class="news-title news-content" 
                                    onclick="showNewsModal('${news.category_name}',
-                                                   '${news.title}',
-                                                   `${news.content}`,
+                                                   '${fn:escapeXml(news.title)}',
+                                                   `${fn:escapeXml(news.content)}`,
                                                    '${news.created_at}',
                                                    '${news.updated_at}',
                                                    '${news.picture}')">
                                     ${news.getTitle()}
                                 </a>
-                            </td>                          
+
+                            </td>
+
+
                             <td class="news-content">${news.content}</td>
                             <td>
                                 <fmt:formatDate value="${news.created_at}" pattern="dd-MM-yyyy" />
                             </td>                           
                             <td>${news.status}</td>  
                             <td>
-                                <img src="imageNews/${news.picture}" alt="News Image" class="news-image">
+                                <img src="<%= request.getContextPath() %>/imageNews/${news.picture}" alt="News Image" class="news-image">
                             </td>
                             <td>
                                 <a href="editNews?news_id=${news.news_id}&category_id=${news.category_id}" style="background-color: #d32f2f;
@@ -346,7 +359,7 @@
                         document.getElementById("modalUpdatedAt").innerText = formatDate(updatedAt);
                         let imgElement = document.getElementById("modalImage");
                         if (image && image !== "null") {
-                            imgElement.src = "imageNews/" + image;
+                            imgElement.src = "<%= request.getContextPath() %>/imageNews/" + image;
                             imgElement.style.display = "block";
                         } else {
                             imgElement.style.display = "none";
@@ -358,6 +371,7 @@
                     function closeModal() {
                         document.getElementById("newsModal").style.display = "none";
                     }
+
 
                 </script>  
                 </tbody>

@@ -238,6 +238,7 @@
                     <select class="filter-dropdown" name="status">                    
                         <option value="all" ${requestScope.status == '' ? 'selected' : ''}>Tất cả</option>
                         <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                        <option value="pending" ${requestScope.status == 'pending' ? 'selected' : ''}>Chưa giải quyết</option>
                         <option value="expired" ${requestScope.status == 'expired' ? 'selected' : ''}>Hết hạn</option>
                         <option value="cancelled" ${requestScope.status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
                     </select>
@@ -253,8 +254,10 @@
                         <thead>
                             <tr>
                                 <th>ID hợp đồng</th>
+                                <th>Tên hợp đồng</th>
                                 <th>Tên khách hàng</th>
                                 <th>Tên dịch vụ</th>
+                                <th>Tên khoản vay</th>
                                 <th>Tên chính sách</th>
                                 <th>Trả theo</th>
                                 <th>Trạng thái</th>
@@ -272,11 +275,15 @@
                                         ${C.contract_id}
                                     </a>
                                 </td>
+                                <td>${C.contract_name}</td>
                                 <td>${C.full_name}</td>
-                                <td>${C.service_name}</td>
+                                <td>${C.service_name == 'Loan' ? 'Vay' : ''}</td>
+                                <td>${C.notes}</td>
                                 <td>${C.policy_name}</td>
                                 <td>${C.payment_frequency == 'monthly' ? 'Tháng' : (C.payment_frequency == 'quarterly' ? 'Quý' : 'Năm')}</td>
-                                <td>${C.status == 'active' ? 'Hoạt động' : (C.status == 'expired' ? 'Hết hạn' : 'Đã huỷ')}</td> 
+                                <td>  ${C.status == 'active' ? 'Hoạt động' : 
+                                        (C.status == 'expired' ? 'Hết hạn' : 
+                                        (C.status == 'pending' ? 'Chưa giải quyết' : 'Đã huỷ'))}</td> 
                                 <td>${C.duration}</td> 
                                 <td><fmt:formatDate value="${C.start_date}" pattern="dd-MM-yyyy" /></td> 
                                 <td><fmt:formatDate value="${C.end_date}" pattern="dd-MM-yyyy" /></td>

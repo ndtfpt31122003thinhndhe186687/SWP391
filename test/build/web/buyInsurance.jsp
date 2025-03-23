@@ -114,22 +114,21 @@
 
         <h1>Mua bảo hiểm</h1>
         <h4>${requestScope.error}</h4> 
-        <form action="buyInsurance" method="post">
+        <form action="buyInsurance" method="post" enctype="multipart/form-data">
 
             <input type="hidden" name="insurance_id" value="${insurance_id}" />
             <div class="container">
-                <label>Chọn ID khoản vay</label>
+                <label>Chọn khoản vay</label>
                 <select id="loanDropdown" class="filter-dropdown" name="loan_id" onchange="updateLoanDetails()">
                     <c:if test ="${not empty listLoan}">                        
                         <c:forEach var="l" items="${requestScope.listLoan}">
-                            <option value="${l.loan_id}">${l.loan_id}</option>  
+                            <option value="${l.loan_id}">${l.notes}</option>  
                         </c:forEach>                
                     </c:if>
                 </select>
                 <label>Chọn chính sách</label>
 
                 <select id="policyDropdown" class="filter-dropdown" name="policy_id" onchange="updatePolicyDetails()">
-
 
 
 
@@ -140,12 +139,14 @@
                         </c:forEach>                
                     </c:if>
                 </select>
+                <label>Nhập tên hợp đồng</label>
+                <input type="text" name="contract_name"  required  /> 
 
                 <label>Số tiền được nhận</label>
-                <input type="text" id="coverageAmount" name="coverage_amount"  required readonly /> VND
+                <input type="text" id="coverageAmount" name="coverage_amount"  required readonly /> 
 
                 <label>Số tiền cần đóng</label>
-                <input type="text" id="premiumAmount" name="premium_amount"  required readonly /> VND
+                <input type="text" id="premiumAmount" name="premium_amount"  required readonly /> 
 
                 <label>Nhập số tiền nộp</label>
                 <input type="text" id="paidAmount" name="paid_amount" required />
@@ -165,7 +166,10 @@
 
                 <label>Nhập thời hạn hợp đồng (Tháng)</label>
                 <input type="text" name="duration" required/>
-
+                 <div class="form-group">
+                                    <label for="file">Ảnh</label>
+                                    <input style="margin-bottom: 5px;margin-top: 5px;" type="file" name="file" id="file" accept="image/png, image/jpg, image/jpeg" >
+                                </div>
                 <button type="submit" >Mua</button>
         </form>
     </div>

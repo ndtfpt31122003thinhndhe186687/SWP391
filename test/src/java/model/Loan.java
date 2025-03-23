@@ -93,12 +93,23 @@ public class Loan {
         this.status = status;
     }
 
-    public Loan(int loan_id, int insurance_id, int policy_id) {
-        this.loan_id = loan_id;
+    public int getInsurance_id() {
+        return insurance_id;
+    }
+
+    public void setInsurance_id(int insurance_id) {
         this.insurance_id = insurance_id;
+    }
+
+    public int getPolicy_id() {
+        return policy_id;
+    }
+
+    public void setPolicy_id(int policy_id) {
         this.policy_id = policy_id;
     }
 
+    
     public String getServiceName() {
         return serviceName;
     }
@@ -229,28 +240,10 @@ public class Loan {
         this.status = status;
     }
 
-    public int getInsurance_id() {
-        return insurance_id;
-    }
-
-    public void setInsurance_id(int insurance_id) {
-        this.insurance_id = insurance_id;
-    }
-
-    public int getPolicy_id() {
-        return policy_id;
-    }
-
-    public void setPolicy_id(int policy_id) {
-        this.policy_id = policy_id;
-    }
-
     @Override
     public String toString() {
-        return "Loan{" + "loan_id=" + loan_id + ", customer_id=" + customer_id + ", service_id=" + service_id + ", term_id=" + term_id + ", duration=" + duration + ", serviceTerm_id=" + serviceTerm_id + ", insurance_id=" + insurance_id + ", policy_id=" + policy_id + ", amount=" + amount + ", interest_rate=" + interest_rate + ", start_date=" + start_date + ", end_date=" + end_date + ", asset_image=" + asset_image + ", terms=" + terms + ", notes=" + notes + ", loan_type=" + loan_type + ", value_asset=" + value_asset + ", status=" + status + ", serviceName=" + serviceName + '}';
+        return "Loan{" + "loan_id=" + loan_id + ", customer_id=" + customer_id + ", service_id=" + service_id + ", term_id=" + term_id + ", duration=" + duration + ", serviceTerm_id=" + serviceTerm_id + ", amount=" + amount + ", interest_rate=" + interest_rate + ", start_date=" + start_date + ", end_date=" + end_date + ", asset_image=" + asset_image + ", terms=" + terms + ", notes=" + notes + ", loan_type=" + loan_type + ", value_asset=" + value_asset + ", status=" + status + '}';
     }
-
-   
     
     
 

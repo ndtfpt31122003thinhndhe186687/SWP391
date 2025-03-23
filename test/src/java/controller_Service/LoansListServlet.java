@@ -91,18 +91,27 @@ public class LoansListServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Customer c = (Customer) session.getAttribute("account");
         String loan_id_raw = request.getParameter("id");
+        String status = request.getParameter("status");
         int loan_id;
         double totalLoan = 0;
         try {
+
             loan_id = Integer.parseInt(loan_id_raw);
             List<Loan> loanList = d.getListLoanByCustomerId(c.getCustomer_id());
             for (Loan loan : loanList) {
                 totalLoan += loan.getAmount();
             }
             request.setAttribute("totalLoan", totalLoan);
+            if ("pending".equals(status)) {
+                request.setAttribute("message", "Khoản vay của bạn chưa được chấp nhận !");
+                request.getRequestDispatcher("loanCustomer.jsp").forward(request, response);
+                return;
+            }
+
             List<Loan_payments> list = d.getPaymentsByLoanIdandCustomerId(loan_id, c.getCustomer_id());
             request.setAttribute("list", list);
             request.getRequestDispatcher("loanPaymentCustomer.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
             System.out.println(e);
         }

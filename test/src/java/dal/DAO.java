@@ -7,7 +7,9 @@ import java.util.List;
 import model.Customer;
 import model.News;
 import model.NewsView;
+import model.Notifications;
 import model.Staff;
+import model.Transaction;
 
 public class DAO extends DBContext {
 
@@ -143,6 +145,7 @@ public class DAO extends DBContext {
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 int customer_id = rs.getInt("customer_id");
+                int role_id = rs.getInt("role_id");
                 String fullname = rs.getString("full_name");
                 String email = rs.getString("email");
                 String userName = rs.getString("username");
@@ -157,7 +160,9 @@ public class DAO extends DBContext {
                 double amount = rs.getDouble("amount");
                 double credit_limit = rs.getDouble("credit_limit");
                 Date date_of_birth = rs.getDate("date_of_birth");
-                Customer acc = new Customer(fullname, email, userName, password, phone_number, address, card_type, status, gender, profile_picture, customer_id, amount, credit_limit, date_of_birth, created_at);
+                Customer acc = new Customer(fullname, email, userName, 
+                        password, phone_number, address, card_type, status, gender, profile_picture, customer_id, role_id,
+                        amount, credit_limit, date_of_birth, created_at);
                 return acc;
             }
         } catch (Exception e) {
@@ -192,6 +197,162 @@ public class DAO extends DBContext {
         }
         return null;
     }
+
+    public Customer getInforById(int id) {
+        String sql = "SELECT * FROM customer WHERE customer_id = ?";
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Customer customer = new Customer();
+                customer.setCustomer_id(rs.getInt("customer_id"));
+                customer.setFull_name(rs.getString("full_name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setUsername(rs.getString("username"));
+                customer.setPhone_number(rs.getString("phone_number"));
+                customer.setAddress(rs.getString("address"));
+                customer.setCard_type(rs.getString("card_type"));
+                customer.setStatus(rs.getString("status"));
+                customer.setGender(rs.getString("gender"));
+                customer.setProfile_picture(rs.getString("profile_picture"));
+                customer.setAmount(rs.getDouble("amount"));
+                customer.setCredit_limit(rs.getDouble("credit_limit"));
+                customer.setDate_of_birth(rs.getDate("date_of_birth"));
+                customer.setCreated_at(rs.getTimestamp("created_at"));
+                customer.setRole_id(rs.getInt("role_id"));
+                return customer;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+    
+    // phong
+        //get notifications by id customer
+    public List<Notifications> getAllNotificationsByCustomerId(int customertId) {
+        List<Notifications> list = new ArrayList<>();
+        String sql = "select* from notifications where customer_id=? order by created_at desc";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, customertId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Notifications n = new Notifications();
+                n.setNotification_id(rs.getInt("notification_id"));
+                n.setCustomer_id(rs.getInt("customer_id"));
+                n.setReference_id(rs.getInt("reference_id"));
+                n.setNotification_type(rs.getString("notification_type"));
+                n.setMessage(rs.getString("message"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setIs_read(rs.getString("is_read"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    //get all notifi filter
+    public List<Notifications> getNotifyFilter(java.sql.Date start, java.sql.Date end, String notifiType, int customerId) {
+        List<Notifications> list = new ArrayList<>();
+        String sql = "SELECT * FROM notifications WHERE 1=1";
+        if (customerId > 0) {
+            sql += " AND customer_id = ?";
+        }
+
+        if (notifiType != null && !notifiType.isEmpty()) {
+            sql += " AND notification_type=?";
+        }
+        if (start != null && end != null) {
+            sql += " AND created_at BETWEEN ? AND ?";
+        }
+        sql += " ORDER BY created_at DESC";
+        try {
+            int index = 1;
+            PreparedStatement ps = con.prepareStatement(sql);
+            if (customerId > 0) {
+                ps.setInt(index++, customerId);
+            }
+            if (notifiType != null && !notifiType.isEmpty()) {
+                ps.setString(index++, notifiType);
+            }
+            if (start != null && end != null) {
+                ps.setDate(index++, start);
+                ps.setDate(index++, end);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Notifications n = new Notifications();
+                n.setNotification_id(rs.getInt("notification_id"));
+                n.setCustomer_id(rs.getInt("customer_id"));
+                n.setReference_id(rs.getInt("reference_id"));
+                n.setNotification_type(rs.getString("notification_type"));
+                n.setMessage(rs.getString("message"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setIs_read(rs.getString("is_read"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    //get all notification type
+    public List<String> getAllNotificationTypes() {
+        List<String> types = new ArrayList<>();
+        String sql = "SELECT DISTINCT notification_type FROM notifications";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                types.add(rs.getString("notification_type"));
+            }
+        } catch (Exception e) {
+        }
+        return types;
+    }
+
+    public List<Notifications> getListByPage(List<Notifications> list, int start, int end) {
+        List<Notifications> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
+
+    //
+    public List<Transaction> getAllTransactionsByCustomerId(int customer_id) {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT t.*, c.full_name, s.service_name \n" +
+"                FROM transactions t \n" +
+"                INNER JOIN customer c ON t.customer_id = c.customer_id \n" +
+"                INNER JOIN services s ON t.service_id = s.service_id where t.customer_id=?\n" +
+"                ORDER BY t.transaction_date DESC";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, customer_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Transaction transaction = new Transaction();
+                transaction.setTransaction_id(rs.getInt("transaction_id"));
+                transaction.setCustomer_id(rs.getInt("customer_id"));
+                transaction.setService_name(rs.getString("service_name"));
+                transaction.setAmount(rs.getDouble("amount"));
+                transaction.setTransaction_date(rs.getTimestamp("transaction_date"));
+                transaction.setTransaction_type(rs.getString("transaction_type"));
+                transactions.add(transaction);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return transactions;
+    }
+
 
 
     // Main method for testing

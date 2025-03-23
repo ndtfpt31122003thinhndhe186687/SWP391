@@ -3,13 +3,16 @@
     Created on : Feb 24, 2025, 3:41:17 PM
     Author     : Windows
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Chi tiết chính sách</title>
+         <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <style>
     /* Tổng thể */
     body {
@@ -82,52 +85,57 @@
 </style>
 
     </head>
-    <body>
-         <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Chi Tiết Chính Sách Của Bảo Hiểm </h1>
-            </div>
+<body class="bg-light">
+    <div class="container mt-4">
+        <!-- Tiêu đề -->
+        <div class="text-center mb-4">
+            <h1 class="h2 text-danger">Chi Tiết Chính Sách Của Bảo Hiểm</h1>
+        </div>
 
-            <!-- Tabs choose staff -->
-
-
-            <!-- View list staff -->
-            <div class="mt-3">
+        <!-- Duyệt danh sách chính sách -->
+        <c:forEach items="${listPolicy}" var="P">
+            <div class="mb-4">
                 <table class="table table-bordered">
-                    <thead>
+                    <tbody>
                         <tr>
-                            <th>ID Chính Sách</th>
-                            <th>Tên Chính Sách</th>
-                            <th>Mô tả</th>
-                            <th>Số Tiền Được Nhận</th>
-                            <th>Số Tiền Cần Đóng</th>
-                            <th>Trạng Thái</th>
-                            
-                            
-                        </tr>
-                    </thead>
-                    <c:forEach items="${listPolicy}" var="P">
-                        <tr>
-                            <td>${P.policy_id}</td>
+                            <th class="w-25 bg-light">Tên Chính Sách</th>
                             <td>${P.policy_name}</td>
-                            <td>${P.description}</td>
-                            <td class="format-number">${P.coverage_amount}</td>
-                            <td class="format-number">${P.premium_amount}</td> 
-                            <td>${P.status}</td> 
-                            
                         </tr>
-                    </c:forEach>
+                        <tr>
+                            <th class="bg-light">Mô tả</th>
+                            <td>${P.description}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Số Tiền Được Nhận</th>
+                            <td>
+                                <strong class="text-success">
+                                    <fmt:formatNumber value="${P.coverage_amount}" pattern="#,##0.00" /> VND
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Số Tiền Cần Đóng</th>
+                            <td>
+                                <strong class="text-danger">
+                                    <fmt:formatNumber value="${P.premium_amount}" pattern="#,##0.00" /> VND
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Trạng Thái</th>
+                            <td>
+                                <span class="badge ${P.status eq 'active' ? 'bg-success' : 'bg-secondary'}">
+                                    ${P.status == 'active' ? 'Hoạt động' : 'Ngừng hoạt động'}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-            <script>
-document.addEventListener("DOMContentLoaded", function () {
-    let formatNumbers = document.querySelectorAll(".format-number");
-    formatNumbers.forEach(function (el) {
-        let num = parseFloat(el.innerText);
-        if (!isNaN(num)) {
-            el.innerText = num.toLocaleString("en-US");
-        }
-    });
-});
-</script>
-    </body>
+        </c:forEach>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

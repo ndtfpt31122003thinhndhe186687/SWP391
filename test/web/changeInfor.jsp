@@ -29,10 +29,9 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
-                    Mini Finance
-                </a>
+                    Finbank                </a>
             </div>
 
             <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,28 +111,26 @@
                         </div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="profile.html">
+                        <a class="dropdown-item" href="viewprofile">
                             <i class="bi-person me-2"></i>
-                            Profile
+                            Hồ sơ                       
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="setting.html">
+                        <a class="dropdown-item" href="changeInfor">
                             <i class="bi-gear me-2"></i>
-                            Settings
+                            Cài đặt
                         </a>
                     </li>
                     <li class="border-top mt-3 pt-2 mx-4">
                         <a class="dropdown-item ms-0 me-0" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
-                            Logout
+                            Đăng xuất
                         </a>
                     </li>
                 </ul>
             </div>
 
-        </div>
-    </div>
 </header>
 
 <div class="container-fluid">
@@ -141,83 +138,9 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <c:if test="${sessionScope.account.role_id==1}">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="staff_management">
-                                <i class="bi-house-fill me-2"></i>
-                                Management
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==2}">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="customerList">
-                                <i class="bi-house-fill me-2"></i>
-                                Management
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-insurance-contracts">
-                                <i class="bi-house-fill me-2"></i>
-                                List Insurance Contracts
-                            </a>
-                        </li>
-                    </c:if>
 
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-debt-customers">
-                                <i class="bi-wallet me-2"></i>
-                                List Debt Customer
-                            </a>
-                        </li>
-                    </c:if>
-
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-transactions">
-                                <i class="bi-person me-2"></i>
-                                List Transactions
-                            </a>
-                        </li>
-                    </c:if>
-
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="list-insurance-transactions">
-                                <i class="bi-person me-2"></i>
-                                List Insurance Transactions
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="amountStatistics">
-                                <i class="bi-person me-2"></i>
-                                Amount Statistics
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="CustomerList_AServlet">
-                                <i class="bi-person me-2"></i>
-                                Accountant
-                            </a>
-                        </li>                   
-                    </c:if>
-                    <c:if test="${sessionScope.account.role_id==4}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="calculate">
-                                <i class="bi-person me-2"></i>
-                                Loan and Savings Interest Calculator
-                            </a>
-                        </li>                   
-                    </c:if>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="index.html">
+                        <a class="nav-link " aria-current="page" href="balanceCustomer">
                             <i class="bi-house-fill me-2"></i>
                             Tổng quan
                         </a>
@@ -250,7 +173,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="setting.html">
+                        <a class="nav-link active" href="changeInfor">
                             <i class="bi-gear me-2"></i>
                             Cài đặt
 
@@ -268,7 +191,7 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Settings</h1>
+                <h1 class="h2 mb-0 text-danger">Cài đặt</h1>
             </div>
 
             <div class="row my-4">
@@ -276,19 +199,19 @@
                     <div class="custom-block bg-white">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link active" href="changeInfor" id="profile-tab" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</a>
+                                <a class="nav-link active" href="changeInfor" id="profile-tab" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Thông tin</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</a>
+                                <a class="nav-link" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Đổi mật khẩu</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changenotification" id="notification-tab" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</a>
+                                <a class="nav-link" href="changenotification" id="notification-tab" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Trạng thái</a>
                             </li>
                         </ul>
 
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                                <h6 class="mb-4 text-danger"><a href="changepass">User Profile</a></h6>
+                                <h6 class="mb-4 text-danger"><a href="changepass">Hồ sơ người dùng</a></h6>
 
                                 <form class="custom-form profile-form" action="changeInfor" method="post" enctype="multipart/form-data">
                                     <input class="form-control" type="text" name="profile-name" placeholder="Name" value="${sessionScope.account.full_name}">
@@ -305,11 +228,11 @@
 
                                     <div class="d-flex">
                                         <button type="button" class="form-control me-3 text-bg-danger">
-                                            Reset
+                                            Cài lại                                      
                                         </button>
 
                                         <button type="submit" class="form-control ms-2 text-bg-danger">
-                                            Update
+                                            Thay đổi
                                         </button>
                                     </div>
                                     <c:if test="${not empty errorMessage}">
@@ -356,10 +279,10 @@
 
                 <div class="col-lg-5 col-12">
                     <div class="custom-block custom-block-contact">
-                        <h6 class="mb-4">Still can?t find what you looking for?</h6>
+                        <h6 class="mb-4">Vẫn không tìm thấy những gì bạn đang tìm kiếm?</h6>
 
                         <p>
-                            <strong>Call us:</strong>
+                            <strong>Gọi cho chúng tôi:</strong>
                             <a href="tel: 305-240-9671" class="ms-2">
                                 (60) 
                                 305-240-9671

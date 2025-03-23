@@ -106,7 +106,12 @@
                 border-radius: 5px;
             }
 
-
+.term-description img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
         </style>
 
 
@@ -322,12 +327,14 @@
                     </thead>
                     <c:forEach items="${listTerm}" var="T">
                         <tr>
-                            <td>${T.term_id}</td>
+                            <td><a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#termModal${T.term_id}">
+                                    ${T.term_id}
+                                </a></td>
                             <!-- Khi click vào term_name, modal sẽ hiện lên -->
                             <td>
-                                <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#termModal${T.term_id}">
-                                    ${T.term_name}
-                                </a>
+
+                                ${T.term_name}
+
                             </td>
                             <td>${T.policy_name}</td>
                             <td>${T.status == 'active' ? 'Hoạt động' : 'Ngừng hoạt động'}</td> 
@@ -346,7 +353,7 @@
                                         <h5 class="modal-title" id="termModalLabel${T.term_id}">Chi tiết điều khoản: ${T.term_name}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body text-start">
+                                    <div class="modal-body text-start term-description">
                                         <p><strong>ID Điều khoản:</strong> ${T.term_id}</p>
                                         <p><strong>Mô tả:</strong> ${T.term_description}</p>
                                         <p><strong>Tên Chính sách:</strong> ${T.policy_name}</p>
@@ -396,7 +403,9 @@
                                 <label>Nhập tên điều khoản</label>                                
                                 <textarea name="term_name" required></textarea><br>
                                 <label>Nhập mô tả</label>
-                                <textarea name="term_description" id="editor"  required></textarea><br>
+                                <div id="toolbar-container"></div> <!-- Thanh công c? CKEditor -->
+                                <div id="editor">${param.term_description != null ? param.term_description : ""}</div>
+                                <input type="hidden" name="term_description" id="hiddenDescription">
                                 <label>Nhập ngày bắt đầu</label>
                                 <input type="date" name="start_date" required/>
                                 <label>Nhập ngày kết thúc</label>
@@ -433,13 +442,13 @@
                 }
             });
         </script>
-        <%
-            HttpSession sessionSuccess = request.getSession();
-            Boolean showModal = (Boolean) sessionSuccess.getAttribute("showSuccessModal");
-            String successMessage = (String) sessionSuccess.getAttribute("successMessage");
+ <%
+    HttpSession sessionSuccess = request.getSession();
+    Boolean showModal = (Boolean) sessionSuccess.getAttribute("showSuccessModal");
+    String successMessage = (String) sessionSuccess.getAttribute("successMessage");
 
-            if (showModal != null && showModal) {
-        %>
+    if (showModal != null && showModal) {
+%>
         <!-- Modal thông báo -->
         <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -471,10 +480,76 @@
             sessionSuccess.removeAttribute("successMessage");
             }
         %>
-        <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
-        <script>
+        </script>  
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/decoupled-document/ckeditor.js"></script>
 
-            CKEDITOR.replace('editor');
+<script>
+            // Hàm upload ?nh
+            class MyUploadAdapter {
+                constructor(loader) {
+                    this.loader = loader;
+                }
+
+                upload() {
+                    return this.loader.file
+                            .then(file => new Promise((resolve, reject) => {
+                                    const formData = new FormData();
+                                    formData.append('upload', file); // Ph?i trùng v?i request.getPart("upload") trong Servlet
+
+                                    fetch('http://localhost:9999/merge/uploadImgPolicy', {// URL servlet upload
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error(`Lỗii HTTP! Mã trạng thái: ${response.status}`);
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(result => {
+                                                if (!result || !result.url) {
+                                                    return reject('Upload ảnh thấtt bại!');
+                                                }
+                                                resolve({
+                                                    default: result.url  // ???ng d?n ?nh tr? v? t? server
+                                                });
+                                            })
+                                            .catch(error => {
+                                                console.error('Lỗi upload ảnh:', error);
+                                                reject('Không thể upload ảnh!');
+                                            });
+                                }));
+                }
+            }
+
+// Gán plugin upload ?nh vào CKEditor
+            function MyCustomUploadAdapterPlugin(editor) {
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                    return new MyUploadAdapter(loader);
+                };
+            }
+
+// Kh?i t?o CKEditor
+            DecoupledEditor
+                    .create(document.querySelector('#editor'), {
+                        extraPlugins: [MyCustomUploadAdapterPlugin]
+                    })
+                    .then(editor => {
+                        const toolbarContainer = document.querySelector('#toolbar-container');
+                        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+                        // L?u n?i dung vào input ?n khi submit form
+                        document.querySelector("#addInsuranceTermModalForm").addEventListener("submit", function () {
+ let descriptionValue = editor.getData();
+    document.querySelector("#hiddenDescription").value = descriptionValue;
+    console.log("Mô tả gửi đi:", descriptionValue);
+                        });
+
+                    })
+                    .catch(error => {
+                        console.error('CKEditor lỗi:', error);
+                    });
+
         </script>
         </main>
 

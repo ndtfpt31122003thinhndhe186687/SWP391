@@ -101,13 +101,19 @@ public class EditNewsServlet extends HttpServlet {
         int categoryId = Integer.parseInt(categoryId_raw);
 
         DAO_Marketer d = new DAO_Marketer();
+            News oldNews = d.getNewsByID(news_id, categoryId);
+
         if (title != null) {
             title = title.trim();
+        }else{
+            title = oldNews.getTitle(); 
         }
         if (content != null) {
             content = content.trim();
+        }else{
+            content=oldNews.getContent();
         }
-        if (title == null || content == null || title.isEmpty() || content.isEmpty() || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {
+        if (title.isEmpty() || content.isEmpty() || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {
             request.setAttribute("error", "Please enter again!");
             News n = d.getNewsByID(news_id, categoryId);
             request.setAttribute("news", n);

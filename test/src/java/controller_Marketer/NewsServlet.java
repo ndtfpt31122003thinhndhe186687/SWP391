@@ -9,9 +9,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import model.Customer;
 import model.News;
 import model.NewsCategory;
+import model.Notifications;
 
 /**
  *
@@ -81,6 +84,15 @@ public class NewsServlet extends HttpServlet {
         List<NewsCategory> listNc = d.getAllNewsCategory();
         request.setAttribute("listNc", listNc);
         request.setAttribute("category_id", category_id);
+        DAO dao = new DAO();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Customer c = (Customer) session.getAttribute("account");
+            if (c != null) {
+                List<Notifications> listNotify = dao.getAllNotificationsByCustomerId(c.getCustomer_id());
+                request.setAttribute("listNotify", listNotify);
+            }
+        }
         request.getRequestDispatcher("news.jsp").forward(request, response);
     }
 

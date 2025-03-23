@@ -9,7 +9,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Chi tiết điều khoản</title>
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <style>
             /* Tổng thể */
             body {
@@ -81,32 +82,45 @@
             }
         </style>
     </head>
-    <body>
-         <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Chi Tiết Điều Khoản Của Bảo Hiểm</h1>
+    <body class="bg-light">
+        <div class="container mt-4">
+            <!-- Tiêu đề -->
+            <div class="text-center mb-4">
+                <h1 class="h2 text-danger">Chi Tiết Điều Khoản Của Bảo Hiểm</h1>
             </div>
-        <div class="mt-3">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID Điều Khoản</th>
-                        <th>Tên Điều Khoản</th>
-                        <th>Tên Chính Sách</th>
-                        <th>Mô Tả</th>                    
-                        <th>Trạng Thái</th>
 
-                    </tr>
-                </thead>
-                <c:forEach items="${listTerm}" var="T">
-                    <tr>
-                        <td>${T.term_id}</td>
-                        <td>${T.term_name}</td>
-                        <td>${T.policy_name}</td>
-                        <td>${T.term_description}</td>                    
-                        <td>${T.status}</td> 
-                    </tr>
-                </c:forEach>
-            </table>
+            <!-- Duyệt danh sách điều khoản -->
+            <c:forEach items="${listTerm}" var="T">
+                <div class="mb-4">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th class="w-25 bg-light">Tên Điều Khoản</th>
+                                <td>${T.term_name}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Tên Chính Sách</th>
+                                <td>${T.policy_name}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Mô Tả</th>
+                                <td>${T.term_description}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Trạng Thái</th>
+                                <td>
+                                    <span class="badge ${T.status eq 'active' ? 'bg-success' : 'bg-secondary'}">
+                                        ${T.status == 'active' ? 'Hoạt động' : 'Ngừng hoạt động'}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </c:forEach>
         </div>
+
+        <!-- Bootstrap 5 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

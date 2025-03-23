@@ -82,7 +82,7 @@ public class InsuranceServlet extends HttpServlet {
                 if(point != 0){
                 star = point / count;
                 }
-                
+
                 if (insurance != null) {
                     request.setAttribute("star", star);
                     request.setAttribute("listC", listC);

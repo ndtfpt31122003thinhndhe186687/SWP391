@@ -52,6 +52,23 @@ public class Staff {
         this.status = status;
     }
 
+    public Staff(int staff_id, String full_name, String email, String username, String phone_number, String gender, Date date_of_birth, String address, int role_id, String status) {
+        this.staff_id = staff_id;
+        this.full_name = full_name;
+        this.email = email;
+        this.username = username;
+        this.phone_number = phone_number;
+        this.gender = gender;
+        this.date_of_birth = date_of_birth;
+        this.address = address;
+        this.role_id = role_id;
+        this.status = status;
+    }
+
+    
+    
+    
+
     public String getFormattedDateOfBirth() {
         return formattedDateOfBirth;
     }

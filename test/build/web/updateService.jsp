@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Update Service</title>
+        <title>Cập nhật dịch vụ</title>
         <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
         <style>
             :root {
@@ -114,109 +114,108 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;            
-            }
-
-            .radio-group {
-                display: flex;
-                gap: 20px;
-                align-items: center;
-            }
-
-            /* Ẩn radio button mặc định */
-            .radio-input {
-                display: none;
-            }
-
-            /* Tạo nút toggle */
-            .radio-label {
-                position: relative;
-                display: flex;
-                align-items: center;
                 justify-content: center;
-                width: 70px;
-                height: 35px;
-                border-radius: 20px;
-                background-color: #ccc;
-                cursor: pointer;
-                transition: background-color 0.3s ease-in-out;
             }
 
-            .radio-label::before {
-                content: "";
-                position: absolute;
-                width: 30px;
-                height: 30px;
+            input[type="radio"].custom-radio {
+                appearance: none; /* Ẩn radio mặc định */
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                width: 16px;
+                height: 16px;
+                border: 2px solid #888; /* Viền mặc định */
                 border-radius: 50%;
-                background-color: white;
-                top: 50%;
-                left: 3px;
-                transform: translateY(-50%);
-                transition: all 0.3s ease-in-out;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                outline: none;
+                cursor: pointer;
+                position: relative;
             }
 
             /* Khi radio được chọn */
-            .radio-input:checked + .radio-label {
-                background-color: #007bff;
+            input[type="radio"].custom-radio:checked {
+                border: 6px solid transparent; /* Ẩn viền ngoài khi chọn */
             }
 
-            .radio-input:checked + .radio-label::before {
-                left: calc(100% - 33px);
+            /* Màu sắc theo từng loại */
+            input#male.custom-radio:checked {
+                background-color: blue;
             }
 
-            /* Màu đỏ khi chọn inactive */
-            .radio-input[value="inactive"]:checked + .radio-label {
-                background-color: #dc3545;
+            input#female.custom-radio:checked {
+                background-color: red;
+            }
+
+            input#active.custom-radio:checked {
+                background-color: green;
+            }
+
+            input#inactive.custom-radio:checked {
+                background-color: red;
+            }
+
+            /* Mặc định label có màu xám */
+            label[for="male"], label[for="female"], label[for="active"], label[for="inactive"] {
+                font-weight: bold;
+                transition: color 0.3s ease-in-out;
+                cursor: pointer;
+            }
+
+            /* Khi chọn Active -> Màu xanh lá */
+            input#active.custom-radio:checked + label[for="active"] {
+                color: green;
+            }
+
+            /* Khi chọn Inactive -> Màu đỏ */
+            input#inactive.custom-radio:checked + label[for="inactive"] {
+                color: red;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Update a service</h1>
+            <h1>Cập nhật dịch vụ</h1>
             <h4 class="error-message">${requestScope.error}</h4>
             <c:set var="s" value="${requestScope.service}"/>
             <form action="updateService" method="post">
                 <div class="form-group">
-                    <label for="service_id">Service ID:</label>
+                    <label for="service_id">ID dịch vụ:</label>
                     <input type="number" id="service_id" readonly name="service_id" value="${s.service_id}"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="service_name">Service Name:</label>
+                    <label for="service_name">Tên dịch vụ:</label>
                     <input type="text" id="service_name" name="service_name" value="${s.service_name}" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description:</label>
+                    <label for="description">Mô tả</label>
                     <textarea type="text" id="description" name="description" required >${s.description}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="service_type">Service Type:</label>
+                    <label for="service_type">Loại dịch vụ:</label>
                     <select id="service_type" name="service_type" required>
-                        <option value="">Select service type</option>
-                        <option value="saving" ${s.service_type == 'saving' ? 'selected' : ''}>Saving</option>
-                        <option value="loan" ${s.service_type == 'loan' ? 'selected' : ''}>Loan</option>
-                        <option value="deposit" ${s.service_type == 'deposit' ? 'selected' : ''}>Deposit</option>
-                        <option value="withdrawal" ${s.service_type == 'withdrawal' ? 'selected' : ''}>Withdrawal</option>
+                        <option value="">Chọn loại dịch vụ</option>
+                        <option value="saving" ${s.service_type == 'saving' ? 'selected' : ''}>Tiết kiệm</option>
+                        <option value="loan" ${s.service_type == 'loan' ? 'selected' : ''}>Vay</option>
+                        <option value="deposit" ${s.service_type == 'deposit' ? 'selected' : ''}>Nạp</option>
+                        <option value="withdrawal" ${s.service_type == 'withdrawal' ? 'selected' : ''}>Rút</option>
                     </select>
                 </div>
 
-                <div class="form-group-status">
-                    <label>Status:</label>
-                    <div class="radio-group">
-                        <input type="radio" id="active" name="status" value="active" class="radio-input" required 
-                               ${s.status == "active" ? "checked" : ""}>
-                        <label for="active" class="radio-label"></label>
+                <div class="form-group">
+                    <label>Trạng thái:</label>
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <input type="radio" id="active" name="status" value="active" class="custom-radio" required
+                        ${s.status == "active" ? "checked" : ""}>
+                        <label for="active"><i class="fa-solid fa-circle-check"></i> Hoạt động</label>
 
-                        <input type="radio" id="inactive" name="status" value="inactive" class="radio-input" required 
-                               ${s.status == "inactive" ? "checked" : ""}>
-                        <label for="inactive" class="radio-label"></label>
+                        <input type="radio" id="inactive" name="status" value="inactive" class="custom-radio" required
+                        ${s.status == "inactive" ? "checked" : ""}>
+                        <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Không hoạt động</label>
                     </div>
-                </div>     
+                </div>        
 
-                <button type="submit">Update</button>
+                <button type="submit">Cập nhật</button>
             </form>
         </div>
         <script>

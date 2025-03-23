@@ -1,7 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <html lang="en">
     <head>
@@ -149,72 +149,15 @@
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="">
-                    <i class="bi-box"></i>
-                    Mini Finance
+                    <i class="bi-bank"></i>
+                    FinBank
                 </a>
             </div>
 
             <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="" method="get" role="form">
-                <input class="form-control bg-white text-dark" name="search" type="text" placeholder="Search" aria-label="Search">
-            </form>
-
-            <div class="navbar-nav me-lg-2">
-                <div class="nav-item text-nowrap d-flex align-items-center">
-                    <div class="dropdown ps-3">
-                        <a class="nav-link dropdown-toggle text-center text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="navbarLightDropdownMenuLink">
-                            <i class="bi-bell"></i>
-                            <span class="position-absolute start-100 translate-middle p-1 bg-white border border-danger rounded-circle">
-                                <span class="visually-hidden">New alerts</span>
-                            </span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-lg-end notifications-block-wrap bg-white text-danger shadow" aria-labelledby="navbarLightDropdownMenuLink">
-                            <small class="text-danger">Notifications</small>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-check-circle-fill"></i>
-                                    </div>
-                                    <div>
-                                        <span>Your account has been created successfully.</span>
-                                        <p>12 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-folder"></i>
-                                    </div>
-                                    <div>
-                                        <span>Please check. We have sent a Daily report.</span>
-                                        <p>10 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-question-circle"></i>
-                                    </div>
-                                    <div>
-                                        <span>Account verification failed.</span>
-                                        <p>1 hour ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
+                   
             <div class="dropdown px-3">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid" alt="">
@@ -239,19 +182,19 @@
                     <li>
                         <a class="dropdown-item" href="profile.html">
                             <i class="bi-person me-2"></i>
-                            Profile
+                            Hồ sơ
                         </a>
                     </li>
                     <li>
                         <a class="dropdown-item" href="setting.html">
                             <i class="bi-gear me-2"></i>
-                            Settings
+                            Cài đặt
                         </a>
                     </li>
                     <li class="border-top mt-3 pt-2 mx-4">
                         <a class="dropdown-item ms-0 me-0" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
-                            Logout
+                            Đăng xuất
                         </a>
                     </li>
                 </ul>
@@ -267,37 +210,65 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
+                        <a class="nav-link active" aria-current="page" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">
                             <i class="me-2"></i>
-                            Staff Management
+                            Quản lý nhân viên
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
-                            Service Management
+                            Quản lý dịch vụ
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="transaction_management">
                             <i class=" me-2"></i>
-                            Transaction Management
+                            Quản lý giao dịch
                         </a>
-                    </li>                   
+                    </li>      
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="insurance_management">
+                            <i class=" me-2"></i>
+                            Quản lý bảo hiểm
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link " href="serviceprovider_management">
+                            <i class=" me-2"></i>
+                            Quản lý nhà cung cấp dịch vụ
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link " href="statistic_management">
                             <i class="me-2"></i>
-                            Statistic Management
+                            Thống kê
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
                             <i class="me-2"></i>
-                            Service Term Management
+                            Quản lý điều khoản
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link " href="feedback_management">
+                            <i class="me-2"></i>
+                            Quản lý phản hồi
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
+                            <i class="me-2"></i>
+                            Kiểm duyệt tin tức 
                         </a>
                     </li>
 
@@ -307,7 +278,7 @@
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Staff Management</h1>
+                <h1 class="h2 mb-0 text-danger">Quản lý nhân viên</h1>
             </div>
 
             <input type="hidden" name ="page" value="1"> 
@@ -315,171 +286,62 @@
             <!-- Tabs choose staff -->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == null || param.type == 'bankers' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">Bankers</a>
+                    <a class="nav-link ${param.type == null || param.type == 'bankers' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">Nhân viên</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == 'marketers' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=marketers&page=1&pageSize=2">Marketers</a>
+                    <a class="nav-link ${param.type == 'marketers' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=marketers&page=1&pageSize=2">Tiếp thị</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${param.type == 'accountants' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=accountants&page=1&pageSize=2">Accountants</a>
+                    <a class="nav-link ${param.type == 'accountants' ? 'active' : ''}" href="staff_management?status=all&sort=full_name&type=accountants&page=1&pageSize=2">Kế toán</a>
                 </li>
             </ul>
 
             <div class="filter-sort-bar">
-                <label for="filterStatus">Filter by Status:</label>
+                <label for="filterStatus">Lọc theo trạng thái:</label>
                 <select id="filterStatus" class="filter-dropdown" onchange="filterStaff()">
-                    <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>All</option>
-                    <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Active</option>
-                    <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Inactive</option>                  
+                    <option value="all" ${requestScope.status == 'all' ? 'selected' : ''}>Tất cả</option>
+                    <option value="active" ${requestScope.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                    <option value="inactive" ${requestScope.status == 'inactive' ? 'selected' : ''}>Không hoạt động</option>                  
                 </select>
 
-                <label for="sortStaff">Sort by:</label>
+                <label for="sortStaff">Sắp xếp:</label>
                 <select id="sortStaff" class="filter-dropdown">
-                    <option value="full_name" ${requestScope.sort == 'full_name' ? 'selected' : ''}>Name</option>
-                    <option value="gender" ${requestScope.sort == 'gender' ? 'selected' : ''}>Gender</option>
-                    <option value="date_of_birth" ${requestScope.sort == 'date_of_birth' ? 'selected' : ''}>DOB</option>
+                    <option value="full_name" ${requestScope.sort == 'full_name' ? 'selected' : ''}>Tên</option>
+                    <option value="gender" ${requestScope.sort == 'gender' ? 'selected' : ''}>Giới tính</option>
+                    <option value="date_of_birth" ${requestScope.sort == 'date_of_birth' ? 'selected' : ''}>Ngày sinh</option>
                 </select>
 
-                <label for="selectPage">Show:</label>
+                <label for="selectPage">Hiện:</label>
                 <select id="selectPage" class="filter-dropdown" onchange="selectPage()">
                     <option value="2" ${requestScope.pageSize == '2' ? 'selected' : ''}>2</option>
                     <option value="5" ${requestScope.pageSize == '5' ? 'selected' : ''}>5</option>
                     <option value="10" ${requestScope.pageSize == '10' ? 'selected' : ''}>10</option>
                 </select>
             </div>    
-
-
-
-
-
             <!-- View list staff -->
             <div class="mt-3">
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <form id="searchForm" class="d-flex">             
                             <input type="text" class="form-control me-2" 
-                                   placeholder="Search by name" name="searchName" value="${param.searchName}" >
-                            <button type="submit" class="btn btn-danger">Search</button>
+                                   placeholder="Tìm kiếm" name="searchName" value="${param.searchName}" >
+                            <button type="submit" class="btn btn-danger">Tìm</button>
                         </form> 
                     </div>
                     <div class="col-md-2">
-                        <a class="btn btn-success mb-2" href="addStaff.jsp">Add New</a>
+                        <a class="btn btn-success mb-2" href="addStaff.jsp">Thêm nhân viên</a>
                     </div>
-                </div>
-                <!-- Display search results if available -->
-                <c:if test="${not empty ListByName or not empty ListByPhone}">
-                    <div class="search-results mb-4">
-                        <h4>Search Results</h4>
-
-                        <!-- Results by Name -->
-                        <c:if test="${not empty ListByName}">
-                            <h5 class="mt-3">Found by Name:</h5>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>                                       
-                                        <th>Role</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <c:forEach items="${ListByName}" var="b">
-                                    <tr>
-                                        <td>${b.staff_id}</td>
-                                        <td>${b.full_name}</td>
-                                        <td>${b.email}</td>
-                                        <td>${b.phone_number}</td>
-
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${b.role_id == 2}">Banker</c:when>
-                                                <c:when test="${b.role_id == 3}">Marketer</c:when>
-                                                <c:when test="${b.role_id == 4}">Accountant</c:when>
-                                            </c:choose>
-                                        </td>
-                                        <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
-                                        <td>
-                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success btn-sm">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a> 
-                                        </td>
-
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </c:if>
-
-                        <!-- Results by Phone -->
-                        <c:if test="${not empty ListByPhone}">
-                            <h5 class="mt-3">Found by Phone:</h5>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>                                       
-                                        <th>Role</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <c:forEach items="${ListByPhone}" var="b">
-                                    <tr>
-                                        <td>${b.staff_id}</td>
-                                        <td>${b.full_name}</td>
-                                        <td>${b.email}</td>
-                                        <td>${b.phone_number}</td>
-
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${b.role_id == 2}">Banker</c:when>
-                                                <c:when test="${b.role_id == 3}">Marketer</c:when>
-                                                <c:when test="${b.role_id == 4}">Accountant</c:when>
-                                            </c:choose>
-                                        </td>
-                                        <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
-                                        <td>
-                                            <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                            <a href="updateStaff?id=${b.staff_id}" class="btn btn-success btn-sm">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a> 
-                                        </td>
-
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </c:if>
-
-                        <!-- No results found message -->
-                        <c:if test="${empty ListByName and empty ListByPhone}">
-                            <div class="alert alert-info mt-3">
-                                No staff members found matching your search.
-                            </div>
-                        </c:if>
-                    </div>
-                </c:if>
-
-                <!-- Original staff list table -->
-                <c:if test="${empty ListByName and empty ListByPhone}">
+                </div>                                         
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
+                                <th>Họ và tên</th>
                                 <th>Email</th>
-                                <th>Phone</th>                               
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>Điện thoại</th>                               
+                                <th>Chức vụ</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <c:forEach items="${requestScope.data}" var="b">
@@ -490,12 +352,21 @@
                                 <td>${b.phone_number}</td>                                                                                          
                                 <td>
                                     <c:choose>
-                                        <c:when test="${b.role_id == 2}">Banker</c:when>
-                                        <c:when test="${b.role_id == 3}">Marketer</c:when>
-                                        <c:when test="${b.role_id == 4}">Accountant</c:when>
+                                        <c:when test="${b.role_id == 2}">Nhân viên</c:when>
+                                        <c:when test="${b.role_id == 3}">Tiếp thị</c:when>
+                                        <c:when test="${b.role_id == 4}">Kế toán</c:when>
                                     </c:choose>
                                 </td>
-                                <td><span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">${b.status}</span></td>
+                                <td>                                  
+                                    <span class="badge ${b.status == 'active' ? 'bg-success' : 'bg-danger'}">
+                                        <c:if test="${b.status == 'active'}">
+                                        Hoạt động
+                                        </c:if>
+                                        <c:if test="${b.status == 'inactive'}">
+                                        Không hoạt động
+                                        </c:if>
+                                    </span>                                 
+                                </td>
                                 <td>
                                     <a onclick="doDelete('${b.staff_id}')" href="#" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i>
@@ -506,8 +377,7 @@
                                 </td>
                             </tr>
                         </c:forEach>
-                    </table>
-                </c:if>
+                    </table>            
             </div>
 
             <div class="pagination">
@@ -527,7 +397,7 @@
 
         <script type="text/javascript">
             function doDelete(id) {
-                if (confirm("Are you sure to delete ID '" + id + "'?")) {
+                if (confirm("Bạn có chắc chắn muốn xóa ID '" + id + "'?")) {
                     window.location = "deleteStaff?id=" + id;
                 }
             }

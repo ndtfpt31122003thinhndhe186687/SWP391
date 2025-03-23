@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller_Admin;
 
 import dal.DAO;
@@ -21,36 +20,39 @@ import model.Staff;
  *
  * @author DELL
  */
-@WebServlet(name="updateBankerServlet", urlPatterns={"/updateStaff"})
+@WebServlet(name = "updateBankerServlet", urlPatterns = {"/updateStaff"})
 public class updateStaffServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateBankerServlet</title>");  
+            out.println("<title>Servlet updateBankerServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateBankerServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet updateBankerServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -58,21 +60,23 @@ public class updateStaffServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String id_raw = request.getParameter("id");
         int id;
         try {
-            id=Integer.parseInt(id_raw);
+            id = Integer.parseInt(id_raw);
             DAO_Admin d = new DAO_Admin();
             Staff s = d.get_Staff_By_StaffId(id);
             request.setAttribute("staff", s);
             request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -80,53 +84,75 @@ public class updateStaffServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
+        DAO_Admin dao = new DAO_Admin();
         String staff_id_raw = request.getParameter("staff_id");
         String full_name = request.getParameter("full_name");
         String email = request.getParameter("email");
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
         String phone_number = request.getParameter("phone_number");
         String gender = request.getParameter("gender");
         String date_of_birth_raw = request.getParameter("date_of_birth");
         String address = request.getParameter("address");
         String role_id_raw = request.getParameter("role_id");
         String status = request.getParameter("status");
-        int staff_id,role_id;
+        int staff_id, role_id;
         try {
-            staff_id=Integer.parseInt(staff_id_raw);
-            role_id=Integer.parseInt(role_id_raw);
-            var date_of_birth = java.sql.Date.valueOf(date_of_birth_raw);
-            DAO_Admin dao = new DAO_Admin();
+            if (staff_id_raw == null || staff_id_raw.trim().isEmpty()) {
+                request.setAttribute("error", "Staff ID khong hop le!");
+                request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
+                return;
+            }
+            staff_id = Integer.parseInt(staff_id_raw);
+            role_id = Integer.parseInt(role_id_raw);
+            java.sql.Date date_of_birth = null;
+            if (date_of_birth_raw != null && !date_of_birth_raw.isEmpty()) {
+                date_of_birth = java.sql.Date.valueOf(date_of_birth_raw);
+            }
             Staff staff = dao.get_Staff_By_StaffId(staff_id);
+            if (staff == null) {
+                request.setAttribute("error", "Staff ID khong ton tai!!");
+                request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
+                return;
+            }
             Staff Username = dao.get_Staff_By_Username(username);
             Staff Email = dao.get_Staff_By_Email(email);
             Staff Phone = dao.get_Staff_By_Phone(phone_number);
-            if(Username != null && !staff.getUsername().equals(username)){
+            if (Username != null && !staff.getUsername().equals(username)) {
                 request.setAttribute("staff", staff);
-                request.setAttribute("error","username "+ username+" existed!!");
+                request.setAttribute("error", "username " + username + " existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
-            }else if (Email != null && !staff.getEmail().equals(email)){
+            } else if (Email != null && !staff.getEmail().equals(email)) {
                 request.setAttribute("staff", staff);
-                request.setAttribute("error","emai "+ email+" existed!!");
+                request.setAttribute("error", "emai " + email + " existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
-            }else if (Phone !=null && !staff.getPhone_number().equals(phone_number)){
+            } else if (Phone != null && !staff.getPhone_number().equals(phone_number)) {
                 request.setAttribute("staff", staff);
-                request.setAttribute("error","phone number "+ phone_number+" existed!!");
+                request.setAttribute("error", "phone number " + phone_number + " existed!!");
                 request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
-            }else{
-            Staff s = new Staff(staff_id, full_name, email, password, username,
-                    phone_number, gender, date_of_birth, address, role_id, status);
-            dao.updateBanker(s);
-           response.sendRedirect("staff_management?status=all&sort=full_name&type=&page=1&pageSize=2");
+            } else {
+                Staff s = new Staff(staff_id, full_name, email, username, 
+                        phone_number, gender, date_of_birth, address, role_id, status);
+                boolean updated = dao.updateBanker(s);
+                if (!updated) {
+                    request.setAttribute("error", "co loi xay ra!");
+                    request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
+                    
+                }
+                response.sendRedirect("staff_management?status=all&sort=full_name&type=&page=1&pageSize=2");
             }
         } catch (NumberFormatException e) {
-            System.out.println(e);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "co loi xay ra!");
+            request.getRequestDispatcher("updateStaff.jsp").forward(request, response);
         }
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

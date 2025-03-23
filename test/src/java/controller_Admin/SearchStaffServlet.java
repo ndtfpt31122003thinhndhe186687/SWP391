@@ -71,11 +71,9 @@ public class SearchStaffServlet extends HttpServlet {
         DAO_Admin d = new DAO_Admin();
         search = search.trim().toLowerCase().replaceAll("\\s+", " ");
         search = "%" + search.replace(" ", "%") + "%";
-        List<Staff> ListByName = d.searchStaffByFullName(search, role_id);
-        List<Staff> ListByPhone = d.searchStaffByPhone(search, role_id);
+        List<Staff> ListByName = d.searchStaffByFullName(search, role_id);      
         request.setAttribute("searchName", search);
-        request.setAttribute("ListByName", ListByName);
-        request.setAttribute("ListByPhone", ListByPhone);
+        request.setAttribute("ListByName", ListByName);     
         request.setAttribute("type", type); 
         request.setAttribute("status", status);
         request.setAttribute("sort", sort);

@@ -241,7 +241,7 @@
                                     Xin chào ${sessionScope.account.full_name}
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="changeInfor">Xem hồ sơ</a></li>
+                                    <li><a class="dropdown-item" href="balanceCustomer">Xem hồ sơ</a></li>
                                         <c:if test="${sessionScope.account.role_id==3}">
                                         <li><a class="dropdown-item" href="marketer/newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Quản lí tin tức</a></li>
                                         </c:if>
@@ -283,10 +283,17 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
                         <li class="dropdown-header">📌 Thông báo gần đây</li>
-                        <li><a class="dropdown-item" href="#"><span>📢</span> Bạn vừa đăng nhập.</a></li>
-                        <li><a class="dropdown-item" href="#"><span>⚠️</span> Bạn đã thay đổi mật khẩu.</a></li>
-                        <li><a class="dropdown-item" href="#"><span>✅</span> Cập nhật hồ sơ thành công.</a></li>
-                        <li class="dropdown-footer"><a href="#">Xem tất cả</a></li>
+                            <c:choose>
+                                <c:when test="${not empty requestScope.listNotify}">
+                                    <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
+                                    <li><a class="dropdown-item" href="#">${n.message}</a></li>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                <li class="dropdown-item text-center text-muted">Không có thông báo nào</li>
+                                </c:otherwise>
+                            </c:choose>
+                        <li class="dropdown-footer text-center"><a href="notificationsList">Xem tất cả</a></li>
                     </ul>
                 </div>
             </div>
@@ -314,13 +321,13 @@
             </div>
         </div>
         <!--about section end -->
-        
+
         <script type="text/javascript">
-            function checkLogin(){
-                var acc=${sessionScope.account!=null};
-                if (!acc){
+            function checkLogin() {
+                var acc =${sessionScope.account!=null};
+                if (!acc) {
                     alert("Bạn cần đăng nhập để xem thông báo");
-                    window.location.href="login";
+                    window.location.href = "login";
                 }
             }
         </script>

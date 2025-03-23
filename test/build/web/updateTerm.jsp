@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Update Term</title>
+        <title>Cập nhật kỳ hạn</title>
         <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
         <style>
             :root {
@@ -18,7 +18,7 @@
                 --dark-red: #c82333;
                 --light-red: #f8d7da;
             }
-            
+
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 background-color: #f8f9fa;
@@ -26,7 +26,7 @@
                 padding: 20px;
                 color: #333;
             }
-            
+
             h1 {
                 color: var(--primary-red);
                 text-align: center;
@@ -34,14 +34,14 @@
                 padding-bottom: 10px;
                 border-bottom: 3px solid var(--primary-red);
             }
-            
+
             .error-message {
                 color: var(--primary-red);
                 text-align: center;
                 margin-bottom: 20px;
                 font-weight: 500;
             }
-            
+
             form {
                 max-width: 600px;
                 margin: 0 auto;
@@ -50,18 +50,18 @@
                 border-radius: 10px;
                 box-shadow: 0 0 20px rgba(0,0,0,0.1);
             }
-            
+
             .form-group {
                 margin-bottom: 20px;
             }
-            
+
             label {
                 display: block;
                 margin-bottom: 5px;
                 color: #555;
                 font-weight: 500;
             }
-            
+
             input, select {
                 width: 100%;
                 padding: 10px;
@@ -70,18 +70,18 @@
                 font-size: 16px;
                 transition: border-color 0.3s;
             }
-            
+
             input:focus, select:focus {
                 outline: none;
                 border-color: var(--primary-red);
                 box-shadow: 0 0 5px rgba(220,53,69,0.2);
             }
-            
+
             input[readonly] {
                 background-color: #f8f9fa;
                 cursor: not-allowed;
             }
-            
+
             button {
                 background-color: var(--primary-red);
                 color: white;
@@ -95,7 +95,7 @@
                 margin-top: 20px;
                 transition: background-color 0.3s;
             }
-            
+
             button:hover {
                 background-color: var(--dark-red);
             }
@@ -121,118 +121,117 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;            
-            }
-
-            .radio-group {
-                display: flex;
-                gap: 20px;
-                align-items: center;
-            }
-
-            /* Ẩn radio button mặc định */
-            .radio-input {
-                display: none;
-            }
-
-            /* Tạo nút toggle */
-            .radio-label {
-                position: relative;
-                display: flex;
-                align-items: center;
                 justify-content: center;
-                width: 70px;
-                height: 35px;
-                border-radius: 20px;
-                background-color: #ccc;
-                cursor: pointer;
-                transition: background-color 0.3s ease-in-out;
             }
 
-            .radio-label::before {
-                content: "";
-                position: absolute;
-                width: 30px;
-                height: 30px;
+            input[type="radio"].custom-radio {
+                appearance: none; /* Ẩn radio mặc định */
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                width: 16px;
+                height: 16px;
+                border: 2px solid #888; /* Viền mặc định */
                 border-radius: 50%;
-                background-color: white;
-                top: 50%;
-                left: 3px;
-                transform: translateY(-50%);
-                transition: all 0.3s ease-in-out;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                outline: none;
+                cursor: pointer;
+                position: relative;
             }
 
             /* Khi radio được chọn */
-            .radio-input:checked + .radio-label {
-                background-color: #007bff;
+            input[type="radio"].custom-radio:checked {
+                border: 6px solid transparent; /* Ẩn viền ngoài khi chọn */
             }
 
-            .radio-input:checked + .radio-label::before {
-                left: calc(100% - 33px);
+            /* Màu sắc theo từng loại */
+            input#male.custom-radio:checked {
+                background-color: blue;
             }
 
-            /* Màu đỏ khi chọn inactive */
-            .radio-input[value="inactive"]:checked + .radio-label {
-                background-color: #dc3545;
+            input#female.custom-radio:checked {
+                background-color: red;
+            }
+
+            input#active.custom-radio:checked {
+                background-color: green;
+            }
+
+            input#inactive.custom-radio:checked {
+                background-color: red;
+            }
+
+            /* Mặc định label có màu xám */
+            label[for="male"], label[for="female"], label[for="active"], label[for="inactive"] {
+                font-weight: bold;
+                transition: color 0.3s ease-in-out;
+                cursor: pointer;
+            }
+
+            /* Khi chọn Active -> Màu xanh lá */
+            input#active.custom-radio:checked + label[for="active"] {
+                color: green;
+            }
+
+            /* Khi chọn Inactive -> Màu đỏ */
+            input#inactive.custom-radio:checked + label[for="inactive"] {
+                color: red;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Update a term</h1>
+            <h1>Cập nhật kỳ hạn</h1>
             <h4 class="error-message">${requestScope.error}</h4>
             <c:set var="t" value="${requestScope.term}"/>
             <form action="updateTerm" method="post" id="termForm" onsubmit="return validateForm()">
                 <div class="form-group">
-                    <label for="term_id">Term ID:</label>
+                    <label for="term_id">ID kỳ hạn:</label>
                     <input type="number" id="term_id" readonly name="term_id" value="${t.term_id}"/>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="term_name">Term Name:</label>
+                    <label for="term_name">Tên kỳ hạn:</label>
                     <input type="text" id="term_name" name="term_name" value="${t.term_name}" required />
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="duration">Duration:</label>
+                    <label for="duration">Thời gian</label>
                     <input type="number" id="duration" name="duration" value="${t.duration}" required min="1"
                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-                    <div class="invalid-feedback" id="duration-feedback">Please enter a valid number for duration.</div>
+                    <div class="invalid-feedback" id="duration-feedback">Hãy nhập đúng giá trị hợp lệ.</div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="term_type">Term Type:</label>
+                    <label for="term_type">Loại kỳ hạn</label>
                     <select id="term_type" name="term_type" required>
-                        <option value="">Select term type</option>
-                        <option value="monthly" ${t.term_type == 'monthly' ? 'selected' : ''}>Monthly</option>
-                        <option value="quarterly" ${t.term_type == 'quarterly' ? 'selected' : ''}>Quarterly</option>
-                        <option value="annually" ${t.term_type == 'annually' ? 'selected' : ''}>Annually</option>
+                        <option value="">Chọn loại kỳ hạn</option>
+                        <option value="monthly" ${t.term_type == 'monthly' ? 'selected' : ''}>Tháng</option>
+                        <option value="quarterly" ${t.term_type == 'quarterly' ? 'selected' : ''}>Quý</option>
+                        <option value="annually" ${t.term_type == 'annually' ? 'selected' : ''}>Năm</option>
                     </select>
                 </div>
-                
-                <div class="form-group-status">
-                    <label>Status:</label>
-                    <div class="radio-group">
-                        <input type="radio" id="active" name="status" value="active" class="radio-input" required 
-                               ${t.status == "active" ? "checked" : ""}>
-                        <label for="active" class="radio-label"></label>
+              
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <input type="radio" id="active" name="status" value="active" class="custom-radio" required
+                        ${t.status == "active" ? "checked" : ""}>
+                        <label for="active"><i class="fa-solid fa-circle-check"></i> Hoạt động</label>
 
-                        <input type="radio" id="inactive" name="status" value="inactive" class="radio-input" required 
-                               ${t.status == "inactive" ? "checked" : ""}>
-                        <label for="inactive" class="radio-label"></label>
+                        <input type="radio" id="inactive" name="status" value="inactive" class="custom-radio" required
+                        ${t.status == "inactive" ? "checked" : ""}>
+                        <label for="inactive"><i class="fa-solid fa-circle-xmark"></i> Không hoạt động</label>
                     </div>
-                </div>     
-                    
-                
-                <button type="submit">Update</button>
+                </div>        
+
+
+                <button type="submit">Cập nhật</button>
             </form>
         </div>
 
         <script>
             function validateForm() {
                 let isValid = true;
-                
+
                 // Duration validation
                 const duration = document.getElementById('duration');
                 const durationFeedback = document.getElementById('duration-feedback');
@@ -247,7 +246,7 @@
             }
 
             // Prevent non-numeric input in duration field
-            document.getElementById('duration').addEventListener('keypress', function(e) {
+            document.getElementById('duration').addEventListener('keypress', function (e) {
                 if (e.key < '0' || e.key > '9') {
                     e.preventDefault();
                 }

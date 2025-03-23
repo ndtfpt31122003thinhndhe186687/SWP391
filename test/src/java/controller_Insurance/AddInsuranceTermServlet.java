@@ -102,7 +102,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
         int policy_id = Integer.parseInt(policy_id_raw);
         Date start_date = null, end_date = null;
         java.sql.Date sqlStart_date = null, sqlEnd_date = null;
-        term_description = term_description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+        term_description = term_description.replaceAll("&nbsp;", "").trim();
         if (term_name.trim().isEmpty()) {
             request.setAttribute("error", "Tên không được để trống");
             request.setAttribute("listPolicy", list);

@@ -88,7 +88,7 @@
     <div class="contract-container">
         <label>ID hợp đồng</label>
         <input type="text" value="${d.contract_id}" readonly/><br>
-
+        
         <input type="hidden" value="${d.insurance_id}" />
 
         <p><strong>Số tiền được nhận:</strong> 

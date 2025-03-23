@@ -14,11 +14,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import model.Customer;
 import model.Insurance;
 import model.Insurance_contract_detail;
 import model.Insurance_transactions;
+import java.time.LocalDate;
 
 /**
  *
@@ -63,44 +67,99 @@ public class calculatorInsuranceServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        DAO_Insurance d = new DAO_Insurance();
-        HttpSession session = request.getSession();
-        String insurance_id_raw = request.getParameter("insurance_id");
-        String contract_id_raw = request.getParameter("contract_id");
-        String policy_id_raw = request.getParameter("policy_id");
-        int insurace_id = Integer.parseInt(insurance_id_raw);
-        int contract_id = Integer.parseInt(contract_id_raw);
-        int policy_id = Integer.parseInt(policy_id_raw);
-        Customer customer = (Customer) session.getAttribute("account");
-        Insurance_contract_detail cd = d.getInsuranceContractDetailByContractid(contract_id, insurace_id);
-        int countTransaction = d.countTransactionByCustomerIDAndContractID(customer.getCustomer_id(), contract_id);
-        int durationPay = 0;
-        double result = 0;
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    DAO_Insurance d = new DAO_Insurance();
+    HttpSession session = request.getSession();
+    
+    String insurance_id_raw = request.getParameter("insurance_id");
+    String contract_id_raw = request.getParameter("contract_id");
+    String policy_id_raw = request.getParameter("policy_id");
+
+    int insurance_id = Integer.parseInt(insurance_id_raw);
+    int contract_id = Integer.parseInt(contract_id_raw);
+    int policy_id = Integer.parseInt(policy_id_raw);
+
+    Customer customer = (Customer) session.getAttribute("account");
+
+    // Lấy ngày thanh toán gần nhất
+    Date lastPaymentDate = d.getLastPaymentDateTransaction(customer.getCustomer_id(), contract_id);
+    LocalDate currentDate = LocalDate.now();
+
+    // Lấy thông tin hợp đồng bảo hiểm
+    Insurance_contract_detail cd = d.getInsuranceContractDetailByContractid(contract_id, insurance_id);
+    boolean hasPaid = false;
+
+    if (lastPaymentDate != null) {
+        LocalDate lastPaid = ((java.sql.Date) lastPaymentDate).toLocalDate();
         String frequency = cd.getPayment_frequency();
-            if (countTransaction == 1) {
-        countTransaction--;
+
+        LocalDate periodEnd = lastPaid; // Ngày cuối cùng của kỳ thanh toán
+
+        switch (frequency) {
+            case "monthly":
+                // Nếu giao dịch gần nhất trong cùng tháng và năm
+                hasPaid = (lastPaid.getMonthValue() == currentDate.getMonthValue()) &&
+                          (lastPaid.getYear() == currentDate.getYear());
+                periodEnd = lastPaid.plusMonths(1).minusDays(1);
+                break;
+            case "quarterly":
+                // Kết thúc kỳ hạn sau 3 tháng kể từ lần thanh toán gần nhất
+                periodEnd = lastPaid.plusMonths(3).minusDays(1);
+                hasPaid = !currentDate.isBefore(lastPaid) && !currentDate.isAfter(periodEnd);
+                break;
+            case "annually":
+                // Kết thúc kỳ hạn sau 12 tháng kể từ lần thanh toán gần nhất
+                periodEnd = lastPaid.plusYears(1).minusDays(1);
+                hasPaid = !currentDate.isBefore(lastPaid) && !currentDate.isAfter(periodEnd);
+                break;
+        }
+
+        // Nếu ngày hiện tại đã qua kỳ hạn, vẫn cho phép thanh toán
+        if (currentDate.isAfter(periodEnd)) {
+            hasPaid = false;
+        }
     }
-            if ("monthly".equals(frequency)) {
+
+    double result = 0;
+    int durationPay = 0;
+    int timePay = 0;
+    if (!hasPaid) {
+        int countTransaction = d.countTransactionByCustomerIDAndContractID(customer.getCustomer_id(), contract_id);
+        countTransaction = countTransaction - 1;
+        switch (cd.getPayment_frequency()) {
+            case "monthly":
                 durationPay = cd.getDuration() - countTransaction;
-                result = (cd.getPremiumAmount() - cd.getPaidAmount()) / durationPay;
-            } else if ("quarterly".equals(frequency)) {
-                durationPay = (cd.getDuration() / 3) - countTransaction;
-                result = (cd.getPremiumAmount() - cd.getPaidAmount())  / durationPay ;
-            } else if ("annually".equals(frequency)) {
+                break;
+            case "quarterly":
+                timePay = cd.getDuration() / 3;
+                if(cd.getDuration() % 3 != 0){
+                    timePay++;
+                }
+                durationPay = timePay - countTransaction;
+                break;
+            case "annually":
+                timePay = cd.getDuration() / 12;
+                if(cd.getDuration() % 12 != 0){
+                    timePay++;
+                }
                 durationPay = (cd.getDuration() / 12) - countTransaction;
-                result = (cd.getPremiumAmount() - cd.getPaidAmount())  / durationPay ;
-            }
-            
-        
-        request.setAttribute("contract_id", contract_id);
-        request.setAttribute("insurance_id", insurace_id);
-        request.setAttribute("policy_id", policy_id);
-        request.setAttribute("money", result);
-        request.setAttribute("cd", cd);
-        request.getRequestDispatcher("payInsurancePolicy.jsp").forward(request, response);
+                break;
+        }
+
+        if (durationPay > 0) {
+            result = (cd.getPremiumAmount() - cd.getPaidAmount()) / durationPay;
+        }
     }
+
+    request.setAttribute("contract_id", contract_id);
+    request.setAttribute("insurance_id", insurance_id);
+    request.setAttribute("policy_id", policy_id);
+    request.setAttribute("money", hasPaid ? 0 : result); // Nếu đã thanh toán kỳ này, đặt số tiền về 0
+    request.setAttribute("cd", cd);
+    request.setAttribute("hasPaid", hasPaid);
+    request.getRequestDispatcher("payInsurancePolicy.jsp").forward(request, response);
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.

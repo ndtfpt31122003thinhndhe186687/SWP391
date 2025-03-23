@@ -5,6 +5,7 @@
 package controller_Banker;
 
 import dal.DBContext;
+import dal.SavingDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +14,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import model.Savings;
 
 /**
  *
@@ -38,7 +44,7 @@ public class UpdateSavingRequestServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateRequestCustomerServlet</title>");            
+            out.println("<title>Servlet UpdateRequestCustomerServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet UpdateRequestCustomerServlet at " + request.getContextPath() + "</h1>");
@@ -59,18 +65,18 @@ public class UpdateSavingRequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String customerId = request.getParameter("customer_id");
+        String savingsId = request.getParameter("savings_id");
         DBContext db = new DBContext();
 
         try (Connection conn = db.getConnection()) {
             // Kiểm tra xem yêu cầu có status là pending hay không
-            String sql = "SELECT status FROM savings WHERE customer_id = ? AND status = 'pending'";
+            String sql = "SELECT status FROM savings WHERE savings_id = ? AND status = 'pending'";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, customerId);
+            pstmt.setString(1, savingsId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                request.setAttribute("customer_id", customerId);
+                request.setAttribute("savings_id", savingsId);
                 request.getRequestDispatcher("updaterequest.jsp").forward(request, response);
             } else {
                 // Nếu không tìm thấy yêu cầu pending thì chuyển hướng về trang danh sách
@@ -91,25 +97,38 @@ public class UpdateSavingRequestServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String customerId = request.getParameter("customer_id");
-    String status = request.getParameter("status");
+            throws ServletException, IOException {
+        String savingsId = request.getParameter("savings_id");
+        String status = request.getParameter("status");
+        String customerId = request.getParameter("customer_id");
+        String savingId_raw = request.getParameter("saving_id");
+        DBContext db = new DBContext();
 
-    DBContext db = new DBContext();
+        // Cập nhật chỉ khi status là approved hoặc rejected
+        String sql = "UPDATE savings SET status = ? WHERE savings_id = ? AND status = 'pending'";
+        try (Connection conn = db.getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, status);
+            pstmt.setString(2, savingsId);
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (status.equals("approved")) {
+            SavingDAO sd = new SavingDAO();
+            Savings sa = sd.getSavingsById(Integer.parseInt(customerId), Integer.parseInt(savingId_raw));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String formattedDate = sdf.format(sa.getStart_date());
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+            symbols.setGroupingSeparator('.');
+            DecimalFormat df = new DecimalFormat("###,###", symbols);
+            String formattedAmount = df.format(sa.getAmount());
+            sd.insertNotification(Integer.parseInt(customerId), Integer.parseInt(savingId_raw),
+                    "Gửi tiết kiệm", "Bạn đã gửi thành công số tiền " + formattedAmount + " VNĐ trong kì hạn " + sa.getDuration() + " tháng bắt đầu từ " + formattedDate);
+        }
 
-    // Cập nhật chỉ khi status là approved hoặc rejected
-    String sql = "UPDATE savings SET status = ? WHERE customer_id = ? AND status = 'pending'";
-    try (Connection conn = db.getConnection()) {
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, status);
-        pstmt.setString(2, customerId);
-        pstmt.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
+        response.sendRedirect("requestsaving");
     }
-
-    response.sendRedirect("requestsaving");
-}
 
     /**
      * Returns a short description of the servlet.

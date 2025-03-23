@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Loan Request</title>
+        <title>Đơn vay</title>
         <style>
             :root {
                 --primary-red: #dc3545;
@@ -146,7 +146,7 @@
                 <div class="form-group">
                     <label for="service_terms">Chọn kỳ hạn: </label>
                     <select id="service_terms" name="service_terms" required>
-                        <option value="">--All--</option>
+                        <option value="">Vui lòng chọn</option>
                         <c:forEach items="${requestScope.listS}" var="st">
                             <option value="${st.serviceTerm_id}"
                                     data-duration="${st.duration}"
@@ -238,7 +238,7 @@
                         previewContainer.appendChild(img);
                     };
 
-                    reader.readAsDataURL(file);
+                    reader.readAsDataURL(file); // show image 
                 }
             });
 
@@ -250,10 +250,10 @@
                 var duration = selectedOption.getAttribute("data-duration");
                 var minPayment = selectedOption.getAttribute("data-min-deposit");
 
-                document.getElementById("duration").value = duration + " months";
-                document.getElementById("interest_rate").value = interestRate + " % per year";
+                document.getElementById("duration").value = duration + " tháng";
+                document.getElementById("interest_rate").value = interestRate + " %/năm";
                 document.getElementById("contract_terms").value = contractTerms
-                        ? contractTerms + "\nMinimum Payment: " + minPayment + " VND"
+                        ? contractTerms + "\nSố tiền tối thiểu: " + minPayment + " VND"
                         : "";
             });
 

@@ -94,16 +94,20 @@
                                 <c:forEach items="${listcustomer}" var="customer">
                                     <tr>
                                         <td>${customer.customer_id}</td>
-                                        <td>${customer.full_name}</td>
+                                        <td>
+                                            <a href="getsaving?savings_id=${customer.savings_id}">
+                                                ${customer.full_name}
+                                            </a>
+                                        </td>
                                         <td>${customer.card_type}</td>
                                         <td>
                                             <form action="updatesavings" method="post">
-                                                <input type="hidden" name="customer_id" value="${customer.customer_id}">
+                                                <input type="hidden" name="savings_id" value="${customer.savings_id}">
                                                 <select name="status" id="status">
                                                     <option value="approved">Approved</option>
-                                                    <option value="rejected">Rejected</option>
+                                                    <option value="rejected">Rejected</option>                                                   
                                                 </select>
-                                                <button type="submit" class="btn btn-info btn-sm">Pending</button>
+                                                <button type="submit" class="btn btn-info btn-sm">Update</button>
                                             </form>
                                         </td>
                                     </tr>

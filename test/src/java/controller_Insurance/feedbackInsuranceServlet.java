@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Customer;
 import model.Insurance_feedback;
+import model.Insurance_policy;
 
 /**
  *
@@ -67,9 +68,9 @@ public class feedbackInsuranceServlet extends HttpServlet {
         Customer c = (Customer) session.getAttribute("account");
         String insurance_id_raw = request.getParameter("insurance_id");
         int insurance_id = Integer.parseInt(insurance_id_raw);
-       List<Insurance_feedback> listP = dao.getAllPolicyIDByFeedback(insurance_id);
+       List<Insurance_policy> listP = dao.gePolicyByCustomerID(insurance_id, c.getCustomer_id());
        request.setAttribute("insurance_id", insurance_id);
-       request.setAttribute("listP", listP);
+       request.setAttribute("listP", listP);     
        request.getRequestDispatcher("feedbackInsurance.jsp").forward(request, response);
 
     }
@@ -96,8 +97,9 @@ public class feedbackInsuranceServlet extends HttpServlet {
          insurance_id = Integer.parseInt(insurance_id_raw);
                  List<Insurance_feedback> listP = dao.getAllPolicyIDByFeedback(insurance_id);   
          policy_id = Integer.parseInt(policy_id_raw);                   
-          feedback_content = feedback_content.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
-        if(feedback_content.isEmpty()){
+          
+          feedback_content = feedback_content.replaceAll("&nbs", "").trim();
+          if(feedback_content.isEmpty()){
              request.setAttribute("error", "Nội dung không được để trống!");
              request.setAttribute("listP", listP);
              request.setAttribute("insurance_id", insurance_id);
@@ -109,7 +111,6 @@ public class feedbackInsuranceServlet extends HttpServlet {
             else{
                 request.setAttribute("error", "Bạn phải đánh giá số sao!");
                 request.setAttribute("listP", listP);
-                request.setAttribute("insurance_id", insurance_id);
                 request.getRequestDispatcher("feedbackInsurance.jsp").forward(request, response);
             }
         

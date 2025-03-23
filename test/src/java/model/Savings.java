@@ -37,7 +37,6 @@ public class Savings {
     }
     
     //add application
-
     public Savings(int customer_id, int serviceTerm_id, double amount, Date start_date, Date end_date, String notes) {
         this.customer_id = customer_id;
         this.serviceTerm_id = serviceTerm_id;
@@ -46,6 +45,19 @@ public class Savings {
         this.end_date = end_date;
         this.notes = notes;
     }
+
+    public Savings(int savings_id, int duration, double amount, double interest_rate, Date start_date, Date end_date, String term_name, String status) {
+        this.savings_id = savings_id;
+        this.duration = duration;
+        this.amount = amount;
+        this.interest_rate = interest_rate;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.term_name = term_name;
+        this.status = status;
+    }
+    
+    
 
  
     

@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Banking Services</title>
+        <title>Dịch vụ ngân hàng</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <style>
@@ -265,7 +265,7 @@
                 <!-- Menu -->
                 <div class="navigation_primary-menu">
                     <div class="navigation_primary-item"> <a href="#">Chi tiêu</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Tiết kiệm</a> </div>
+                    <div class="navigation_primary-item"> <a href="depositSaving">Tiết kiệm</a> </div>
                     <div class="navigation_primary-item"> <a href="#">Vay</a> </div>
                     <div class="navigation_primary-item"> <a href="#">Bảo hiểm</a> </div>
                     <div class="navigation_primary-item"> <a href="#">Thông tin mới</a> </div>
@@ -300,8 +300,8 @@
         <!-- Header Section -->
         <div class="service-header">
             <div class="container">
-                <h1 class="display-4"><i class="bi bi-bank"></i> Banking Services</h1>
-                <p class="lead">Discover our range of financial services</p>
+                <h1 class="display-4"><i class="bi bi-bank"></i> Dịch vụ ngân hàng</h1>
+                <p class="lead">Khám phá các dịch vụ tài chính của chúng tôi</p>
             </div>
         </div>
 
@@ -353,12 +353,12 @@
                                     <c:if test="${s.status == 'active'}">
                                         <a href="Service?action=details&id=${s.service_id}" 
                                            class="btn btn-learn-more">
-                                            <i class="bi bi-arrow-right-circle"></i> Learn More
+                                            <i class="bi bi-arrow-right-circle"></i> Tìm hiểu thêm 
                                         </a>
                                     </c:if>
                                     <c:if test="${s.status != 'active'}">
                                         <button class="btn btn-secondary" disabled>
-                                            <i class="bi bi-clock"></i> Currently Unavailable
+                                            <i class="bi bi-clock"></i> Hiện không hoạt động
                                         </button>
                                     </c:if>
                                 </div>

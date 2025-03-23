@@ -1,5 +1,6 @@
 package controller_Marketer;
 
+import dal.DAO;
 import dal.DAO_Marketer;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -59,7 +60,7 @@ public class AddNewsServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAO_Marketer d = new DAO_Marketer();
         List<NewsCategory> listNc = d.getAllNewsCategory();
@@ -75,8 +76,9 @@ public class AddNewsServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+   
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             // Lấy dữ liệu từ form
@@ -91,8 +93,7 @@ public class AddNewsServlet extends HttpServlet {
                 title = title.trim();
             }
             if (content != null) {
-                content = content.replaceAll("<[^>]*>", "").
-                        replaceAll("&nbsp;", "").trim();
+                content = content.trim();
             }
             // Kiểm tra điều kiện hợp lệ
             if (title == null || content == null || title.isEmpty() || content.isEmpty() || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {

@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller_SavingDepositService;
+package controller_Service;
 
+import dal.DBContext;
 import dal.SavingDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import model.Customer;
 import model.Savings;
-
+import java.sql.*;
 /**
  *
  * @author Acer Nitro Tiger
@@ -70,22 +71,50 @@ public class SavingsListServlet extends HttpServlet {
         List<Savings> savingList = d.getAllDepositSavingsOfUser(c.getCustomer_id());
         request.setAttribute("savingsList", savingList);
 
-        // Tính tổng tiền sau khi có lãi suất
+        // Lấy ngày đăng ký VIP và savingsRateBonus mỗi lần load trang
+        double savingsRateBonus = 0.0;
+        Date vipStartDate = null;
+        String vipSql = "SELECT v.start_date, vt.savings_rate FROM vip v "
+                + "JOIN vip_term vt ON v.vipTerm_id = vt.vipTerm_id "
+                + "WHERE v.customer_id = ? AND v.status = 'active'";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement pstmt = conn.prepareStatement(vipSql)) {
+            pstmt.setInt(1, c.getCustomer_id());
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                vipStartDate = rs.getDate("start_date"); // Ngày VIP bắt đầu có hiệu lực
+                savingsRateBonus = rs.getDouble("savings_rate");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Tính tổng tiền tiết kiệm, chỉ cộng thêm lãi suất nếu đơn được tạo sau ngày VIP
         Map<Integer, Double> accruedInterestMap = new HashMap<>();
         for (Savings s : savingList) {
-            // Tính tổng tiền sau khi có lãi suất
-            double totalWithInterest = d.getSavingDeposit(s.getSavings_id());
+            double baseInterestRate = s.getInterest_rate();
+            double finalInterestRate = baseInterestRate;
+
+            // Chỉ cộng thêm nếu đơn có start_date >= vipStartDate
+            if (vipStartDate != null && (s.getStart_date().compareTo(vipStartDate) >= 0)) {
+                finalInterestRate += savingsRateBonus;
+            }
+
+            double totalWithInterest = d.getSavingDepositWithRate(s.getSavings_id(), finalInterestRate);
             accruedInterestMap.put(s.getSavings_id(), totalWithInterest);
         }
+
         request.setAttribute("accruedInterestMap", accruedInterestMap);
+        request.setAttribute("savingsRateBonus", savingsRateBonus);
+        request.setAttribute("vipStartDate", vipStartDate); // Gửi ngày VIP về JSP
+
         double totalSavings = 0;
         for (Savings saving : savingList) {
             totalSavings += saving.getAmount();
         }
         request.setAttribute("totalSavings", totalSavings);
 
-        request.getRequestDispatcher("depositSaving.jsp").forward(request, response);
-
+        request.getRequestDispatcher("depositSavingList.jsp").forward(request, response);
     }
 
     /**

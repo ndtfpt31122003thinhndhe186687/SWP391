@@ -3,8 +3,7 @@
     Created on : Jan 10, 2025, 10:24:01 PM
     Author     : Windows
 --%>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -21,7 +20,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>SB Admin 2 - Login</title>
+        <title>Đăng nhập</title>
 
         <!-- Custom fonts for this template-->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -51,33 +50,31 @@
                                 <div class="col-lg-6">
                                     <div class="p-5">
                                         <div class="text-center">
-                                            <h1 class="h4 text-gray-900 mb-4">Chào mừng trở lại</h1>
+                                            <h1 class="h4 text-gray-900 mb-4">Chào mừng!</h1>
                                         </div>
                                         <div id="logreg-forms">
                                             <form class="form-signin" action="login" method="post">
                                                 <p class="text-danger">${mess}</p>
                                                 <div class="form-group">
-                                                    <input name="username"  type="text"  id="inputEmail" class="form-control" placeholder="Username" required="" autofocus="">
+                                                    <input name="username"  type="text"  id="inputEmail" class="form-control" placeholder="Tên đăng nhập" required="" autofocus="">
                                                 </div>
                                                 <div class="form-group">
-                                                    <input name="pass"  type="password"  id="inputPassword" class="form-control" placeholder="Password" required="">
+                                                    <input name="pass"  type="password"  id="inputPassword" class="form-control" placeholder="Mật khẩu" required="">
                                                 </div>
                                                 <select name="role">
                                                     <option value="customer">Khách hàng</option>
                                                     <option value="staff">Nhân viên</option>
                                                     <option value="insurance">Bảo hiểm</option>
-                                                </select>
-                                                <br>
-                                                <br>
+                                                </select>                                         
                                                 <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i>Đăng nhập</button>
                                                 <hr>
                                             </form>
                                             <hr>
                                             <div class="text-center">
-                                                <a class="small" href="forgotpass">Forgot Password?</a>
+                                                <a class="small" href="forgotpass">Quên mật khẩu?</a>
                                             </div>
                                             <div class="text-center">
-                                                <a class="small" href="register">Create an Account!</a>
+                                                <a class="small" href="register">Tạo tài khoản!</a>
                                             </div>
                                         </div>
                                     </div>

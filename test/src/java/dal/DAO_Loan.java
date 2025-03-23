@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import model.Customer;
 import model.Loan;
 import model.Loan_payments;
 import model.ServiceTerms;
@@ -109,7 +110,7 @@ public class DAO_Loan extends DBContext {
 
     public List<Loan> getListLoanByCustomerId(int id) {
         String sql = "select l.amount,l.start_date,l.end_date,l.image,l.value_asset,"
-                + "s.service_name,l.loan_id from loan l join service_terms st on"
+                + "s.service_name,l.loan_id,l.status from loan l join service_terms st on"
                 + " l.serviceTerm_id=st.serviceTerm_id join services s on"
                 + " st.service_id = s.service_id where l.customer_id = ?";
         List<Loan> list = new ArrayList<>();
@@ -126,6 +127,7 @@ public class DAO_Loan extends DBContext {
                 l.setValue_asset(rs.getDouble(5));
                 l.setServiceName(rs.getString(6));
                 l.setLoan_id(rs.getInt(7));
+                l.setStatus(rs.getString(8));
                 list.add(l);
             }
         } catch (Exception e) {
@@ -134,32 +136,7 @@ public class DAO_Loan extends DBContext {
         return list;
     }
     
-    public List<Loan> getListLoanByCustomerIdAndInsurance_id(int id) {
-        String sql = "select l.amount,l.start_date,l.end_date,l.image,l.value_asset,"
-                + "s.service_name,l.loan_id from loan l join service_terms st on"
-                + " l.serviceTerm_id=st.serviceTerm_id join services s on"
-                + " st.service_id = s.service_id where l.customer_id = ?";
-        List<Loan> list = new ArrayList<>();
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, id);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                Loan l = new Loan();
-                l.setAmount(rs.getDouble(1));
-                l.setStart_date(rs.getDate(2));
-                l.setEnd_date(rs.getDate(3));
-                l.setAsset_image(rs.getString(4));
-                l.setValue_asset(rs.getDouble(5));
-                l.setServiceName(rs.getString(6));
-                l.setLoan_id(rs.getInt(7));
-                list.add(l);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return list;
-    }
+    
 
     public Loan getLoanByLoanId(int id) {
         String sql = "select l.loan_id,l.amount,t.duration,st.interest_rate "
@@ -182,49 +159,6 @@ public class DAO_Loan extends DBContext {
         }
         return null;
     }
-    
-    public Loan getLoanByLoanIdAndDate(int id) {
-        String sql = "select loan_id, start_date,end_date from loan\n" +
-"where loan_id = ?";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, id);
-            ResultSet rs = pre.executeQuery();
-            if (rs.next()) {
-                Loan l = new Loan();
-                l.setLoan_id(rs.getInt(1));
-                l.setStart_date(rs.getDate(2));
-                l.setEnd_date(rs.getDate(3));
-                return l;
-            }
-        } catch (Exception e) {
-        }
-        return null;
-    }
-       public Loan getLoanByLoanIdAndInsuranceID(int loan_id, int insurance_id, int policy_id) {
-        String sql = "select loan_id, insurance_id, policy_id from loan \n" +
-"join insurance_contract on loan.customer_id = insurance_contract.customer_id\n" +
-"join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id\n" +
-"where loan.customer_id = ? and insurance_contract_detail.insurance_id = ? and insurance_contract.policy_id = ?";
-        try {
-            PreparedStatement pre = con.prepareStatement(sql);
-            pre.setInt(1, loan_id);
-            pre.setInt(2, insurance_id);
-            pre.setInt(3, policy_id);
-            ResultSet rs = pre.executeQuery();
-            if (rs.next()) {
-                Loan l = new Loan();
-                l.setLoan_id(rs.getInt(1));
-                l.setInsurance_id(rs.getInt(2));
-                l.setPolicy_id(rs.getInt(3));
-                return l;
-            }
-        } catch (Exception e) {
-        }
-        return null;
-    }
-
-
 
     public void insertLoanPayment(Loan_payments lp) {
         String sql = "INSERT INTO loan_payments (loan_id, payment_date, "
@@ -276,6 +210,134 @@ public class DAO_Loan extends DBContext {
         return payments;
     }
 
+    public List<Loan_payments> getDuePayments() {
+        List<Loan_payments> payments = new ArrayList<>();
+        String sql = "SELECT lp.loan_payments_id, lp.loan_id, l.customer_id, c.email, lp.payment_amount, lp.payment_date "
+                + "FROM loan_payments lp "
+                + "JOIN loan l ON lp.loan_id = l.loan_id "
+                + "JOIN customer c ON l.customer_id = c.customer_id "
+                + "WHERE lp.payment_date = CAST(GETDATE() AS DATE) AND lp.payment_status = 'pending'";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Loan_payments l = new Loan_payments();
+                l.setLoan_payments_id(rs.getInt(1));
+                l.setLoan_id(rs.getInt(2));
+                l.setCustomer_id(rs.getInt(3));
+                l.setEmail(rs.getString(4));
+                l.setPayment_amount(rs.getDouble(5));
+                l.setPayment_date(rs.getDate(6));
+                payments.add(l);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return payments;
+    }
+
+    public void UpdateCustomerAmount(double amount, int id) {
+        String sql = "update customer set amount =? where customer_id =?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setDouble(1, amount);
+            pre.setInt(2, id);
+            pre.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public Customer getCustomerById(int id) {
+        String sql = "select * from customer where customer_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                Customer c = new Customer();
+                c.setAmount(rs.getDouble("amount"));
+                c.setFull_name(rs.getString("full_name"));
+                c.setEmail(rs.getString("email"));
+                return c;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    // son
+    public Loan getLoanByLoanIdAndDate(int id) {
+        String sql = "select loan_id, start_date,end_date from loan\n"
+                + "where loan_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                Loan l = new Loan();
+                l.setLoan_id(rs.getInt(1));
+                l.setStart_date(rs.getDate(2));
+                l.setEnd_date(rs.getDate(3));
+                return l;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public Loan getLoanByLoanIdAndInsuranceID(int loan_id, int insurance_id, int policy_id) {
+        String sql = "select loan_id, insurance_id, policy_id from loan \n"
+                + "join insurance_contract on loan.customer_id = insurance_contract.customer_id\n"
+                + "join insurance_contract_detail on insurance_contract.contract_id = insurance_contract_detail.contract_id\n"
+                + "where loan.customer_id = ? and insurance_contract_detail.insurance_id = ? and insurance_contract.policy_id = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, loan_id);
+            pre.setInt(2, insurance_id);
+            pre.setInt(3, policy_id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                Loan l = new Loan();
+                l.setLoan_id(rs.getInt(1));
+                l.setInsurance_id(rs.getInt(2));
+                l.setPolicy_id(rs.getInt(3));
+                return l;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+    
+     public List<Loan> getListLoanByCustomerIdAndNote(int id) {
+        String sql = "select l.amount,l.start_date,l.end_date,l.image,l.value_asset,"
+                + "s.service_name,l.loan_id,l.status,l.notes from loan l join service_terms st on"
+                + " l.serviceTerm_id=st.serviceTerm_id join services s on"
+                + " st.service_id = s.service_id where l.customer_id = ?";
+        List<Loan> list = new ArrayList<>();
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Loan l = new Loan();
+                l.setAmount(rs.getDouble(1));
+                l.setStart_date(rs.getDate(2));
+                l.setEnd_date(rs.getDate(3));
+                l.setAsset_image(rs.getString(4));
+                l.setValue_asset(rs.getDouble(5));
+                l.setServiceName(rs.getString(6));
+                l.setLoan_id(rs.getInt(7));
+                l.setStatus(rs.getString(8));
+                l.setNotes(rs.getString(9));
+                list.add(l);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
     // Main method for testing
     public static void main(String[] args) {
         DAO_Loan d = new DAO_Loan();
@@ -296,21 +358,20 @@ public class DAO_Loan extends DBContext {
 //            double interestAmount = remaining * monthlyinterest;
 //            double paymentAmount = principal + interestAmount;
 //            remaining -= principal;
-//            Loan_payments payment = new Loan_payments(2,
+//            Loan_payments payment = new Loan_payments(1,
 //                    paymentDate, paymentAmount,
 //                    principal, interestAmount,
 //                    Math.max(remaining, 0), "pending");
 //            d.insertLoanPayment(payment);
 //        }
-//        List<Loan_payments> list = d.getPaymentsByLoanIdandCustomerId(2, 2);
+//        List<Loan_payments> list = d.getPaymentsByLoanIdandCustomerId(1, 1);
 //        for (Loan_payments loan_payments : list) {
 //            System.out.println(loan_payments);
 //        }
-//         List<Loan> list = d.getListLoanByCustomerId(1);
-//         for (Loan loan : list) {
-//             System.out.println(loan);
+//        
+//          List<Loan_payments> l = d.getDuePayments();
+//          for (Loan_payments loan_payments : l) {
+//              System.out.println(loan_payments);
 //        }
-        Loan l = d.getLoanByLoanIdAndInsuranceID(1, 1, 1);
-        System.out.println(l);
     }
 }

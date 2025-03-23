@@ -13,6 +13,8 @@ import java.util.Date;
 public class Loan_payments {
     private int loan_payments_id;
     private int loan_id;
+    private int customer_id;
+    private String email;
     private Date payment_date;
     private double payment_amount,principal_amount,
             interest_amount,remaining_amount;
@@ -30,6 +32,36 @@ public class Loan_payments {
         this.remaining_amount = remaining_amount;
         this.payment_status = payment_status;
     }
+
+    public Loan_payments(int loan_payments_id, int loan_id, int customer_id, String email, Date payment_date, double payment_amount, double principal_amount, double interest_amount, double remaining_amount, String payment_status) {
+        this.loan_payments_id = loan_payments_id;
+        this.loan_id = loan_id;
+        this.customer_id = customer_id;
+        this.email = email;
+        this.payment_date = payment_date;
+        this.payment_amount = payment_amount;
+        this.principal_amount = principal_amount;
+        this.interest_amount = interest_amount;
+        this.remaining_amount = remaining_amount;
+        this.payment_status = payment_status;
+    }
+
+    public int getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(int customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
 
     public int getLoan_payments_id() {
         return loan_payments_id;
@@ -97,7 +129,9 @@ public class Loan_payments {
 
     @Override
     public String toString() {
-        return "Loan_payments{" + "loan_payments_id=" + loan_payments_id + ", loan_id=" + loan_id + ", payment_date=" + payment_date + ", payment_amount=" + payment_amount + ", principal_amount=" + principal_amount + ", interest_amount=" + interest_amount + ", remaining_amount=" + remaining_amount + ", payment_status=" + payment_status + '}';
+        return "Loan_payments{" + "loan_payments_id=" + loan_payments_id + ", loan_id=" + loan_id + ", customer_id=" + customer_id + ", email=" + email + ", payment_date=" + payment_date + ", payment_amount=" + payment_amount + ", principal_amount=" + principal_amount + ", interest_amount=" + interest_amount + ", remaining_amount=" + remaining_amount + ", payment_status=" + payment_status + '}';
     }
+
+   
     
 }

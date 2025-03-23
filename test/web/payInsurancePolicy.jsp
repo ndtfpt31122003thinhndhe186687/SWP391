@@ -72,17 +72,26 @@
 
     </head>
     <body>
+        <fmt:setLocale value="vi_VN"/>
        <div class="container">
         <h2>Thanh Toán Hợp Đồng Bảo Hiểm</h2>
         <h4>${requestScope.error}</h4>
-        <p>Số tiền cần thanh toán:</p>
-        <label><span><fmt:formatNumber value="${money}" pattern="#,##0.00" />VND</label>
+<c:choose>
+    <c:when test="${hasPaid}">
+        <p>Bạn đã thanh toán. Không cần nộp thêm.</p>
+    </c:when>
+    <c:otherwise>
+        <p>Số tiền cần thanh toán: <fmt:formatNumber value="${money}" pattern="#,##0.00"/> VND</p>
+        
         <form action="calculatorInsurance" method="post">
-            <input type="hidden" name="amount" value=${money}>
-            <input type="hidden" name="contract_id" value=${contract_id}>
-            <input type="hidden" name="insurance_id" value=${insurance_id}>
-            <button type="submit">Thanh Toán</button>
+            <input type="hidden" name="contract_id" value="${contract_id}">
+            <input type="hidden" name="insurance_id" value="${insurance_id}">
+            <input type="hidden" name="policy_id" value="${policy_id}">
+            <input type="hidden" name="amount" value="${money}">
+            <button type="submit">Thanh toán</button>
         </form>
+    </c:otherwise>
+</c:choose>
             <br>
             <a href="home.jsp">Trở về trang chủ</a>
     </div>

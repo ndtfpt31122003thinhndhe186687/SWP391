@@ -108,7 +108,7 @@
             int policy_id = Integer.parseInt(policy_id_raw);
              List<Insurance_policy> listPolicy = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
              List<String> listStatus = List.of("Hoạt động", "Ngừng hoạt động"); 
-            term_description = term_description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+            term_description = term_description.replaceAll("&nbsp;", "").trim();
              if(term_name.trim().isEmpty()){
                 request.setAttribute("error", "Tên không được để trống");
                 List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");

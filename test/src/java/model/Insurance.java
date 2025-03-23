@@ -4,8 +4,6 @@
  */
 package model;
 
-import java.util.Date;
-
 /**
  *
  * @author Windows
@@ -18,6 +16,16 @@ public class Insurance {
     public Insurance() {
     }
 
+    public Insurance(int insurance_id, String username, String insurance_name, String email, String phone_number, String address, String status) {
+        this.insurance_id = insurance_id;
+        this.username = username;
+        this.insurance_name = insurance_name;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.status = status;
+    }
+    
     public Insurance(int role_id, String username, String password, String insurance_name, String email, String phone_number, String address, String status) {
         this.role_id = role_id;
         this.username = username;
@@ -64,10 +72,6 @@ public class Insurance {
         this.status = status;
     }
     
-    
-
-
-
     public int getPolicy_id() {
         return policy_id;
     }
