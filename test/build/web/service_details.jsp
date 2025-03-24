@@ -7,6 +7,8 @@
         <title>Thông tin về dịch vụ</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
         <style>
             :root {
                 --primary-color: #dc3545;
@@ -188,7 +190,11 @@
                                         <c:if test="${star == 0}">
                                             <label>Chưa có đánh giá</label>
                                         </c:if>
+                                            
                                 </div>
+                             <div class="detail-label">
+                                 <a href="customerViewFeedback?service_id=${service.service_id} "class="detail-label">Xem đánh giá</a>
+                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="detail-label">Loại dịch vụ</div>

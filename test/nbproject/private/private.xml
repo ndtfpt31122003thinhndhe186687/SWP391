@@ -12,10 +12,10 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/ki5/SWP391/bt/SWP391_test/merge/web/customerListInsurance.jsp</file>
-            <file>file:/E:/ki5/SWP391/bt/SWP391_test/merge/src/java/controller_Insurance/searchCustomerInsuranceServlet.java</file>
-            <file>file:/E:/ki5/SWP391/bt/SWP391_test/merge/src/java/controller_Insurance/CustomerInsuranceListServlet.java</file>
-            <file>file:/E:/ki5/SWP391/bt/SWP391_test/merge/src/java/dal/DAO_Insurance.java</file>
+            <file>file:/E:/ki5/SWP391/bt/SWP391/test/web/managerInsuranceFeedbackStatistic.jsp</file>
+            <file>file:/E:/ki5/SWP391/bt/SWP391/test/src/java/dal/DAO_Insurance.java</file>
+            <file>file:/E:/ki5/SWP391/bt/SWP391/test/src/java/controller_Insurance/ManagerStatisticFeedbackInsuranceServlet.java</file>
+            <file>file:/E:/ki5/SWP391/bt/SWP391/test/src/java/model/Insurance_feedback.java</file>
         </group>
     </open-files>
 </project-private>

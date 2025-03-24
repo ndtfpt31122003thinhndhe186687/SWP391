@@ -1,5 +1,6 @@
 package dal;
 
+import controller_Insurance.feedbackInsuranceServlet;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -295,6 +296,34 @@ public class DAO_Insurance extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public Insurance_policy getPolicyByContractID(int contract_id, String status) {
+        String sql = "select * from insurance_policy\n"
+                + "join insurance_contract on insurance_policy.policy_id = insurance_contract.policy_id\n"
+                + "where contract_id = ? and insurance_policy.status = 'active' ";
+
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, contract_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int policy_id = rs.getInt("policy_id");
+                contract_id = rs.getInt("contract_id");
+                int insurance_id = rs.getInt("insurance_id");
+                status = rs.getString("status");
+                double coverage_amount = rs.getDouble("coverage_amount");
+                double premium_amount = rs.getDouble("premium_amount");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                Insurance_policy policy = new Insurance_policy(policy_id, insurance_id, contract_id,
+                        status, coverage_amount, premium_amount, start_date, end_date);
+                return policy;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<Insurance_policy> getPolicyByInsuranceIDAndStatus(int insurance_id, String status, int offset, int next) {
@@ -1949,8 +1978,8 @@ public class DAO_Insurance extends DBContext {
                 Double PaidAmount = rs.getDouble("PaidAmount");
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
-                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency, 
-                        contract_name,insurance_id, contract_id, duration,
+                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency,
+                        contract_name, insurance_id, contract_id, duration,
                         policy_id, CoverageAmount, PremiumAmount, PaidAmount, start_date, end_date);
                 list.add(customer);
             }
@@ -1998,8 +2027,8 @@ public class DAO_Insurance extends DBContext {
                 Double PaidAmount = rs.getDouble("PaidAmount");
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
-                   Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency, 
-                        contract_name,insurance_id, contract_id, duration,
+                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency,
+                        contract_name, insurance_id, contract_id, duration,
                         policy_id, CoverageAmount, PremiumAmount, PaidAmount, start_date, end_date);
                 list.add(customer);
             }
@@ -2032,7 +2061,7 @@ public class DAO_Insurance extends DBContext {
             pre.setInt(5, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
-                 String contract_name = rs.getString("contract_name");
+                String contract_name = rs.getString("contract_name");
                 String notes = rs.getString("notes");
                 int contract_id = rs.getInt("contract_id");
                 insurance_id = rs.getInt("insurance_id");
@@ -2048,8 +2077,8 @@ public class DAO_Insurance extends DBContext {
                 Double PaidAmount = rs.getDouble("PaidAmount");
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
-                  Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency, 
-                        contract_name,insurance_id, contract_id, duration,
+                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency,
+                        contract_name, insurance_id, contract_id, duration,
                         policy_id, CoverageAmount, PremiumAmount, PaidAmount, start_date, end_date);
                 list.add(customer);
             }
@@ -2080,7 +2109,7 @@ public class DAO_Insurance extends DBContext {
             pre.setInt(3, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
-                 String contract_name = rs.getString("contract_name");
+                String contract_name = rs.getString("contract_name");
                 String notes = rs.getString("notes");
                 int contract_id = rs.getInt("contract_id");
                 int insurance_id = rs.getInt("insurance_id");
@@ -2096,8 +2125,8 @@ public class DAO_Insurance extends DBContext {
                 Double PaidAmount = rs.getDouble("PaidAmount");
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
-                   Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency, 
-                        contract_name,insurance_id, contract_id, duration,
+                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency,
+                        contract_name, insurance_id, contract_id, duration,
                         policy_id, CoverageAmount, PremiumAmount, PaidAmount, start_date, end_date);
                 list.add(customer);
             }
@@ -2129,7 +2158,7 @@ public class DAO_Insurance extends DBContext {
             pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
-                 String contract_name = rs.getString("contract_name");
+                String contract_name = rs.getString("contract_name");
                 String notes = rs.getString("notes");
                 int contract_id = rs.getInt("contract_id");
                 int insurance_id = rs.getInt("insurance_id");
@@ -2145,8 +2174,8 @@ public class DAO_Insurance extends DBContext {
                 Double PaidAmount = rs.getDouble("PaidAmount");
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
-                   Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency, 
-                        contract_name,insurance_id, contract_id, duration,
+                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency,
+                        contract_name, insurance_id, contract_id, duration,
                         policy_id, CoverageAmount, PremiumAmount, PaidAmount, start_date, end_date);
                 list.add(customer);
             }
@@ -2178,7 +2207,7 @@ public class DAO_Insurance extends DBContext {
             pre.setInt(4, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
-                 String contract_name = rs.getString("contract_name");
+                String contract_name = rs.getString("contract_name");
                 int contract_id = rs.getInt("contract_id");
                 insurance_id = rs.getInt("insurance_id");
                 customer_id = rs.getInt("customer_id");
@@ -2194,8 +2223,8 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 String notes = rs.getString("notes");
-                  Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency, 
-                        contract_name,insurance_id, contract_id, duration,
+                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency,
+                        contract_name, insurance_id, contract_id, duration,
                         policy_id, CoverageAmount, PremiumAmount, PaidAmount, start_date, end_date);
                 list.add(customer);
             }
@@ -2228,7 +2257,7 @@ public class DAO_Insurance extends DBContext {
             pre.setInt(5, next);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
-                 String contract_name = rs.getString("contract_name");
+                String contract_name = rs.getString("contract_name");
                 int contract_id = rs.getInt("contract_id");
                 insurance_id = rs.getInt("insurance_id");
                 customer_id = rs.getInt("customer_id");
@@ -2244,8 +2273,8 @@ public class DAO_Insurance extends DBContext {
                 Date start_date = rs.getDate("start_date");
                 Date end_date = rs.getDate("end_date");
                 String notes = rs.getString("notes");
-                  Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency, 
-                        contract_name,insurance_id, contract_id, duration,
+                Customer customer = new Customer(loan_id, notes, insurance_name, policy_name, payment_frequency,
+                        contract_name, insurance_id, contract_id, duration,
                         policy_id, CoverageAmount, PremiumAmount, PaidAmount, start_date, end_date);
                 list.add(customer);
             }
@@ -3247,6 +3276,22 @@ public class DAO_Insurance extends DBContext {
         return 0;
     }
 
+    public int getTotalInsuranceFeedbackAndRate(int insurance_id, int rate) {
+        String sql = "select COUNT(*) from feedbackInsurance\n"
+                + "where insurance_id = ? and feedbackInsurance.feedback_rate = ?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, rate);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
     public int getTotalInsuranceFeedbackByPolicy_id(int insurance_id, int policy_id) {
         String sql = "select COUNT(*) from feedbackInsurance\n"
                 + "where insurance_id = ? and policy_id = ?";
@@ -3261,6 +3306,126 @@ public class DAO_Insurance extends DBContext {
         } catch (Exception e) {
         }
         return 0;
+    }
+
+    public Insurance_feedback getHighestPolicyRate(int insurance_id) {
+        String sql = "SELECT TOP 1 \n"
+                + "    p.policy_id, \n"
+                + "    p.policy_name, \n"
+                + "    AVG(f.feedback_rate) AS avg_rating\n"
+                + "FROM feedbackInsurance f\n"
+                + "JOIN insurance_policy p ON f.policy_id = p.policy_id\n"
+                + "where f.insurance_id = ? \n"
+                + "GROUP BY p.policy_id, p.policy_name\n"
+                + "ORDER BY avg_rating DESC";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int policy_id = rs.getInt("policy_id");
+                String policy_name = rs.getString("policy_name");
+                int avg_rating = rs.getInt("avg_rating");
+                Insurance_feedback f = new Insurance_feedback(policy_id, policy_name, avg_rating);
+                return f;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public Insurance_feedback getLowestPolicyRate(int insurance_id) {
+        String sql = "SELECT TOP 1 \n"
+                + "    p.policy_id, \n"
+                + "    p.policy_name, \n"
+                + "    AVG(f.feedback_rate) AS avg_rating\n"
+                + "FROM feedbackInsurance f\n"
+                + "JOIN insurance_policy p ON f.policy_id = p.policy_id\n"
+                + "where f.insurance_id = ? \n"
+                + "GROUP BY p.policy_id, p.policy_name\n"
+                + "ORDER BY avg_rating ASC";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int policy_id = rs.getInt("policy_id");
+                String policy_name = rs.getString("policy_name");
+                int avg_rating = rs.getInt("avg_rating");
+                Insurance_feedback f = new Insurance_feedback(policy_id, policy_name, avg_rating);
+                return f;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public int getAvgRate(int insurance_id) {
+        String sql = "SELECT \n"
+                + "    insurance_id, \n"
+                + "    COUNT(feedback_id) AS total_feedbacks, \n"
+                + "    AVG(feedback_rate) AS avg_rating\n"
+                + "FROM feedbackInsurance\n"
+                + "Where insurance_id = ?\n"
+                + "GROUP BY insurance_id;";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("avg_rating");
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    public Insurance_feedback getTopPolicyRate(int insurance_id, int rate) {
+        String sql = "SELECT TOP 1 ip.policy_id, ip.policy_name, COUNT(fb.feedback_id) AS avg_rating\n"
+                + "FROM feedbackInsurance fb\n"
+                + "JOIN insurance_policy ip ON fb.policy_id = ip.policy_id\n"
+                + "WHERE fb.insurance_id = ? and fb.feedback_rate = ?\n"
+                + "GROUP BY ip.policy_id, ip.policy_name\n"
+                + "ORDER BY avg_rating DESC";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, rate);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int policy_id = rs.getInt("policy_id");
+                String policy_name = rs.getString("policy_name");
+                int avg_rating = rs.getInt("avg_rating");
+                Insurance_feedback f = new Insurance_feedback(policy_id, policy_name, avg_rating);
+                return f;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+    
+    public Insurance_feedback getBotPolicyRate(int insurance_id, int rate) {
+        String sql = "SELECT TOP 1 ip.policy_id, ip.policy_name, COUNT(fb.feedback_id) AS avg_rating\n"
+                + "FROM feedbackInsurance fb\n"
+                + "JOIN insurance_policy ip ON fb.policy_id = ip.policy_id\n"
+                + "WHERE fb.insurance_id = ? and fb.feedback_rate = ?\n"
+                + "GROUP BY ip.policy_id, ip.policy_name\n"
+                + "ORDER BY avg_rating ASC";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, insurance_id);
+            pre.setInt(2, rate);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                int policy_id = rs.getInt("policy_id");
+                String policy_name = rs.getString("policy_name");
+                int avg_rating = rs.getInt("avg_rating");
+                Insurance_feedback f = new Insurance_feedback(policy_id, policy_name, avg_rating);
+                return f;
+            }
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     public List<Insurance_feedback> sortAllFeedbackByFeedbackDate(int insurance_id, int offset, int next) {
@@ -3435,15 +3600,7 @@ public class DAO_Insurance extends DBContext {
 
     public static void main(String[] args) {
         DAO_Insurance d = new DAO_Insurance();
-//        List<Insurance_contract> l = d.getListInsuranceContractByCustomerID(1);
-//        for (Insurance_contract insurance_contract : l) {
-//            System.out.println(insurance_contract);
-//        }
+        System.out.println(d.getBotPolicyRate(1, 1));
 
-        List<Customer> c = d.getListInsuranceByCustomerID(1);
-        for (Customer customer : c) {
-            System.out.println(customer);
-
-        }
     }
 }

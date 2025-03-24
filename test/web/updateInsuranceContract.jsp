@@ -66,6 +66,7 @@
         <c:set var="c" value="${requestScope.contract}"/>
         <form action="updateInsuranceContract" method="post">
             <input type="hidden" name="contract_id" value="${contract.contract_id}">
+            <input type="hidden" name="customer_id" value="${contract.customer_id}">
             Chọn trạng thái
             <select class="filter-dropdown" name="status">
                 <option value="pending" ${c.status == 'pending' ? 'selected' : ''}>Chưa giải quyết</option>

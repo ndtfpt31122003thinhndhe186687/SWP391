@@ -2261,7 +2261,7 @@ public class DAO_Admin extends DBContext {
         String sql = "select feedback.*, customer.full_name, services.service_name from feedback\n"
                 + "join customer on feedback.customer_id = customer.customer_id\n"
                 + "join services on feedback.service_id = services.service_id\n"
-                + "where feedback.service_id = ?";
+                + "where services.service_id = ?";
 
         try {
             PreparedStatement pre = con.prepareStatement(sql);
@@ -2503,15 +2503,15 @@ public class DAO_Admin extends DBContext {
     // Main method for testing
     public static void main(String[] args) {
         DAO_Admin d = new DAO_Admin();
-        String date = "2000-12-31";
-        Date sqlDate = java.sql.Date.valueOf(date);
-        ServiceProvider s = new ServiceProvider(7, "thinh", "thinh",
-                "thinh", "Electricity", "thinh", "thinh", "thinh", "active");
-        d.insertServiceProvider(s);
-
-            
-        
-
+//        String date = "2000-12-31";
+//        Date sqlDate = java.sql.Date.valueOf(date);
+//        ServiceProvider s = new ServiceProvider(7, "thinh", "thinh",
+//                "thinh", "Electricity", "thinh", "thinh", "thinh", "active");
+//        d.insertServiceProvider(s);
+        List<Feedback> l = d.getListFeedbackByServiceID(1);
+        for (Feedback feedback : l) {
+            System.out.println(feedback);
+            System.out.println(d.getTotalFeedbackByServiceID(1));
+        }
     }
 }
-

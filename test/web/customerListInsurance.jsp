@@ -412,7 +412,7 @@
 
 
                                     <td colspan="7">
-                                        <strong>Tần suất thanh toán:</strong> ${c.payment_frequency} <br>
+                                        <strong>Tần suất thanh toán:</strong> ${c.payment_frequency == 'monthly' ? 'Tháng' : (c.payment_frequency == 'quarterly' ? 'Quý' : 'Năm')}<br>
                                         <strong>Số tiền bảo hiểm:</strong> <fmt:formatNumber value="${c.coverageAmount}" pattern="#,##0.00" /> VND<br>
                                         <strong>Phí bảo hiểm:</strong> <fmt:formatNumber value="${c.premiumAmount}" pattern="#,##0.00" /> VND <br>
                                         <strong>Số tiền đã thanh toán:</strong> <fmt:formatNumber value="${c.paidAmount}" pattern="#,##0.00" /> VND<br>

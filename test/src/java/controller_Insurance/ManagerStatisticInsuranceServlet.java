@@ -64,12 +64,12 @@ public class ManagerStatisticInsuranceServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
-
         request.setAttribute("totalPolicies", dao.getTotalInsurancePolicy(i.getInsurance_id()));
         request.setAttribute("totalTerms", dao.getTotalInsuranceTerm(i.getInsurance_id()));
         request.setAttribute("totalContract", dao.getTotalInsuranceContract(i.getInsurance_id()));
         request.setAttribute("totalCustomers", dao.getTotalInsuranceCustomer(i.getInsurance_id()));
         request.setAttribute("totalTransaction", dao.getTotalInsuranceTransaction(i.getInsurance_id()));
+        request.setAttribute("totalFeedback", dao.getTotalInsuranceFeedback(i.getInsurance_id()));
         request.setAttribute("activePolicys", dao.getTotalInsurancePolicyByStatus(i.getInsurance_id(), "active"));
         request.setAttribute("activeTerms", dao.getTotalInsuranceTermByStatus(i.getInsurance_id(), "active"));
         request.setAttribute("activeContract", dao.getTotalInsuranceContractByStatus(i.getInsurance_id(), "active"));

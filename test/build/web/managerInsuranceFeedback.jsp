@@ -219,6 +219,12 @@
                             Quản lý phản hồi bảo hiểm
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerStatisticFeedbackInsurance">
+                            <i class="me-2"></i>
+                            Quản lý thống kê phản hồi bảo hiểm
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>

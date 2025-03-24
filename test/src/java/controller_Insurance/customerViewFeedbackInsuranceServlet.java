@@ -3,10 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller_Service;
+package controller_Insurance;
 
-import dal.DAO_Admin;
-import dal.SavingDAO;
+import dal.DAO_Insurance;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,16 +14,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Customer;
-import model.Feedback;
-import model.ServiceTerms;
+import model.Insurance_feedback;
 
 /**
  *
- * @author Acer Nitro Tiger
+ * @author Windows
  */
-@WebServlet(name="DepositSavingServlet", urlPatterns={"/depositSaving"})
-public class DepositSavingServlet extends HttpServlet {
+@WebServlet(name="customerViewFeedbackInsuranceServlet", urlPatterns={"/customerViewFeedbackInsurance"})
+public class customerViewFeedbackInsuranceServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -41,10 +38,10 @@ public class DepositSavingServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DepositSavingServlet</title>");  
+            out.println("<title>Servlet customerViewFeedbackInsuranceServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DepositSavingServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet customerViewFeedbackInsuranceServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,14 +58,13 @@ public class DepositSavingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        SavingDAO d=new SavingDAO();
-        DAO_Admin dao = new DAO_Admin();
-        List<ServiceTerms> listS=d.getDepositService();
-        List<Customer> listC = dao.getCustomerByServiceID(1);
-        List<Feedback> listF = dao.getListFeedbackByServiceID(1);
-                 int count = dao.getTotalFeedbackByServiceID(1);
+        DAO_Insurance dao = new DAO_Insurance();
+        String insurance_id_raw = request.getParameter("insurance_id");
+        int insurance_id = Integer.parseInt(insurance_id_raw);
+         List<Insurance_feedback> listF = dao.getListFeedbackByInsuranceID(insurance_id);
+                 int count = dao.getTotalInsuranceFeedback(insurance_id);
                 int point = 0, star = 0;
-                for (Feedback feedback : listF) {
+                for (Insurance_feedback feedback : listF) {
                     point += feedback.getFeedback_rate();
                 }
                 if(point != 0){
@@ -76,10 +72,7 @@ public class DepositSavingServlet extends HttpServlet {
                 }
                  request.setAttribute("star", star);
                     request.setAttribute("listF", listF);
-        request.setAttribute("listS", listS);
-        request.setAttribute("listC", listC);
-        request.getRequestDispatcher("depositSaving.jsp").forward(request, response);
-        
+                    request.getRequestDispatcher("customerViewFeedbackInsurance.jsp").forward(request, response);
     } 
 
     /** 

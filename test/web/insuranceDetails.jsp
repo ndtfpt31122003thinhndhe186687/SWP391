@@ -155,6 +155,9 @@
                                         <c:if test="${star == 0}">
                                             <label>Chưa có đánh giá</label>
                                         </c:if>
+                                            <div class="detail-label">
+                                 <a href="customerViewFeedbackInsurance?insurance_id=${insurance.insurance_id} "class="detail-label">Xem đánh giá</a>
+                             </div>
                                 </div>
                                 <div class="detail-label">Chính sách</div>
                                 <a class="detail-label" href="InsurancePolicyDetails?insurance_id=${insurance.insurance_id}" >Xem thêm</a>

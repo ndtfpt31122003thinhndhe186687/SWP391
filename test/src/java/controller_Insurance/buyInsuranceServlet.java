@@ -321,12 +321,12 @@ public class buyInsuranceServlet extends HttpServlet {
 
         Insurance_contract_detail icd = new Insurance_contract_detail(contract_id, insurance_id, coverage_amount, premium_amount, paid_amount,
                 start_date, end_date);
-
-        Insurance_transactions it = new Insurance_transactions(contract_id, c.getCustomer_id(), paid_amount,
-                "premium_payment", "Premium payment.");
+//
+//        Insurance_transactions it = new Insurance_transactions(contract_id, c.getCustomer_id(), paid_amount,
+//                "premium_payment", "Nộp tiền bảo hiểm.");
         dao.insertContractDetail(icd);
-        dao.insertInsuranceTransaction(it);
-        daoS.updateAmount(c.getCustomer_id(), paid_amount);
+//        dao.insertInsuranceTransaction(it);
+//        daoS.updateAmount(c.getCustomer_id(), paid_amount);
         session.setAttribute("showSuccessModal", true);
         SavingDAO d = new SavingDAO();
         d.insertNotification(c.getCustomer_id(), contract_id, "Mua bảo hiểm",

@@ -13,11 +13,11 @@ import java.util.Locale;
  * @author Windows
  */
 public class Insurance_policy {
-    public int policy_id,insurance_id;
+    public int policy_id,insurance_id, contract_id;
     public String policy_name,description,status, image;
 
     public double coverage_amount,premium_amount;
-    public Date created_at;
+    public Date created_at, start_date,end_date;
 
     public Insurance_policy() {
     }
@@ -68,6 +68,43 @@ public class Insurance_policy {
         this.image = image;
         this.coverage_amount = coverage_amount;
         this.premium_amount = premium_amount;
+    }
+
+    public Insurance_policy(int policy_id, int insurance_id, int contract_id, String status, double coverage_amount, double premium_amount, Date start_date,Date end_date) {
+        this.policy_id = policy_id;
+        this.insurance_id = insurance_id;
+        this.contract_id = contract_id;
+        this.status = status;
+        this.coverage_amount = coverage_amount;
+        this.premium_amount = premium_amount;
+        this.start_date = start_date;
+        this.end_date = end_date;
+    }
+
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
+    }
+
+    public Date getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(Date end_date) {
+        this.end_date = end_date;
+    }
+
+    
+    
+    public int getContract_id() {
+        return contract_id;
+    }
+
+    public void setContract_id(int contract_id) {
+        this.contract_id = contract_id;
     }
 
    
@@ -147,8 +184,10 @@ public class Insurance_policy {
 
     @Override
     public String toString() {
-        return "Insurance_policy{" + "policy_id=" + policy_id + ", insurance_id=" + insurance_id + ", policy_name=" + policy_name + ", description=" + description + ", status=" + status + ", image=" + image + ", coverage_amount=" + coverage_amount + ", premium_amount=" + premium_amount + ", created_at=" + created_at + '}';
+        return "Insurance_policy{" + "policy_id=" + policy_id + ", insurance_id=" + insurance_id + ", contract_id=" + contract_id + ", policy_name=" + policy_name + ", description=" + description + ", status=" + status + ", image=" + image + ", coverage_amount=" + coverage_amount + ", premium_amount=" + premium_amount + ", created_at=" + created_at + ", start_date=" + start_date + ", end_date=" + end_date + '}';
     }
+
+    
     
     
    

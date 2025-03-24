@@ -111,8 +111,15 @@ public class feedbackInsuranceServlet extends HttpServlet {
             else{
                 request.setAttribute("error", "Bạn phải đánh giá số sao!");
                 request.setAttribute("listP", listP);
+                request.setAttribute("insurance_id", insurance_id);
                 request.getRequestDispatcher("feedbackInsurance.jsp").forward(request, response);
             }
+         if(feedback_rate <= 0 && feedback_rate >= 6){
+              request.setAttribute("error", "Số sao phải lớn hơn 0 và nhỏ hơn 6!");
+                request.setAttribute("listP", listP);
+                request.setAttribute("insurance_id", insurance_id);
+                request.getRequestDispatcher("feedbackInsurance.jsp").forward(request, response);
+         }
         
 
        

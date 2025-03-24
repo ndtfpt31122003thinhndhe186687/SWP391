@@ -6,6 +6,7 @@
 package controller_Insurance;
 
 import dal.DAO_Insurance;
+import dal.SavingDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Insurance;
 import model.Insurance_contract;
+import model.Insurance_contract_detail;
 import model.Insurance_policy;
+import model.Insurance_transactions;
 
 /**
  *
@@ -83,13 +86,26 @@ public class updateInsuranceContractServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         DAO_Insurance dao = new DAO_Insurance();
+        SavingDAO daoS = new SavingDAO();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");   
         String contract_id_raw = request.getParameter("contract_id");
+        String customer_id_raw = request.getParameter("customer_id");
         String status = request.getParameter("status");
             int contract_id = Integer.parseInt(contract_id_raw);
+            int customer_id = Integer.parseInt(customer_id_raw);
             Insurance_contract c = new Insurance_contract(contract_id, status);
             dao.updateInsuranceContract(c);
+            Insurance_contract_detail detail = dao.getInsuranceContractDetailByContractid(contract_id, i.getInsurance_id());
+            if(status.equals("active")){
+        Insurance_transactions it = new Insurance_transactions(contract_id, customer_id, detail.getPaidAmount(),
+                "premium_payment", "Nộp tiền bảo hiểm.");
+        dao.insertInsuranceTransaction(it);
+        daoS.updateAmount(customer_id, detail.getPaidAmount());
+          SavingDAO d = new SavingDAO();
+        d.insertNotification(customer_id, contract_id, "Mua bảo hiểm",
+                "Yêu cầu mua bảo hiểm đã được duyệt!");
+            }
             String url = "managerInsuranceContract?insurance_id=" + i.getInsurance_id(); 
         response.sendRedirect(url);
     }

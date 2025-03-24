@@ -13,6 +13,7 @@
         <title>Banking Services</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <style>
             :root {
                 --primary-color: #dc3545;
@@ -379,6 +380,29 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Phản hồi -->
+        <div class="container mt-5">
+    <h2 class="mb-4 text-center">Phản hồi về dịch vụ:</h2>
+
+    <c:forEach items="${listF}" var="f">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h4 class="text-primary"><i class="bi bi-person-circle"></i> ${f.full_name}</h4>
+                <p><strong>Nội dung phản hồi:</strong> ${f.feedback_content}</p>
+                
+                <div class="star-rating text-warning">
+                    <c:forEach begin="1" end="${star}">
+                        <i class="fa-solid fa-star"></i>
+                    </c:forEach>
+                    <c:if test="${star% 1 != 0}">
+                        <i class="fa-solid fa-star-half-alt"></i>
+                    </c:if>
+                </div>
+            </div>
+        </div>
+    </c:forEach>
+</div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     </body>

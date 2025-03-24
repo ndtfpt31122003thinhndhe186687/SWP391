@@ -1,6 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -22,35 +23,32 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+
         <style>
-            .table thead {
-                background-color: #dc3545;
-                color: white;
+            .statistic-card {
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                padding: 20px;
+                margin-bottom: 20px;
             }
-
-            .table {
-                border-color: #dc3545;
-            }
-
-            .table tbody tr {
+            .statistic-title {
                 color: #333;
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            .statistic-value {
+                color: #007bff;
+                font-size: 24px;
+                font-weight: bold;
+            }
+            .statistic-section {
+                margin-bottom: 30px;
             }
 
-            .table tbody tr:hover {
-                background-color: #f1b0b7;
-                transition: 0.3s;
-            }
 
-            .btn-danger {
-                background-color: #8b0000 !important;
-                border-color: #8b0000 !important;
-            }
-
-            .btn-success {
-                background-color: #b02a37 !important;
-                border-color: #b02a37 !important;
-            }
         </style>
+
 
     </head>
     <body>
@@ -66,8 +64,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchInsuranceCustomer" method="post" role="form">
-                <input class="form-control bg-white text-dark" name="search_customer_name" type="text" placeholder="Search" aria-label="Search">
+            <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="searchByPolicyName" method="post" role="form">
+                <input class="form-control bg-white text-dark" name="search_policy_name" type="text" placeholder="Search" aria-label="Search">
             </form>
 
             <div class="navbar-nav me-lg-2">
@@ -218,68 +216,128 @@
                             Quản lý thống kê phản hồi bảo hiểm
                         </a>
                     </li>
+
                 </ul>
             </div>
         </nav>
 
         <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
             <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Quản lý khách hàng đã mua bảo hiểm</h1>
+                <h1 class="h2 mb-0 text-danger">Quản lý thống kê phản hồi</h1>
             </div>
 
             <!-- Tabs choose staff -->
 
 
             <!-- View list staff -->
-            <div class="mt-3">
-                <form action="filterInsuranceCustomer" method="get">
-                    <label>Hiện thông tin theo giới tính: </label>
-                    <select class="filter-dropdown" name="gender">                    
-                        <option value="all" ${requestScope.gender == '' ? 'selected' : ''}>Tất cả</option>
-                        <option value="male" ${requestScope.gender == 'male' ? 'selected' : ''}>Nam</option>
-                        <option value="female" ${requestScope.gender == 'female' ? 'selected' : ''}>Nữ</option>                   
-                    </select>
-                    <label>Chọn số lượng khách hàng: </label>
-                    <select class="filter-dropdown" name="quantity">                    
-                        <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
-                        <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
-                        <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
-                    </select>
-                    <button type="submid">Tìm</button>
-                </form>
 
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID khách hàng</th>
-                            <th>Họ và tên</th>
-                            <th>Email</th>
-                            <th>Tên người dùng</th>
-                            <th>Số điện thoại</th>
-                            <th>Địa chỉ</th>
-                            <th>Giới tính</th>
-                        </tr>
-                    </thead>
+            <div class="row statistic-section">
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Tổng số phản hồi</div>
+                        <div class="statistic-value">${totalFeedback}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Trung bình số sao</div>
+                        <div class="statistic-value">${totalRate}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Tổng số phản hồi được đánh giá 5 sao</div>
+                        <div class="statistic-value">${totalRate5}</div>
+                    </div>
+                </div>
 
-                    <c:forEach items="${listC}" var="C" varStatus="status">
-                        <tr>
-                            <td>${C.customer_id}</td>
-                            <td>${C.full_name}</td>
-                            <td>${C.email}</td>
-                            <td>${C.username}</td>
-                            <td>${C.phone_number}</td>
-                            <td>${C.address}</td> 
-                            <td>${C.gender}</td>
-                        </tr>
 
-                    </c:forEach>
-
-                </table>
-                <c:forEach begin="1" end="${endP}" var="q">
-                    <a href="filterInsuranceCustomer?gender=${gender}&quantity=${quantity}&offset=${q}">${q}</a>
-                </c:forEach>
             </div>
-        </main>
+
+            <!-- Active Counts Section -->
+            <div class="row statistic-section">
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Tổng số phản hồi được đánh giá 4 sao</div>
+                        <div class="statistic-value">${totalRate4}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Tổng số phản hồi được đánh giá 3 sao</div>
+                        <div class="statistic-value">${totalRate3}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Tổng số phản hồi được đánh giá 2 sao</div>
+                        <div class="statistic-value">${totalRate2}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Tổng số phản hồi được đánh giá 1 sao</div>
+                        <div class="statistic-value">${totalRate1}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row statistic-section">
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Chính sách được đánh giá cao nhất</div>
+                        <div class="statistic-value">${policyHighest.policy_name}</div>
+                        <div class="statistic-title">Số lần được đánh giá</div>
+                        <div class="statistic-value">${policyHighest.avg_rating}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Chính sách được đánh giá thấp nhất</div>
+                        <div class="statistic-value">${policyLowest.policy_name}</div>
+                        <div class="statistic-title">Số lần được đánh giá</div>
+                        <div class="statistic-value">${policyLowest.avg_rating}</div>
+                    </div>
+                </div>               
+            </div>
+            <div class="row statistic-section">
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Chính sách được đánh giá 5 sao nhiều nhất</div>
+                        <div class="statistic-value">${policyHighestRate5.policy_name}</div>
+                        <div class="statistic-title">Số lần được đánh giá</div>
+                        <div class="statistic-value">${policyHighestRate5.avg_rating}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Chính sách được đánh giá 5 sao ít nhất</div>
+                        <div class="statistic-value">${policyLowestRate5.policy_name}</div>
+                        <div class="statistic-title">Số lần được đánh giá</div>
+                        <div class="statistic-value">${policyLowestRate5.avg_rating}</div>
+                    </div>
+                </div>               
+            </div>
+            <div class="row statistic-section">
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Chính sách được đánh giá 1 sao nhiều nhất</div>
+                        <div class="statistic-value">${policyHighestRate1.policy_name}</div>
+                        <div class="statistic-title">Số lần được đánh giá</div>
+                        <div class="statistic-value">${policyHighestRate1.avg_rating}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Chính sách được đánh giá 1 sao ít nhất</div>
+                        <div class="statistic-value">${policyLowestRate1.policy_name}</div>
+                        <div class="statistic-title">Số lần được đánh giá</div>
+                        <div class="statistic-value">${policyLowestRate1.avg_rating}</div>
+                    </div>
+                </div>               
+            </div>
+
+            
 
 
 

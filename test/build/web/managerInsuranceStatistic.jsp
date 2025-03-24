@@ -265,7 +265,7 @@
                 <div class="col-md-4">
                     <div class="statistic-card">
                         <div class="statistic-title">Tổng số phản hồi</div>
-                        <div class="statistic-value">0</div>
+                        <div class="statistic-value">${totalFeedback}</div>
                     </div>
                 </div>
             </div>
