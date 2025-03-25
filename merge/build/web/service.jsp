@@ -266,7 +266,7 @@
                 <div class="navigation_primary-menu">
                     <div class="navigation_primary-item"> <a href="#">Chi tiêu</a> </div>
                     <div class="navigation_primary-item"> <a href="depositSaving">Tiết kiệm</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Vay</a> </div>
+                    <div class="navigation_primary-item"> <a href="loanService">Vay</a> </div>
                     <div class="navigation_primary-item"> <a href="#">Bảo hiểm</a> </div>
                     <div class="navigation_primary-item"> <a href="#">Thông tin mới</a> </div>
                 </div>

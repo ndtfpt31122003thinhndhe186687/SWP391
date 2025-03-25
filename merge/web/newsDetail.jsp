@@ -119,7 +119,7 @@
         }
 
         .search{
-            margin-right: 300px;
+            margin-right: 400px;
             margin-top: 16px;
         }
 
@@ -462,12 +462,19 @@
                         🔔 Thông báo
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
-                        <li class="dropdown-header">📌 Thông báo gần đây</li>
-                        <li><a class="dropdown-item" href="#"><span>📢</span> Bạn vừa đăng nhập.</a></li>
-                        <li><a class="dropdown-item" href="#"><span>⚠️</span> Bạn đã thay đổi mật khẩu.</a></li>
-                        <li><a class="dropdown-item" href="#"><span>✅</span> Cập nhật hồ sơ thành công.</a></li>
-                        <li class="dropdown-footer"><a href="#">Xem tất cả</a></li>
-                    </ul>
+                    <li class="dropdown-header">📌 Thông báo gần đây</li>
+                        <c:choose>
+                            <c:when test="${not empty requestScope.listNotify}">
+                                <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
+                                <li><a class="dropdown-item" href="#">${n.message}</a></li>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                            <li class="dropdown-item text-center text-muted">Không có thông báo nào</li>
+                            </c:otherwise>
+                        </c:choose>
+                    <li class="dropdown-footer text-center"><a href="notificationsList">Xem tất cả</a></li>
+                </ul>
                 </div>
             </div>
 

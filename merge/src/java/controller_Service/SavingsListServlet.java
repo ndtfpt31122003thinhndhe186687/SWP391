@@ -4,6 +4,7 @@
  */
 package controller_Service;
 
+import dal.DAO;
 import dal.DBContext;
 import dal.SavingDAO;
 import java.io.IOException;
@@ -20,6 +21,8 @@ import java.util.Map;
 import model.Customer;
 import model.Savings;
 import java.sql.*;
+import model.Notifications;
+
 /**
  *
  * @author Acer Nitro Tiger
@@ -113,7 +116,10 @@ public class SavingsListServlet extends HttpServlet {
             totalSavings += saving.getAmount();
         }
         request.setAttribute("totalSavings", totalSavings);
-
+        //Thong bao
+        DAO dao = new DAO();
+        List<Notifications> listNotify = dao.getAllNotificationsByCustomerId(c.getCustomer_id());
+        request.setAttribute("listNotify", listNotify);
         request.getRequestDispatcher("depositSavingList.jsp").forward(request, response);
     }
 

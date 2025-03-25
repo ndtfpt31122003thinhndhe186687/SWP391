@@ -249,6 +249,37 @@
             .bank {
                 color: black;
             }
+            .news-card {
+                background: white;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s, box-shadow 0.3s;
+                margin-bottom: 2rem;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            .news-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 20px rgba(220, 53, 69, 0.2);
+            }
+
+            .news-card img {
+                height: 200px;
+                object-fit: cover;
+            }
+
+            .news-card .card-body {
+                padding: 1.5rem;
+            }
+
+            .card-text{
+                max-width: 300px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
         </style>
     </head>
     <body>
@@ -266,7 +297,7 @@
                 <div class="navigation_primary-menu">
                     <div class="navigation_primary-item"> <a href="#">Chi tiêu</a> </div>
                     <div class="navigation_primary-item"> <a href="depositSaving">Tiết kiệm</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Vay</a> </div>
+                    <div class="navigation_primary-item"> <a href="loanService">Vay</a> </div>
                     <div class="navigation_primary-item"> <a href="#">Bảo hiểm</a> </div>
                     <div class="navigation_primary-item"> <a href="#">Thông tin mới</a> </div>
                 </div>
@@ -296,9 +327,6 @@
                 </c:if>   
             </div>
         </div>
-
-
-
 
         <div class="service-header text-center py-5 bg-light">
             <div class="container">
@@ -353,8 +381,8 @@
                             contractTerms: contractTerms,
                             minDeposit: minDeposit
                         };
-                        localStorage.setItem("selectedTerm", JSON.stringify(selectedTerm)); 
-                        window.location.href = "sendSavingsApplication"; 
+                        localStorage.setItem("selectedTerm", JSON.stringify(selectedTerm));
+                        window.location.href = "sendSavingsApplication";
                     }
                 </script>
 
@@ -362,23 +390,48 @@
         </div>
         <!-- Bảo Mật & An Toàn -->
         <div class="container mt-5">
-            <h2 class="text-center">🔒 Bảo Mật & An Toàn</h2>
-            <p class="text-center">Tài khoản tiết kiệm của bạn được bảo vệ với công nghệ bảo mật tiên tiến.</p>
+            <h2 class="text-center">🔒 Bảo Mật & An Toàn Khi Gửi Tiết Kiệm</h2>
+            <p class="text-center">Khoản tiền tiết kiệm của bạn được bảo vệ với công nghệ bảo mật hiện đại và chính sách an toàn tối ưu.</p>
             <div class="row text-center">
                 <div class="col-md-4">
                     <i class="bi bi-shield-lock display-4 text-primary"></i>
                     <h5>Xác thực hai lớp</h5>
+                    <p>Bảo vệ tài khoản tiết kiệm với hệ thống xác thực bảo mật kép.</p>
                 </div>
                 <div class="col-md-4">
                     <i class="bi bi-bank display-4 text-success"></i>
-                    <h5>Bảo hiểm ngân hàng</h5>
+                    <h5>Đảm bảo bởi ngân hàng</h5>
+                    <p>Tất cả khoản tiết kiệm đều được bảo hiểm và đảm bảo an toàn tuyệt đối.</p>
                 </div>
                 <div class="col-md-4">
                     <i class="bi bi-file-lock display-4 text-danger"></i>
-                    <h5>Dữ liệu mã hóa</h5>
+                    <h5>Dữ liệu được mã hóa</h5>
+                    <p>Thông tin và giao dịch của bạn được mã hóa để chống gian lận.</p>
                 </div>
             </div>
         </div>
+
+
+        <!-- Tin Tức Tiết Kiệm -->
+        <div class="container mt-5">
+            <h2 class="text-center">📰 Tin Tức Về Tiết Kiệm</h2>
+            <p class="text-center">Cập nhật những thông tin mới nhất về tiết kiệm và tài chính.</p>
+            <div class="row">
+                <c:forEach items="${requestScope.listNews}" var="news">
+                    <div class="col-md-4">
+                        <div class="card news-card">
+                            <img src="imageNews/${news.picture}" class="card-img-top" alt="news image">
+                            <div class="card-body">
+                                <h5 class="card-title">${news.title}</h5>
+                                <p class="card-text">${news.content}</p>
+                                <a href="newsDetail?news_id=${news.news_id}" class="btn btn-outline-danger">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     </body>

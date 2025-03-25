@@ -5,6 +5,7 @@
 
 package controller_Insurance;
 
+import dal.DAO;
 import dal.DAO_Insurance;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Customer;
+import model.Notifications;
 
 /**
  *
@@ -64,6 +66,10 @@ public class CustomerInsuranceListServlet extends HttpServlet {
         Customer c = (Customer) session.getAttribute("account");
         List<Customer> listC = dao.getListInsuranceByCustomerID(c.getCustomer_id());
         request.setAttribute("listC", listC);
+          //Thong bao
+        DAO d = new DAO();
+        List<Notifications> listNotify = d.getAllNotificationsByCustomerId(c.getCustomer_id());
+        request.setAttribute("listNotify", listNotify);
         request.getRequestDispatcher("customerListInsurance.jsp").forward(request, response);
     } 
 

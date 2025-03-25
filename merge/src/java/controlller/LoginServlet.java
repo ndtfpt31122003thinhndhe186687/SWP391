@@ -105,7 +105,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 HttpSession session = request.getSession();
                 session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
+                response.sendRedirect("home");  // Điều hướng đến trang chính sau khi đăng nhập thành công
             }
         }else if("insurance".equals(role)){
             Insurance acc = daoadmin.login_insurance(username, password);
@@ -115,7 +115,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 HttpSession session = request.getSession();
                 session.setAttribute("account", acc);
-                response.sendRedirect("home.jsp");  // Điều hướng đến trang chính sau khi đăng nhập thành công
+                response.sendRedirect("home");  // Điều hướng đến trang chính sau khi đăng nhập thành công
             }
         }
     }

@@ -13,8 +13,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import model.Customer;
 import model.News;
+import model.Notifications;
+import model.Staff;
 
 /**
  *
@@ -61,7 +65,7 @@ public class NewsDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAO_Marketer d=new DAO_Marketer();
+        DAO_Marketer d = new DAO_Marketer();
         String news_raw = request.getParameter("news_id");
         try {
             int news_id = Integer.parseInt(news_raw);
@@ -71,10 +75,27 @@ public class NewsDetailServlet extends HttpServlet {
             News newsDetail = d.getNewsDetail(news_id);
             request.setAttribute("newsDetail", newsDetail);
             //gte related news
-            List<News> listRelatedNews=d.getRelatedNews(news_id);
+            List<News> listRelatedNews = d.getRelatedNews(news_id);
             request.setAttribute("listRelatedNews", listRelatedNews);
-         
+
         } catch (Exception e) {
+        }
+        DAO dao = new DAO();
+        HttpSession session = request.getSession(false);
+        String username = "";
+        if (session != null) {
+            Object account = session.getAttribute("account");
+            if (account != null) {
+                if (account instanceof Staff) {
+                    username = ((Staff) account).getUsername();
+                } else if (account instanceof Customer) {
+                    username = ((Customer) account).getUsername();
+                }
+                List<Notifications> listNotify = dao.getAllNotificationsByCustomerId(username);
+                request.setAttribute("listNotify", listNotify);
+                int countNotify = dao.getTotalNotifyById(username);
+                request.setAttribute("countNotify", countNotify);
+            }
         }
         request.getRequestDispatcher("newsDetail.jsp").forward(request, response);
 

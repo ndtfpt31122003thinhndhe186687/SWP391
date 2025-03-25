@@ -100,9 +100,9 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="index.html">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
-                    Mini Finance
+                    Finbank
                 </a>
             </div>
 
@@ -125,7 +125,7 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-lg-end notifications-block-wrap bg-white text-danger shadow" aria-labelledby="navbarLightDropdownMenuLink">
-                            <small class="text-danger">Notifications</small>
+                            <small class="text-danger">Thông báo</small>
                             <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
                                 <li class="notifications-block border-bottom border-danger pb-2 mb-2">
                                     <a class="dropdown-item d-flex align-items-center text-danger" href="#">
@@ -206,7 +206,7 @@
                                     Hồ sơ
                                 </a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item">
                                 <a class="nav-link active" href="savingList">
                                     <i class="bi-person me-2"></i>
                                     Sổ tiết kiệm 
@@ -218,10 +218,29 @@
                                     Vay 
                                 </a>
                             </li>
+
+                            <c:if test="${sessionScope.account.role_id==6}">
+                                <c:if test="${sessionScope.account.card_type == 'credit' 
+                                              && sessionScope.account.credit_limit == 0 }">
+                                      <li class="nav-item">                                             
+
+                                          <a class="nav-link" href="registerCreditCard">
+                                              <i class="bi-person me-2"></i>
+                                              Đăng Ký Thẻ Tín Dụng
+                                          </a>                          
+                                      </li>
+                                </c:if>  
+                            </c:if>  
                             <li class="nav-item">
-                                <a class="nav-link " href="notificationsList">
+                                <a class="nav-link" href="notificationsList">
                                     <i class="bi-person me-2"></i>
                                     Thông báo 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="CustomerInsuranceList">
+                                    <i class="bi-gear me-2"></i>
+                                    Bảo hiểm
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -255,7 +274,7 @@
                             <c:forEach var="saving" items="${savingsList}">
                                 <div class="savings-item">
                                     <p><strong>Deposit ID:</strong> 
-                                        <a href="#" class="deposit-id" onclick="toggleDetails('${saving.savings_id}')">DS_${saving.savings_id}</a>
+                                        <a href="#" class="deposit-id" onclick="toggleDetails('${saving.savings_id}')">Sổ tiết kiệm thứ ${saving.savings_id}</a>
                                     </p>
                                     <div id="${saving.savings_id}" class="savings-details" style="display: none;">
                                         <div class="savings-table">

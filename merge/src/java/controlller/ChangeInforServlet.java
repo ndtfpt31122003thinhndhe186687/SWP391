@@ -32,6 +32,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import model.Customer;
 import model.NewsCategory;
+import model.Notifications;
 
 /**
  *
@@ -87,6 +88,10 @@ public class ChangeInforServlet extends HttpServlet {
             return;
         }
         request.setAttribute("customer", c);
+          //Thong bao
+        DAO d = new DAO();
+        List<Notifications> listNotify = d.getAllNotificationsByCustomerId(c.getCustomer_id());
+        request.setAttribute("listNotify", listNotify);
         request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
     }
 

@@ -53,43 +53,19 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-lg-end notifications-block-wrap bg-white text-danger shadow" aria-labelledby="navbarLightDropdownMenuLink">
-                            <small class="text-danger">Notifications</small>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-check-circle-fill"></i>
-                                    </div>
-                                    <div>
-                                        <span>Your account has been created successfully.</span>
-                                        <p>12 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-folder"></i>
-                                    </div>
-                                    <div>
-                                        <span>Please check. We have sent a Daily report.</span>
-                                        <p>10 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-question-circle"></i>
-                                    </div>
-                                    <div>
-                                        <span>Account verification failed.</span>
-                                        <p>1 hour ago</p>
-                                    </div>
-                                </a>
-                            </li>
+                            <small class="text-danger">Thông báo</small>
+                            <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
+                                <li class="notifications-block border-bottom border-danger pb-2 mb-2">
+                                    <a class="dropdown-item d-flex align-items-center text-danger" href="#">
+                                        <div class="notifications-icon-wrap bg-danger text-white">
+                                            <i class="notifications-icon bi-check-circle-fill"></i>
+                                        </div>
+                                        <div>
+                                            <span>${n.message}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </c:forEach>
                         </ul>
                     </div>
                 </div>
@@ -131,192 +107,217 @@
                 </ul>
             </div>
 
-</header>
+        </header>
 
-<div class="container-fluid">
-    <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
-            <div class="position-sticky py-4 px-3 sidebar-sticky">
-                <ul class="nav flex-column h-100">
+        <div class="container-fluid">
+            <div class="row">
+                <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
+                    <div class="position-sticky py-4 px-3 sidebar-sticky">
+                        <ul class="nav flex-column h-100">
 
-                    <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="balanceCustomer">
-                            <i class="bi-house-fill me-2"></i>
-                            Tổng quan
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="wallet">
-                            <i class="bi-wallet me-2"></i>
-                            Ví của tôi
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="viewprofile">
-                            <i class="bi-person me-2"></i>
-                            Hồ sơ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="savingList">
-                            <i class="bi-person me-2"></i>
-                            Sổ tiết kiệm 
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="loanList">
-                            <i class="bi-person me-2"></i>
-                            Vay 
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link active" href="changeInfor">
-                            <i class="bi-gear me-2"></i>
-                            Cài đặt
-
-                        </a>
-                    </li>
-                    <li class="nav-item border-top mt-auto pt-2">
-                        <a class="nav-link" href="logout">
-                            <i class="bi-box-arrow-left me-2"></i>
-                            Đăng xuất
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
-            <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Cài đặt</h1>
-            </div>
-
-            <div class="row my-4">
-                <div class="col-lg-7 col-12">
-                    <div class="custom-block bg-white">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" href="changeInfor" id="profile-tab" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Thông tin</a>
+                            <li class="nav-item">
+                                <a class="nav-link " aria-current="page" href="balanceCustomer">
+                                    <i class="bi-house-fill me-2"></i>
+                                    Tổng quan
+                                </a>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Đổi mật khẩu</a>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="wallet">
+                                    <i class="bi-wallet me-2"></i>
+                                    Ví của tôi
+                                </a>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changenotification" id="notification-tab" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Trạng thái</a>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="viewprofile">
+                                    <i class="bi-person me-2"></i>
+                                    Hồ sơ
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="savingList">
+                                    <i class="bi-person me-2"></i>
+                                    Sổ tiết kiệm 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="loanList">
+                                    <i class="bi-person me-2"></i>
+                                    Vay 
+                                </a>
+                            </li>
+
+                           
+                            <c:if test="${sessionScope.account.role_id==6}">
+                                <c:if test="${sessionScope.account.card_type == 'credit' 
+                                              && sessionScope.account.credit_limit == 0 }">
+                                      <li class="nav-item">                                             
+
+                                          <a class="nav-link" href="registerCreditCard">
+                                              <i class="bi-person me-2"></i>
+                                              Đăng Ký Thẻ Tín Dụng
+                                          </a>                          
+                                      </li>
+                                </c:if>  
+                            </c:if>  
+                            <li class="nav-item">
+                                <a class="nav-link" href="notificationsList">
+                                    <i class="bi-person me-2"></i>
+                                    Thông báo 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="CustomerInsuranceList">
+                                    <i class="bi-gear me-2"></i>
+                                    Bảo hiểm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="changeInfor">
+                                    <i class="bi-gear me-2"></i>
+                                    Cài đặt
+
+                                </a>
+                            </li>
+                            <li class="nav-item border-top mt-auto pt-2">
+                                <a class="nav-link" href="logout">
+                                    <i class="bi-box-arrow-left me-2"></i>
+                                    Đăng xuất
+                                </a>
                             </li>
                         </ul>
+                    </div>
+                </nav>
 
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                                <h6 class="mb-4 text-danger"><a href="changepass">Hồ sơ người dùng</a></h6>
+                <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+                    <div class="title-group mb-3">
+                        <h1 class="h2 mb-0 text-danger">Cài đặt</h1>
+                    </div>
 
-                                <form class="custom-form profile-form" action="changeInfor" method="post" enctype="multipart/form-data">
-                                    <input class="form-control" type="text" name="profile-name" placeholder="Name" value="${sessionScope.account.full_name}">
-                                    <input class="form-control" type="email" name="profile-email" placeholder="Email" value="${sessionScope.account.email}">
-                                    <input class="form-control" type="number" name="profile-phone" placeholder="Phone" value="${sessionScope.account.phone_number}">
-                                    <input class="form-control" type="text" name="profile-address" placeholder="Address" value="${sessionScope.account.address}">
-                                    <input class="form-control" type="text" name="dob" placeholder="Date of birth (dd-MM-yyyy)" 
-                                           value="<fmt:formatDate value='${sessionScope.account.date_of_birth}' pattern='dd-MM-yyyy' />">
+                    <div class="row my-4">
+                        <div class="col-lg-7 col-12">
+                            <div class="custom-block bg-white">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" href="changeInfor" id="profile-tab" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Thông tin</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Đổi mật khẩu</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" href="changenotification" id="notification-tab" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Trạng thái</a>
+                                    </li>
+                                </ul>
 
-                                    <div class="input-group mb-1">
-                                        <input type="file" class="form-control" name="profile-image">
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                                        <h6 class="mb-4 text-danger"><a href="changepass">Hồ sơ người dùng</a></h6>
+
+                                        <form class="custom-form profile-form" action="changeInfor" method="post" enctype="multipart/form-data">
+                                            <input class="form-control" type="text" name="profile-name" placeholder="Name" value="${sessionScope.account.full_name}">
+                                            <input class="form-control" type="email" name="profile-email" placeholder="Email" value="${sessionScope.account.email}">
+                                            <input class="form-control" type="number" name="profile-phone" placeholder="Phone" value="${sessionScope.account.phone_number}">
+                                            <input class="form-control" type="text" name="profile-address" placeholder="Address" value="${sessionScope.account.address}">
+                                            <input class="form-control" type="text" name="dob" placeholder="Date of birth (dd-MM-yyyy)" 
+                                                   value="<fmt:formatDate value='${sessionScope.account.date_of_birth}' pattern='dd-MM-yyyy' />">
+
+                                            <div class="input-group mb-1">
+                                                <input type="file" class="form-control" name="profile-image">
+                                            </div>
+                                            <input type="hidden" name="oldImage" value="${sessionScope.account.profile_picture}">
+
+                                            <div class="d-flex">
+                                                <button type="button" class="form-control me-3 text-bg-danger">
+                                                    Cài lại                                      
+                                                </button>
+
+                                                <button type="submit" class="form-control ms-2 text-bg-danger">
+                                                    Thay đổi
+                                                </button>
+                                            </div>
+                                            <c:if test="${not empty errorMessage}">
+                                                <div style="color: red; font-weight: bold;">
+                                                    ${errorMessage}
+                                                </div>
+                                            </c:if>
+                                        </form>
                                     </div>
-                                    <input type="hidden" name="oldImage" value="${sessionScope.account.profile_picture}">
 
-                                    <div class="d-flex">
-                                        <button type="button" class="form-control me-3 text-bg-danger">
-                                            Cài lại                                      
-                                        </button>
 
-                                        <button type="submit" class="form-control ms-2 text-bg-danger">
-                                            Thay đổi
-                                        </button>
+
+                                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
+                                        <h6 class="mb-4 text-danger">Notification</h6>
+
+                                        <form class="custom-form notification-form" action="#" method="post" role="form">
+
+                                            <div class="form-check form-switch d-flex mb-3 ps-0">
+                                                <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
+
+                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
+                                            </div>
+
+                                            <div class="form-check form-switch d-flex mb-3 ps-0">
+                                                <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
+
+                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
+                                            </div>
+
+                                            <div class="d-flex mt-4">
+                                                <button type="button" class="form-control me-3 text-bg-danger">
+                                                    Reset
+                                                </button>
+
+                                                <button type="submit" class="form-control ms-2 text-bg-danger">
+                                                    Update Password
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <c:if test="${not empty errorMessage}">
-                                        <div style="color: red; font-weight: bold;">
-                                            ${errorMessage}
-                                        </div>
-                                    </c:if>
-                                </form>
+                                </div>
                             </div>
+                        </div>
 
+                        <div class="col-lg-5 col-12">
+                            <div class="custom-block custom-block-contact">
+                                <h6 class="mb-4">Vẫn không tìm thấy những gì bạn đang tìm kiếm?</h6>
 
+                                <p>
+                                    <strong>Gọi cho chúng tôi:</strong>
+                                    <a href="tel: 305-240-9671" class="ms-2">
+                                        (60) 
+                                        305-240-9671
+                                    </a>
+                                </p>
 
-                            <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                                <h6 class="mb-4 text-danger">Notification</h6>
-
-                                <form class="custom-form notification-form" action="#" method="post" role="form">
-
-                                    <div class="form-check form-switch d-flex mb-3 ps-0">
-                                        <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
-
-                                        <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                    </div>
-
-                                    <div class="form-check form-switch d-flex mb-3 ps-0">
-                                        <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
-
-                                        <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                    </div>
-
-                                    <div class="d-flex mt-4">
-                                        <button type="button" class="form-control me-3 text-bg-danger">
-                                            Reset
-                                        </button>
-
-                                        <button type="submit" class="form-control ms-2 text-bg-danger">
-                                            Update Password
-                                        </button>
-                                    </div>
-                                </form>
+                                <a href="#" class="btn custom-btn custom-btn-bg-white mt-3">
+                                    Chat with us
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-5 col-12">
-                    <div class="custom-block custom-block-contact">
-                        <h6 class="mb-4">Vẫn không tìm thấy những gì bạn đang tìm kiếm?</h6>
+                    <footer class="site-footer">
+                        <div class="container">
+                            <div class="row">
 
-                        <p>
-                            <strong>Gọi cho chúng tôi:</strong>
-                            <a href="tel: 305-240-9671" class="ms-2">
-                                (60) 
-                                305-240-9671
-                            </a>
-                        </p>
+                                <div class="col-lg-12 col-12">
+                                    <p class="copyright-text">Copyright © Mini Finance 2048 
+                                        - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                                </div>
 
-                        <a href="#" class="btn custom-btn custom-btn-bg-white mt-3">
-                            Chat with us
-                        </a>
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </main>
+
             </div>
+        </div>
 
-            <footer class="site-footer">
-                <div class="container">
-                    <div class="row">
+        <!-- JAVASCRIPT FILES -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/custom.js"></script>
 
-                        <div class="col-lg-12 col-12">
-                            <p class="copyright-text">Copyright © Mini Finance 2048 
-                                - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                        </div>
-
-                    </div>
-                </div>
-            </footer>
-        </main>
-
-    </div>
-</div>
-
-<!-- JAVASCRIPT FILES -->
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/custom.js"></script>
-
-</body>
+    </body>
 </html>

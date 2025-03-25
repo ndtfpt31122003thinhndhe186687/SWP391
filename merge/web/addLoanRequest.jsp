@@ -261,7 +261,7 @@
                 var selectedOption = document.getElementById("service_terms").
                         options[document.getElementById("service_terms").selectedIndex];
                 var minDeposit = parseFloat(selectedOption.getAttribute("data-min-deposit"));
-                
+
                 let rawValue = this.value.replace(/\./g, "");
                 let amountInput = parseFloat(rawValue);
 
@@ -297,7 +297,7 @@
             });
 
             document.getElementById("value_asset").addEventListener("input", function () {
-                let rawValue = this.value.replace(/\./g, "");             
+                let rawValue = this.value.replace(/\./g, "");
                 if (!isNaN(rawValue) && rawValue.length > 0) {
                     this.value = Number(rawValue).toLocaleString("vi-VN");
                 } else {
@@ -320,7 +320,7 @@
 
                 if (amount > 0) {
                     let minAsset = amount / 0.8; // 80% LTV                  
-                    if (assetValue < minAsset ) {
+                    if (assetValue < minAsset) {
                         assetFeedback.style.display = 'block';
                     } else {
                         assetFeedback.style.display = 'none';
@@ -335,20 +335,43 @@
                 const amount = document.getElementById('amount');
                 const amountFeedback = document.getElementById('amount-feedback');
                 const assetFeedback = document.getElementById("asset-feedback");
-                
+
                 if (!amount.checkValidity()) {
                     amountFeedback.style.display = 'block';
                     isValid = false;
                 } else {
                     amountFeedback.style.display = 'none';
                 }
-                
-                if(assetFeedback.style.display === 'block'){
+
+                if (assetFeedback.style.display === 'block') {
                     isValid = false;
                 }
 
                 return isValid;
             }
+
+            window.onload = function () {
+                let selectedTerm = localStorage.getItem("selectedTerm");
+                if (selectedTerm) {
+                    selectedTerm = JSON.parse(selectedTerm);
+
+                    let serviceTermsSelect = document.getElementById("service_terms");
+                    serviceTermsSelect.value = selectedTerm.serviceTermId;
+
+                    serviceTermsSelect.dispatchEvent(new Event("change"));
+
+                    document.getElementById("duration").value = selectedTerm.duration + " tháng";
+                    document.getElementById("interest_rate").value = selectedTerm.interestRate + " %/năm";
+                    document.getElementById("contract_terms").value = selectedTerm.contractTerms +
+                            "\nSố tiền tối thiểu: " + parseFloat(selectedTerm.minPayment).toLocaleString("vi-VN") + " VND";
+                }
+            };
+
+            window.addEventListener("unload", function () {
+                localStorage.removeItem("selectedTerm");
+            });
+
+
 
         </script>
     </body>

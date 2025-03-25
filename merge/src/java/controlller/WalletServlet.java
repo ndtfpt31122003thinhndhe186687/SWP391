@@ -27,6 +27,8 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import dal.DAO;
+import model.Notifications;
 /**
  *
  * @author AD
@@ -174,6 +176,10 @@ public class WalletServlet extends HttpServlet {
         request.setAttribute("transactions", transactions);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
+        //Thong bao
+        DAO d = new DAO();
+        List<Notifications> listNotify = d.getAllNotificationsByCustomerId(c.getCustomer_id());
+        request.setAttribute("listNotify", listNotify);
         request.getRequestDispatcher("wallet.jsp").forward(request, response);
 
     } catch (Exception e) {

@@ -1,16 +1,15 @@
 <%-- 
-    Document   : service
-    Created on : Feb 11, 2025, 12:36:07 AM
-    Author     : DELL
+    Document   : loanService
+    Created on : Mar 17, 2025, 11:23:56 PM
+    Author     : Acer Nitro Tiger
 --%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Dịch vụ ngân hàng</title>
+        <title>Banking Services</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <style>
@@ -234,14 +233,14 @@
             .navigation_primary-actions a:hover {
                 background-color: darkred;
             }
-            
+
             .navigation_secondary-actions a {
                 padding: 8px 16px;
                 border-radius: 5px;
                 font-weight: bold;
                 text-decoration: red;
             }
-                     
+
             .fin {
                 color: red;
             }
@@ -249,9 +248,40 @@
             .bank {
                 color: black;
             }
+            
+             .news-card {
+                background: white;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s, box-shadow 0.3s;
+                margin-bottom: 2rem;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            .news-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 20px rgba(220, 53, 69, 0.2);
+            }
+
+            .news-card img {
+                height: 200px;
+                object-fit: cover;
+            }
+
+            .news-card .card-body {
+                padding: 1.5rem;
+            }
+            
+            .card-text{
+                 max-width: 300px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis; 
+            }
         </style>
     </head>
-    <body>       
+    <body>
         <div class="navigation_primary">
             <div class="navigation_primary-wrapper">
                 <!-- Logo -->
@@ -290,96 +320,113 @@
                     <c:if test="${sessionScope.account.role_id == 5}">
                         <div class="navigation_secondary-actions">
                             <a >Xin chào ${sessionScope.account.insurance_name}</a>                                          
-                        <a href="logout">Đăng xuất</a>
+                            <a href="logout">Đăng xuất</a>
                         </div>
-                        </c:if>
-                    </c:if>   
+                    </c:if>
+                </c:if>   
             </div>
         </div>
 
-        <!-- Header Section -->
-        <div class="service-header">
+        <div class="service-header text-center py-5 bg-light">
             <div class="container">
-                <h1 class="display-4"><i class="bi bi-bank"></i> Dịch vụ ngân hàng</h1>
-                <p class="lead">Khám phá các dịch vụ tài chính của chúng tôi</p>
+                <h1 class="display-4"><i class="bi bi-cash-coin"></i> Dịch Vụ Vay Vốn</h1>
+                <p class="lead">Hỗ trợ tài chính linh hoạt với lãi suất ưu đãi</p>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="container">
-            <!-- Services Grid -->
-            <div class="row g-4">
-                <c:forEach items="${listServices}" var="s">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="images/loan_image.jpg" alt="Vay vốn" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6">
+                    <h2>Lợi ích của Dịch Vụ Vay</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success"></i> Thủ tục đơn giản</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success"></i> Lãi suất cạnh tranh</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success"></i> Khoản vay linh hoạt</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle text-success"></i> Giải ngân nhanh chóng</li>
+                    </ul>
+                    <a href="SendLoanRequest" class="btn btn-primary mt-3"><i class="bi bi-arrow-right-circle"></i> Đăng ký vay ngay</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <h2 class="text-center">📌 Các Gói Vay</h2>
+            <div class="row">
+                <c:forEach items="${requestScope.listL}" var="loan">
                     <div class="col-md-4">
-                        <div class="service-card ${s.status != 'active' ? 'service-inactive' : ''}">
-                            <div class="card-body text-center">
-                                <div class="service-icon">
-                                    <c:choose>
-                                        <c:when test="${s.service_type == 'saving'}">
-                                            <i class="bi bi-piggy-bank"></i>
-                                        </c:when>
-                                        <c:when test="${s.service_type == 'loan'}">
-                                            <i class="bi bi-cash-coin"></i>
-                                        </c:when>
-                                        <c:when test="${s.service_type == 'deposit'}">
-                                            <i class="bi bi-safe"></i>
-                                        </c:when>
-                                        <c:when test="${s.service_type == 'withdrawal'}">
-                                            <i class="bi bi-cash-stack"></i>
-                                        </c:when>
-                                    </c:choose>
-                                </div>
-                                <h3 class="service-title">${s.service_name}</h3>
-                                <div class="service-type-badge ${s.service_type.toLowerCase()}">
-                                    <c:choose>
-                                        <c:when test="${s.service_type == 'saving'}">
-                                            Savings
-                                        </c:when>
-                                        <c:when test="${s.service_type == 'loan'}">
-                                            Loans
-                                        </c:when>
-                                        <c:when test="${s.service_type == 'deposit'}">
-                                            Deposits
-                                        </c:when>
-                                        <c:when test="${s.service_type == 'withdrawal'}">
-                                            Withdrawals
-                                        </c:when>
-                                    </c:choose>
-                                </div>
-                                <p class="service-description">
-                                    ${s.description}
-                                </p>
-                                <div class="service-footer">
-                                    <c:if test="${s.status == 'active'}">
-                                        <a href="Service?action=details&id=${s.service_id}" 
-                                           class="btn btn-learn-more">
-                                            <i class="bi bi-arrow-right-circle"></i> Tìm hiểu thêm 
-                                        </a>
-                                    </c:if>
-                                    <c:if test="${s.status != 'active'}">
-                                        <button class="btn btn-secondary" disabled>
-                                            <i class="bi bi-clock"></i> Hiện không hoạt động
-                                        </button>
-                                    </c:if>
-                                </div>
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">${loan.term_name}</h5>
+                                <p class="card-text">Lãi suất: <strong>${loan.interest_rate}%/năm</strong></p>
+                                <a href="#" class="btn btn-outline-primary" 
+                                   onclick="saveSelectedTerm('${loan.serviceTerm_id}', '${loan.term_name}', '${loan.interest_rate}',
+                                                     '${loan.duration}', '${loan.contract_terms}', '${loan.min_payment}')">                                 
+                                    Chọn gói vay</a>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+                <script>
+                    function saveSelectedTerm(serviceTermId, termName, interestRate, duration, contractTerms, minPayment) {
+                        let selectedTerm = {
+                            serviceTermId: serviceTermId,
+                            termName: termName,
+                            interestRate: interestRate,
+                            duration: duration,
+                            contractTerms: contractTerms,
+                            minPayment: minPayment
+                        };
+                        localStorage.setItem("selectedTerm", JSON.stringify(selectedTerm));
+                        window.location.href = "SendLoanRequest";
+                    }
+                </script>
+            </div>
+        </div>
+        <div class="container mt-5">
+    <h2 class="text-center">🔒 An Toàn & Hỗ Trợ Tài Chính</h2>
+    <p class="text-center">Cam kết bảo mật thông tin và hỗ trợ khách hàng vay vốn hiệu quả.</p>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <i class="bi bi-shield-lock display-4 text-primary"></i>
+            <h5>Bảo mật thông tin</h5>
+            <p>Hệ thống mã hóa tiên tiến giúp bảo vệ dữ liệu cá nhân và tài chính của bạn.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-person-check display-4 text-success"></i>
+            <h5>Tư vấn tận tâm</h5>
+            <p>Đội ngũ chuyên gia sẵn sàng hỗ trợ bạn chọn gói vay phù hợp nhất.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-piggy-bank display-4 text-danger"></i>
+            <h5>Lãi suất hấp dẫn</h5>
+            <p>Cung cấp các gói vay với lãi suất ưu đãi và phương thức thanh toán linh hoạt.</p>
+        </div>
+    </div>
+</div>
+
+
+        <!-- Tin Tức Tiết Kiệm -->
+        <div class="container mt-5">
+            <h2 class="text-center">📰 Tin Tức Về Vay Vốn</h2>
+            <p class="text-center">Luôn cập nhật tin tức mới nhất về tài chính và các gói vay ưu đãi.</p>
+            <div class="row">
+                <c:forEach items="${requestScope.listNews}" var="news">
+                    <div class="col-md-4">
+                        <div class="card news-card">
+                            <img src="imageNews/${news.picture}" class="card-img-top" alt="news image">
+                            <div class="card-body">
+                                <h5 class="card-title">${news.title}</h5>
+                                <p class="card-text">${news.content}</p>
+                                <a href="newsDetail?news_id=${news.news_id}" class="btn btn-outline-danger">Xem chi tiết</a>
                             </div>
                         </div>
                     </div>
                 </c:forEach>
             </div>
-
-            <!-- No Services Message -->
-            <c:if test="${empty listServices}">
-                <div class="alert alert-info text-center">
-                    <i class="bi bi-info-circle"></i> No services available at the moment.
-                </div>
-            </c:if>
         </div>
-        <div class="text-center mt-4">
-                <a href="unsecuredloans.jsp" class="btn btn-primary">Apply for Unsecured Loans</a>
-            </div>
-
-        <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

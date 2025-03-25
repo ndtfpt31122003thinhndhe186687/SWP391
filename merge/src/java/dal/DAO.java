@@ -74,8 +74,6 @@ public class DAO extends DBContext {
         }
     }
 
-    
-
     // Check if a phone number already exists
     public boolean existedPhoneNum(String phoneNum) {
         String sql = "SELECT [customer_id] FROM [dbo].[customer] WHERE phone_number = ?";
@@ -160,7 +158,7 @@ public class DAO extends DBContext {
                 double amount = rs.getDouble("amount");
                 double credit_limit = rs.getDouble("credit_limit");
                 Date date_of_birth = rs.getDate("date_of_birth");
-                Customer acc = new Customer(fullname, email, userName, 
+                Customer acc = new Customer(fullname, email, userName,
                         password, phone_number, address, card_type, status, gender, profile_picture, customer_id, role_id,
                         amount, credit_limit, date_of_birth, created_at);
                 return acc;
@@ -228,15 +226,40 @@ public class DAO extends DBContext {
         }
         return null;
     }
-    
+
     // phong
-        //get notifications by id customer
-    public List<Notifications> getAllNotificationsByCustomerId(int customertId) {
+    //get notifications by  customer
+    public List<Notifications> getAllNotificationsByCustomerId(String userName) {
+        List<Notifications> list = new ArrayList<>();
+        String sql = "select* from notifications n join customer c on n.customer_id=c.customer_id where c.username=? order by n.created_at desc";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, userName);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Notifications n = new Notifications();
+                n.setNotification_id(rs.getInt("notification_id"));
+                n.setCustomer_id(rs.getInt("customer_id"));
+                n.setReference_id(rs.getInt("reference_id"));
+                n.setNotification_type(rs.getString("notification_type"));
+                n.setMessage(rs.getString("message"));
+                n.setCreated_at(rs.getDate("created_at"));
+                n.setIs_read(rs.getString("is_read"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+    
+    //get notifications by id customer
+    public List<Notifications> getAllNotificationsByCustomerId(int id) {
         List<Notifications> list = new ArrayList<>();
         String sql = "select* from notifications where customer_id=? order by created_at desc";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, customertId);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Notifications n = new Notifications();
@@ -256,7 +279,7 @@ public class DAO extends DBContext {
     }
 
     //get all notifi filter
-    public List<Notifications> getNotifyFilter(java.sql.Date start, java.sql.Date end, String notifiType, int customerId) {
+    public List<Notifications> getNotifyFilter(java.sql.Date start, java.sql.Date end, String notifiType, int customerId,String isRead) {
         List<Notifications> list = new ArrayList<>();
         String sql = "SELECT * FROM notifications WHERE 1=1";
         if (customerId > 0) {
@@ -265,6 +288,9 @@ public class DAO extends DBContext {
 
         if (notifiType != null && !notifiType.isEmpty()) {
             sql += " AND notification_type=?";
+        }
+        if(isRead!=null && !isRead.isEmpty()){
+            sql += " AND is_read=?";
         }
         if (start != null && end != null) {
             sql += " AND created_at BETWEEN ? AND ?";
@@ -278,6 +304,9 @@ public class DAO extends DBContext {
             }
             if (notifiType != null && !notifiType.isEmpty()) {
                 ps.setString(index++, notifiType);
+            }
+            if(isRead!=null && !isRead.isEmpty()){
+                ps.setString(index++, isRead);
             }
             if (start != null && end != null) {
                 ps.setDate(index++, start);
@@ -327,11 +356,11 @@ public class DAO extends DBContext {
     //
     public List<Transaction> getAllTransactionsByCustomerId(int customer_id) {
         List<Transaction> transactions = new ArrayList<>();
-        String sql = "SELECT t.*, c.full_name, s.service_name \n" +
-"                FROM transactions t \n" +
-"                INNER JOIN customer c ON t.customer_id = c.customer_id \n" +
-"                INNER JOIN services s ON t.service_id = s.service_id where t.customer_id=?\n" +
-"                ORDER BY t.transaction_date DESC";
+        String sql = "SELECT t.*, c.full_name, s.service_name \n"
+                + "                FROM transactions t \n"
+                + "                INNER JOIN customer c ON t.customer_id = c.customer_id \n"
+                + "                INNER JOIN services s ON t.service_id = s.service_id where t.customer_id=?\n"
+                + "                ORDER BY t.transaction_date DESC";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -353,11 +382,37 @@ public class DAO extends DBContext {
         return transactions;
     }
 
+    //Get total notification by customer ID
+    public int getTotalNotifyById(String username) {
+        String sql = "select count(*) as total from notifications n join customer c on n.customer_id=c.customer_id where c.username=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
 
+    //read notifications
+    public void readNotification(int id) {
+        String sql = "update notifications set is_read='read' where notification_id=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     // Main method for testing
     public static void main(String[] args) {
-       
+        DAO d = new DAO();
     }
 
 }

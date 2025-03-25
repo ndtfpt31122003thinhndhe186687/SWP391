@@ -101,9 +101,9 @@
         <fmt:setLocale value="vi_VN"/>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="index.html">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
-                    Mini Finance
+                    Finbank
                 </a>
             </div>
 
@@ -126,43 +126,19 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-lg-end notifications-block-wrap bg-white text-danger shadow" aria-labelledby="navbarLightDropdownMenuLink">
-                            <small class="text-danger">Notifications</small>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-check-circle-fill"></i>
-                                    </div>
-                                    <div>
-                                        <span>Your account has been created successfully.</span>
-                                        <p>12 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block border-bottom border-danger pb-2 mb-2">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-folder"></i>
-                                    </div>
-                                    <div>
-                                        <span>Please check. We have sent a Daily report.</span>
-                                        <p>10 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="notifications-block">
-                                <a class="dropdown-item d-flex align-items-center text-danger" href="#">
-                                    <div class="notifications-icon-wrap bg-danger text-white">
-                                        <i class="notifications-icon bi-question-circle"></i>
-                                    </div>
-                                    <div>
-                                        <span>Account verification failed.</span>
-                                        <p>1 hour ago</p>
-                                    </div>
-                                </a>
-                            </li>
+                            <small class="text-danger">Thông báo</small>
+                            <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
+                                <li class="notifications-block border-bottom border-danger pb-2 mb-2">
+                                    <a class="dropdown-item d-flex align-items-center text-danger" href="#">
+                                        <div class="notifications-icon-wrap bg-danger text-white">
+                                            <i class="notifications-icon bi-check-circle-fill"></i>
+                                        </div>
+                                        <div>
+                                            <span>${n.message}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </c:forEach>
                         </ul>
 
                     </div>
@@ -238,19 +214,35 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="loanList">
+                                <a class="nav-link active" href="loanList">
                                     <i class="bi-person me-2"></i>
                                     Vay 
                                 </a>
                             </li>
-                            
+                            <c:if test="${sessionScope.account.role_id==6}">
+                                <c:if test="${sessionScope.account.card_type == 'credit' 
+                                              && sessionScope.account.credit_limit == 0 }">
+                                      <li class="nav-item">                                             
+
+                                          <a class="nav-link" href="registerCreditCard">
+                                              <i class="bi-person me-2"></i>
+                                              Đăng Ký Thẻ Tín Dụng
+                                          </a>                          
+                                      </li>
+                                </c:if>  
+                            </c:if>  
                             <li class="nav-item">
-                                <a class="nav-link active" href="CustomerInsuranceList">
+                                <a class="nav-link" href="notificationsList">
+                                    <i class="bi-person me-2"></i>
+                                    Thông báo 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="CustomerInsuranceList">
                                     <i class="bi-gear me-2"></i>
                                     Bảo hiểm
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a class="nav-link " href="changeInfor">
                                     <i class="bi-gear me-2"></i>

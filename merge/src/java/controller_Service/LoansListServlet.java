@@ -4,6 +4,7 @@
  */
 package controller_Service;
 
+import dal.DAO;
 import dal.DAO_Loan;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +18,7 @@ import java.util.List;
 import model.Customer;
 import model.Loan;
 import model.Loan_payments;
+import model.Notifications;
 
 /**
  *
@@ -73,6 +75,10 @@ public class LoansListServlet extends HttpServlet {
         }
         request.setAttribute("loanList", loanList);
         request.setAttribute("totalLoan", totalLoan);
+         //Thong bao
+        DAO dao = new DAO();
+        List<Notifications> listNotify = dao.getAllNotificationsByCustomerId(c.getCustomer_id());
+        request.setAttribute("listNotify", listNotify);
         request.getRequestDispatcher("loanCustomer.jsp").forward(request, response);
     }
 

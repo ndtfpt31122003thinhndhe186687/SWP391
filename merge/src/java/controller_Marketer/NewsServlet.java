@@ -15,6 +15,7 @@ import model.Customer;
 import model.News;
 import model.NewsCategory;
 import model.Notifications;
+import model.Staff;
 
 /**
  *
@@ -86,11 +87,19 @@ public class NewsServlet extends HttpServlet {
         request.setAttribute("category_id", category_id);
         DAO dao = new DAO();
         HttpSession session = request.getSession(false);
+        String username = "";
         if (session != null) {
-            Customer c = (Customer) session.getAttribute("account");
-            if (c != null) {
-                List<Notifications> listNotify = dao.getAllNotificationsByCustomerId(c.getCustomer_id());
+            Object account = session.getAttribute("account");
+            if (account != null) {
+                if (account instanceof Staff) {
+                    username = ((Staff) account).getUsername();
+                } else if (account instanceof Customer) {
+                    username = ((Customer) account).getUsername();
+                }
+                List<Notifications> listNotify = dao.getAllNotificationsByCustomerId(username);
                 request.setAttribute("listNotify", listNotify);
+                int countNotify = dao.getTotalNotifyById(username);
+                request.setAttribute("countNotify", countNotify);
             }
         }
         request.getRequestDispatcher("news.jsp").forward(request, response);

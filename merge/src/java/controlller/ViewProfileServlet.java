@@ -20,6 +20,7 @@ import java.sql.*;
 import model.Asset;
 import dal.DBContext;
 import jakarta.servlet.http.HttpSession;
+import model.Notifications;
 
 /**
  *
@@ -121,6 +122,10 @@ public class ViewProfileServlet extends HttpServlet {
         // Truyền dữ liệu sang viewprofile.jsp
         request.setAttribute("customer", customer);
         request.setAttribute("assets", assets);
+         //Thong bao
+        DAO d = new DAO();
+        List<Notifications> listNotify = d.getAllNotificationsByCustomerId(c.getCustomer_id());
+        request.setAttribute("listNotify", listNotify);
         request.getRequestDispatcher("viewprofile.jsp").forward(request, response);
 
     }

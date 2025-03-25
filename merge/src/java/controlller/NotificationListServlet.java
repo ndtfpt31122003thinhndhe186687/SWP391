@@ -72,6 +72,7 @@ public class NotificationListServlet extends HttpServlet {
         String toDateStr = request.getParameter("toDate");
         String page_raw = request.getParameter("page");
         String pageSize_raw = request.getParameter("pageSize");
+        String status=request.getParameter("status");
 
         Date fromDate = null;
         Date toDate = null;
@@ -110,7 +111,7 @@ public class NotificationListServlet extends HttpServlet {
         if (errorMessage != null) {
             request.setAttribute("errorMessage", errorMessage);
         } else {
-            List<Notifications> listNotify = d.getNotifyFilter(startDate, endDate, type, c.getCustomer_id());
+            List<Notifications> listNotify = d.getNotifyFilter(startDate, endDate, type, c.getCustomer_id(),status);
             int pageSize = (pageSize_raw == null || pageSize_raw.isEmpty()) ? 3 : Integer.parseInt(pageSize_raw);
             int totalNews = listNotify.size();
             int totalPage = totalNews % pageSize == 0 ? (totalNews / pageSize) : ((totalNews / pageSize) + 1);
@@ -127,6 +128,7 @@ public class NotificationListServlet extends HttpServlet {
         List<String> listNotifyType = d.getAllNotificationTypes();
         request.setAttribute("listTypes", listNotifyType);
         request.setAttribute("type", type);
+        request.setAttribute("status", status);
         request.setAttribute("fromDate", fromDateStr);
         request.setAttribute("toDate", toDateStr);
         request.getRequestDispatcher("notificationsList.jsp").forward(request, response);

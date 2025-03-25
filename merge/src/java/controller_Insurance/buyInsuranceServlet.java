@@ -4,6 +4,7 @@
  */
 package controller_Insurance;
 
+import dal.DAO;
 import dal.DAO_Insurance;
 import dal.DAO_Loan;
 import dal.SavingDAO;
@@ -119,13 +120,13 @@ public class buyInsuranceServlet extends HttpServlet {
         String policy_id_raw = request.getParameter("policy_id");
         String coverage_amount_raw = request.getParameter("coverage_amount");
         String premium_amount_raw = request.getParameter("premium_amount");
-        String paid_amount_raw = request.getParameter("paid_amount");       
+        String paid_amount_raw = request.getParameter("paid_amount");
         String payment_frequency = request.getParameter("payment_frequency");
         String duration_raw = request.getParameter("duration");
         String loan_id_raw = request.getParameter("loan_id");
-         coverage_amount_raw = coverage_amount_raw.replaceAll("\\.", "");
+        coverage_amount_raw = coverage_amount_raw.replaceAll("\\.", "");
         premium_amount_raw = premium_amount_raw.replaceAll("\\.", "");
-        paid_amount_raw = paid_amount_raw.replaceAll("\\.", "");             
+        paid_amount_raw = paid_amount_raw.replaceAll("\\.", "");
         int policy_id = 0, duration = 0, insurance_id = 0, loan_id = 0;
         int service_id = 2;
         double coverage_amount = 0, premium_amount = 0, paid_amount = 0;
@@ -134,23 +135,22 @@ public class buyInsuranceServlet extends HttpServlet {
         policy_id = Integer.parseInt(policy_id_raw);
         insurance_id = Integer.parseInt(insurance_id_raw);
         duration = Integer.parseInt(duration_raw);
-        loan_id = Integer.parseInt(loan_id_raw);       
+        loan_id = Integer.parseInt(loan_id_raw);
         coverage_amount = Double.parseDouble(coverage_amount_raw);
-            premium_amount = Double.parseDouble(premium_amount_raw);
+        premium_amount = Double.parseDouble(premium_amount_raw);
         List<Insurance_policy> listP = dao.getPolicyByInsuranceIDAndActive(insurance_id, "active");
-       
+
         try {
-            
+
             paid_amount = Double.parseDouble(paid_amount_raw);
         } catch (NumberFormatException e) {
-             request.setAttribute("error", "Số tiền nộp phải là số!");
+            request.setAttribute("error", "Số tiền nộp phải là số!");
             request.setAttribute("insurance_id", insurance_id);
             request.setAttribute("listLoan", listL);
             request.setAttribute("listPolicy", listP);
             request.getRequestDispatcher("buyInsurance.jsp").forward(request, response);
             return;
         }
-        
 
         if (paid_amount < 0) {
             request.setAttribute("error", "Số tiền nộp phải lớn hoặc bằng 0!");
@@ -258,6 +258,10 @@ public class buyInsuranceServlet extends HttpServlet {
         dao.insertInsuranceTransaction(it);
         daoS.updateAmount(c.getCustomer_id(), paid_amount);
         session.setAttribute("showSuccessModal", true);
+        //thong bao
+        SavingDAO d = new SavingDAO();
+        d.insertNotification(c.getCustomer_id(), contract_id, "Mua bảo hiểm", 
+                "Bạn đã mua bảo hiểm thành công!");
         session.setAttribute("successMessage", "Bạn đã mua bảo hiểm thành công!");
         response.sendRedirect("home.jsp");
 

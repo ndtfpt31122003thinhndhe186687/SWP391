@@ -270,12 +270,12 @@
                         <small>Tổng số tiền vay</small>
                         <h2 class="mt-2 mb-3"><fmt:formatNumber value="${totalLoan}" pattern="#,###"/>VND</h2>
                         <div class="savings-list">
-                            <c:forEach var="loan" items="${list}">
+                            <c:forEach var="loan" items="${list}" varStatus="status">
                                 <div class="savings-item">                              
                                     <div id="${loan.loan_id}" class="savings-details" >
                                         <div class="savings-table">
                                             <div class="row"><span class="label">STT:</span>
-                                                <span class="value">${loan.loan_payments_id}</span>
+                                                <span class="value">${status.count}</span>
                                             </div>
                                             <div class="row"><span class="label">Số tiền gốc:</span>
                                                 <span class="value"><fmt:formatNumber value="${loan.principal_amount}" pattern="#,###" />VND</span>

@@ -5,6 +5,7 @@
 
 package controller_Service;
 
+import dal.DAO_Marketer;
 import dal.SavingDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.News;
 import model.ServiceTerms;
 
 /**
@@ -59,8 +61,11 @@ public class DepositSavingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         SavingDAO d=new SavingDAO();
+        DAO_Marketer dao=new DAO_Marketer();
         List<ServiceTerms> listS=d.getDepositService();
         request.setAttribute("listS", listS);
+        List<News> listN=dao.getAllNewsByCategory(4);
+        request.setAttribute("listNews", listN);
         request.getRequestDispatcher("depositSaving.jsp").forward(request, response);
         
     } 

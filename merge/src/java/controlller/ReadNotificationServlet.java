@@ -12,19 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import javax.management.Notification;
-import model.Customer;
-import model.Notifications;
-import model.Staff;
 
 /**
  *
- * @author DELL
+ * @author Acer Nitro Tiger
  */
-@WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
-public class HomeServlet extends HttpServlet {
+@WebServlet(name = "ReadNotificationServlet", urlPatterns = {"/readNotification"})
+public class ReadNotificationServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +37,10 @@ public class HomeServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeServlet</title>");
+            out.println("<title>Servlet ReadNotificationServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ReadNotificationServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,25 +58,15 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAO d = new DAO();
-        HttpSession session = request.getSession(false);
-        String username="";
-        if (session != null) {
-            Object account = session.getAttribute("account");
-            if (account != null) {
-                if (account instanceof Staff) {
-                  username   = ((Staff) account).getUsername();
-                } else if (account instanceof Customer) {
-                    username = ((Customer) account).getUsername();
-                }
-                List<Notifications> listNotify = d.getAllNotificationsByCustomerId(username);
-                request.setAttribute("listNotify", listNotify);
-                int countNotify = d.getTotalNotifyById(username);
-                request.setAttribute("countNotify", countNotify);
+        String id = request.getParameter("id");
+        if (id != null) {
+            try {
+                DAO d = new DAO();
+                d.readNotification(Integer.parseInt(id));
+            } catch (Exception e) {
             }
         }
-
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        response.sendRedirect("notificationsList");
     }
 
     /**

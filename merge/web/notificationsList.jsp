@@ -112,6 +112,14 @@
                 border: 2px solid #b71c1c;
             }
 
+            .badge-new {
+                background-color: #ffcccc !important; /* Màu đỏ nhạt */
+                color: #990000 !important; /* Màu chữ đỏ đậm hơn */
+                font-weight: normal;
+                padding: 4px 8px;
+                border-radius: 5px;
+                font-size: 12px;
+            }
 
 
         </style>
@@ -120,9 +128,9 @@
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
-                <a class="navbar-brand text-white" href="index.html">
+                <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
-                    Mini Finance
+                    Finbank
                 </a>
             </div>
 
@@ -226,7 +234,7 @@
                                     Hồ sơ
                                 </a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item">
                                 <a class="nav-link" href="savingList">
                                     <i class="bi-person me-2"></i>
                                     Sổ tiết kiệm 
@@ -238,10 +246,29 @@
                                     Vay 
                                 </a>
                             </li>
+
+                            <c:if test="${sessionScope.account.role_id==6}">
+                                <c:if test="${sessionScope.account.card_type == 'credit' 
+                                              && sessionScope.account.credit_limit == 0 }">
+                                      <li class="nav-item">                                             
+
+                                          <a class="nav-link" href="registerCreditCard">
+                                              <i class="bi-person me-2"></i>
+                                              Đăng Ký Thẻ Tín Dụng
+                                          </a>                          
+                                      </li>
+                                </c:if>  
+                            </c:if>  
                             <li class="nav-item">
                                 <a class="nav-link active" href="notificationsList">
                                     <i class="bi-person me-2"></i>
                                     Thông báo 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="CustomerInsuranceList">
+                                    <i class="bi-gear me-2"></i>
+                                    Bảo hiểm
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -274,8 +301,8 @@
             </c:if>
 
             <form action="notificationsList" method="get">
-                <div class="row g-3">
-                    <div class="col-md-4">
+                <div class="row g-3 row-cols-auto align-items-end">
+                    <div class="col">
                         <label for="notificationType" class="form-label">Loại thông báo</label>
                         <select name="type" id="notificationType" class="form-select">
                             <option value="">Tất cả</option>
@@ -285,19 +312,26 @@
                         </select>
                     </div>
 
-
-                    <div class="col-md-3">
-                        <label for="fromDate" class="form-label">Từ ngày (dd-MM-yyyy)</label>
-                        <input type="text"  value="${param.fromDate}" id="fromDate" name="fromDate" class="form-control" placeholder="dd-MM-yyyy">
+                    <div class="col">
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select name="status" id="status" class="form-select">
+                            <option value="">Tất cả</option>
+                            <option value="unread" ${param.status == 'unread' ? 'selected' : ''}>Chưa đọc</option>
+                            <option value="read" ${param.status == 'read' ? 'selected' : ''}>Đã đọc</option>
+                        </select>
                     </div>
 
+                    <div class="col">
+                        <label for="fromDate" class="form-label">Từ ngày</label>
+                        <input type="text" value="${param.fromDate}" id="fromDate" name="fromDate" class="form-control" placeholder="dd-MM-yyyy">
+                    </div>
 
-                    <div class="col-md-3">
-                        <label for="toDate" class="form-label">Đến ngày (dd-MM-yyyy)</label>
+                    <div class="col">
+                        <label for="toDate" class="form-label">Đến ngày</label>
                         <input type="text" value="${param.toDate}" id="toDate" name="toDate" class="form-control" placeholder="dd-MM-yyyy">
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col">
                         <label for="limit" class="form-label">Hiển thị</label>
                         <select name="pageSize" id="limit" class="form-select">
                             <option value="3" ${param.pageSize == '3' ? 'selected' : ''}>3</option>
@@ -306,12 +340,14 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-danger w-100">Lọc</button>
+                    <div class="col">
+                        <button type="submit" class="btn btn-danger mt-4">Lọc</button>
                     </div>
                 </div>
             </form>
-                        
+
+
+
             <div class="row my-4">
                 <div class="col-lg-12 col-12">
                     <div class="custom-block bg-white">
@@ -320,7 +356,12 @@
                             <c:forEach items="${requestScope.listNotify}" var="n">
                                 <div class="notification-item d-flex align-items-center">
                                     <div class="notification-content">
-                                        <span class="notification-message">${n.message}</span>
+                                        <a href="readNotification?id=${n.notification_id}" class="${n.is_read == 'unread' ? 'fw-bold text-danger' : 'text-muted'}">
+                                            <span class="notification-message">${n.message}</span>
+                                        </a>
+                                        <c:if test="${n.is_read == 'unread'}">
+                                            <span class="badge badge-new ms-2">Mới</span>
+                                        </c:if>
                                         <p class="notification-time"><fmt:formatDate value="${n.created_at}" pattern="dd-MM-yyyy"/></p>
                                     </div>
                                 </div>                           
@@ -336,7 +377,7 @@
                             <span class="current-page">${i}</span>
                         </c:when>
                         <c:otherwise>
-                            <a href="notificationsList?type=${type}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}&page=${i}">${i}</a>
+                            <a href="notificationsList?type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}&page=${i}">${i}</a>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>

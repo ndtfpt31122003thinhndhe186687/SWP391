@@ -154,6 +154,12 @@
             overflow: hidden;
         }
 
+        .unread {
+            font-weight: bold;
+            background-color: #f8d7da; /* Màu nền nhạt để nổi bật */
+            color: #721c24; /* Màu chữ đậm hơn */
+            border-left: 5px solid #dc3545; /* Viền trái để dễ nhận biết */
+        }
 
     </style>
 
@@ -277,25 +283,28 @@
                     </c:if>
                 </div>
 
-                <div class="dropdown notification-dropdown" style="margin-left: 15px">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" onclick="checkLogin()">
-                        🔔 Thông báo
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
-                        <li class="dropdown-header">📌 Thông báo gần đây</li>
-                            <c:choose>
-                                <c:when test="${not empty requestScope.listNotify}">
-                                    <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
-                                    <li><a class="dropdown-item" href="#">${n.message}</a></li>
+                    <div class="dropdown notification-dropdown" style="margin-left: 15px">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" onclick="checkLogin()">
+                            🔔 Thông báo
+                            <span class="badge bg-danger notification-count">${requestScope.countNotify}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
+                            <li class="dropdown-header">📌 Thông báo gần đây</li>
+                                <c:choose>
+                                    <c:when test="${not empty requestScope.listNotify}">
+                                        <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
+                                        <li>
+                                            <a class="dropdown-item ${n.is_read=='unread' ? 'unread' : ''}" href="markAsRead?id=${n.notification_id}">${n.message}</a>
+                                        </li>
                                     </c:forEach>
                                 </c:when>
                                 <c:otherwise>
-                                <li class="dropdown-item text-center text-muted">Không có thông báo nào</li>
-                                </c:otherwise>
-                            </c:choose>
-                        <li class="dropdown-footer text-center"><a href="notificationsList">Xem tất cả</a></li>
-                    </ul>
-                </div>
+                                    <li class="dropdown-item text-center text-muted">Không có thông báo nào</li>
+                                    </c:otherwise>
+                                </c:choose>
+                            <li class="dropdown-footer text-center"><a href="notificationsList">Xem tất cả</a></li>
+                        </ul>
+                    </div>
             </div>
 
             <div class="header_right">
