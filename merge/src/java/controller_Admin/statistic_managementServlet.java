@@ -9,20 +9,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author DELL
- */
 @WebServlet(name="statistic_managementServlet", urlPatterns={"/statistic_management"})
-public class statistic_managementServlet extends HttpServlet {
-
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+public class statistic_managementServlet extends HttpServlet {   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -38,16 +26,7 @@ public class statistic_managementServlet extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
         }
-    } 
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    }     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -72,13 +51,13 @@ public class statistic_managementServlet extends HttpServlet {
             request.setAttribute("creditCards", dao.get_Customer_By_Card_Type("credit"));
             request.setAttribute("debitCards", dao.get_Customer_By_Card_Type("debit"));
             
-            
-            request.setAttribute("pendingRequests", dao.get_Requests_By_Status("pending"));
-            request.setAttribute("approvedRequests", dao.get_Requests_By_Status("approved"));
-            request.setAttribute("rejectedRequests", dao.get_Requests_By_Status("rejected"));
+            request.setAttribute("totalLoan", dao.get_total_Loan());
+            request.setAttribute("totalLoanpayment", dao.get_total_Loanpayment_amount());
             
             
-            request.setAttribute("totalFeedback", dao.get_Total_Feedback());
+            request.setAttribute("totalSaving", dao.get_total_Saving());
+            request.setAttribute("totalSavingamount", dao.get_total_Savings_amount());
+            
             
             request.getRequestDispatcher("/statistic management.jsp").forward(request, response);
             
@@ -87,13 +66,7 @@ public class statistic_managementServlet extends HttpServlet {
         }
     }
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {

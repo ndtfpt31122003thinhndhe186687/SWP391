@@ -199,7 +199,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="managerStatisticInsurance?${account.insurance_id}">
+                        <a class="nav-link active" href="managerStatisticInsurance?${account.insurance_id}">
                             <i class="me-2"></i>
                             Quản lý thống kê của bảo hiểm
                         </a>
@@ -208,6 +208,12 @@
                         <a class="nav-link " href="ManagerInsuranceFeedback">
                             <i class="me-2"></i>
                             Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
+                      <li class="nav-item">
+                        <a class="nav-link " href="ManagerStatisticFeedbackInsurance">
+                            <i class="me-2"></i>
+                            Quản lý thống kê phản hồi bảo hiểm
                         </a>
                     </li>
 
@@ -265,7 +271,7 @@
                 <div class="col-md-4">
                     <div class="statistic-card">
                         <div class="statistic-title">Tổng số phản hồi</div>
-                        <div class="statistic-value">0</div>
+                        <div class="statistic-value">${totalFeedback}</div>
                     </div>
                 </div>
             </div>

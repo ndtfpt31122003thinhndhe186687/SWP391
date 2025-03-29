@@ -12,7 +12,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -26,7 +25,7 @@
                 font-size: 32px;
             }
             form {
-                background: #ffcccc;
+                background: white;
                 padding: 30px;
                 border-radius: 15px;
                 display: inline-block;
@@ -67,7 +66,12 @@
                 border-radius: 8px;
                 font-size: 18px;
             }
-
+.policy-description img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
         </style>
     </head>
     <body>
@@ -81,16 +85,18 @@
             <textarea name="policy_name" >${p.policy_name}</textarea><br>
 
             Nhập mô tả  
-            <textarea name="description" id="editor2">${p.description}</textarea><br>
+            <div id="toolbar-container"></div> <!-- Thanh công c? CKEditor -->
+            <div id="editor" class="policy-description" >${p.description}</div>
+            <input type="hidden" name="description" id="hiddenDescription">
 
-           <fmt:formatNumber value="${p.coverage_amount}" pattern="#,##0" var="formattedCoverage"/>
-<fmt:formatNumber value="${p.premium_amount}" pattern="#,##0" var="formattedPremium"/>
+            <fmt:formatNumber value="${p.coverage_amount}" pattern="#,##0" var="formattedCoverage"/>
+            <fmt:formatNumber value="${p.premium_amount}" pattern="#,##0" var="formattedPremium"/>
 
-Nhập số tiền được nhận 
-<input type="text" id="coverage_amount" name="coverage_amount" value="${formattedCoverage}" /><br>
+            Nhập số tiền được nhận 
+            <input type="text" id="coverage_amount" name="coverage_amount" value="${formattedCoverage}" /><br>
 
-Nhập số tiền cần đóng 
-<input type="text" id="premium_amount" name="premium_amount" value="${formattedPremium}" /><br>
+            Nhập số tiền cần đóng 
+            <input type="text" id="premium_amount" name="premium_amount" value="${formattedPremium}" /><br>
 
             Chọn trạng thái
             <select class="filter-dropdown" name="status">
@@ -111,12 +117,75 @@ Nhập số tiền cần đóng
         </form>
 
         <main>
-            <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
-            <script>
+          <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/decoupled-document/ckeditor.js"></script>
+          <script>
+            // Hàm upload ?nh
+            class MyUploadAdapter {
+                constructor(loader) {
+                    this.loader = loader;
+                }
 
-                CKEDITOR.replace('editor2');
-            </script>
-          
+                upload() {
+                    return this.loader.file
+                            .then(file => new Promise((resolve, reject) => {
+                                    const formData = new FormData();
+                                    formData.append('upload', file); // Ph?i trùng v?i request.getPart("upload") trong Servlet
+
+                                    fetch('http://localhost:9999/merge/uploadImgPolicy', {// URL servlet upload
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error(`Lỗii HTTP! Mã trạng thái: ${response.status}`);
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(result => {
+                                                if (!result || !result.url) {
+                                                    return reject('Upload ảnh thấtt bại!');
+                                                }
+                                                resolve({
+                                                    default: result.url  // ???ng d?n ?nh tr? v? t? server
+                                                });
+                                            })
+                                            .catch(error => {
+                                                console.error('Lỗi upload ảnh:', error);
+                                                reject('Không thể upload ảnh!');
+                                            });
+                                }));
+                }
+            }
+
+// Gán plugin upload ?nh vào CKEditor
+            function MyCustomUploadAdapterPlugin(editor) {
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                    return new MyUploadAdapter(loader);
+                };
+            }
+
+// Kh?i t?o CKEditor
+            DecoupledEditor
+                    .create(document.querySelector('#editor'), {
+                        extraPlugins: [MyCustomUploadAdapterPlugin]
+                    })
+                    .then(editor => {
+                        const toolbarContainer = document.querySelector('#toolbar-container');
+                        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+                        // L?u n?i dung vào input ?n khi submit form
+ document.querySelector("form").addEventListener("submit", function () {
+            let descriptionValue = editor.getData().trim();
+            document.getElementById("hiddenDescription").value = descriptionValue;
+        });
+
+                    })
+                    .catch(error => {
+                        console.error('CKEditor lỗi:', error);
+                    });
+
+        </script>
+
 
             <script>
                 function formatCurrencyInput(element) {

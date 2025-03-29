@@ -64,6 +64,10 @@ public class deletePolicyServlet extends HttpServlet {
         dao.deletePolicy(id);
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         String url = "managerPolicy?insurance_id=" + i.getInsurance_id();
         response.sendRedirect(url);
     } 

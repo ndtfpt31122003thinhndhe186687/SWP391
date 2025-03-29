@@ -152,7 +152,7 @@
                                     data-duration="${st.duration}"
                                     data-interest="${st.interest_rate}"
                                     data-terms="${st.contract_terms}"
-                                    data-min-deposit="${st.min_deposit}">
+                                    data-min-deposit="${st.min_payment}">
                                 ${st.term_name}                           
                             </option>
 
@@ -213,7 +213,9 @@
                 </div>
 
                 <button type="submit">Gửi yêu cầu </button>
-            </form>               
+            </form> 
+                <button onclick="location.href='SendLoanReq'">Chuyển sang tín chấp</button>
+
         </div>
         <script>
             document.getElementById("asset_image").addEventListener("change", function (event) {

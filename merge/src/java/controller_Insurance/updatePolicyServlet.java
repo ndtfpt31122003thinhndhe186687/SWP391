@@ -96,6 +96,10 @@ public class updatePolicyServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         String policy_id_raw = request.getParameter("policy_id");
         int policy_id = Integer.parseInt(policy_id_raw);
         Insurance_policy iP = dao.getPolicyById(policy_id);
@@ -110,7 +114,7 @@ public class updatePolicyServlet extends HttpServlet {
         premium_amount_raw = premium_amount_raw.replaceAll("\\.", "");
         double coverage_amount = 0, premium_amount = 0;
         policy_name = policy_name.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
-        description = description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+        
 
         Part filePart = request.getPart("file");
         String fileName = filePart.getSubmittedFileName();
@@ -154,6 +158,7 @@ public class updatePolicyServlet extends HttpServlet {
             request.setAttribute("listPolicy", listP);
             request.getRequestDispatcher("updatePolicy.jsp").forward(request, response);
         }
+        description = description.replaceAll("&nbsp;", "").trim();
         if (description.trim().isEmpty()) {
             request.setAttribute("error", "Mô tả không được để trống");
             request.setAttribute("listStatus", listStatus);

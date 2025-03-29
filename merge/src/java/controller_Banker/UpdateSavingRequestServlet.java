@@ -98,11 +98,11 @@ public class UpdateSavingRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String savingsId = request.getParameter("savings_id");
+         String savingsId = request.getParameter("savings_id");
         String status = request.getParameter("status");
         String customerId = request.getParameter("customer_id");
-        //String savingId_raw = request.getParameter("saving_id");
         DBContext db = new DBContext();
+        SavingDAO sd = new SavingDAO();
 
         // Cập nhật chỉ khi status là approved hoặc rejected
         String sql = "UPDATE savings SET status = ? WHERE savings_id = ? AND status = 'pending'";
@@ -114,7 +114,6 @@ public class UpdateSavingRequestServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SavingDAO sd = new SavingDAO();
         if (status.equals("approved")) {
             Savings sa = sd.getSavingsById(Integer.parseInt(customerId), Integer.parseInt(savingsId));
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -125,9 +124,12 @@ public class UpdateSavingRequestServlet extends HttpServlet {
             String formattedAmount = df.format(sa.getAmount());
             sd.insertNotification(Integer.parseInt(customerId), Integer.parseInt(savingsId),
                     "Gửi tiết kiệm", "Bạn đã gửi thành công số tiền " + formattedAmount + " VNĐ trong kì hạn " + sa.getDuration() + " tháng bắt đầu từ " + formattedDate);
-        }else if (status.equals("rejected")){
-            sd.insertNotification(Integer.parseInt(customerId), Integer.parseInt(savingsId),
-                    "Gửi tiết kiệm","Bạn đã bị hủy đơn. Nếu muốn thực hiện lại giao dịch, hãy điền lại thông tin!");
+            sd.insertTransactionSaving(Integer.parseInt(customerId), 1, sa.getAmount(), "withdrawal");
+        }else if(status.equals("rejected")){
+            Savings sa = sd.getSavingsById(Integer.parseInt(customerId), Integer.parseInt(savingsId));
+            sd.getAmountAgain(Integer.parseInt(customerId), sa.getAmount());
+            sd.insertNotification(Integer.parseInt(customerId), Integer.parseInt(savingsId), "Thông báo khác"
+                    , "Đơn tiết kiệm của bạn đã bị từ chối ! Nếu muốn sử dụng lại dịch vụ hãy điền và gửi lại form.");
         }
         response.sendRedirect("requestsaving");
     }

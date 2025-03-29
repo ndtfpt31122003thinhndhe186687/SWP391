@@ -200,10 +200,10 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Liên hệ</a>
+                                <a class="nav-link" href="news">Tin tức</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="news">Tin tức</a>
+                                <a class="nav-link" href="membership">Khách hàng thân thiết</a>
                             </li>
                         </ul>
                     </div>
@@ -241,41 +241,49 @@
             <div class="user-section">
                 <div class="login">
                     <c:if test="${sessionScope.account != null}">
-                        <c:if test="${sessionScope.account.role_id !=5}">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Xin chào ${sessionScope.account.full_name}
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="balanceCustomer">Xem hồ sơ</a></li>
-                                        <c:if test="${sessionScope.account.role_id==3}">
-                                        <li><a class="dropdown-item" href="marketer/newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Quản lí tin tức</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.account.role_id==1}">
-                                        <li><a class="dropdown-item" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">Quản lý</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.account.role_id==2}">
-                                        <li><a class="dropdown-item" href="customerList">Quản lý</a></li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.account.role_id==4}">
-                                        <li><a class="dropdown-item" href="staff_management">Quản lý</a></li>
-                                        </c:if>
-                                    <li><a class="dropdown-item" href="logout">Đăng xuất</a></li>
-                                </ul>
-                            </li>
-                        </c:if>
-                        <c:if test="${sessionScope.account.role_id == 5}">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Xin chào ${sessionScope.account.insurance_name}
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="managerPolicy">Quản lý bảo hiểm</a></li>
-                                    <li><a class="dropdown-item" href="logout">Đăng xuất</a></li>
-                                </ul>
-                            </li>                          
-                        </c:if>
-                    </c:if>    
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Xin chào 
+                                <c:choose>
+                                    <c:when test="${sessionScope.account.role_id == 5}">
+                                        ${sessionScope.account.insurance_name}
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${sessionScope.account.full_name}
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <c:choose>
+                                    <c:when test="${sessionScope.account.role_id == 6}">
+                                        <li><a class="dropdown-item" href="balanceCustomer">Xem hồ sơ</a></li>
+                                        </c:when>
+                                        <c:otherwise>
+                                        <li><a class="dropdown-item" href="viewInforStaff">Xem hồ sơ</a></li>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                <c:if test="${sessionScope.account.role_id == 3}">
+                                    <li><a class="dropdown-item" href="marketer/newsManage?staff_id=${sessionScope.account.staff_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Quản lí tin tức</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.account.role_id == 1}">
+                                    <li><a class="dropdown-item" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">Quản lý</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.account.role_id == 2}">
+                                    <li><a class="dropdown-item" href="customerList">Quản lý</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.account.role_id == 4}">
+                                    <li><a class="dropdown-item" href="list-insurance-contracts">Quản lí (Accountant)</a></li>                                    </c:if>
+
+                                <c:if test="${sessionScope.account.role_id == 5}">
+                                    <li><a class="dropdown-item" href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">Quản lý bảo hiểm</a></li>
+                                    </c:if>
+
+                                <li><a class="dropdown-item" href="logout">Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    </c:if>
+
                     <c:if test="${sessionScope.account == null}">
                         <li class="nav-item">
                             <a class="nav-link" href="login">Đăng nhập</a>
@@ -283,28 +291,29 @@
                     </c:if>
                 </div>
 
-                    <div class="dropdown notification-dropdown" style="margin-left: 15px">
-                        <button class="btn btn-light dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" onclick="checkLogin()">
-                            🔔 Thông báo
-                            <span class="badge bg-danger notification-count">${requestScope.countNotify}</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
-                            <li class="dropdown-header">📌 Thông báo gần đây</li>
-                                <c:choose>
-                                    <c:when test="${not empty requestScope.listNotify}">
-                                        <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
-                                        <li>
-                                            <a class="dropdown-item ${n.is_read=='unread' ? 'unread' : ''}" href="markAsRead?id=${n.notification_id}">${n.message}</a>
-                                        </li>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    <li class="dropdown-item text-center text-muted">Không có thông báo nào</li>
-                                    </c:otherwise>
-                                </c:choose>
-                            <li class="dropdown-footer text-center"><a href="notificationsList">Xem tất cả</a></li>
-                        </ul>
-                    </div>
+
+                <div class="dropdown notification-dropdown" style="margin-left: 15px">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" onclick="checkLogin()">
+                        🔔 Thông báo
+                        <span class="badge bg-danger notification-count">${requestScope.countNotify}</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationDropdown">
+                        <li class="dropdown-header">📌 Thông báo gần đây</li>
+                            <c:choose>
+                                <c:when test="${not empty requestScope.listNotify}">
+                                    <c:forEach items="${requestScope.listNotify}" var="n" begin="0" end="2">
+                                    <li>
+                                        <a class="dropdown-item ${n.is_read=='unread' ? 'unread' : ''}" href="markAsRead?id=${n.notification_id}">${n.message}</a>
+                                    </li>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="dropdown-item text-center text-muted">Không có thông báo nào</li>
+                                </c:otherwise>
+                            </c:choose>
+                        <li class="dropdown-footer text-center"><a href="notificationsList">Xem tất cả</a></li>
+                    </ul>
+                </div>
             </div>
 
             <div class="header_right">
@@ -319,9 +328,16 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8">
-                        <h1 class="services_taital">WELCOME TO MY BANKING</h1>
-                        <p class="services_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it </p>
-                        <div class="moremore_bt"><a href="#">Read More </a></div>
+                        <h1 class="services_taital">CHÀO MỪNG ĐẾN VỚI NGÂN HÀNG CỦA CHÚNG TÔI!</h1>
+                        <p class="services_text">
+                            💰 Trải nghiệm tài chính hiện đại và an toàn! <br><br>
+                            Chắc hẳn ai cũng từng gặp phải tình trạng bị phân tâm bởi bố cục của một trang web khi đọc nội dung trên đó. 
+                            Chính vì vậy, chúng tôi luôn chú trọng đến việc thiết kế giao diện thân thiện, giúp bạn dễ dàng tiếp cận 
+                            các thông tin quan trọng. <br><br>
+                            Với hệ thống ngân hàng số tiên tiến, bạn có thể thực hiện giao dịch một cách nhanh chóng, bảo mật và thuận tiện. 
+                            Chúng tôi cam kết mang lại cho bạn những dịch vụ tài chính tối ưu, đáp ứng mọi nhu cầu của bạn.
+                        </p>
+                        <div class="moremore_bt"><a href="#">Đọc thêm</a></div>
                     </div>
                     <div class="col-md-4">
                         <div><img src="images/img-1.png" class="image_1"></div>
@@ -329,6 +345,7 @@
                 </div>
             </div>
         </div>
+
         <!--about section end -->
 
         <script type="text/javascript">
@@ -345,46 +362,40 @@
         <!--services section start -->
         <div class="what_we_do_section layout_padding">
             <div class="container">
-                <h1 class="what_taital">WHAT WE DO</h1>
-                <p class="what_text">We provide seamless banking services to help you manage your finances efficiently and securely.</p>
+                <h1 class="what_taital">CHÚNG TÔI LÀM GÌ?</h1>
+                <p class="what_text">Chúng tôi cung cấp các dịch vụ ngân hàng hiện đại giúp bạn quản lý tài chính một cách hiệu quả và an toàn.</p>
                 <div class="what_we_do_section_2">
                     <div class="row">
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="box_main">
-                                <div class="icon_1"><img src="images/icon-1.png"></div>
-                                <h3 class="accounting_text">Accounting</h3>
-                                <p class="lorem_text">Lorem Ipsum is simply dummy text of the printing and</p>
-                                <div class="moremore_bt_1"><a href="#">Read More </a></div>
+                        <c:forEach items="${requestScope.listServices}" var="s">
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="box_main">
+                                    <div class="icon_1">
+                                        <c:choose>
+                                            <c:when test="${s.service_type == 'saving'}">
+                                                <img src="images/th.jpg">
+                                            </c:when>
+                                            <c:when test="${s.service_type == 'loan'}">
+                                                <img src="images/b.jpg">
+                                            </c:when>
+                                            <c:when test="${s.service_type == 'deposit'}">
+                                                <img src="images/c.jpg">
+                                            </c:when>
+                                            <c:when test="${s.service_type == 'withdrawal'}">
+                                                <img src="images/d.png">
+                                            </c:when>
+                                        </c:choose>
+                                    </div>
+                                    <h3 class="accounting_text">${s.service_name}</h3>
+                                    <p class="lorem_text">${s.description}</p>
+                                    <div class="moremore_bt_1"><a href="#">Xem thêm</a></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="box_main">
-                                <div class="icon_1"><img src="images/icon-2.png"></div>
-                                <h3 class="accounting_text">Advisor</h3>
-                                <p class="lorem_text">Lorem Ipsum is simply dummy text of the printing and</p>
-                                <div class="moremore_bt_1"><a href="#">Read More </a></div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="box_main">
-                                <div class="icon_1"><img src="images/icon-3.png"></div>
-                                <h3 class="accounting_text">Investment</h3>
-                                <p class="lorem_text">Lorem Ipsum is simply dummy text of the printing and</p>
-                                <div class="moremore_bt_1"><a href="#">Read More </a></div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="box_main">
-                                <div class="icon_1"><img src="images/icon-4.png"></div>
-                                <h3 class="accounting_text">Financial</h3>
-                                <p class="lorem_text">Lorem Ipsum is simply dummy text of the printing and</p>
-                                <div class="moremore_bt_1"><a href="#">Read More </a></div>
-                            </div>
-                        </div>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
         </div>
+
         <!--services section end -->
 
         <div class="project_section_2 layout_padding">

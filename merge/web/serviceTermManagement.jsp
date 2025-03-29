@@ -1,6 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 
 <html lang="en">
@@ -224,192 +225,172 @@
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="staff_management?status=all&sort=full_name&type=&page=1&pageSize=2">
+                        <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">
                             <i class="me-2"></i>
-                            Staff Management
+                            Quản lý nhân viên
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="service_management">
+                        <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
-                            Service Management
+                            Quản lý dịch vụ
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="transaction_management">
                             <i class=" me-2"></i>
-                            Transaction Management
+                            Quản lý giao dịch
                         </a>
-                    </li>                   
+                    </li>      
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="insurance_management">
+                            <i class=" me-2"></i>
+                            Quản lý bảo hiểm
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="serviceprovider_management">
+                            <i class=" me-2"></i>
+                            Quản lý nhà cung cấp dịch vụ
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link " href="statistic_management">
                             <i class="me-2"></i>
-                            Statistic Management
+                            Thống kê
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active " href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
+                        <a class="nav-link active" href="serviceTermManagement?serviceName=all&sort=all&page=1&pageSize=4">
                             <i class="me-2"></i>
-                            Service Term Management
+                            Quản lý điều khoản
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link " href="feedback_management">
                             <i class="me-2"></i>
-                            Qu?n l� ph?n h?i
+                            Quản lý phản hồi
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
+                        <a class="nav-link " href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
                             <i class="me-2"></i>
-                            Ki?m duy?t tin t?c
+                            Kiểm duyệt tin tức 
                         </a>
                     </li>
+
 
                 </ul>
             </div>
         </nav>
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start" style="margin-top: 50px">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0 text-danger">Quản lý điều khoản dịch vụ</h1>
+    </div>
+    <div class="filter-sort-bar">
+        <label for="filterServiceName">Lọc theo tên dịch vụ:</label> 
+        <select id="filterServiceName" class="filter-dropdown" onchange="filterServiceName()">
+            <option value="all" ${requestScope.serviceName == 'all' ? 'selected' : ''}}>Tất cả</option>        
+            <c:forEach var="s" items="${requestScope.listS}">
+                <option value="${s.service_name}" ${requestScope.serviceName == s.service_name ? 'selected':''}>${s.service_name}</option>        
+            </c:forEach>
+        </select>
 
-        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start" style="margin-top: 50px">
-            <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Service term Management</h1>
-            </div>
-            <div class="filter-sort-bar">
-                <label for="filterServiceName">Filter by service name:</label> 
-                <select id="filterServiceName" class="filter-dropdown" onchange="filterServiceName()">
-                    <option value="all" ${requestScope.serviceName == 'all' ? 'selected' : ''}}>All </option>        
-                    <c:forEach var="s" items="${requestScope.listS}">
-                        <option value="${s.service_name}" ${requestScope.serviceName == s.service_name ? 'selected':''}>${s.service_name}</option>        
-                    </c:forEach>
-                </select>
+        <label for="sort">Sắp xếp theo:</label>
+        <select id="sort" class="filter-dropdown" onchange="filterSort()">
+            <option value="all" ${requestScope.sort == 'all' ? 'selected' : ''}>Tất cả</option>        
+            <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Tên điều khoản dịch vụ</option>
+            <option value="duration" ${requestScope.sort == 'duration' ? 'selected' : ''}>Thời gian tối đa (tháng)</option>
+        </select>
 
-                <label for="sort">Sort by:</label>
-                <select id="sort" class="filter-dropdown" onchange="filterSort()">
-                    <option value="all" ${requestScope.sort == 'all' ? 'selected' : ''}>All</option>        
-                    <option value="term_name" ${requestScope.sort == 'term_name' ? 'selected' : ''}>Service term name</option>
-                    <option value="duration" ${requestScope.sort == 'duration' ? 'selected' : ''}>Max Term Months</option>
-                </select>
+        <label for="pageSize">Số mục trên mỗi trang:</label>
+        <select id="pageSize" class="filter-dropdown" onchange="changePageSize()">
+            <option value="4" ${requestScope.pageSize == 4 ? 'selected' : ''}>4</option>
+            <option value="8" ${requestScope.pageSize == 8 ? 'selected' : ''}>8</option>
+            <option value="12" ${requestScope.pageSize == 12 ? 'selected' : ''}>12</option>
+        </select>
+    </div>    
+    <div class="mt-3">
+        <a class="btn btn-success mb-2" href="addServiceTerm">Thêm mới</a>
+        <table class="news-table">
+            <thead>
+                <tr>
+                    <th>Tên dịch vụ</th>
+                    <th>Tên điều khoản</th>
+                    <th>Mô tả</th>
+                    <th>Điều khoản hợp đồng</th>
+                    <th>Thời gian tối đa (tháng)</th>
+                    <th>Phạt thanh toán sớm</th>
+                    <th>Lãi suất</th>
+                    <th>Thanh toán tối thiểu</th>
+                    <th>Tiền gửi tối thiểu</th>          
+                    <th>Ngày tạo</th>                            
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${requestScope.listSt}" var="s">
+                    <tr>
+                        <td>${s.service_name}</td>
+                        <td>${s.term_name}</td>
+                        <td>${s.description}</td>
+                        <td class="news-content">${s.contract_terms}</td>
+                        <td>${s.duration}</td>
+                        <td>${s.early_payment_penalty}</td>
+                        <td>${s.interest_rate}</td>
+                        <td>${s.min_payment}</td>
+                        <td>${s.min_deposit}</td>
+                        <td>
+                            <fmt:formatDate value="${s.created_at}" pattern="dd-MM-yyyy" />
+                        </td>                                
+                        <td>${s.status}</td>
+                        <td>
+                            <a onclick="doDelete('${s.serviceTerm_id}')" class="btn btn-danger">Xóa</a>
+                            <a href="updateServiceTerm?serviceTerm_id=${s.serviceTerm_id}" class="btn btn-success">Cập nhật</a> 
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <c:if test="${not empty param.searchName}">
+                <c:forEach begin="1" end="${totalPage}" var="i">
+                    <c:choose>
+                        <c:when test="${i == page}">
+                            <span class="current-page">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="searchServiceTerm?searchName=${param.searchName}&page=${i}&pageSize=${pageSize}">${i}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </c:if>
+            <c:if test="${empty param.searchName}">      
+                <c:forEach begin="1" end="${totalPage}" var="i">
+                    <c:choose>
+                        <c:when test="${i == page}">
+                            <span class="current-page">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="serviceTermManagement?serviceName=${requestScope.serviceName}&sort=${requestScope.sort}&page=${i}&pageSize=${pageSize}">${i}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </c:if>
+        </div>
+    </div>
+</main>
 
-                <label for="pageSize">Items per page:</label>
-                <select id="pageSize" class="filter-dropdown" onchange="changePageSize()">
-                    <option value="4" ${requestScope.pageSize == 4 ? 'selected' : ''}>4</option>
-                    <option value="8" ${requestScope.pageSize == 8 ? 'selected' : ''}>8</option>
-                    <option value="12" ${requestScope.pageSize == 12 ? 'selected' : ''}>12</option>
-                </select>
-            </div>    
-            <div class="mt-3">
-                <a class="btn btn-success mb-2" href="addServiceTerm">Add New</a>
-                <table class="news-table">
-                    <thead>
-                        <tr>
-                            <th>Service name</th>
-                            <th>Service term name</th>
-                            <th>Description</th>
-                            <th>Contract terms</th>
-                            <th>Max term months</th>
-                            <th>Early payment penalty</th>
-                            <th>Interest rate</th>
-                            <th>Min Payment</th>
-                            <th>Min Deposit</th>          
-                            <th>Created at</th>                           
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${requestScope.listSt}" var="s">
-                            <tr>
-                                <td>${s.service_name}</td>
-                                <td>${s.term_name}</td>
-                                <td>${s.description}</td>
-                                <td class="news-content">${s.contract_terms}</td>
-                                <td>${s.duration}</td>
-                                <td>${s.early_payment_penalty}</td>
-                                <td>${s.interest_rate}</td>
-                                <td>${s.min_payment}</td>
-                                <td>${s.min_deposit}</td>
-                                <td>
-                                    <fmt:formatDate value="${s.created_at}" pattern="dd-MM-yyyy" />
-                                </td>                                
-                                <td>${s.status}</td>
-                                <td>
-                                    <a onclick="doDelete('${s.serviceTerm_id}')" class="btn btn-danger">Delete</a>
-                                    <a href="updateServiceTerm?serviceTerm_id=${s.serviceTerm_id}" class="btn btn-success">Update</a> 
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-
-                </table>
-                <div class="pagination">
-                    <c:if test="${not empty param.searchName}">
-                        <c:forEach begin="1" end="${totalPage}" var="i">
-                            <c:choose>
-                                <c:when test="${i == page}">
-                                    <span class="current-page">${i}</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="searchServiceTerm?searchName=${param.searchName}&page=${i}&pageSize=${pageSize}">${i}</a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </c:if>
-                    <c:if test="${empty param.searchName}">      
-                        <c:forEach begin="1" end="${totalPage}" var="i">
-                            <c:choose>
-                                <c:when test="${i == page}">
-                                    <span class="current-page">${i}</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="serviceTermManagement?serviceName=${requestScope.serviceName}&sort=${requestScope.sort}&page=${i}&pageSize=${pageSize}">${i}</a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </c:if>
-
-                </div>
-                <script type="text/javascript">
-                    function doDelete(id) {
-                        if (confirm("Are you sure to delete this term ?")) {
-                            window.location = "deleteServiceTerm?serviceTerm_id=" + id;
-                        }
-                    }
-
-                    function filterServiceName() {
-                        var serviceName = document.getElementById("filterServiceName").value;
-                        var sort = document.getElementById("sort").value;
-                        var pageSize = document.getElementById("pageSize").value;
-                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
-                    }
-
-                    function filterSort() {
-                        var sort = document.getElementById("sort").value;
-                        var serviceName = document.getElementById("filterServiceName").value;
-                        var pageSize = document.getElementById("pageSize").value;
-                        window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
-                    }
-
-                    function changePageSize() {
-                        var pageSize = document.getElementById("pageSize").value;
-                        var serviceName = document.getElementById("filterServiceName").value;
-                        var sort = document.getElementById("sort").value;
-                        var searchInput = document.getElementById("searchName");
-                        var searchName = searchInput ? searchInput.value.trim().replace(/\s+/g, " ") : "";
-                        if (searchName !== "") {
-                            window.location.href = "searchServiceTerm?searchName=" + encodeURIComponent(searchName) + "&page=1&pageSize=" + pageSize;
-                        } else {
-                            window.location.href = "serviceTermManagement?serviceName=" + serviceName + "&sort=" + sort + "&page=1" + "&pageSize=" + pageSize;
-                        }
-                    }
-                </script>
-            </div>
-        </main>
+       
     </div>
 </div>
 

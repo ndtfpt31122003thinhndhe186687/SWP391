@@ -263,12 +263,12 @@
                 </div>
 
                 <!-- Menu -->
-                <div class="navigation_primary-menu">
-                    <div class="navigation_primary-item"> <a href="#">Chi tiêu</a> </div>
+               <div class="navigation_primary-menu">
+                    <div class="navigation_primary-item"> <a href="home">Trang chủ</a> </div>
                     <div class="navigation_primary-item"> <a href="depositSaving">Tiết kiệm</a> </div>
                     <div class="navigation_primary-item"> <a href="loanService">Vay</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Bảo hiểm</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Thông tin mới</a> </div>
+                    <div class="navigation_primary-item"> <a href="Insurance">Bảo hiểm</a> </div>
+                    <div class="navigation_primary-item"> <a href="news">Tin tức</a> </div>
                 </div>
 
                 <!-- Nút đăng nhập -->
@@ -375,9 +375,7 @@
                 </div>
             </c:if>
         </div>
-        <div class="text-center mt-4">
-                <a href="unsecuredloans.jsp" class="btn btn-primary">Apply for Unsecured Loans</a>
-            </div>
+       
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

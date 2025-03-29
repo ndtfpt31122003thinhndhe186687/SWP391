@@ -66,6 +66,10 @@ public class ManagerInsuranceFeedbackServlet extends HttpServlet {
         List<Insurance_feedback> listP = new ArrayList<>();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         listP = dao.getAllPolicyIDByFeedback(i.getInsurance_id());
         listF = dao.getListFeedbackByInsuranceID(i.getInsurance_id());
         request.setAttribute("listF", listF);

@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import model.Customer;
 import model.Loan;
 import model.ServiceTerms;
 
@@ -73,6 +75,13 @@ public class SendLoanRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAO_Loan d = new DAO_Loan();
+        HttpSession session = request.getSession();
+        Customer c = (Customer) session.getAttribute("account");
+        if (c == null) {
+            // Chưa đăng nhập, chuyển hướng đến trang login
+            response.sendRedirect("login");
+            return;
+        }
         List<ServiceTerms> list = d.getLoanServiceTerms(); // doi ten
         request.setAttribute("listS", list);
         request.getRequestDispatcher("addLoanRequest.jsp").forward(request, response);
@@ -102,6 +111,7 @@ public class SendLoanRequestServlet extends HttpServlet {
         double amount, value_asset;
         int duration, serviceTerm_id, customer_id;
         String msg="";
+        HttpSession session=request.getSession();
         try {
             customer_id = Integer.parseInt(customer_id_raw);
             amount = Double.parseDouble(amount_raw.replace(".", ""));
@@ -130,13 +140,12 @@ public class SendLoanRequestServlet extends HttpServlet {
                     end_date, fileName, notes, loan_type, value_asset, "pending");
             int id=d.InsertLoanRequest(loan);
             if (id>0){
-            msg="Gửi đơn vay thành công !!!";
+            msg="Gửi đơn vay thành công ! Hãy chờ bên phía ngân hàng kiểm duyệt đơn của bạn.";
             sd.insertNotification(customer_id, id, "Vay", msg);
-            request.setAttribute("message", msg);     
+            session.setAttribute("successMessage", msg);     
             }
-            List<ServiceTerms> list = d.getLoanServiceTerms(); // doi ten
-            request.setAttribute("listS", list);
-            request.getRequestDispatcher("addLoanRequest.jsp").forward(request, response);
+            response.sendRedirect("home");
+           
         } catch (NumberFormatException e) {
             System.out.println(e);
         }

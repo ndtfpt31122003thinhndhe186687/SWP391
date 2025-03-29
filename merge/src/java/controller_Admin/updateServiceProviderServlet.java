@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Insurance;
 import model.ServiceProvider;
 
 /**
@@ -66,7 +67,47 @@ public class updateServiceProviderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        DAO_Admin dao = new DAO_Admin();
+        String id_raw = request.getParameter("id");
+        String serviceprovider_name = request.getParameter("serviceprovider_name");
+        String email = request.getParameter("email");
+        String username = request.getParameter("username");
+        String phone_number = request.getParameter("phone_number");
+        String address = request.getParameter("address");
+        String servicetype = request.getParameter("servicetype");
+        String status = request.getParameter("status");
+        int id;
+        try {
+            id  = Integer.parseInt(id_raw);
+            ServiceProvider Username = dao.getServiceProviderByUserName(username);
+            ServiceProvider Email = dao.getServiceProviderByEmail(email);
+            ServiceProvider Phone = dao.getServiceProviderByPhone(phone_number);
+            ServiceProvider Name = dao.getServiceProviderByName(serviceprovider_name);
+            ServiceProvider serviceprovider = dao.getServiceProviderById(id);
+            if (Username != null && !serviceprovider.getUsername().equals(username)) {
+                request.setAttribute("serviceprovider", serviceprovider);
+                request.setAttribute("error", "Username " + username + " existed!!");
+                request.getRequestDispatcher("updateServiceProvider.jsp").forward(request, response);
+            } else if (Email != null && !serviceprovider.getEmail().equals(email)) {
+                request.setAttribute("serviceprovider", serviceprovider);
+                request.setAttribute("error", "Emai " + email + " existed!!");
+                request.getRequestDispatcher("updateServiceProvider.jsp").forward(request, response);
+            } else if (Phone != null && !serviceprovider.getPhone_number().equals(phone_number)) {
+                request.setAttribute("serviceprovider", serviceprovider);
+                request.setAttribute("error", "Phone number " + phone_number + " existed!!");
+                request.getRequestDispatcher("updateServiceProvider.jsp").forward(request, response);
+            } else if (Name != null && !serviceprovider.getName().equals(serviceprovider_name)) {
+                request.setAttribute("serviceprovider", serviceprovider);
+                request.setAttribute("error", "Service provider name " + serviceprovider_name + " existed!!");
+                request.getRequestDispatcher("updateServiceProvider.jsp").forward(request, response);
+            } else {
+                ServiceProvider s = new ServiceProvider(id, serviceprovider_name, 
+                        username, servicetype, email, phone_number, address, status);
+                dao.updateServiceProvider(s);
+                response.sendRedirect("serviceprovider_management");
+            }
+        } catch (Exception e) {
+        }
     }
 
     /** 

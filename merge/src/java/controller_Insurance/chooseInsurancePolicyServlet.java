@@ -63,6 +63,10 @@ public class chooseInsurancePolicyServlet extends HttpServlet {
          DAO_Insurance d = new DAO_Insurance();       
         HttpSession session = request.getSession();
         Customer customer = (Customer) session.getAttribute("account");
+        if (customer == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         String insurance_id_raw = request.getParameter("insurance_id");
         int insurace_id = Integer.parseInt(insurance_id_raw);
         List<Insurance_contract_detail> cd = d.getInsuranceContractDetailByCustomerIDAndInsuranceID(customer.getCustomer_id(), insurace_id);

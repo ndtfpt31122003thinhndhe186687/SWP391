@@ -1,6 +1,7 @@
 <!doctype html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -47,6 +48,7 @@
         </style>
     </head>
     <body>
+        <fmt:setLocale value="vi_VN"/>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="">
@@ -110,7 +112,7 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <li class="nav-item">
+                   <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Quản lý nhân viên
@@ -118,26 +120,26 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link " href="service_management?type=services">
+                        <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
                             Quản lý dịch vụ
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link " href="transaction_management">
+                        <a class="nav-link" href="transaction_management">
                             <i class=" me-2"></i>
                             Quản lý giao dịch
                         </a>
-                    </li>    
-
+                    </li>      
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="insurance_management">
                             <i class=" me-2"></i>
                             Quản lý bảo hiểm
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
                         <a class="nav-link " href="serviceprovider_management">
                             <i class=" me-2"></i>
@@ -146,7 +148,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active " href="statistic_management">
+                        <a class="nav-link active" href="statistic_management">
                             <i class="me-2"></i>
                             Thống kê
                         </a>
@@ -165,13 +167,13 @@
                             Quản lý phản hồi
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
                             <i class="me-2"></i>
                             Kiểm duyệt tin tức 
                         </a>
-                    </li>    
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -262,31 +264,52 @@
                 </div>
             </div>
 
-            <!-- Request Status Distribution -->
+
+            <!-- Gender Distribution -->
             <div class="row statistic-section">
-                <div class="col-12">
+                <div class="col-md-6">
                     <div class="statistic-card">
-                        <div class="statistic-title">Trạng thái yêu cầu:</div>
+                        <div class="statistic-title">Vay</div>
                         <table class="table">
                             <tr>
-                                <td>Yêu cầu đang chờ xử lý:</td>
-                                <td class="statistic-value">${pendingRequests}</td>
+                                <td>Số khoản vay:</td>
+                                <td class="statistic-value">${totalLoan}</td>
+                            </tr>                           
+                            <tr>
+                                <td>Số tiền thu từ nợ:</td>
+                                <td class="statistic-value">                                   
+                                    <fmt:formatNumber value="${totalLoanpayment}" pattern="#,###" /> VND  
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Card Type Distribution -->
+                <div class="col-md-6">
+                    <div class="statistic-card">
+                        <div class="statistic-title">Tiết kiệm</div>
+                        <table class="table">
+                            <tr>
+                                <td>Số tiền gửi tiết kiệm:</td>
+                                <td class="statistic-value">${totalSaving}</td>
                             </tr>
                             <tr>
-                                <td>Yêu cầu đồng ý:</td>
-                                <td class="statistic-value">${approvedRequests}</td>
-                            </tr>
-                            <tr>
-                                <td>Yêu cầu từ chối:</td>
-                                <td class="statistic-value">${rejectedRequests}</td>
+                                <td>Số tiền gửi tiết kiệm:</td>
+                                <td class="statistic-value">
+                                    <fmt:formatNumber value="${totalSavingamount}" pattern="#,###" /> VND  
+                                </td>
                             </tr>
                         </table>
                     </div>
                 </div>
             </div>
-        </main>
+    </div>                
 
-    </div>
+
+</main>
+
+</div>
 </div>
 
 <!-- JAVASCRIPT FILES -->

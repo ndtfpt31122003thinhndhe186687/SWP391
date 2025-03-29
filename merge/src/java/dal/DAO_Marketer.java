@@ -281,53 +281,51 @@ public class DAO_Marketer extends DBContext {
         return list;
     }
 
-    //view new statistic
-    public List<NewsView> countNews() {
+    //News statistic by staff_id
+    public List<NewsView> countNewsByStaff(int staffId) {
         List<NewsView> list = new ArrayList<>();
-        String sql = "select n.title,nv.news_id,count(*) as newsAmount from news_views nv join news n on n.news_id=nv.news_id \n"
-                + "group by n.title,nv.news_id ";
-        try {
-            PreparedStatement st = con.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
+        String sql = "SELECT n.title, COUNT(nv.id) AS newsAmount "
+                + "FROM news n LEFT JOIN news_views nv ON n.news_id = nv.news_id "
+                + "WHERE n.staff_id = ? "
+                + "GROUP BY n.title";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                NewsView n = new NewsView();
-                n.setNews_id(rs.getInt("news_id"));
-                n.setTitle(rs.getString("title"));
-                n.setNewsAmount(rs.getInt("newsAmount"));
-                list.add(n);
+                list.add(new NewsView(rs.getString("title"), rs.getInt("newsAmount")));
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return list;
     }
 
-    //Total article
-    public int totalArticle() {
-        String sql = "select count(*) as totalArticle from news where status='approved'";
-        try {
-            PreparedStatement st = con.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                return rs.getInt("totalArticle");
+    public int totalArticleByStaff(int staffId) {
+        String sql = "SELECT COUNT(*) FROM news WHERE staff_id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return 0;
     }
 
-    //Total views
-    public int totalView() {
-        String sql = "select count(*) as totalView from news_views";
-        try {
-            PreparedStatement st = con.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                return rs.getInt("totalView");
+    public int totalViewByStaff(int staffId) {
+        String sql = "SELECT COUNT(nv.id) "
+                + "FROM news_views nv JOIN news n ON nv.news_id = n.news_id "
+                + "WHERE n.staff_id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return 0;
     }
@@ -351,7 +349,7 @@ public class DAO_Marketer extends DBContext {
         if (sortBy != null && !sortBy.equals("all") && !sortBy.isEmpty()) {
             sql += " ORDER BY n.created_at DESC, n." + sortBy;
         } else {
-            sql += " ORDER BY n.created_at DESC"; 
+            sql += " ORDER BY n.created_at DESC";
         }
         try {
             PreparedStatement st = con.prepareStatement(sql);
@@ -452,15 +450,14 @@ public class DAO_Marketer extends DBContext {
         }
         return arr;
     }
-    
+
     //Thống kê số lượng bài viết theo tháng
     public int getNewsCountByMonth() {
-        String query = "SELECT COUNT(news_id) AS total_news " +
-                       "FROM news GROUP BY YEAR(created_at), MONTH(created_at) " +
-                       "ORDER BY year DESC, month DESC";
+        String query = "SELECT COUNT(news_id) AS total_news "
+                + "FROM news GROUP BY YEAR(created_at), MONTH(created_at) "
+                + "ORDER BY year DESC, month DESC";
         try (
-             PreparedStatement ps = con.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = con.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 return rs.getInt("total_news");
@@ -470,15 +467,15 @@ public class DAO_Marketer extends DBContext {
         }
         return 0;
     }
-    
+
     //Thống kê số lượng bài viết theo danh mục
-    public int getNewsAmountByCategory(int category_id){
-        String sql="select count(*) as total from news where category_id=? and status='approved'";
+    public int getNewsAmountByCategory(int category_id) {
+        String sql = "select count(*) as total from news where category_id=? and status='approved'";
         try {
-            PreparedStatement ps=con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, category_id);
-            ResultSet rs=ps.executeQuery();
-            while(rs.next()){
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 return rs.getInt("total");
             }
         } catch (Exception e) {
@@ -487,7 +484,21 @@ public class DAO_Marketer extends DBContext {
         return 0;
     }
 
-   
+    public boolean isTitleExist(String title) {
+        String sql = "SELECT COUNT(*) FROM news WHERE title = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, title);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu số lượng > 0, tiêu đề đã tồn tại
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         DAO_Marketer d = new DAO_Marketer();
         List<News> list = d.getAllNewsByCategory(1);

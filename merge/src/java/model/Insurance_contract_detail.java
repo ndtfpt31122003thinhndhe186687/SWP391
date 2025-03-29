@@ -11,10 +11,10 @@ import java.util.Date;
  * @author Windows
  */
 public class Insurance_contract_detail {
-    public int contract_id,insurance_id,customer_id,service_id,policy_id, duration;
+    public int contract_id,insurance_id,customer_id,service_id,policy_id, duration,loan_id;
     public double CoverageAmount,PremiumAmount,PaidAmount;
     public Date start_date, end_date;
-    public String payment_frequency,customer_name,service_name,policy_name;
+    public String payment_frequency,customer_name,service_name,policy_name,notes,contract_name;
 
     public Insurance_contract_detail() {
     }
@@ -56,12 +56,47 @@ public class Insurance_contract_detail {
         this.duration = duration;
     }
 
-    public Insurance_contract_detail(int contract_id, int insurance_id, int customer_id, int policy_id, String policy_name) {
+    public Insurance_contract_detail(int contract_id, int insurance_id, int customer_id, int policy_id, String policy_name, String contract_name) {
         this.contract_id = contract_id;
         this.insurance_id = insurance_id;
         this.customer_id = customer_id;
         this.policy_id = policy_id;
         this.policy_name = policy_name;
+        this.contract_name = contract_name;
+
+    }
+        public Insurance_contract_detail(int contract_id, int insurance_id, int customer_id, int policy_id, String policy_name, int loan_id, String notes) {
+        this.contract_id = contract_id;
+        this.insurance_id = insurance_id;
+        this.customer_id = customer_id;
+        this.policy_id = policy_id;
+        this.policy_name = policy_name;
+        this.loan_id = loan_id;
+        this.notes = notes;
+    }
+
+    public String getContract_name() {
+        return contract_name;
+    }
+
+    public void setContract_name(String contract_name) {
+        this.contract_name = contract_name;
+    }
+
+    public int getLoan_id() {
+        return loan_id;
+    }
+
+    public void setLoan_id(int loan_id) {
+        this.loan_id = loan_id;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
     
 

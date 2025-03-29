@@ -64,6 +64,10 @@ public class ManagerInsuranceContractServlet extends HttpServlet {
         DAO_Insurance d = new DAO_Insurance();
               HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         List<Insurance_contract> listC = d.getAllInsuranceContractByInsuranceId(i.getInsurance_id());        
         request.setAttribute("listC", listC);
         request.getRequestDispatcher("managerInsuranceContract.jsp").forward(request, response);

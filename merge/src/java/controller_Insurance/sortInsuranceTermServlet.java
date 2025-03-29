@@ -69,6 +69,10 @@ public class sortInsuranceTermServlet extends HttpServlet {
         
         HttpSession sesstion = request.getSession();
         Insurance i = (Insurance) sesstion.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         List<Insurance_policy> listP = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active"); 
         String sort = request.getParameter("sortInsuranceTerm");
         String status = request.getParameter("status");

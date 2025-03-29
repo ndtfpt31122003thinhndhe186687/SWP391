@@ -24,19 +24,20 @@ import model.Insurance;
  *
  * @author Windows
  */
-@WebFilter(filterName = "InsuranceCustomerFilter", urlPatterns = {"/managerInsuranceCustomer"})
+@WebFilter(filterName = "InsuranceCustomerFilter", urlPatterns = {"/managerInsuranceCustomer","/paginationInsuranceCustomer",
+"/searchCustomerInsurance","/filterInsuranceCustomer"})
 public class ManagerInsuranceCustomerFilter implements Filter {
-    
+
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-    
+
     public ManagerInsuranceCustomerFilter() {
-    }    
-    
+    }
+
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -63,8 +64,8 @@ public class ManagerInsuranceCustomerFilter implements Filter {
 	    log(buf.toString());
 	}
          */
-    }    
-    
+    }
+
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -105,15 +106,22 @@ public class ManagerInsuranceCustomerFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession();
-        Insurance i = (Insurance) session.getAttribute("account");
-        if(i != null && i.getRole_id() == 5){
-            chain.doFilter(request, response);
+        Object account = session.getAttribute("account");
+
+// Nếu account không phải là Insurance, chuyển hướng ngay
+        if (!(account instanceof Insurance)) {
+            res.sendRedirect("insuranceFilter.jsp");
+            return;
         }
-        else{
+
+// Ép kiểu và kiểm tra role_id
+        Insurance i = (Insurance) account;
+        if (i.getRole_id() == 5) {
+            chain.doFilter(request, response);
+        } else {
             res.sendRedirect("insuranceFilter.jsp");
         }
-        
-        
+
 //        if (debug) {
 //            log("ManagerInsuranceCustomerFilter:doFilter()");
 //        }
@@ -165,16 +173,16 @@ public class ManagerInsuranceCustomerFilter implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {                
+            if (debug) {
                 log("InsuranceCustomerFilter:Initializing filter");
             }
         }
@@ -193,20 +201,20 @@ public class ManagerInsuranceCustomerFilter implements Filter {
         sb.append(")");
         return (sb.toString());
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);        
-        
+        String stackTrace = getStackTrace(t);
+
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);                
+                PrintWriter pw = new PrintWriter(ps);
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
-                pw.print(stackTrace);                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+                pw.print(stackTrace);
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -223,7 +231,7 @@ public class ManagerInsuranceCustomerFilter implements Filter {
             }
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -237,9 +245,9 @@ public class ManagerInsuranceCustomerFilter implements Filter {
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);        
+        filterConfig.getServletContext().log(msg);
     }
-    
+
 }

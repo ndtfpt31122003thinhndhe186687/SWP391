@@ -8,11 +8,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Banking Services</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <style>
             :root {
                 --primary-color: #dc3545;
@@ -293,13 +293,12 @@
                     </a>
                 </div>
 
-                <!-- Menu -->
                 <div class="navigation_primary-menu">
-                    <div class="navigation_primary-item"> <a href="#">Chi tiêu</a> </div>
+                    <div class="navigation_primary-item"> <a href="home">Trang chủ</a> </div>
                     <div class="navigation_primary-item"> <a href="depositSaving">Tiết kiệm</a> </div>
                     <div class="navigation_primary-item"> <a href="loanService">Vay</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Bảo hiểm</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Thông tin mới</a> </div>
+                    <div class="navigation_primary-item"> <a href="Insurance">Bảo hiểm</a> </div>
+                    <div class="navigation_primary-item"> <a href="news">Tin tức</a> </div>
                 </div>
 
                 <!-- Nút đăng nhập -->
@@ -338,7 +337,7 @@
         <div class="container mt-4">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="images/saving_image.jpg" alt="Gửi tiết kiệm" class="img-fluid rounded">
+                    <img src="https://homepage.momocdn.net/blogscontents/momo-upload-api-231101113510-638344353108439354.jpg" alt="Gửi tiết kiệm" class="img-fluid rounded">
                 </div>
                 <div class="col-md-6">
                     <h2>Lợi ích của Tiết Kiệm</h2>
@@ -432,6 +431,28 @@
             </div>
         </div>
 
+        <!-- Phản hồi -->
+        <div class="container mt-5">
+            <h2 class="mb-4 text-center">Phản hồi về dịch vụ:</h2>
+
+            <c:forEach items="${listF}" var="f">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h4 class="text-primary"><i class="bi bi-person-circle"></i> ${f.full_name}</h4>
+                        <p><strong>Nội dung phản hồi:</strong> ${f.feedback_content}</p>
+
+                        <div class="star-rating text-warning">
+                            <c:forEach begin="1" end="${star}">
+                                <i class="fa-solid fa-star"></i>
+                            </c:forEach>
+                            <c:if test="${star% 1 != 0}">
+                                <i class="fa-solid fa-star-half-alt"></i>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     </body>

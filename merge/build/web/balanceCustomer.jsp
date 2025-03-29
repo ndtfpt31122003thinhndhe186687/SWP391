@@ -27,6 +27,22 @@
     <link href="css/apexcharts.css" rel="stylesheet">
 
     <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+    <style>
+        .transaction-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%; /* Đảm bảo căn chỉnh theo chiều ngang */
+        }
+
+        .transaction-amount {
+            min-width: 120px;  /* Đảm bảo số tiền không bị đẩy lệch */
+            text-align: right;
+            font-weight: bold;
+        }
+
+
+    </style>
 
 </head>
 
@@ -121,78 +137,71 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="balanceCustomer">
-                            <i class="bi-house-fill me-2"></i>
-                            Tổng quan
+                            <i class="bi-house-fill me-2"></i> Tổng quan
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="wallet">
-                            <i class="bi-wallet me-2"></i>
-                            Ví của tôi
+                            <i class="bi-wallet me-2"></i> Ví của tôi
                         </a>
                     </li>
-
                     <li class="nav-item">
-                        <a class="nav-link" href="viewprofile">
-                            <i class="bi-person me-2"></i>
-                            Hồ sơ
+                        <a class="nav-link" href="insuranceWallet">
+                            <i class="bi-shield-check me-2"></i> Lịch sử bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="transferAmount">
+                            <i class="bi-arrow-left-right me-2"></i> Chuyển tiền
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="viewprofile">
+                            <i class="bi-person me-2"></i> Hồ sơ
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="savingList">
-                            <i class="bi-person me-2"></i>
-                            Sổ tiết kiệm 
+                            <i class="bi-piggy-bank me-2"></i> Sổ tiết kiệm
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="loanList">
-                            <i class="bi-person me-2"></i>
-                            Vay 
+                        <a class="nav-link" href="loanList">
+                            <i class="bi-bank me-2"></i> Vay
                         </a>
                     </li>
-
-
                     <c:if test="${sessionScope.account.role_id==6}">
-                        <c:if test="${sessionScope.account.card_type == 'credit' 
-                                      && sessionScope.account.credit_limit == 0 }">
-                              <li class="nav-item">                                             
-
-                                  <a class="nav-link" href="registerCreditCard">
-                                      <i class="bi-person me-2"></i>
-                                      Đăng Ký Thẻ Tín Dụng
-                                  </a>                          
-                              </li>
-                        </c:if>  
-                    </c:if>  
+                        <c:if test="${sessionScope.account.card_type == 'credit' && sessionScope.account.credit_limit == 0 }">
+                            <li class="nav-item">
+                                <a class="nav-link" href="registerCreditCard">
+                                    <i class="bi-credit-card me-2"></i> Đăng Ký Thẻ Tín Dụng
+                                </a>
+                            </li>
+                        </c:if>
+                    </c:if>
                     <li class="nav-item">
                         <a class="nav-link" href="notificationsList">
-                            <i class="bi-person me-2"></i>
-                            Thông báo 
+                            <i class="bi-bell me-2"></i> Thông báo
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="CustomerInsuranceList">
-                            <i class="bi-gear me-2"></i>
-                            Bảo hiểm
+                        <a class="nav-link" href="CustomerInsuranceList">
+                            <i class="bi-shield-lock me-2"></i> Bảo hiểm
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="changeInfor">
-                            <i class="bi-gear me-2"></i>
-                            Cài đặt
-
+                        <a class="nav-link" href="changeInfor">
+                            <i class="bi-gear me-2"></i> Cài đặt
                         </a>
                     </li>
                     <li class="nav-item border-top mt-auto pt-2">
                         <a class="nav-link" href="logout">
-                            <i class="bi-box-arrow-left me-2"></i>
-                            Đăng xuất
+                            <i class="bi-box-arrow-left me-2"></i> Đăng xuất
                         </a>
                     </li>
+
                 </ul>
             </div>
         </nav>
@@ -202,7 +211,11 @@
                 <h1 class="h2 mb-0 text-danger">Tổng quan</h1>
 
                 <small class="text-muted">Xin chào ${customer.full_name}, chào mừng quay trở lại!</small>
+                <c:if test="${not empty vipStatusMessage}">
+                    <p class="text-primary font-weight-bold">${vipStatusMessage}</p>
+                </c:if>
             </div>
+
 
             <div class="row my-4">
                 <div class="col-lg-7 col-12">
@@ -214,13 +227,7 @@
                             <fmt:formatNumber value="${customer.amount}" type="currency" currencySymbol="VND" groupingUsed="true" />
                         </h2>
 
-                        <div class="custom-block-numbers d-flex align-items-center">
-                            <span>****</span>
-                            <span>****</span>
-                            <span>****</span>
-                            <p>2560</p>
-                        </div>
-
+                       
                         <div class="d-flex">
 
                             <div class="ms-auto">
@@ -230,18 +237,10 @@
                         </div>
                     </div>
 
-                    <div class="custom-block bg-white">
-                        <h5 class="mb-4 text-danger">Lịch sử</h5>
-
-                        <div id="pie-chart"></div>
-                    </div>
-
-                    <div class="custom-block bg-white">
-                        <div id="chart"></div>
-                    </div>
-
+                   
+                 
                     <div class="custom-block custom-block-exchange">
-                        <h5 class="mb-4 text-danger">Exchange Rate</h5>
+                        <h5 class="mb-4 text-danger">Tỉ giá đối hoài</h5>
 
                         <div class="d-flex align-items-center border-bottom pb-3 mb-3">
                             <div class="d-flex align-items-center">
@@ -254,12 +253,12 @@
                             </div>
 
                             <div class="ms-auto me-4">
-                                <small>Sell</small>
+                                <small>Bán</small>
                                 <h6>1.0931</h6>
                             </div>
 
                             <div>
-                                <small>Buy</small>
+                                <small>Mua</small>
                                 <h6>1.0821</h6>
                             </div>
                         </div>
@@ -425,20 +424,20 @@
                                         <p class="text-muted">
                                             <c:choose>
                                                 <c:when test="${t.transaction_type eq 'withdrawal'}">
-                                                    <i class="bi bi-arrow-right-circle text-danger"></i> Rút tiền
+                                                    <i class="bi bi-arrow-right-circle text-danger"></i> Chuyển tiền
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <i class="bi bi-arrow-down-circle text-success"></i> Chuyển tiền
+                                                    <i class="bi bi-arrow-down-circle text-success"></i> Nhận tiền
                                                 </c:otherwise>
                                             </c:choose></p>
                                     </div>
                                 </div>
 
-                                <div class="ms-auto">
+                                <div class="transaction-container">
                                     <small>
                                         <fmt:formatDate value="${t.transaction_date}" pattern="dd/MM/yyyy" />
                                     </small>
-                                    <strong class="d-block">
+                                    <strong class="transaction-amount">
                                         <c:choose>
                                             <c:when test="${t.transaction_type eq 'withdrawal'}">
                                                 <span class="text-danger">
@@ -452,8 +451,8 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </strong>
-
                                 </div>
+
                             </div>
                         </c:forEach>
                         <div class="border-top pt-4 mt-4 text-center">

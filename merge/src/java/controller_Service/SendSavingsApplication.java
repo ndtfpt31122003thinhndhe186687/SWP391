@@ -112,7 +112,7 @@ public class SendSavingsApplication extends HttpServlet {
             int id = d.insertSavings(s);
             if (id > 0) {
                 String message = "Bạn đã tạo đơn gửi tiết kiệm thành công! Hãy đợi kiểm duyệt từ phía ngân hàng!";
-                d.insertNotification(customerId, id, "Thông báo khác", message);
+                d.insertNotification(customerId, id, "Gửi tiết kiệm", message);
                 session.setAttribute("successMessage", message);
             }
             response.sendRedirect("home");
@@ -123,6 +123,8 @@ public class SendSavingsApplication extends HttpServlet {
     /**
      * Returns a short description of the servlet.
      *
+     * @return a String containing servlet description
+     * Returns a short description of the servlet.
      * @return a String containing servlet description
      */
     @Override

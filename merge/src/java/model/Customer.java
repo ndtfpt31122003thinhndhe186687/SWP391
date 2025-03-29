@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Customer {
 
-    public String full_name, email, username, password, phone_number, address, 
+    public String full_name, email, username, password, phone_number, address,notes,contract_name, 
     card_type, status, gender, profile_picture,insurance_name,policy_name,payment_frequency;
     int customer_id, role_id, insurance_id,service_id,loan_id,contract_id,duration,policy_id,savings_id;
     double amount, credit_limit, CoverageAmount, PremiumAmount,PaidAmount;;
@@ -150,6 +150,56 @@ public class Customer {
         this.start_date = start_date;
         this.end_date = end_date;
     }
+      public Customer(String notes, int loan_id) {
+        this.notes = notes;
+        this.loan_id = loan_id;
+    }
+    
+    public Customer(int insurance_id, String insurance_name) {
+        this.insurance_id = insurance_id;
+        this.insurance_name = insurance_name;
+    }
+
+    public Customer(String policy_name, int customer_id, int policy_id) {
+        this.policy_name = policy_name;
+        this.customer_id = customer_id;
+        this.policy_id = policy_id;
+    }
+    
+     public Customer(String insurance_name, String policy_name, String payment_frequency, String contract_name, int insurance_id, int contract_id, int duration, int policy_id, double CoverageAmount, double PremiumAmount, double PaidAmount, Date start_date, Date end_date) {
+        this.insurance_name = insurance_name;
+        this.policy_name = policy_name;
+        this.payment_frequency = payment_frequency;
+        this.contract_name = contract_name;
+        this.insurance_id = insurance_id;
+        this.contract_id = contract_id;
+        this.duration = duration;
+        this.policy_id = policy_id;
+        this.CoverageAmount = CoverageAmount;
+        this.PremiumAmount = PremiumAmount;
+        this.PaidAmount = PaidAmount;
+        this.start_date = start_date;
+        this.end_date = end_date;
+    }
+
+    public Customer(int loan_id,String notes,String insurance_name, String policy_name, String payment_frequency, String contract_name, int insurance_id, int contract_id, int duration, int policy_id, double CoverageAmount, double PremiumAmount, double PaidAmount, Date start_date, Date end_date) {
+        this.loan_id = loan_id;
+        this.notes = notes;
+        this.insurance_name = insurance_name;
+        this.policy_name = policy_name;
+        this.payment_frequency = payment_frequency;
+        this.contract_name = contract_name;
+        this.insurance_id = insurance_id;
+        this.contract_id = contract_id;
+        this.duration = duration;
+        this.policy_id = policy_id;
+        this.CoverageAmount = CoverageAmount;
+        this.PremiumAmount = PremiumAmount;
+        this.PaidAmount = PaidAmount;
+        this.start_date = start_date;
+        this.end_date = end_date;
+    }
+
     
     //vuong
      public Customer(String full_name, String email, String username, String password, String phone_number, String address, String card_type, String status, String gender, String profile_picture, int customer_id, int role_id, int insurance_id, int loan_id, int savings_id, double amount, double credit_limit, Date date_of_birth, Date created_at) {
@@ -173,6 +223,25 @@ public class Customer {
         this.date_of_birth = date_of_birth;
         this.created_at = created_at;
     }
+      // son
+     public Customer(String insurance_name, String policy_name, String payment_frequency, int customer_id, int insurance_id, int loan_id, int duration, int policy_id, double CoverageAmount, double PremiumAmount, double PaidAmount, Date start_date, Date end_date, String notes) {
+        this.insurance_name = insurance_name;
+        this.policy_name = policy_name;
+        this.payment_frequency = payment_frequency;
+        this.customer_id = customer_id;
+        this.insurance_id = insurance_id;
+        this.loan_id = loan_id;
+        this.duration = duration;
+        this.policy_id = policy_id;
+        this.CoverageAmount = CoverageAmount;
+        this.PremiumAmount = PremiumAmount;
+        this.PaidAmount = PaidAmount;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.notes = notes;
+    }
+
+
 
 
     public int getSavings_id() {
@@ -438,6 +507,22 @@ public class Customer {
 
     public void setDate_of_birth(Date date_of_birth) {
         this.date_of_birth = date_of_birth;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getContract_name() {
+        return contract_name;
+    }
+
+    public void setContract_name(String contract_name) {
+        this.contract_name = contract_name;
     }
 
     @Override

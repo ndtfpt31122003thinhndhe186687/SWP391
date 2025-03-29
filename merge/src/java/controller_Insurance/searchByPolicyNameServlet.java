@@ -86,6 +86,10 @@ public class searchByPolicyNameServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         DAO_Insurance dao = new DAO_Insurance();
         List<Insurance_policy> list = dao.searchInsurancePolicyByPolicyName(policy_name, i.insurance_id);
         request.setAttribute("listPolicy", list);

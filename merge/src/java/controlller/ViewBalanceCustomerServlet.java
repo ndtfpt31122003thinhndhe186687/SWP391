@@ -5,6 +5,7 @@
 package controlller;
 
 import dal.DAO;
+import dal.DBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,8 +14,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 import model.Customer;
+import java.sql.*;
+import java.util.List;
 import model.Notifications;
 import model.Transaction;
 
@@ -73,9 +75,40 @@ public class ViewBalanceCustomerServlet extends HttpServlet {
             Customer customer = d.getInforById(c.getCustomer_id());
             request.setAttribute("customer", customer);
         }
-         List<Notifications> listNotify = d.getAllNotificationsByCustomerId(c.getCustomer_id());
+
+        // Kiểm tra xem khách hàng có VIP không
+        String vipStatusMessage = null;
+        String sqlVip = """
+        SELECT vt.vip_type FROM vip v
+        JOIN vip_term vt ON v.vipTerm_id = vt.vipTerm_id
+        WHERE v.customer_id = ? AND v.status = 'active'
+    """;
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement pstmt = conn.prepareStatement(sqlVip)) {
+            pstmt.setInt(1, c.getCustomer_id());
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String vipType = rs.getString("vip_type");
+                switch (vipType) {
+                    case "silver":
+                        vipStatusMessage = "Bạn hiện đang là khách hàng Bạc";
+                        break;
+                    case "gold":
+                        vipStatusMessage = "Bạn hiện đang là khách hàng Vàng";
+                        break;
+                    case "diamond":
+                        vipStatusMessage = "Bạn hiện đang là khách hàng Kim Cương";
+                        break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        request.setAttribute("vipStatusMessage", vipStatusMessage);
+        List<Notifications> listNotify = d.getAllNotificationsByCustomerId(c.getCustomer_id());
         request.setAttribute("listNotify", listNotify);
-        List<Transaction> listT=d.getAllTransactionsByCustomerId(c.getCustomer_id());
+        List<Transaction> listT = d.getAllTransactionsByCustomerId(c.getCustomer_id());
         request.setAttribute("listT", listT);
         request.getRequestDispatcher("balanceCustomer.jsp").forward(request, response);
     }

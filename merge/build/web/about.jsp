@@ -168,7 +168,7 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
+                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <a class="nav-link" href="home">Trang chủ</a>
                             </li>
@@ -183,10 +183,10 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Liên hệ</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="news">Tin tức</a>
+                            </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="membership">Khách hàng thân thiết</a>
                             </li>
                         </ul>
                     </div>

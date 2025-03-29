@@ -252,7 +252,7 @@ public class DAO extends DBContext {
         }
         return list;
     }
-    
+
     //get notifications by id customer
     public List<Notifications> getAllNotificationsByCustomerId(int id) {
         List<Notifications> list = new ArrayList<>();
@@ -279,7 +279,7 @@ public class DAO extends DBContext {
     }
 
     //get all notifi filter
-    public List<Notifications> getNotifyFilter(java.sql.Date start, java.sql.Date end, String notifiType, int customerId,String isRead) {
+    public List<Notifications> getNotifyFilter(java.sql.Date start, java.sql.Date end, String notifiType, int customerId, String isRead) {
         List<Notifications> list = new ArrayList<>();
         String sql = "SELECT * FROM notifications WHERE 1=1";
         if (customerId > 0) {
@@ -289,7 +289,7 @@ public class DAO extends DBContext {
         if (notifiType != null && !notifiType.isEmpty()) {
             sql += " AND notification_type=?";
         }
-        if(isRead!=null && !isRead.isEmpty()){
+        if (isRead != null && !isRead.isEmpty()) {
             sql += " AND is_read=?";
         }
         if (start != null && end != null) {
@@ -305,7 +305,7 @@ public class DAO extends DBContext {
             if (notifiType != null && !notifiType.isEmpty()) {
                 ps.setString(index++, notifiType);
             }
-            if(isRead!=null && !isRead.isEmpty()){
+            if (isRead != null && !isRead.isEmpty()) {
                 ps.setString(index++, isRead);
             }
             if (start != null && end != null) {
@@ -383,11 +383,11 @@ public class DAO extends DBContext {
     }
 
     //Get total notification by customer ID
-    public int getTotalNotifyById(String username) {
-        String sql = "select count(*) as total from notifications n join customer c on n.customer_id=c.customer_id where c.username=?";
+    public int getTotalNotifyById(int id) {
+        String sql = "select count(*) as total from notifications where customer_id=?";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, username);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 return rs.getInt("total");
@@ -407,6 +407,55 @@ public class DAO extends DBContext {
             ResultSet rs = ps.executeQuery();
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    public Staff viewInforStaff(int staff_id) {
+        String sql = "SELECT * FROM staff WHERE staff_id = ?";
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, staff_id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Staff s = new Staff();
+                s.setFull_name(rs.getString("full_name"));
+                s.setEmail(rs.getString("email"));
+                s.setPhone_number(rs.getString("phone_number"));
+                s.setGender(rs.getString("gender"));
+                s.setDate_of_birth(rs.getDate("date_of_birth"));
+                s.setAddress(rs.getString("address"));
+                return s;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    // Update customer information
+    public void changeInforStaff(String full_name, String email, String phone_number, String address, java.sql.Date dob, int staff_id) {
+        String sql = "update staff set full_name=?,email=?,phone_number=?,address=?,date_of_birth=? where staff_id=?";
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setString(1, full_name);
+            st.setString(2, email);
+            st.setString(3, phone_number);
+            st.setString(4, address);
+            st.setDate(5, dob);
+            st.setInt(6, staff_id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void changePasswordStaff(int staff_id, String password) {
+        String sql = "UPDATE staff SET password = ? WHERE staff_id = ?";
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setString(1, password);
+            st.setInt(2, staff_id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error at changePassword: " + e.getMessage());
         }
     }
 

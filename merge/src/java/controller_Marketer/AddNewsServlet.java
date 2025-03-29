@@ -76,7 +76,6 @@ public class AddNewsServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-   
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -97,9 +96,25 @@ public class AddNewsServlet extends HttpServlet {
             }
             // Kiểm tra điều kiện hợp lệ
             if (title == null || content == null || title.isEmpty() || content.isEmpty() || title.matches(".*\\s{2,}.*") || content.matches(".*\\s{2,}.*")) {
-                request.setAttribute("err", "Please enter again!");
+                request.setAttribute("error", "Hãy nhập lại đúng giá trị!");
                 List<NewsCategory> listNc = d.getAllNewsCategory();
                 request.setAttribute("listNc", listNc);
+                request.getRequestDispatcher("addNews.jsp").forward(request, response);
+                return;
+            }
+            // Kiểm tra ký tự đặc biệt (chỉ cho phép chữ cái, số và một số ký tự cơ bản)
+            if (!title.matches("^[a-zA-Z0-9À-ỹ\\s.,!?()-]+$")
+                    || !content.matches("^[a-zA-Z0-9À-ỹ\\s.,!?()-]+$")) {
+                request.setAttribute("err", "Tiêu đề và nội dung không được chứa ký tự đặc biệt!");
+                request.setAttribute("listNc", d.getAllNewsCategory());
+                request.getRequestDispatcher("addNews.jsp").forward(request, response);
+                return;
+            }
+
+            // Kiểm tra tiêu đề đã tồn tại hay chưa
+            if (d.isTitleExist(title)) {
+                request.setAttribute("err", "Bài viết với tiêu đề này đã tồn tại!");
+                request.setAttribute("listNc", d.getAllNewsCategory());
                 request.getRequestDispatcher("addNews.jsp").forward(request, response);
                 return;
             }

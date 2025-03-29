@@ -31,6 +31,11 @@ public class NewsView {
         this.newsAmount = newsAmount;
     }
 
+    public NewsView(String title, int newsAmount) {
+        this.title = title;
+        this.newsAmount = newsAmount;
+    }
+
    
 
     public int getNewsAmount() {

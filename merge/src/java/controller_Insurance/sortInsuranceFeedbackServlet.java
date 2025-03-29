@@ -68,6 +68,10 @@ public class sortInsuranceFeedbackServlet extends HttpServlet {
         List<Insurance_feedback> listP = new ArrayList<>();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         listP = dao.getAllPolicyIDByFeedback(i.getInsurance_id());
         String sort = request.getParameter("sortInsuranceFeedback");
         String policy_id_raw = request.getParameter("policy_id");

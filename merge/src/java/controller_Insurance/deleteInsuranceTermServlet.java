@@ -64,6 +64,10 @@ public class deleteInsuranceTermServlet extends HttpServlet {
        dao.deleteInsuranceTerm(term_id);
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
        String url = "managerInsuranceTerm?insurance_id=" +i.getInsurance_id();
        response.sendRedirect(url);
     } 

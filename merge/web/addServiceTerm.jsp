@@ -102,7 +102,7 @@
             <form action="addServiceTerm" method="post">
                 <div class="form-group">
                     <label for="service_id">Service name:</label>
-                    <select name="service_id" id="service_id" onchange="toggleFields()">
+                    <select name="service_id" id="service_id" onchange="toggleFields()" required>
                         <option value="">-- Select Service --</option>
                         <c:forEach var="service" items="${requestScope.listS}">
                             <option value="${service.service_id}">${service.service_name}</option>
@@ -112,17 +112,17 @@
 
                 <div class="form-group">
                     <label for="term_name">Term name:</label>
-                    <input type="text" id="term_name" name="term_name"/>
+                    <input type="text" id="term_name" name="term_name" required/>
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <input type="text" id="description" name="description"/>
+                    <input type="text" id="description" name="description" required/>
                 </div>
 
                 <div class="form-group">
                     <label for="contract_terms">Detailed contract terms</label>
-                    <input type="text" id="contract_terms" name="contract_terms"/>
+                    <input type="text" id="contract_terms" name="contract_terms" required/>
                 </div>
 
                 <div class="form-group">

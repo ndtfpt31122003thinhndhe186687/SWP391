@@ -97,6 +97,7 @@ public class WithdrawSavingServlet extends HttpServlet {
             msg = "Bạn đã rút tiền thành công vào ngày " + formattedDate + "! Hãy kiểm tra số dư tài khoản!";
             session.setAttribute("successMessage", msg);
             d.insertNotification(c.getCustomer_id(), savingId, "Gửi tiết kiệm", msg);
+            d.insertTransactionSaving(c.getCustomer_id(), 1, d.getMoney(savingId), "deposit");
             response.sendRedirect("home");
         } else {
             //request.setAttribute("error", "Khoản tiết kiệm chưa đến hạn, không thể rút!");
@@ -104,6 +105,7 @@ public class WithdrawSavingServlet extends HttpServlet {
             msg = "Vào ngày " + formattedDate + " ,bạn đã rút tiền thành công nhưng gói rút này chưa đến hạn! Hãy kiểm tra số dư tài khoản!";
             session.setAttribute("successMessage", msg);
             d.insertNotification(c.getCustomer_id(), savingId, "Gửi tiết kiệm", msg);
+            d.insertTransactionSaving(c.getCustomer_id(), 1, d.getMoney(savingId), "deposit");
             response.sendRedirect("home");
         }
 

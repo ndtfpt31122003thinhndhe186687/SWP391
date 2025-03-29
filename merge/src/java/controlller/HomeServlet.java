@@ -5,6 +5,7 @@
 package controlller;
 
 import dal.DAO;
+import dal.DAO_Admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,10 +14,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import javax.management.Notification;
 import model.Customer;
 import model.Notifications;
+import model.Services;
 import model.Staff;
 
 /**
@@ -66,23 +69,32 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         DAO d = new DAO();
         HttpSession session = request.getSession(false);
-        String username="";
+        String username = "";
+        int customerId = -1; // Sử dụng customerId thay vì username
+        List<Notifications> listNotify = new ArrayList<>();
+        int countNotify = 0;
         if (session != null) {
             Object account = session.getAttribute("account");
-            if (account != null) {
-                if (account instanceof Staff) {
-                  username   = ((Staff) account).getUsername();
-                } else if (account instanceof Customer) {
-                    username = ((Customer) account).getUsername();
-                }
-                List<Notifications> listNotify = d.getAllNotificationsByCustomerId(username);
-                request.setAttribute("listNotify", listNotify);
-                int countNotify = d.getTotalNotifyById(username);
-                request.setAttribute("countNotify", countNotify);
+            if (account instanceof Customer) {
+                Customer customer = (Customer) account;
+                username = customer.getUsername();
+                customerId = customer.getCustomer_id();
+
+                // Lấy thông báo dựa trên customer_id
+                listNotify = d.getAllNotificationsByCustomerId(customerId);
+                countNotify = d.getTotalNotifyById(customerId);
             }
         }
 
+        request.setAttribute("listNotify", listNotify);
+        request.setAttribute("countNotify", countNotify);
+        //lay ra service
+        DAO_Admin dao = new DAO_Admin();
+        List<Services> services = dao.getAllServices();
+        request.setAttribute("listServices", services);
+
         request.getRequestDispatcher("home.jsp").forward(request, response);
+
     }
 
     /**

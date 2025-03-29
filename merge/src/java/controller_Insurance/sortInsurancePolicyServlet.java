@@ -64,6 +64,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     DAO_Insurance dao = new DAO_Insurance();
     HttpSession session = request.getSession();
     Insurance i = (Insurance) session.getAttribute("account");
+    if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
 
     String sort = request.getParameter("sortInsurancePolicy");
     String status = request.getParameter("status");

@@ -195,7 +195,10 @@ public class MembershipServlet extends HttpServlet {
         }
 
         conn.commit(); // Xác nhận transaction
-        response.sendRedirect("success.jsp"); // Chuyển hướng khi thành công
+         request.setAttribute("successMessage", "Bạn đã giao dịch thành công!");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("membership.jsp");
+        dispatcher.forward(request, response);
+
     } catch (Exception e) {
         e.printStackTrace();
         request.setAttribute("error", "Lỗi khi đăng ký VIP: " + e.getMessage());

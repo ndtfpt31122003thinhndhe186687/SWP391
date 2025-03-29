@@ -81,16 +81,16 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
+
     // insurance
-    public Insurance login_insurance(String username , String password){
+    public Insurance login_insurance(String username, String password) {
         String sql = "select * from insurance where username=? and password=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, username);
             pre.setString(2, password);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 int insurance_id = rs.getInt(1);
                 int role_id = rs.getInt(2);
                 String insurance_name = rs.getString(5);
@@ -135,14 +135,10 @@ public class DAO_Admin extends DBContext {
     }
 
     public void deleteBanker(int id) {
-        String sql = "set nocount on; "
-                + "delete from news where staff_id= ?;"
-                + "delete from staff where staff_id=?;";
+        String sql = "Update staff set status ='inactive' where staff_id =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, id);
-            pre.setInt(2, id);
-            pre.setInt(3, id);
             pre.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -1612,14 +1608,14 @@ public class DAO_Admin extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public Insurance getInsuranceById(int id ){
+
+    public Insurance getInsuranceById(int id) {
         String sql = "select * from insurance where insurance_id =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1637,14 +1633,14 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
-    public Insurance getInsuranceByName(String name ){
+
+    public Insurance getInsuranceByName(String name) {
         String sql = "select * from insurance where insurance_name =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, name);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1662,14 +1658,14 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
-    public Insurance getInsuranceByUserName(String username ){
+
+    public Insurance getInsuranceByUserName(String username) {
         String sql = "select * from insurance where username =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, username);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1687,13 +1683,14 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    public Insurance getInsuranceByEmail(String email ){
+
+    public Insurance getInsuranceByEmail(String email) {
         String sql = "select * from insurance where email =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, email);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1711,13 +1708,14 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    public Insurance getInsuranceByPhone(String phone ){
+
+    public Insurance getInsuranceByPhone(String phone) {
         String sql = "select * from insurance where phone_number =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, phone);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1767,7 +1765,7 @@ public class DAO_Admin extends DBContext {
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1785,14 +1783,15 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    public List<Insurance> gettAllInsuranceSortedByStatus(String sortBy,String status){
+
+    public List<Insurance> gettAllInsuranceSortedByStatus(String sortBy, String status) {
         List<Insurance> list = new ArrayList<>();
         String sql = "select * from insurance where status = ? order by " + sortBy + " asc";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, status);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1810,14 +1809,15 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    public List<Insurance> getAllInsuranceByName(String search){
+
+    public List<Insurance> getAllInsuranceByName(String search) {
         List<Insurance> list = new ArrayList<>();
         String sql = "select * from insurance where insurance_name like ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setString(1, "%"+search +"%");
+            pre.setString(1, "%" + search + "%");
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Insurance i = new Insurance();
                 i.setInsurance_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1835,6 +1835,7 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
+
     public List<Insurance> getInsuranceByPage(List<Insurance> list, int start, int end) {
         List<Insurance> arr = new ArrayList<>();
         for (int i = start; i < end; i++) {
@@ -1842,6 +1843,7 @@ public class DAO_Admin extends DBContext {
         }
         return arr;
     }
+
     // management service provider 
     public void insertServiceProvider(ServiceProvider sp) {
         String sql = "insert into serviceprovider values (?,?,?,?,?,?,?,?,?)";
@@ -1868,30 +1870,32 @@ public class DAO_Admin extends DBContext {
                 + "ServiceType=?,"
                 + "email=?,"
                 + "phone_number=?,"
+                + "address=?,"
                 + "status=? "
                 + "where provider_id=?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setString(1,sp.getName() );
+            pre.setString(1, sp.getName());
             pre.setString(2, sp.getUsername());
             pre.setString(3, sp.getServicetype());
             pre.setString(4, sp.getEmail());
             pre.setString(5, sp.getPhone_number());
-            pre.setString(6, sp.getStatus());
-            pre.setInt(7, sp.getProvider_id());
+            pre.setString(6, sp.getAddress());
+            pre.setString(7, sp.getStatus());
+            pre.setInt(8, sp.getProvider_id());
             pre.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-    
-    public ServiceProvider getServiceProviderById(int id ){
+
+    public ServiceProvider getServiceProviderById(int id) {
         String sql = "select * from serviceprovider where provider_id =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, id);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1910,14 +1914,14 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
-    public ServiceProvider getServiceProviderByName(String name ){
+
+    public ServiceProvider getServiceProviderByName(String name) {
         String sql = "select * from serviceprovider where Name =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, name);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -1936,15 +1940,15 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    
-    public ServiceProvider getServiceProviderByUserName(String username ){
+
+    public ServiceProvider getServiceProviderByUserName(String username) {
         String sql = "select * from serviceprovider where username =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, username);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
-                 ServiceProvider i = new ServiceProvider();
+            if (rs.next()) {
+                ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
                 i.setName(rs.getString(3));
@@ -1962,14 +1966,15 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    public ServiceProvider getServiceProviderByEmail(String email ){
+
+    public ServiceProvider getServiceProviderByEmail(String email) {
         String sql = "select * from serviceprovider where email =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, email);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
-                 ServiceProvider i = new ServiceProvider();
+            if (rs.next()) {
+                ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
                 i.setName(rs.getString(3));
@@ -1987,14 +1992,15 @@ public class DAO_Admin extends DBContext {
         }
         return null;
     }
-    public ServiceProvider getServiceProviderByPhone(String phone ){
+
+    public ServiceProvider getServiceProviderByPhone(String phone) {
         String sql = "select * from serviceprovider where phone_number =?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, phone);
             ResultSet rs = pre.executeQuery();
-            if(rs.next()){
-                 ServiceProvider i = new ServiceProvider();
+            if (rs.next()) {
+                ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
                 i.setName(rs.getString(3));
@@ -2045,7 +2051,7 @@ public class DAO_Admin extends DBContext {
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -2064,14 +2070,15 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    public List<ServiceProvider> gettAllServiceProviderSortedByStatus(String sortBy,String status){
+
+    public List<ServiceProvider> gettAllServiceProviderSortedByStatus(String sortBy, String status) {
         List<ServiceProvider> list = new ArrayList<>();
         String sql = "select * from serviceprovider where status = ? order by " + sortBy + " asc";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setString(1, status);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -2090,14 +2097,15 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    public List<ServiceProvider> getAllServiceProviderByName(String search){
+
+    public List<ServiceProvider> getAllServiceProviderByName(String search) {
         List<ServiceProvider> list = new ArrayList<>();
         String sql = "select * from serviceprovider where Name like ?";
         try {
             PreparedStatement pre = con.prepareStatement(sql);
-            pre.setString(1, "%"+search +"%");
+            pre.setString(1, "%" + search + "%");
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 ServiceProvider i = new ServiceProvider();
                 i.setProvider_id(rs.getInt(1));
                 i.setRole_id(rs.getInt(2));
@@ -2116,6 +2124,7 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
+
     public List<ServiceProvider> getServiceProviderByPage(List<ServiceProvider> list, int start, int end) {
         List<ServiceProvider> arr = new ArrayList<>();
         for (int i = start; i < end; i++) {
@@ -2123,9 +2132,9 @@ public class DAO_Admin extends DBContext {
         }
         return arr;
     }
-    
+
     // Sơn 
-     //feedback
+    //feedback
     public List<Feedback> getListFeedback() {
         List<Feedback> list = new ArrayList<>();
         String sql = "select feedback.*, customer.full_name, services.service_name from feedback\n"
@@ -2245,7 +2254,7 @@ public class DAO_Admin extends DBContext {
         return 0;
     }
 
-     public List<Feedback> getListFeedbackByServiceID(int service_id) {
+    public List<Feedback> getListFeedbackByServiceID(int service_id) {
         List<Feedback> list = new ArrayList<>();
         String sql = "select feedback.*, customer.full_name, services.service_name from feedback\n"
                 + "join customer on feedback.customer_id = customer.customer_id\n"
@@ -2273,7 +2282,7 @@ public class DAO_Admin extends DBContext {
         }
         return list;
     }
-    
+
     public List<Feedback> getAllFeedbackByServiceID(int service_id, int offset, int next) {
         List<Feedback> list = new ArrayList<>();
         String sql = "select feedback.*, customer.full_name, services.service_name from feedback\n"
@@ -2467,7 +2476,7 @@ public class DAO_Admin extends DBContext {
             PreparedStatement pre = con.prepareStatement(sql);
             pre.setInt(1, service_id);
             ResultSet rs = pre.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 int customer_id = rs.getInt("customer_id");
                 String full_name = rs.getString("full_name");
                 String email = rs.getString("email");
@@ -2478,7 +2487,7 @@ public class DAO_Admin extends DBContext {
                 service_id = rs.getInt("service_id");
                 String address = rs.getString("address");
 
-                Customer customer = new Customer(customer_id,full_name, email, username, password, phone_number, address, gender, service_id);
+                Customer customer = new Customer(customer_id, full_name, email, username, password, phone_number, address, gender, service_id);
                 list.add(customer);
             }
         } catch (Exception e) {
@@ -2486,15 +2495,143 @@ public class DAO_Admin extends DBContext {
         return list;
     }
 
-    
+    //ngay 25/3
+    public int get_total_Loan() {
+        String sql = "select COUNT(*) as count from loan where status = 'approved' ";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public double get_total_Loanpayment_amount() {
+        String sql = "select SUM(payment_amount) from loan_payments where payment_status = 'complete'";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public int get_total_Saving() {
+        String sql = "select COUNT(*) as count from savings where status = 'approved' ";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public double get_total_Savings_amount() {
+        String sql = "select SUM(amount) from savings where status = 'approved'";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public int get_total_Feedback() {
+        String sql = "select COUNT(*) as count from feedback ";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public int get_Feedback(int number) {
+        String sql = "select COUNT(*) as count from feedback where feedback_rate = ? ";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, number);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    //30-3
+    public void deleteTerm(int id) {
+        String sql = "Update term set status='inactive' where term_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            pre.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void deleteInsurance(int id) {
+        String sql = "Update insurance set status='inactive' where insurance_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            pre.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void deleteServiceprovider(int id) {
+        String sql = "Update serviceprovider set status='inactive' where provider_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            pre.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void deleteService(int id) {
+        String sql = "Update services set status ='inactive' where service_id =?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
     // Main method for testing
     public static void main(String[] args) {
         DAO_Admin d = new DAO_Admin();
         String date = "2000-12-31";
         Date sqlDate = java.sql.Date.valueOf(date);
-        ServiceProvider s = new ServiceProvider(7, "thinh", "thinh",
-                "thinh", "Electricity", "thinh", "thinh", "thinh", "active");
-        d.insertServiceProvider(s);
-        
+        System.out.println(d.getServiceProviderById(1));
+
     }
 }

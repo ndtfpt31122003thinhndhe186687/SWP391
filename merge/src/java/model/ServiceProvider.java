@@ -16,6 +16,17 @@ public class ServiceProvider {
     public ServiceProvider() {
     }
 
+    public ServiceProvider(int provider_id, String name, String username, String servicetype, String email, String phone_number, String address, String status) {
+        this.provider_id = provider_id;
+        this.name = name;
+        this.username = username;
+        this.servicetype = servicetype;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.address = address;
+        this.status = status;
+    }
+
     public ServiceProvider(int provider_id, int role_id, String name, String username, String password, String servicetype, String email, String phone_number, String address, String status) {
         this.provider_id = provider_id;
         this.role_id = role_id;

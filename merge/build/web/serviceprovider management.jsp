@@ -205,7 +205,7 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <li class="nav-item">
+                   <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Quản lý nhân viên
@@ -213,7 +213,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link " href="service_management?type=services">
+                        <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
                             Quản lý dịch vụ
                         </a>
@@ -225,16 +225,16 @@
                             Quản lý giao dịch
                         </a>
                     </li>      
-
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="insurance_management">
                             <i class=" me-2"></i>
                             Quản lý bảo hiểm
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
-                        <a class="nav-link active " href="serviceprovider_management">
+                        <a class="nav-link active" href="serviceprovider_management">
                             <i class=" me-2"></i>
                             Quản lý nhà cung cấp dịch vụ
                         </a>
@@ -260,7 +260,7 @@
                             Quản lý phản hồi
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
                             <i class="me-2"></i>
@@ -436,7 +436,7 @@
         <script type="text/javascript">
             function doDeleteService(id) {
                 if (confirm("Are you sure to delete ID '" + id + "'?")) {
-                    window.location = "deleteService?id=" + id;
+                    window.location = "deleteServiceProvider?id=" + id;
                 }
             }
 

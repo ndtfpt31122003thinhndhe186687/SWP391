@@ -6,12 +6,13 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+
         <style>
             :root {
                 --primary-red: #dc3545;
@@ -123,11 +124,16 @@
                 margin-top: 5px;
                 display: none;
             }
-
+.term-description img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
         </style>
     </head>
     <body>
-        <h1>Update Insurance term</h1>
+        <h1>Cập nhật điều khoản bảo hiểm</h1>
         <h4>${requestScope.error}</h4>
         <c:set var="t" value="${requestScope.term}"/>
         <form action="updateInsuranceTerm" method="post">            
@@ -146,13 +152,15 @@
             <textarea name="term_name" required>${t.term_name}</textarea>
             <br>
             <label>Nhận mô tả</label>
-            <textarea name="term_description" id="editor2" required>${t.term_description}</textarea>
+             <div id="toolbar-container"></div> <!-- Thanh công c? CKEditor -->
+             <div id="editor" class="term-description">${t.term_description != null ? t.term_description : ""}</div>
+                                <input type="hidden" name="term_description" id="hiddenDescription">
             <br>
             <label>Nhập ngày bắt đầu</label>
-            <input type="text" name="start_date" value="${t.start_date}" required/>
+            <input type="date" name="start_date" value="${t.start_date}" required/>
             <br>
             <label>Nhận ngày kết thúc</label>
-            <input type="text" name="end_date" value="${t.end_date}" required/>
+            <input type="date" name="end_date" value="${t.end_date}" required/>
             <br>
             <label>Chọn trạng thái</label>
             <select class="filter-dropdown" name="status">                
@@ -165,10 +173,76 @@
             <br>
             <button type="submit">Sửa</button>
         </form>
-        <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
-        <script>
+ 
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/decoupled-document/ckeditor.js"></script>
 
-            CKEDITOR.replace('editor2');
+<script>
+            // Hàm upload ?nh
+            class MyUploadAdapter {
+                constructor(loader) {
+                    this.loader = loader;
+                }
+
+                upload() {
+                    return this.loader.file
+                            .then(file => new Promise((resolve, reject) => {
+                                    const formData = new FormData();
+                                    formData.append('upload', file); // Ph?i trùng v?i request.getPart("upload") trong Servlet
+
+                                    fetch('http://localhost:9999/merge/uploadImgPolicy', {// URL servlet upload
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error(`Lỗii HTTP! Mã trạng thái: ${response.status}`);
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(result => {
+                                                if (!result || !result.url) {
+                                                    return reject('Upload ảnh thấtt bại!');
+                                                }
+                                                resolve({
+                                                    default: result.url  // ???ng d?n ?nh tr? v? t? server
+                                                });
+                                            })
+                                            .catch(error => {
+                                                console.error('Lỗi upload ảnh:', error);
+                                                reject('Không thể upload ảnh!');
+                                            });
+                                }));
+                }
+            }
+
+// Gán plugin upload ?nh vào CKEditor
+            function MyCustomUploadAdapterPlugin(editor) {
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                    return new MyUploadAdapter(loader);
+                };
+            }
+
+// Kh?i t?o CKEditor
+            DecoupledEditor
+                    .create(document.querySelector('#editor'), {
+                        extraPlugins: [MyCustomUploadAdapterPlugin]
+                    })
+                    .then(editor => {
+                        const toolbarContainer = document.querySelector('#toolbar-container');
+                        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+                        // L?u n?i dung vào input ?n khi submit form
+                        document.querySelector("form").addEventListener("submit", function () {
+ let descriptionValue = editor.getData();
+    document.querySelector("#hiddenDescription").value = descriptionValue;
+    console.log("Mô tả gửi đi:", descriptionValue);
+                        });
+
+                    })
+                    .catch(error => {
+                        console.error('CKEditor lỗi:', error);
+                    });
+
         </script>
     </body>
 </html>

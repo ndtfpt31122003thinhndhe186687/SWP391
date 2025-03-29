@@ -181,7 +181,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
+                        <a class="nav-link active" href="filterInsuranceCustomer?gender=all&quantity=5&offset=1">
                             <i class="me-2"></i>
                             Quản lý khách hàng đã mua bảo hiểm
                         </a>
@@ -210,6 +210,12 @@
                         <a class="nav-link " href="ManagerInsuranceFeedback">
                             <i class="me-2"></i>
                             Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerStatisticFeedbackInsurance">
+                            <i class="me-2"></i>
+                            Quản lý thống kê phản hồi bảo hiểm
                         </a>
                     </li>
                 </ul>

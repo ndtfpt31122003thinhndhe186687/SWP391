@@ -66,8 +66,18 @@ public class feedbackInsuranceServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
          HttpSession session = request.getSession();
         Customer c = (Customer) session.getAttribute("account");
-        String insurance_id_raw = request.getParameter("insurance_id");
-        int insurance_id = Integer.parseInt(insurance_id_raw);
+        if (c == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
+         String insurance_id_raw = request.getParameter("insurance_id");
+         int insurance_id = 0;
+        try {
+            insurance_id = Integer.parseInt(insurance_id_raw);
+        } catch (Exception e) {
+        }
+        
+        
        List<Insurance_policy> listP = dao.gePolicyByCustomerID(insurance_id, c.getCustomer_id());
        request.setAttribute("insurance_id", insurance_id);
        request.setAttribute("listP", listP);     
@@ -97,8 +107,9 @@ public class feedbackInsuranceServlet extends HttpServlet {
          insurance_id = Integer.parseInt(insurance_id_raw);
                  List<Insurance_feedback> listP = dao.getAllPolicyIDByFeedback(insurance_id);   
          policy_id = Integer.parseInt(policy_id_raw);                   
-          feedback_content = feedback_content.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
-        if(feedback_content.isEmpty()){
+          
+          feedback_content = feedback_content.replaceAll("&nbs", "").trim();
+          if(feedback_content.isEmpty()){
              request.setAttribute("error", "Nội dung không được để trống!");
              request.setAttribute("listP", listP);
              request.setAttribute("insurance_id", insurance_id);
@@ -113,6 +124,12 @@ public class feedbackInsuranceServlet extends HttpServlet {
                 request.setAttribute("insurance_id", insurance_id);
                 request.getRequestDispatcher("feedbackInsurance.jsp").forward(request, response);
             }
+         if(feedback_rate <= 0 && feedback_rate >= 6){
+              request.setAttribute("error", "Số sao phải lớn hơn 0 và nhỏ hơn 6!");
+                request.setAttribute("listP", listP);
+                request.setAttribute("insurance_id", insurance_id);
+                request.getRequestDispatcher("feedbackInsurance.jsp").forward(request, response);
+         }
         
 
        

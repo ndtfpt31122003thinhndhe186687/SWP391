@@ -24,7 +24,8 @@ import model.Insurance;
  *
  * @author Windows
  */
-@WebFilter(filterName = "InsuranceTermManagerFilter", urlPatterns = {"/managerInsuranceTerm"})
+@WebFilter(filterName = "InsuranceTermManagerFilter", urlPatterns = {"/managerInsuranceTerm","/addInsuranceTerm","/paginationInsuranceTerm",
+"/searchInsuranceTermByTermName","/sortInsuranceTerm","/updateInsuranceTerm"})
 public class ManagerInsuranceTermFilter implements Filter {
     
     private static final boolean debug = true;
@@ -104,15 +105,22 @@ public class ManagerInsuranceTermFilter implements Filter {
             throws IOException, ServletException {
          HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        HttpSession session = req.getSession();
-        Insurance i = (Insurance) session.getAttribute("account");
-        
-        if(i != null && i.getRole_id() == 5){
-            chain.doFilter(request, response);
-        }
-        else{
-            res.sendRedirect("insuranceFilter.jsp");
-        }
+                HttpSession session = req.getSession();
+Object account = session.getAttribute("account");
+
+// Nếu account không phải là Insurance, chuyển hướng ngay
+if (!(account instanceof Insurance)) {
+    res.sendRedirect("insuranceFilter.jsp");
+    return;
+}
+
+// Ép kiểu và kiểm tra role_id
+Insurance i = (Insurance) account;
+if (i.getRole_id() == 5) {
+    chain.doFilter(request, response);
+} else {
+    res.sendRedirect("insuranceFilter.jsp");
+}
         
 //        if (debug) {
 //            log("ManagerInsuranceTermFilter:doFilter()");

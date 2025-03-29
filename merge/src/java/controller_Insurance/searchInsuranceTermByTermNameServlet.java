@@ -77,6 +77,10 @@ public class searchInsuranceTermByTermNameServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         List<Insurance_term> list = new ArrayList<>();
         String term_name = request.getParameter("search_term_name");
         if(term_name == null && term_name.trim().isEmpty() ){

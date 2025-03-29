@@ -63,6 +63,7 @@ public class InsurancePolicyDetailsServlet extends HttpServlet {
         DAO_Insurance d = new DAO_Insurance();
         String insurance_id_raw = request.getParameter("insurance_id");
         int insurance_id = Integer.parseInt(insurance_id_raw);
+        
         List<Insurance_policy> listP = d.getPolicyByInsuranceID(insurance_id);      
         request.setAttribute("listPolicy", listP);
         request.getRequestDispatcher("insurancePolicyDetail.jsp").forward(request, response);

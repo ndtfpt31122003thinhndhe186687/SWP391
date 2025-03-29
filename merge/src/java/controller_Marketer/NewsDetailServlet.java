@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
 import model.News;
@@ -80,23 +81,27 @@ public class NewsDetailServlet extends HttpServlet {
 
         } catch (Exception e) {
         }
-        DAO dao = new DAO();
+        DAO dao=new DAO();
         HttpSession session = request.getSession(false);
         String username = "";
+        int customerId = -1; // Sử dụng customerId thay vì username
+        List<Notifications> listNotify = new ArrayList<>();
+        int countNotify = 0;
         if (session != null) {
             Object account = session.getAttribute("account");
-            if (account != null) {
-                if (account instanceof Staff) {
-                    username = ((Staff) account).getUsername();
-                } else if (account instanceof Customer) {
-                    username = ((Customer) account).getUsername();
-                }
-                List<Notifications> listNotify = dao.getAllNotificationsByCustomerId(username);
-                request.setAttribute("listNotify", listNotify);
-                int countNotify = dao.getTotalNotifyById(username);
-                request.setAttribute("countNotify", countNotify);
+            if (account instanceof Customer) {
+                Customer customer = (Customer) account;
+                username = customer.getUsername();
+                customerId = customer.getCustomer_id();
+
+                // Lấy thông báo dựa trên customer_id
+                listNotify = dao.getAllNotificationsByCustomerId(customerId);
+                countNotify = dao.getTotalNotifyById(customerId);
             }
         }
+
+        request.setAttribute("listNotify", listNotify);
+        request.setAttribute("countNotify", countNotify);
         request.getRequestDispatcher("newsDetail.jsp").forward(request, response);
 
     }

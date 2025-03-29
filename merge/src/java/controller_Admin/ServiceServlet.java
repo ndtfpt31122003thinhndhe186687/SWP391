@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.Customer;
+import model.Feedback;
 import model.Services;
 
 /**
@@ -39,9 +41,23 @@ public class ServiceServlet extends HttpServlet {
             // Xử lý xem chi tiết dịch vụ
             String id = request.getParameter("id");
             try {
-                int serviceId = Integer.parseInt(id);
+               int serviceId = Integer.parseInt(id);
                 Services service = dao.getServiceById(serviceId);
+                List<Customer> listC = dao.getCustomerByServiceID(serviceId);
+                List<Feedback> listF = dao.getListFeedbackByServiceID(serviceId);
+                 int count = dao.getTotalFeedbackByServiceID(serviceId);
+                int point = 0, star = 0;
+                for (Feedback feedback : listF) {
+                    point += feedback.getFeedback_rate();
+                }
+                if(point != 0){
+                star = point / count;
+                }
+
+
                 if (service != null) {
+                     request.setAttribute("star", star);
+                    request.setAttribute("listC", listC);
                     request.setAttribute("service", service);
                     request.getRequestDispatcher("service_details.jsp").forward(request, response);
                 } else {
@@ -60,7 +76,7 @@ public class ServiceServlet extends HttpServlet {
             }
             request.getRequestDispatcher("service.jsp").forward(request, response);
         }
-    } 
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.

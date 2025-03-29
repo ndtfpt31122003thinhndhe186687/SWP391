@@ -99,6 +99,12 @@
     word-wrap: break-word;  /* Xuống dòng nếu quá dài */
     max-width: 100%;        /* Không cho vượt quá chiều rộng */
 }
+.policy-description img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
 
 
         </style>
@@ -219,7 +225,7 @@
                 <ul class="nav flex-column h-100">
 
                     <li class="nav-item">
-                        <a class="nav-link " href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
+                        <a class="nav-link active" href="sortInsurancePolicy?sortInsurancePolicy=none&status=all&quantity=5&offset=1">
                             <i class="me-2"></i>
                             Quản lý chính sách bảo hiểm
                         </a>
@@ -264,8 +270,12 @@
                             Quản lý phản hồi bảo hiểm
                         </a>
                     </li>
-
-
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerStatisticFeedbackInsurance">
+                            <i class="me-2"></i>
+                            Quản lý thống kê phản hồi bảo hiểm
+                        </a>
+                    </li>
 
                 </ul>
             </div>
@@ -318,8 +328,8 @@
                     </thead>
                     <c:forEach items="${listPolicy}" var="P">
                         <tr>
-                            <td>${P.policy_id}</td>
-                            <td><a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#policyModal${P.policy_id}">${P.policy_name}</a></td>
+                            <td><a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#policyModal${P.policy_id}">${P.policy_id}</a></td>
+                            <td>${P.policy_name}</td>
                             <td>${P.status == 'active' ? 'Hoạt động' : 'Ngừng hoạt động'}</td>
                             <td><fmt:formatDate value="${P.created_at}" pattern="dd-MM-yyyy" /></td>
                             <td>
@@ -336,7 +346,9 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
+                                        <div class="policy-description">
                                         <p><strong>Mô tả:</strong> ${P.description}</p>
+                                        </div>
                                         <p><strong>Số tiền được nhận:</strong> <span><fmt:formatNumber value="${P.coverage_amount}" pattern="#,##0.00" />VND</span></p>
                                         <p><strong>Số tiền cần đóng:</strong> <span><fmt:formatNumber value="${P.premium_amount}" pattern="#,##0.00" />VND</span></p>
                                         <p><strong>Ảnh:</strong></p>
@@ -372,7 +384,10 @@
                                 <textarea name="policy_name"  required class="form-control"></textarea>
 
                                 <label>Nhập mô tả</label>
-                                <textarea name="description" id="editor1" required class="form-control"></textarea>
+                                  <div id="toolbar-container"></div> <!-- Thanh công c? CKEditor -->
+                                            <div id="editor">${param.description != null ? param.description : ""}</div>
+                                            <input type="hidden" name="description" id="hiddenDescription">
+                                            
 
 
                                 <label>Nhập số tiền được nhận</label>
@@ -424,7 +439,7 @@
             Boolean showModal = (Boolean) sessionSuccess.getAttribute("showSuccessModal");
             String successMessage = (String) sessionSuccess.getAttribute("successMessage");
 
-            if (showModal != null && showModal) {
+            if (showModal != null && showModal && successMessage != null) {
         %>
         <!-- Modal thông báo -->
         <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -457,13 +472,6 @@
             }
         %>
 
-        <script src="ckfinder/ckfinder.js"></script>
-        <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
-
-        <script>
-            CKEDITOR.replace('editor1');
-        </script>
-
             <script>
                 function formatCurrencyInput(element) {
                     let rawValue = element.value.replace(/\D/g, ""); // Chỉ giữ lại số
@@ -482,8 +490,76 @@
                     formatCurrencyInput(this);
                 });
             </script>  
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/decoupled-document/ckeditor.js"></script>
 
+<script>
+            // Hàm upload ?nh
+            class MyUploadAdapter {
+                constructor(loader) {
+                    this.loader = loader;
+                }
 
+                upload() {
+                    return this.loader.file
+                            .then(file => new Promise((resolve, reject) => {
+                                    const formData = new FormData();
+                                    formData.append('upload', file); // Ph?i trùng v?i request.getPart("upload") trong Servlet
+
+                                    fetch('http://localhost:9999/merge/uploadImgPolicy', {// URL servlet upload
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error(`Lỗii HTTP! Mã trạng thái: ${response.status}`);
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(result => {
+                                                if (!result || !result.url) {
+                                                    return reject('Upload ảnh thấtt bại!');
+                                                }
+                                                resolve({
+                                                    default: result.url  
+                                                });
+                                            })
+                                            .catch(error => {
+                                                console.error('Lỗi upload ảnh:', error);
+                                                reject('Không thể upload ảnh!');
+                                            });
+                                }));
+                }
+            }
+
+// Gán plugin upload ?nh vào CKEditor
+            function MyCustomUploadAdapterPlugin(editor) {
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                    return new MyUploadAdapter(loader);
+                };
+            }
+
+// Kh?i t?o CKEditor
+            DecoupledEditor
+                    .create(document.querySelector('#editor'), {
+                        extraPlugins: [MyCustomUploadAdapterPlugin]
+                    })
+                    .then(editor => {
+                        const toolbarContainer = document.querySelector('#toolbar-container');
+                        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+                        // L?u n?i dung vào input ?n khi submit form
+                        document.querySelector("#addPolicyForm").addEventListener("submit", function () {
+ let descriptionValue = editor.getData();
+    document.querySelector("#hiddenDescription").value = descriptionValue;
+    console.log("Mô tả gửi đi:", descriptionValue);
+                        });
+
+                    })
+                    .catch(error => {
+                        console.error('CKEditor lỗi:', error);
+                    });
+
+        </script>
 
         </main>
 

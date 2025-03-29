@@ -91,7 +91,7 @@
             </c:forEach>
         </select>
 
-        <label>Chọn ID hợp đồng</label>
+        <label>Chọn tên hợp đồng</label>
         <select class="filter-dropdown" name="contract_id" id="contractSelect">
             <!-- Hợp đồng sẽ được lọc bằng JavaScript -->
         </select>
@@ -100,7 +100,7 @@
         <div style="display: none;">
             <c:forEach var="c" items="${requestScope.listCD}">                  
                 <option class="contractOption" data-policy-id="${c.policy_id}" value="${c.contract_id}">
-                    ${c.contract_id}
+                    ${c.contract_name}
                 </option>
             </c:forEach>
         </div>

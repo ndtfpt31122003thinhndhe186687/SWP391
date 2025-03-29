@@ -15,9 +15,9 @@ public class Loan_payments {
     private int loan_id;
     private int customer_id;
     private String email;
-    private Date payment_date;
+    private Date payment_date,paydate;
     private double payment_amount,principal_amount,
-            interest_amount,remaining_amount;
+            interest_amount,remaining_amount,penaltyfee;
     private String payment_status;
 
     public Loan_payments() {
@@ -44,6 +44,39 @@ public class Loan_payments {
         this.interest_amount = interest_amount;
         this.remaining_amount = remaining_amount;
         this.payment_status = payment_status;
+    }
+
+    public Loan_payments(int loan_payments_id, int loan_id, int customer_id, String email, Date payment_date, Date paydate, double payment_amount, double principal_amount, double interest_amount, double remaining_amount, double penaltyfee, String payment_status) {
+        this.loan_payments_id = loan_payments_id;
+        this.loan_id = loan_id;
+        this.customer_id = customer_id;
+        this.email = email;
+        this.payment_date = payment_date;
+        this.paydate = paydate;
+        this.payment_amount = payment_amount;
+        this.principal_amount = principal_amount;
+        this.interest_amount = interest_amount;
+        this.remaining_amount = remaining_amount;
+        this.penaltyfee = penaltyfee;
+        this.payment_status = payment_status;
+    }
+    
+    
+
+    public double getPenaltyfee() {
+        return penaltyfee;
+    }
+
+    public void setPenaltyfee(double penaltyfee) {
+        this.penaltyfee = penaltyfee;
+    }
+
+    public Date getPaydate() {
+        return paydate;
+    }
+
+    public void setPaydate(Date paydate) {
+        this.paydate = paydate;
     }
 
     public int getCustomer_id() {
@@ -129,8 +162,10 @@ public class Loan_payments {
 
     @Override
     public String toString() {
-        return "Loan_payments{" + "loan_payments_id=" + loan_payments_id + ", loan_id=" + loan_id + ", customer_id=" + customer_id + ", email=" + email + ", payment_date=" + payment_date + ", payment_amount=" + payment_amount + ", principal_amount=" + principal_amount + ", interest_amount=" + interest_amount + ", remaining_amount=" + remaining_amount + ", payment_status=" + payment_status + '}';
+        return "Loan_payments{" + "loan_payments_id=" + loan_payments_id + ", loan_id=" + loan_id + ", customer_id=" + customer_id + ", email=" + email + ", payment_date=" + payment_date + ", paydate=" + paydate + ", payment_amount=" + payment_amount + ", principal_amount=" + principal_amount + ", interest_amount=" + interest_amount + ", remaining_amount=" + remaining_amount + ", penaltyfee=" + penaltyfee + ", payment_status=" + payment_status + '}';
     }
+
+    
 
    
     

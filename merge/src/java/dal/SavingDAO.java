@@ -147,22 +147,54 @@ public class SavingDAO extends DBContext {
         }
     }
 
+    //lay lai tien khi bi rejected
+    public void getAmountAgain(int customer_id, double amount) {
+        String sql = "UPDATE customer SET amount = amount + ? WHERE customer_id = ? and card_type='debit'";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setDouble(1, amount);
+            ps.setInt(2, customer_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
     //get total saving deposit
     public double getSavingDeposit(int saving_id) {
-        String sql = "SELECT \n"
-                + "s.amount + (s.amount * (st.interest_rate / 100) * (t.duration / 12.0)) AS total_with_interest\n"
-                + "FROM savings s\n"
-                + "JOIN service_terms st ON s.serviceTerm_id = st.serviceTerm_id\n"
-                + "JOIN term t ON st.term_id = t.term_id where s.savings_id=?";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "SELECT s.amount, st.interest_rate, t.duration, "
+                + "COALESCE(vt.savings_rate, 0) AS vip_bonus_rate, "
+                + "v.start_date AS vip_start_date, s.start_date AS saving_start_date "
+                + "FROM savings s "
+                + "JOIN service_terms st ON s.serviceTerm_id = st.serviceTerm_id "
+                + "JOIN term t ON st.term_id = t.term_id "
+                + "LEFT JOIN vip v ON s.customer_id = v.customer_id AND v.status = 'active' "
+                + "LEFT JOIN vip_term vt ON v.vipTerm_id = vt.vipTerm_id "
+                + "WHERE s.savings_id = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, saving_id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getDouble("total_with_interest");
+                double amount = rs.getDouble("amount");
+                double baseInterestRate = rs.getDouble("interest_rate");
+                double vipBonusRate = rs.getDouble("vip_bonus_rate");
+                int duration = rs.getInt("duration");
+                Timestamp vipStartDate = rs.getTimestamp("vip_start_date");
+                Timestamp savingStartDate = rs.getTimestamp("saving_start_date");
+
+                double finalInterestRate = baseInterestRate;
+
+                // Chỉ cộng thêm nếu đơn được tạo sau khi đăng ký VIP
+                if (vipStartDate != null && savingStartDate.after(vipStartDate)) {
+                    finalInterestRate += vipBonusRate;
+                }
+
+                // Tính tổng tiền sau lãi suất
+                double totalWithInterest = amount + (amount * (finalInterestRate / 100) * (duration / 12.0));
+                return totalWithInterest;
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return 0;
     }
@@ -182,7 +214,7 @@ public class SavingDAO extends DBContext {
                 Savings s = new Savings();
                 s.setSavings_id(rs.getInt("savings_id"));
                 s.setAmount(rs.getDouble("amount"));
-                s.setStart_date(rs.getDate("start_date"));
+                s.setStart_date(rs.getTimestamp("start_date"));
                 s.setEnd_date(rs.getDate("end_date"));
                 s.setTerm_name(rs.getString("term_name"));
                 s.setInterest_rate(rs.getDouble("interest_rate"));
@@ -232,6 +264,7 @@ public class SavingDAO extends DBContext {
             System.out.println(e);
         }
     }
+    
 
     //rut tien
     public void withdrawSavings(int saving_id) {
@@ -270,13 +303,15 @@ public class SavingDAO extends DBContext {
         }
     }
 
-    //vuong
     public double getSavingDepositWithRate(int savingsId, double interestRate) {
         double totalWithInterest = 0;
-        String sql = "SELECT s.amount, t.duration FROM savings s "
-                + "JOIN service_terms st ON s.serviceTerm_id = st.serviceTerm_id "
-                + "JOIN term t ON st.term_id = t.term_id "
-                + "WHERE s.savings_id = ?";
+        String sql = """
+        SELECT s.amount, t.duration, s.start_date 
+        FROM savings s 
+        JOIN service_terms st ON s.serviceTerm_id = st.serviceTerm_id 
+        JOIN term t ON st.term_id = t.term_id 
+        WHERE s.savings_id = ?
+    """;
 
         try (Connection conn = new DBContext().getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, savingsId);
@@ -286,8 +321,15 @@ public class SavingDAO extends DBContext {
                 double amount = rs.getDouble("amount");
                 int duration = rs.getInt("duration");
 
-                // Tính tổng tiền với lãi suất (lãi kép)
+                System.out.println("Calculating Saving ID: " + savingsId);
+                System.out.println("Amount: " + amount);
+                System.out.println("Duration: " + duration);
+                System.out.println("Final Interest Rate: " + interestRate);
+
+                // Tính tổng tiền với lãi suất mới (nếu có)
                 totalWithInterest = amount * Math.pow(1 + (interestRate / 100), duration / 12.0);
+
+                System.out.println("Total With Interest: " + totalWithInterest);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -309,13 +351,13 @@ public class SavingDAO extends DBContext {
         }
 
     }
-
     //get savings by id
+
     public Savings getSavingsById(int customer_id, int saving_id) {
         String sql = "select s.savings_id,s.amount,s.start_date,s.end_date,st.term_name,st.interest_rate,t.duration,s.status\n"
                 + "FROM savings s\n"
                 + "JOIN service_terms st ON s.serviceTerm_id = st.serviceTerm_id\n"
-                + "JOIN term t ON st.term_id = t.term_id where s.status = 'approved' and s.customer_id=? and s.savings_id=?";;
+                + "JOIN term t ON st.term_id = t.term_id and s.customer_id=? and s.savings_id=?";;
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, customer_id);
@@ -331,10 +373,40 @@ public class SavingDAO extends DBContext {
         return null;
     }
 
+    //ghi lai lich su giao dich
+    public void insertTransactionSaving(int customer_id, int service_id, double amount, String transaction_type) {
+        String sql = "insert into transactions (customer_id,service_id,amount,transaction_type) values (?,?,?,?)";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, customer_id);
+            ps.setInt(2, service_id);
+            ps.setDouble(3, amount);
+            ps.setString(4, transaction_type);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+    
+    //lay ra tien rur de luu vao giao dich
+    public double getMoney(int savings_id){
+        String sql="select amount from savings where savings_id=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, savings_id);
+            ResultSet rs=ps.executeQuery();
+            while(rs.next()){
+                return rs.getDouble("amount");
+            }
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
     public static void main(String[] args) {
         SavingDAO s = new SavingDAO();
-        List<Savings> list = s.getAllDepositSavingsOfUser(1);
-        System.out.println(list);
+        double k = s.getSavingDeposit(1);
+        System.out.println(k);
     }
 
 }

@@ -186,76 +186,70 @@
                 <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
                     <div class="position-sticky py-4 px-3 sidebar-sticky">
                         <ul class="nav flex-column h-100">
+                             <li class="nav-item">
+                        <a class="nav-link " aria-current="page" href="balanceCustomer">
+                            <i class="bi-house-fill me-2"></i> Tổng quan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="wallet">
+                            <i class="bi-wallet me-2"></i> Ví của tôi
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="insuranceWallet">
+                            <i class="bi-shield-check me-2"></i> Lịch sử bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="transferAmount">
+                            <i class="bi-arrow-left-right me-2"></i> Chuyển tiền
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="viewprofile">
+                            <i class="bi-person me-2"></i> Hồ sơ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="savingList">
+                            <i class="bi-piggy-bank me-2"></i> Sổ tiết kiệm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="loanList">
+                            <i class="bi-bank me-2"></i> Vay
+                        </a>
+                    </li>
+                    <c:if test="${sessionScope.account.role_id==6}">
+                        <c:if test="${sessionScope.account.card_type == 'credit' && sessionScope.account.credit_limit == 0 }">
                             <li class="nav-item">
-                                <a class="nav-link " aria-current="page" href="balanceCustomer">
-                                    <i class="bi-house-fill me-2"></i>
-                                    Tổng quan
+                                <a class="nav-link" href="registerCreditCard">
+                                    <i class="bi-credit-card me-2"></i> Đăng Ký Thẻ Tín Dụng
                                 </a>
                             </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="wallet">
-                                    <i class="bi-wallet me-2"></i>
-                                    Ví của tôi
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="viewprofile">
-                                    <i class="bi-person me-2"></i>
-                                    Hồ sơ
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="savingList">
-                                    <i class="bi-person me-2"></i>
-                                    Sổ tiết kiệm 
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link " href="loanList">
-                                    <i class="bi-person me-2"></i>
-                                    Vay 
-                                </a>
-                            </li>
-
-                            <c:if test="${sessionScope.account.role_id==6}">
-                                <c:if test="${sessionScope.account.card_type == 'credit' 
-                                              && sessionScope.account.credit_limit == 0 }">
-                                      <li class="nav-item">                                             
-
-                                          <a class="nav-link" href="registerCreditCard">
-                                              <i class="bi-person me-2"></i>
-                                              Đăng Ký Thẻ Tín Dụng
-                                          </a>                          
-                                      </li>
-                                </c:if>  
-                            </c:if>  
-                            <li class="nav-item">
-                                <a class="nav-link" href="notificationsList">
-                                    <i class="bi-person me-2"></i>
-                                    Thông báo 
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link " href="CustomerInsuranceList">
-                                    <i class="bi-gear me-2"></i>
-                                    Bảo hiểm
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link " href="changeInfor">
-                                    <i class="bi-gear me-2"></i>
-                                    Cài đặt
-
-                                </a>
-                            </li>
-                            <li class="nav-item border-top mt-auto pt-2">
-                                <a class="nav-link" href="logout">
-                                    <i class="bi-box-arrow-left me-2"></i>
-                                    Đăng xuất
-                                </a>
-                            </li>
+                        </c:if>
+                    </c:if>
+                    <li class="nav-item">
+                        <a class="nav-link" href="notificationsList">
+                            <i class="bi-bell me-2"></i> Thông báo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="CustomerInsuranceList">
+                            <i class="bi-shield-lock me-2"></i> Bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="changeInfor">
+                            <i class="bi-gear me-2"></i> Cài đặt
+                        </a>
+                    </li>
+                    <li class="nav-item border-top mt-auto pt-2">
+                        <a class="nav-link" href="logout">
+                            <i class="bi-box-arrow-left me-2"></i> Đăng xuất
+                        </a>
+                    </li>
                         </ul>
                     </div>
                 </nav>
@@ -281,8 +275,20 @@
                                             <div class="row"><span class="label">Số tiền đã gửi:</span><span class="value"><fmt:formatNumber value="${saving.amount}" type="currency" currencySymbol="VND" groupingUsed="true" /></span></div>
                                             <div class="row"><span class="label">Ngày gửi:</span><span class="value"> <fmt:formatDate value="${saving.start_date}" pattern="dd-MM-yyyy" /></span></div>
                                             <div class="row"><span class="label">Kỳ hạn:</span><span class="value">${saving.duration} tháng</span></div>
+                                            <fmt:parseDate var="savingStartDate" value="${saving.start_date}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                            <fmt:parseDate var="vipStartDate" value="${requestScope.vipStartDate}" pattern="yyyy-MM-dd HH:mm:ss" />
 
-                                            <div class="row"><span class="label">Lãi suất:</span><span class="value">${saving.interest_rate}%</span></div>
+                                            <c:choose>
+                                                <c:when test="${savingStartDate.time >= vipStartDate.time}">
+                                                    <div class="row"><span class="label">Lãi suất:</span><span class="value">${saving.interest_rate + savingsRateBonus}%</span></div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="row"><span class="label">Lãi suất:</span><span class="value">${saving.interest_rate}%</span></div>
+                                                </c:otherwise>
+                                            </c:choose>
+
+
+
                                             <div class="row"><span class="label">Ngày đáo hạn:</span><span class="value"><fmt:formatDate value="${saving.end_date}" pattern="dd-MM-yyyy" /></span></div>
                                             <div class="row accrued-interest"><span class="label">Lãi suất tích lũy dự kiến nhận về:</span><span class="value"><fmt:formatNumber value="${accruedInterestMap[saving.savings_id]}" type="currency" currencySymbol="VND" groupingUsed="true" /></span></div>
                                         </div>

@@ -292,13 +292,12 @@
                     </a>
                 </div>
 
-                <!-- Menu -->
-                <div class="navigation_primary-menu">
-                    <div class="navigation_primary-item"> <a href="#">Chi tiêu</a> </div>
+                 <div class="navigation_primary-menu">
+                    <div class="navigation_primary-item"> <a href="home">Trang chủ</a> </div>
                     <div class="navigation_primary-item"> <a href="depositSaving">Tiết kiệm</a> </div>
                     <div class="navigation_primary-item"> <a href="loanService">Vay</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Bảo hiểm</a> </div>
-                    <div class="navigation_primary-item"> <a href="#">Thông tin mới</a> </div>
+                    <div class="navigation_primary-item"> <a href="Insurance">Bảo hiểm</a> </div>
+                    <div class="navigation_primary-item"> <a href="news">Tin tức</a> </div>
                 </div>
 
                 <!-- Nút đăng nhập -->
@@ -337,7 +336,7 @@
         <div class="container mt-4">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="images/loan_image.jpg" alt="Vay vốn" class="img-fluid rounded">
+                    <img src="https://image3.luatvietnam.vn/uploaded/images/original/2024/07/02/4-truong-hop-vay-von-phai-cung-cap-thong-tin-nguoi-co-lien-quan_0207095929.jpg" alt="Vay vốn" class="img-fluid rounded">
                 </div>
                 <div class="col-md-6">
                     <h2>Lợi ích của Dịch Vụ Vay</h2>

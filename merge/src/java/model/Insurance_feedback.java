@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Windows
  */
 public class Insurance_feedback {
-    public int feedback_id, customer_id, insurance_id,policy_id, feedback_rate;
+    public int feedback_id, customer_id, insurance_id,policy_id, feedback_rate,avg_rating;
     public String full_name, policy_name, feedback_content;
     public Date feedback_date;
 
@@ -50,6 +50,20 @@ public class Insurance_feedback {
     public Insurance_feedback(int policy_id,String policy_name) {
         this.policy_id = policy_id;
         this.policy_name = policy_name;
+    }
+    
+     public Insurance_feedback(int policy_id,String policy_name,int avg_rating) {
+        this.policy_id = policy_id;
+        this.policy_name = policy_name;
+        this.avg_rating = avg_rating;
+    }
+
+    public int getAvg_rating() {
+        return avg_rating;
+    }
+
+    public void setAvg_rating(int avg_rating) {
+        this.avg_rating = avg_rating;
     }
 
     
@@ -128,8 +142,10 @@ public class Insurance_feedback {
 
     @Override
     public String toString() {
-        return "Insurance_feedback{" + "feedback_id=" + feedback_id + ", customer_id=" + customer_id + ", insurance_id=" + insurance_id + ", policy_id=" + policy_id + ", feedback_rate=" + feedback_rate + ", full_name=" + full_name + ", policy_name=" + policy_name + ", feedback_content=" + feedback_content + ", feedback_date=" + feedback_date + '}';
+        return "Insurance_feedback{" + "feedback_id=" + feedback_id + ", customer_id=" + customer_id + ", insurance_id=" + insurance_id + ", policy_id=" + policy_id + ", feedback_rate=" + feedback_rate + ", avg_rating=" + avg_rating + ", full_name=" + full_name + ", policy_name=" + policy_name + ", feedback_content=" + feedback_content + ", feedback_date=" + feedback_date + '}';
     }
+
+   
 
 
 }

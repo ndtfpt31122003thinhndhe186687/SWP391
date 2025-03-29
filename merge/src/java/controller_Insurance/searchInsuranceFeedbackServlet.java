@@ -64,6 +64,10 @@ public class searchInsuranceFeedbackServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance(); 
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
          String customer_name = request.getParameter("search_customer_name");
         if(customer_name == null && customer_name.trim().isEmpty()){
             customer_name = "%";

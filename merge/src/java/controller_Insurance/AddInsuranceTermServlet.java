@@ -71,6 +71,10 @@ public class AddInsuranceTermServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
         request.setAttribute("listPolicy", list);
         request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);
@@ -91,6 +95,10 @@ public class AddInsuranceTermServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         List<Insurance_term> listT = dao.getInsuranceTermByInsuranceID(i.getInsurance_id());
         List<Insurance_policy> list = dao.getPolicyByInsuranceIDAndActive(i.getInsurance_id(), "active");
         String policy_id_raw = request.getParameter("policy_id");
@@ -102,7 +110,7 @@ public class AddInsuranceTermServlet extends HttpServlet {
         int policy_id = Integer.parseInt(policy_id_raw);
         Date start_date = null, end_date = null;
         java.sql.Date sqlStart_date = null, sqlEnd_date = null;
-        term_description = term_description.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+        term_description = term_description.replaceAll("&nbsp;", "").trim();
         if (term_name.trim().isEmpty()) {
             request.setAttribute("error", "Tên không được để trống");
             request.setAttribute("listPolicy", list);

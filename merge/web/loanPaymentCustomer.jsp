@@ -90,10 +90,26 @@
             .deposit-id:hover {
                 text-decoration: underline; /* Chỉ hiện gạch chân khi di chuột vào */
             }
+            .error-message {
+                color: red;
+                text-align: center;
+                margin-bottom: 20px;
+                font-weight: 500;
+            }
+            .status-pending {
+                color: #FFA500; /* Màu cam */
+                font-weight: bold;
+            }
 
+            .status-complete {
+                color: #28A745; /* Màu xanh lá */
+                font-weight: bold;
+            }
 
-
-
+            .status-late {
+                color: #DC3545; /* Màu đỏ */
+                font-weight: bold;
+            }
         </style>
     </head>
 
@@ -102,8 +118,8 @@
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="index.html">
-                    <i class="bi-box"></i>
-                    Mini Finance
+                    <i class="bi-bank"></i>
+                    FinBank
                 </a>
             </div>
 
@@ -211,51 +227,69 @@
                 <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
                     <div class="position-sticky py-4 px-3 sidebar-sticky">
                         <ul class="nav flex-column h-100">
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="index.html">
-                                    <i class="bi-house-fill me-2"></i>
-                                    Tổng quan                                </a>
-                            </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="wallet.html">
-                                    <i class="bi-wallet me-2"></i>
-                                    Ví của tôi
+                                <a class="nav-link " aria-current="page" href="balanceCustomer">
+                                    <i class="bi-house-fill me-2"></i> Tổng quan
                                 </a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link" href="viewprofile">
-                                    <i class="bi-person me-2"></i>
-                                    Hồ sơ
+                                <a class="nav-link" href="wallet">
+                                    <i class="bi-wallet me-2"></i> Ví của tôi
                                 </a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link " href="savingList">
-                                    <i class="bi-person me-2"></i>
-                                    Sổ tiết kiệm 
+                                <a class="nav-link" href="insuranceWallet">
+                                    <i class="bi-shield-check me-2"></i> Lịch sử bảo hiểm
                                 </a>
                             </li>
-
+                            <li class="nav-item">
+                                <a class="nav-link" href="transferAmount">
+                                    <i class="bi-arrow-left-right me-2"></i> Chuyển tiền
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="viewprofile">
+                                    <i class="bi-person me-2"></i> Hồ sơ
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="savingList">
+                                    <i class="bi-piggy-bank me-2"></i> Sổ tiết kiệm
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="loanList">
-                                    <i class="bi-person me-2"></i>
-                                    Vay 
+                                    <i class="bi-bank me-2"></i> Vay
                                 </a>
                             </li>
-
+                            <c:if test="${sessionScope.account.role_id==6}">
+                                <c:if test="${sessionScope.account.card_type == 'credit' && sessionScope.account.credit_limit == 0 }">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="registerCreditCard">
+                                            <i class="bi-credit-card me-2"></i> Đăng Ký Thẻ Tín Dụng
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </c:if>
+                            <li class="nav-item">
+                                <a class="nav-link" href="notificationsList">
+                                    <i class="bi-bell me-2"></i> Thông báo
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="CustomerInsuranceList">
+                                    <i class="bi-shield-lock me-2"></i> Bảo hiểm
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="changeInfor">
-                                    <i class="bi-gear me-2"></i>
-                                    Cài đặt
+                                    <i class="bi-gear me-2"></i> Cài đặt
                                 </a>
                             </li>
-
                             <li class="nav-item border-top mt-auto pt-2">
                                 <a class="nav-link" href="logout">
-                                    <i class="bi-box-arrow-left me-2"></i>
-                                    Đăng xuất
+                                    <i class="bi-box-arrow-left me-2"></i> Đăng xuất
                                 </a>
                             </li>
                         </ul>
@@ -267,15 +301,38 @@
                         <h1 class="h2 mb-0 text-danger"> Sổ Vay </h1>    
                     </div>
                     <div class="custom-block custom-block-balance">
+                        <% 
+    String message = (String) request.getAttribute("message");
+    if (message != null) { 
+                        %>
+                        <script>
+                            alert("<%= message %>");
+                        </script>
+                        <% } %>
                         <small>Tổng số tiền vay</small>
                         <h2 class="mt-2 mb-3"><fmt:formatNumber value="${totalLoan}" pattern="#,###"/>VND</h2>
+                        <small>Tổng số tiền phải trả</small>
+                        <h2 class="mt-2 mb-3">
+                            <fmt:formatNumber value="${totalLoanpayments}" pattern="#,###"/>VND
+                            <form action="payLoan?id=${requestScope.loan_id}" method="post">                     
+                                <button class="btn btn-danger btn-sm">Tất toán trước hạn</button>
+                            </form>
+                        </h2>
+                        <c:if test ="${not empty requestScope.messagePenalty}">
+                            <h4 class="error-message">${requestScope.messagePenalty}</h4>
+                        </c:if>
+                        <c:if test ="${not empty requestScope.messageAmount}">
+                            <h4 class="error-message">${requestScope.messageAmount}</h4>
+                        </c:if>
+
                         <div class="savings-list">
-                            <c:forEach var="loan" items="${list}" varStatus="status">
+                            <c:forEach var="loan" items="${list}" varStatus ="status">
                                 <div class="savings-item">                              
                                     <div id="${loan.loan_id}" class="savings-details" >
                                         <div class="savings-table">
                                             <div class="row"><span class="label">STT:</span>
                                                 <span class="value">${status.count}</span>
+                                                <input type="hidden" name="loanpaymentid" value="${loan.loan_payments_id}" />
                                             </div>
                                             <div class="row"><span class="label">Số tiền gốc:</span>
                                                 <span class="value"><fmt:formatNumber value="${loan.principal_amount}" pattern="#,###" />VND</span>
@@ -289,37 +346,37 @@
                                             <div class="row"><span class="label">Số gốc còn lại:</span>
                                                 <span class="value"><fmt:formatNumber value="${loan.remaining_amount}" pattern="#,###" />VND</span>
                                             </div>
-                                            <div class="row"><span class="label">Ngày trả nợ:</span>
+                                            <div class="row"><span class="label">Ngày đến hạn:</span>
                                                 <span class="value"> <fmt:formatDate value="${loan.payment_date}" pattern="dd-MM-yyyy" /></span>
                                             </div>
-                                            <div class="row"><span class="label">Trạng thái:</span>
-                                                <span class="value">${loan.payment_status}</span>                                                                   
+                                            <div class="row"><span class="label">Ngày trả nợ:</span>
+                                                <span class="value"> <fmt:formatDate value="${loan.paydate}" pattern="dd-MM-yyyy" /></span>
                                             </div>
-                                            <form action="loanList?id=${loan.loan_id}" method="post">                     
-                                                <button class="btn btn-danger btn-sm">Trả nợ</button>
-                                            </form>
+                                            <div class="row"><span class="label">Số tiền phạt:</span>
+                                                <span class="value"><fmt:formatNumber value="${loan.penaltyfee}" pattern="#,###" />VND</span>
+                                            </div>
+                                            <div class="row"><span class="label">Trạng thái:</span>
+                                                <span class="value status-${loan.payment_status}"" id="status_${loan.loan_payments_id}">
+                                                    <c:choose>
+                                                        <c:when test="${loan.payment_status =='pending'}">Chưa thanh toán</c:when>
+                                                        <c:when test="${loan.payment_status =='complete'}">Đã thanh toán</c:when>
+                                                        <c:when test="${loan.payment_status =='late'}">Nộp muộn</c:when>
+                                                    </c:choose>
+                                                </span>
+                                            </div>
+                                            <c:if test="${loan.payment_status =='pending'}">        
+                                                <form action="payLoan" method="get">
+                                                    <input type="hidden" name="id" value="${loan.loan_payments_id}" />
+                                                    <input type="hidden" name="loanid" value="${loan.loan_id}" />
+                                                    <button class="btn btn-danger btn-sm" type="submit">Trả nợ</button>
+                                                </form>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>
                             </c:forEach>
-
-
-
                         </div>
-                    </div>
-
-                    <script>
-                        function toggleDetailsLoan(id) {
-                            var details = document.getElementById(id);
-
-                            if (details.style.display === "none") {
-                                details.style.display = "block";
-                            } else {
-                                details.style.display = "none";
-                            }
-                        }
-                    </script>
-
+                    </div>                  
 
                     <footer class="site-footer">
                         <div class="container">
@@ -336,6 +393,7 @@
             </div>
 
         </main>
+
     </div>
 </div>
 

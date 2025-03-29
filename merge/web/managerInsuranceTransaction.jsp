@@ -196,7 +196,7 @@
                     </li>                   
 
                     <li class="nav-item">
-                        <a class="nav-link " href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
+                        <a class="nav-link active" href="sortInsuranceTransaction?sortInsuranceTransaction=none&transaction_type=all&quantity=5&offset=1">
                             <i class="me-2"></i>
                             Quản lý giao dịch bảo hiểm
                         </a>
@@ -211,6 +211,12 @@
                         <a class="nav-link " href="ManagerInsuranceFeedback">
                             <i class="me-2"></i>
                             Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerStatisticFeedbackInsurance">
+                            <i class="me-2"></i>
+                            Quản lý thống kê phản hồi bảo hiểm
                         </a>
                     </li>
                 </ul>

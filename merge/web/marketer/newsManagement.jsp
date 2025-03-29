@@ -170,7 +170,7 @@
             <a href="<%= request.getContextPath() %>/home.jsp">Trở về Trang chủ</a>
             <a href="newsManage?staff_id=${sessionScope.account.role_id}&categoryId=0&status=all&sort=all&page=1&pageSize=4">Bảng điều khiển</a>
             <a href="addNews">Thêm Tin tức</a>
-            <a href="newsStatistic">Thống kê tin tức</a>
+            <a href="newsStatistic?page=1">Thống kê tin tức</a>
         </div>
         <div class="content">
             <h1>Quản lý Tin tức</h1>

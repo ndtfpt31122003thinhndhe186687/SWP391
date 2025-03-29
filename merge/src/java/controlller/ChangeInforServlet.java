@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +31,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import model.Customer;
 import model.NewsCategory;
 import model.Notifications;
@@ -88,7 +90,7 @@ public class ChangeInforServlet extends HttpServlet {
             return;
         }
         request.setAttribute("customer", c);
-          //Thong bao
+        //Thong bao
         DAO d = new DAO();
         List<Notifications> listNotify = d.getAllNotificationsByCustomerId(c.getCustomer_id());
         request.setAttribute("listNotify", listNotify);
@@ -108,7 +110,7 @@ public class ChangeInforServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Customer c = (Customer) session.getAttribute("account");
-        String em=c.getEmail();
+        String em = c.getEmail();
         String fullname = request.getParameter("profile-name");
         String email = request.getParameter("profile-email");
         String phone = request.getParameter("profile-phone");
@@ -122,8 +124,11 @@ public class ChangeInforServlet extends HttpServlet {
         if (email == null || email.trim().isEmpty()) {
             email = c.getEmail();
         }
-        if (phone == null || phone.trim().isEmpty()) {
-            phone = c.getPhone_number();
+        // Kiểm tra số điện thoại hợp lệ (10 chữ số và bắt đầu bằng 0)
+        if (phone == null || !phone.matches("0\\d{9}")) {
+            request.setAttribute("errorMessage", "Số điện thoại không hợp lệ! Phải có 10 chữ số và bắt đầu bằng số 0.");
+            request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
+            return; // Dừng xử lý nếu không hợp lệ
         }
         if (address == null || address.trim().isEmpty()) {
             address = c.getAddress();
@@ -146,7 +151,7 @@ public class ChangeInforServlet extends HttpServlet {
 
                 sqlDob = new java.sql.Date(dob.getTime());
             } catch (ParseException e) {
-                request.setAttribute("errorMessage", "Invalid date format. Please use dd-MM-yyyy.");
+                request.setAttribute("errorMessage", "Sai định dạng ngày. Hãy nhập theo dd/MM/yyyy!");
                 session.setAttribute("account", c);
                 request.getRequestDispatcher("changeInfor.jsp").forward(request, response);
                 return;
@@ -195,7 +200,7 @@ public class ChangeInforServlet extends HttpServlet {
         }
     }
 
-    public static void sendOtp(String recipientEmail, String otp) throws MessagingException {
+     public static void sendOtp(String recipientEmail, String otp) throws MessagingException, UnsupportedEncodingException {
         String senderEmail = "ducthinh20032003@gmail.com";
         String senderPassword = "fjuk kgua lvis rzkq";
 
@@ -214,12 +219,19 @@ public class ChangeInforServlet extends HttpServlet {
         Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress(senderEmail));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-        message.setSubject("Mã OTP Xác Nhận");
-        message.setHeader("Content-Type", "text/plain; charset=UTF-8");
-        message.setText("Mã OTP của bạn là: " + otp + ". Vui lòng không chia sẻ mã này.");
+        message.setSubject(MimeUtility.encodeText("Mã OTP Xác Nhận", "UTF-8", "B"));
+        String emailContent = "<p>Xin chào,</p>"
+                + "<p>Mã OTP của bạn là: <b>" + otp + "</b></p>"
+                + "<p>Vui lòng không chia sẻ mã này với bất kỳ ai.</p>"
+                + "<p>Trân trọng,</p>"
+                + "<p>Đội ngũ hỗ trợ YourBank</p>"
+                + "<p>Email: support@yourbank.com | Điện thoại: +123 456 789</p>";
+
+        message.setContent(emailContent, "text/html; charset=UTF-8");
 
         Transport.send(message);
     }
+
 
     /**
      * Returns a short description of the servlet.

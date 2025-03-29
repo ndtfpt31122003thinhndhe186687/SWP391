@@ -139,6 +139,12 @@
                 color: white;
                 font-weight: bold;
             }
+            .feedback-content img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
         </style>
     </head>
     <body>
@@ -153,7 +159,7 @@
             <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-         
+
             <div class="dropdown px-3">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid" alt="">
@@ -205,7 +211,7 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
             <div class="position-sticky py-4 px-3 sidebar-sticky">
                 <ul class="nav flex-column h-100">
-                    <li class="nav-item">
+                     <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="staff_management?status=all&sort=full_name&type=bankers&page=1&pageSize=2">
                             <i class="me-2"></i>
                             Quản lý nhân viên
@@ -213,7 +219,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link " href="service_management?type=services">
+                        <a class="nav-link" href="service_management?type=services">
                             <i class="me-2"></i>
                             Quản lý dịch vụ
                         </a>
@@ -225,16 +231,16 @@
                             Quản lý giao dịch
                         </a>
                     </li>      
-
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="insurance_management">
                             <i class=" me-2"></i>
                             Quản lý bảo hiểm
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
-                        <a class="nav-link  " href="serviceprovider_management">
+                        <a class="nav-link " href="serviceprovider_management">
                             <i class=" me-2"></i>
                             Quản lý nhà cung cấp dịch vụ
                         </a>
@@ -255,12 +261,12 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link active " href="feedback_management">
+                        <a class="nav-link active" href="feedback_management">
                             <i class="me-2"></i>
                             Quản lý phản hồi
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="newsResponse?categoryId=0&sort=title&page=1&pageSize=4">
                             <i class="me-2"></i>
@@ -280,29 +286,29 @@
 
                 <label for="filterStatus">Hiển thị thông tin theo tên dịch vụ:</label>
                 <select id="filterStatus" class="filter-dropdown" name="service_id"">
-                     <option value="0" ${requestScope.service_id == '' ? 'selected' : ''}>Tất cả</option>
-                        <c:forEach items="${listS}" var="S">
+                    <option value="0" ${requestScope.service_id == '' ? 'selected' : ''}>Tất cả</option>
+                    <c:forEach items="${listS}" var="S">
                         <option value="${S.service_id}" ${requestScope.service_id == S.service_id ? 'selected' : ''}>${S.service_name}</option>
-                        </c:forEach>                
+                    </c:forEach>                
                 </select>
 
                 <label for="sortFeedback">Sắp xếp theo:</label>
                 <select id="sortTransaction" class="filter-dropdown" name="sortFeedback">
                     <option value="feedback_date" ${requestScope.sort == 'full_name' ? 'selected' : ''}>Ngày phản hồi</option>
                     <option value="feedback_rate" ${requestScope.sort == 'service_name' ? 'selected' : ''}>Điểm phản hồi</option>
-                    
+
                 </select>
 
-                    <br>
-                 <label>Chọn số lượng phản hồi: </label>
-                    <select class="filter-dropdown" name="quantity">                    
-                        <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
-                        <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
-                        <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
-                    </select>
+                <br>
+                <label>Chọn số lượng phản hồi: </label>
+                <select class="filter-dropdown" name="quantity">                    
+                    <option value="5" ${requestScope.quantity == '5' ? 'selected' : ''}>5</option>
+                    <option value="10" ${requestScope.quantity == '10' ? 'selected' : ''}>10</option>
+                    <option value="15" ${requestScope.quantity == '15' ? 'selected' : ''}>15</option>                  
+                </select>
 
                 <button type="submit">Tìm</button>
-                </form>
+            </form>
 
             <div class="search-bar">
                 <form action="searchFeedback">
@@ -313,7 +319,7 @@
 
             <!-- View list transaction -->
             <div class="mt-3">
-               <table class="table table-bordered">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>ID Phản hồi</th>
@@ -341,7 +347,7 @@
                                         <h5 class="modal-title" id="feedbackModalLabel${F.feedback_id}">Chi tiết phản hồi:</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">                                                              
+                                    <div class="modal-body feedback-content">                                                              
                                         <p><strong>Nội dung phản hồi:</strong> ${F.feedback_content}</p>                                      
                                     </div>
                                     <div class="modal-footer">

@@ -52,7 +52,7 @@
         <h2 class="text-danger mt-5">Xác nhận OTP</h2>
         <p>Nhập mã OTP gồm 6 chữ số đã gửi đến email của bạn:</p>
 
-        <form action="verifyOtp" method="post">
+        <form action="${sessionScope.account.role_id == 6 ? 'verifyOtp' : 'verifyOtpStaff'}" method="post">
             <input type="text" id="otp-input" name="otp" inputmode="numeric" 
                    maxlength="6" oninput="updateOtpDisplay()" autofocus>
 

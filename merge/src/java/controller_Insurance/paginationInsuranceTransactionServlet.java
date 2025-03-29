@@ -66,6 +66,10 @@ public class paginationInsuranceTransactionServlet extends HttpServlet {
         List<Insurance_transactions> list = new ArrayList<>();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         String quantity_raw = request.getParameter("quantity");
         String offset_raw = request.getParameter("offset");
         int offset = 1;

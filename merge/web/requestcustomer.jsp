@@ -1,5 +1,6 @@
 <!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -17,8 +18,26 @@
     </head>
     <body>
         <header class="navbar sticky-top flex-md-nowrap bg-danger">
-            <!-- Header content (same as staff_management.jsp) -->
-        </header>
+      <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
+        <a class="navbar-brand text-white" href="home">
+          <i class="bi-box"></i>
+          Mini Finance
+        </a>
+      </div>
+      <div class="dropdown px-3">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid" alt="Profile">
+        </a>
+        <ul class="dropdown-menu bg-white shadow">
+          <li>
+            <a class="dropdown-item" href="logout">
+              <i class="bi-box-arrow-left me-2"></i>
+              Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </header>
 
         <div class="container-fluid">
             <div class="row">
@@ -28,25 +47,25 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="customerList">
                                     <i class="bi-people me-2"></i>
-                                    Customer List
+                                    Danh sách người dùng
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="listdebt">
                                     <i class="bi-cash-coin me-2"></i>
-                                    Debt Management
+                                    Quản lý nợ
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="customerrequest">
                                     <i class="bi-person-plus me-2"></i>
-                                    Customer Loan Requests
+                                    Đơn vay
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="requestsaving">
                                     <i class="bi-piggy-bank me-2"></i>
-                                    Customer Saving Requests
+                                    Đơn tiết kiệm
                                 </a>
                             </li>
                         </ul>
@@ -55,7 +74,7 @@
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0 text-danger">Customer Loan Request List</h1>
+                        <h1 class="h2 mb-0 text-danger">Đơn vay</h1>
                     </div>
 
                     <!-- Search Form -->
@@ -67,13 +86,13 @@
                                 </div>
                                 <div class="col-md-4">
                                     <select name="card_type" class="form-select">
-                                        <option value="" ${card_type == '' ? 'selected' : ''}>All Card Types</option>
+                                        <option value="" ${card_type == '' ? 'selected' : ''}>Loại thẻ</option>
                                         <option value="debit" ${card_type == 'debit' ? 'selected' : ''}>Debit</option>
                                         <option value="credit" ${card_type == 'credit' ? 'selected' : ''}>Credit</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                                    <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
                                 </div>
                             </div>
                         </form>
@@ -84,10 +103,10 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Customer ID</th>
-                                    <th>Customer Name</th>
-                                    <th>Card Type</th>
-                                    <th>Status</th>
+                                    <th>ID</th>
+                                    <th>Tên người dùng</th>
+                                    <th>Loại thẻ</th>
+                                    <th>Tình trạng</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -105,10 +124,10 @@
                                                 <input type="hidden" name="customer_id" value="${customer.customer_id}">
                                                 <input type="hidden" name="loan_id" value="${customer.loan_id}">
                                                 <select name="status" id="status">
-                                                    <option value="approved">Approved</option>
-                                                    <option value="rejected">Rejected</option>
+                                                    <option value="approved">Đồng ý</option>
+                                                    <option value="rejected">Từ chối</option>
                                                 </select>
-                                                <button type="submit" class="btn btn-info btn-sm">Pending</button>
+                                                <button type="submit" class="btn btn-info btn-sm">Submit</button>
                                             </form>
                                         </td>
                                     </tr>

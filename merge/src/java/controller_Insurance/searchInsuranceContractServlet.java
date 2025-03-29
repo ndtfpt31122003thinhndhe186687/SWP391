@@ -88,6 +88,10 @@ public class searchInsuranceContractServlet extends HttpServlet {
         }
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         DAO_Insurance dao = new DAO_Insurance();
         List<Insurance_contract> list = dao.searchInsuranceContractByCustomerName(i.getInsurance_id(), customer_name);
         request.setAttribute("listC", list);

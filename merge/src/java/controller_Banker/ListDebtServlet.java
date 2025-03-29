@@ -16,24 +16,23 @@ import model.Debt_management;
 public class ListDebtServlet extends HttpServlet {
 
     @Override
-         protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Get search parameter from request (if any)
+        // Get search value from request (if any)
         String searchQuery = request.getParameter("search");
         if (searchQuery == null) {
             searchQuery = "";
         } else {
-            // Trim whitespace and replace multiple spaces with a single space
             searchQuery = searchQuery.trim().replaceAll("\\s+", " ");
         }
-        
-        // Get card type from request (default to empty string if not present)
+
+        // Get card type from request (if any)
         String cardType = request.getParameter("card_type");
         if (cardType == null) {
             cardType = "";
         }
-        
-        // Get page number from request, default is 1 if not present
+
+        // Get page number from request, default is 1
         int page = 1;
         String pageParam = request.getParameter("page");
         if (pageParam != null && !pageParam.isEmpty()) {
@@ -45,41 +44,36 @@ public class ListDebtServlet extends HttpServlet {
         }
         int pageSize = 10;
         int offset = (page - 1) * pageSize;
-        
+
         DBContext db = new DBContext();
         List<Debt_management> debts = new ArrayList<>();
         int totalRecords = 0;
-        
+
         // Construct base SQL query
         String baseSql = "SELECT d.debt_id, c.full_name, c.card_type " +
                          "FROM debt_management d " +
-                         "INNER JOIN customer c ON d.customer_id = c.customer_id ";
-        
-        // Build WHERE clause
-        StringBuilder whereClause = new StringBuilder();
+                         "INNER JOIN customer c ON d.customer_id = c.customer_id " +
+                         "WHERE 1=1 ";
+
         boolean hasSearch = !searchQuery.isEmpty();
-        boolean hasCardFilter = !cardType.isEmpty();
-        
+        boolean hasCardTypeFilter = !cardType.isEmpty();
+
+        // Add search condition if applicable
         if (hasSearch) {
-            whereClause.append("WHERE (c.full_name LIKE ? OR CAST(d.debt_id AS VARCHAR(20)) = ?)");
-        }
-        if (hasCardFilter) {
-            if (whereClause.length() == 0) {
-                whereClause.append("WHERE LOWER(c.card_type) = LOWER(?)");
-            } else {
-                whereClause.append(" AND LOWER(c.card_type) = LOWER(?)");
-            }
+            baseSql += "AND (c.full_name LIKE ? OR CAST(d.debt_id AS VARCHAR(20)) = ?) ";
         }
         
-        String orderClause = " ORDER BY d.debt_id ";
-        String paginationClause = " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-        String sql = baseSql + whereClause + orderClause + paginationClause;
-        
-        // Query to count total records with filters
-        String countSql = "SELECT COUNT(*) AS total FROM (" + baseSql + whereClause + ") AS filtered_results";
-        
+        // Add card type filter if applicable
+        if (hasCardTypeFilter) {
+            baseSql += "AND LOWER(c.card_type) = LOWER(?) ";
+        }
+
+        // Add ORDER BY and pagination (OFFSET-FETCH for SQL Server)
+        String sql = baseSql + "ORDER BY d.debt_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String countSql = "SELECT COUNT(*) AS total FROM (" + baseSql + ") AS filtered_results";
+
         try (Connection conn = db.getConnection()) {
-            // Count total records
+            // Get total record count
             try (PreparedStatement countStmt = conn.prepareStatement(countSql)) {
                 int idx = 1;
                 if (hasSearch) {
@@ -87,7 +81,7 @@ public class ListDebtServlet extends HttpServlet {
                     countStmt.setString(idx++, pattern);
                     countStmt.setString(idx++, searchQuery);
                 }
-                if (hasCardFilter) {
+                if (hasCardTypeFilter) {
                     countStmt.setString(idx++, cardType.toLowerCase());
                 }
                 try (ResultSet rsCount = countStmt.executeQuery()) {
@@ -96,8 +90,8 @@ public class ListDebtServlet extends HttpServlet {
                     }
                 }
             }
-            
-            // Retrieve the list with pagination and filters
+
+            // Get debt list with pagination
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 int idx = 1;
                 if (hasSearch) {
@@ -105,12 +99,12 @@ public class ListDebtServlet extends HttpServlet {
                     pstmt.setString(idx++, pattern);
                     pstmt.setString(idx++, searchQuery);
                 }
-                if (hasCardFilter) {
+                if (hasCardTypeFilter) {
                     pstmt.setString(idx++, cardType.toLowerCase());
                 }
                 pstmt.setInt(idx++, offset);
                 pstmt.setInt(idx++, pageSize);
-                
+
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
                         Debt_management debt = new Debt_management();
@@ -121,20 +115,17 @@ public class ListDebtServlet extends HttpServlet {
                     }
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Log SQL exceptions
         } catch (Exception e) {
-            e.printStackTrace(); // Log any other exceptions
+            e.printStackTrace();
         }
-        
+
         int totalPages = (int) Math.ceil(totalRecords / (double) pageSize);
-        
+
         request.setAttribute("listdebt", debts);
         request.setAttribute("search", searchQuery);
         request.setAttribute("card_type", cardType);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        
         request.getRequestDispatcher("listdebt.jsp").forward(request, response);
     }
 
@@ -142,10 +133,5 @@ public class ListDebtServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "ListDebtServlet with pagination, search filter, and card_type filter";
     }
 }

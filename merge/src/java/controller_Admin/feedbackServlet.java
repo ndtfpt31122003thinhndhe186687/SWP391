@@ -84,7 +84,7 @@ public class feedbackServlet extends HttpServlet {
         String feedback_rate_raw = request.getParameter("feedback_rate");
         int service_id=0, feedback_rate=0;
          service_id = Integer.parseInt(service_id_raw);                   
-          feedback_content = feedback_content.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim();
+          feedback_content = feedback_content.replaceAll("&nbsp;", "").trim();
         if(feedback_content.isEmpty()){
              request.setAttribute("error", "Nội dung không được để trống!");
              request.setAttribute("service_id", service_id);

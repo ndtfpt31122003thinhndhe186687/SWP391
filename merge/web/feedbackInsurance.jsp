@@ -15,9 +15,14 @@
             /* Căn chỉnh tổng thể */
             body {
                 font-family: Arial, sans-serif;
-                margin: 20px;
-                padding: 20px;
-                background-color: #f9f9f9;
+                background-color: #ffe6e6;
+                color: #990000;
+                text-align: center;
+                font-size: 18px;
+            }
+            h1 {
+                color: #cc0000;
+                font-size: 32px;
             }
 
             form {
@@ -25,7 +30,7 @@
                 padding: 20px;
                 border-radius: 10px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                width: 400px;
+                width: 900px;
                 margin: auto;
                 border: 2px solid #e74c3c; /* Viền đỏ */
             }
@@ -100,13 +105,19 @@
             .rating label:hover ~ label {
                 color: gold;
             }
-
+.feedback-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
         </style>
     </head>
     <body>
-        <h3>${requestScope.error}</h3>
+        <h1>Gửi phản hồi bảo hiểm</h1>
+        <h3 style="color:red">${requestScope.error}</h3>
         <form action="feedbackInsurance" method="post">
-            <input type="text" name="insurance_id" value="${insurance_id}">
+            <input type="hidden" name="insurance_id" value="${insurance_id}">
             <label>Chọn chính sách</label>  
             <select name="policy_id">
                 <c:forEach var="P" items="${listP}">
@@ -114,7 +125,9 @@
                 </c:forEach>
             </select>
             <label>Nhập nội dung phản hồi</label>
-            <textarea name="feedback_content" id="editor1" required class="form-control"></textarea>
+             <div id="toolbar-container"></div> <!-- Thanh công c? CKEditor -->
+            <div id="editor" class="feedback-content" >${p.description}</div>
+            <input type="hidden" name="feedback_content" id="hiddenDescription">
             <label>Đánh giá</label>
             <div class="rating">
                 <input type="radio" id="star5" name="feedback_rate" value="5"><label for="star5">★</label>
@@ -127,10 +140,73 @@
         <button type="submit"> Gửi phản hồi </button>
     </form>
 
-    <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/decoupled-document/ckeditor.js"></script>
+          <script>
+            // Hàm upload ?nh
+            class MyUploadAdapter {
+                constructor(loader) {
+                    this.loader = loader;
+                }
 
-    <script>
-        CKEDITOR.replace('editor1');
-    </script>
+                upload() {
+                    return this.loader.file
+                            .then(file => new Promise((resolve, reject) => {
+                                    const formData = new FormData();
+                                    formData.append('upload', file); // Ph?i trùng v?i request.getPart("upload") trong Servlet
+
+                                    fetch('http://localhost:9999/merge/uploadImgPolicy', {// URL servlet upload
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error(`Lỗii HTTP! Mã trạng thái: ${response.status}`);
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(result => {
+                                                if (!result || !result.url) {
+                                                    return reject('Upload ảnh thấtt bại!');
+                                                }
+                                                resolve({
+                                                    default: result.url  // ???ng d?n ?nh tr? v? t? server
+                                                });
+                                            })
+                                            .catch(error => {
+                                                console.error('Lỗi upload ảnh:', error);
+                                                reject('Không thể upload ảnh!');
+                                            });
+                                }));
+                }
+            }
+
+// Gán plugin upload ?nh vào CKEditor
+            function MyCustomUploadAdapterPlugin(editor) {
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                    return new MyUploadAdapter(loader);
+                };
+            }
+
+// Kh?i t?o CKEditor
+            DecoupledEditor
+                    .create(document.querySelector('#editor'), {
+                        extraPlugins: [MyCustomUploadAdapterPlugin]
+                    })
+                    .then(editor => {
+                        const toolbarContainer = document.querySelector('#toolbar-container');
+                        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+                        // L?u n?i dung vào input ?n khi submit form
+ document.querySelector("form").addEventListener("submit", function () {
+            let descriptionValue = editor.getData().trim();
+            document.getElementById("hiddenDescription").value = descriptionValue;
+        });
+
+                    })
+                    .catch(error => {
+                        console.error('CKEditor lỗi:', error);
+                    });
+
+        </script>
 </body>
 </html>

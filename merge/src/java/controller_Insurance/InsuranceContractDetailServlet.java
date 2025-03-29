@@ -63,6 +63,10 @@ public class InsuranceContractDetailServlet extends HttpServlet {
         String contract_id_raw = request.getParameter("contract_id");
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         int insurance_Id = i.getInsurance_id();
         int contract_id = Integer.parseInt(contract_id_raw);
         Insurance_contract_detail detail = dao.getInsuranceContractDetailByContractid(contract_id, i.getInsurance_id());

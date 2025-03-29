@@ -117,73 +117,66 @@
 
                             <li class="nav-item">
                                 <a class="nav-link " aria-current="page" href="balanceCustomer">
-                                    <i class="bi-house-fill me-2"></i>
-                                    Tổng quan
+                                    <i class="bi-house-fill me-2"></i> Tổng quan
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a class="nav-link" href="wallet">
-                                    <i class="bi-wallet me-2"></i>
-                                    Ví của tôi
+                                    <i class="bi-wallet me-2"></i> Ví của tôi
                                 </a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link" href="viewprofile">
-                                    <i class="bi-person me-2"></i>
-                                    Hồ sơ
+                                <a class="nav-link" href="insuranceWallet">
+                                    <i class="bi-shield-check me-2"></i> Lịch sử bảo hiểm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="transferAmount">
+                                    <i class="bi-arrow-left-right me-2"></i> Chuyển tiền
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="viewprofile">
+                                    <i class="bi-person me-2"></i> Hồ sơ
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="savingList">
-                                    <i class="bi-person me-2"></i>
-                                    Sổ tiết kiệm 
+                                    <i class="bi-piggy-bank me-2"></i> Sổ tiết kiệm
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="loanList">
-                                    <i class="bi-person me-2"></i>
-                                    Vay 
+                                <a class="nav-link" href="loanList">
+                                    <i class="bi-bank me-2"></i> Vay
                                 </a>
                             </li>
-
-                           
                             <c:if test="${sessionScope.account.role_id==6}">
-                                <c:if test="${sessionScope.account.card_type == 'credit' 
-                                              && sessionScope.account.credit_limit == 0 }">
-                                      <li class="nav-item">                                             
-
-                                          <a class="nav-link" href="registerCreditCard">
-                                              <i class="bi-person me-2"></i>
-                                              Đăng Ký Thẻ Tín Dụng
-                                          </a>                          
-                                      </li>
-                                </c:if>  
-                            </c:if>  
+                                <c:if test="${sessionScope.account.card_type == 'credit' && sessionScope.account.credit_limit == 0 }">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="registerCreditCard">
+                                            <i class="bi-credit-card me-2"></i> Đăng Ký Thẻ Tín Dụng
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </c:if>
                             <li class="nav-item">
                                 <a class="nav-link" href="notificationsList">
-                                    <i class="bi-person me-2"></i>
-                                    Thông báo 
+                                    <i class="bi-bell me-2"></i> Thông báo
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="CustomerInsuranceList">
-                                    <i class="bi-gear me-2"></i>
-                                    Bảo hiểm
+                                <a class="nav-link" href="CustomerInsuranceList">
+                                    <i class="bi-shield-lock me-2"></i> Bảo hiểm
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="changeInfor">
-                                    <i class="bi-gear me-2"></i>
-                                    Cài đặt
-
+                                    <i class="bi-gear me-2"></i> Cài đặt
                                 </a>
                             </li>
                             <li class="nav-item border-top mt-auto pt-2">
                                 <a class="nav-link" href="logout">
-                                    <i class="bi-box-arrow-left me-2"></i>
-                                    Đăng xuất
+                                    <i class="bi-box-arrow-left me-2"></i> Đăng xuất
                                 </a>
                             </li>
                         </ul>
@@ -204,9 +197,6 @@
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Đổi mật khẩu</a>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" href="changenotification" id="notification-tab" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Trạng thái</a>
                                     </li>
                                 </ul>
 
@@ -241,37 +231,6 @@
                                                     ${errorMessage}
                                                 </div>
                                             </c:if>
-                                        </form>
-                                    </div>
-
-
-
-                                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                                        <h6 class="mb-4 text-danger">Notification</h6>
-
-                                        <form class="custom-form notification-form" action="#" method="post" role="form">
-
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
-
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                            </div>
-
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
-
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                            </div>
-
-                                            <div class="d-flex mt-4">
-                                                <button type="button" class="form-control me-3 text-bg-danger">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2 text-bg-danger">
-                                                    Update Password
-                                                </button>
-                                            </div>
                                         </form>
                                     </div>
                                 </div>

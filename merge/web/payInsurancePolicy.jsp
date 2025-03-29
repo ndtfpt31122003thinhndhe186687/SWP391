@@ -81,7 +81,7 @@
         <p>Bạn đã thanh toán. Không cần nộp thêm.</p>
     </c:when>
     <c:otherwise>
-        <p>Số tiền cần thanh toán: <fmt:formatNumber value="${money}" pattern="#,###"/> VND</p>
+        <p>Số tiền cần thanh toán: <fmt:formatNumber value="${money}" pattern="#,##0.00"/> VND</p>
         
         <form action="calculatorInsurance" method="post">
             <input type="hidden" name="contract_id" value="${contract_id}">

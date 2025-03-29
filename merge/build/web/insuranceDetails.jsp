@@ -148,13 +148,18 @@
                                 <div class="detail-label">Đánh giá</div>
                                 <div class="detail-value">
                                     <c:if test="${star > 0}">
-                                    <c:forEach begin="1" end="${star}">
-                                        <i class="fa-solid fa-star" style="color: gold;"></i>
-                                    </c:forEach>
+                                        <c:forEach begin="1" end="${star}">
+                                            <i class="fa-solid fa-star" style="color: gold;"></i>
+                                        </c:forEach>
                                     </c:if>
-                                        <c:if test="${star == 0}">
-                                            <label>Chưa có đánh giá</label>
-                                        </c:if>
+                                    <c:if test="${star == 0}">
+                                        <label>Chưa có đánh giá</label>
+                                    </c:if>
+                                    <c:if test="${star > 0}">
+                                        <div class="detail-label">
+                                            <a href="customerViewFeedbackInsurance?insurance_id=${insurance.insurance_id} "class="detail-label">Xem đánh giá</a>
+                                        </div>
+                                    </c:if>
                                 </div>
                                 <div class="detail-label">Chính sách</div>
                                 <a class="detail-label" href="InsurancePolicyDetails?insurance_id=${insurance.insurance_id}" >Xem thêm</a>

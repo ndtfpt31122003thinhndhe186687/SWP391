@@ -51,6 +51,12 @@
                 background-color: #b02a37 !important;
                 border-color: #b02a37 !important;
             }
+            .feedback-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
         </style>
 
     </head>
@@ -208,9 +214,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="ManagerInsuranceFeedback">
+                        <a class="nav-link active" href="ManagerInsuranceFeedback">
                             <i class="me-2"></i>
                             Quản lý phản hồi bảo hiểm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="ManagerStatisticFeedbackInsurance">
+                            <i class="me-2"></i>
+                            Quản lý thống kê phản hồi bảo hiểm
                         </a>
                     </li>
                 </ul>
@@ -279,7 +291,7 @@
                                         <h5 class="modal-title" id="feedbackModalLabel${F.feedback_id}">Chi tiết phản hồi:</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">                                                              
+                                    <div class="modal-body feedback-content">                                                              
                                         <p><strong>Nội dung phản hồi:</strong> ${F.feedback_content}</p>                                      
                                     </div>
                                     <div class="modal-footer">

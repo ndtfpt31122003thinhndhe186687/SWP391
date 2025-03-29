@@ -56,7 +56,7 @@
     </style>
 </head>
 <body>
-    <h1>Update Debt Management</h1>
+    <h1>Quản lý nợ</h1>
 
     <%
         Debt_management debt = (Debt_management) request.getAttribute("debt");
@@ -64,13 +64,13 @@
     %>
         <form action="updatedebtmanagement" method="post">
             <input type="hidden" name="debt_id" value="<%= debt.getDebt_id() %>">
-            <label for="debt_status">Debt Status:</label>
+            <label for="debt_status">Tình trạng nợ:</label>
             <input type="text" id="debt_status" name="debt_status" value="<%= debt.getDebt_status() %>">
 
-            <label for="overdue_days">Overdue Days:</label>
+            <label for="overdue_days">Ngày quá hạn:</label>
             <input type="number" id="overdue_days" name="overdue_days" value="<%= debt.getOverdue_days() %>">
 
-            <label for="notes">Notes:</label>
+            <label for="notes">Ghi chú:</label>
             <textarea id="notes" name="notes"><%= debt.getNotes() %></textarea>
 
             <input type="submit" value="Update">

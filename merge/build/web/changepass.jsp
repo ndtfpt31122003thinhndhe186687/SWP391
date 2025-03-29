@@ -30,8 +30,7 @@
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
                 <a class="navbar-brand text-white" href="home">
                     <i class="bi-box"></i>
-                    Finbank
-                </a>
+                    Finbank                </a>
             </div>
 
             <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,225 +80,184 @@
                             <img src="images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
 
                             <div class="d-flex flex-column">
-                                <small>${sessionScope.account.customer_id}</small>
+                                <small>${sessionScope.account.full_name}</small>
                                 <small>${sessionScope.account.email}</small>
                             </div>
                         </div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="profile.html">
+                        <a class="dropdown-item" href="viewprofile">
                             <i class="bi-person me-2"></i>
-                            Profile
+                            Hồ sơ                       
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="setting.html">
+                        <a class="dropdown-item" href="changeInfor">
                             <i class="bi-gear me-2"></i>
-                            Settings
+                            Cài đặt
                         </a>
                     </li>
                     <li class="border-top mt-3 pt-2 mx-4">
                         <a class="dropdown-item ms-0 me-0" href="logout">
-                            <i class="bi-box-arrow-left me-2"></i>
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </div>
-</header>
-
-<div class="container-fluid">
-    <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
-            <div class="position-sticky py-4 px-3 sidebar-sticky">
-                <ul class="nav flex-column h-100">
-                    <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="balanceCustomer">
-                            <i class="bi-house-fill me-2"></i>
-                            Tổng quan
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="wallet">
-                            <i class="bi-wallet me-2"></i>
-                            Ví của tôi
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="viewprofile">
-                            <i class="bi-person me-2"></i>
-                            Hồ sơ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="savingList">
-                            <i class="bi-person me-2"></i>
-                            Sổ tiết kiệm 
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="loanList">
-                            <i class="bi-person me-2"></i>
-                            Vay 
-                        </a>
-                    </li>
-
-                    
-                    <c:if test="${sessionScope.account.role_id==6}">
-                        <c:if test="${sessionScope.account.card_type == 'credit' 
-                                      && sessionScope.account.credit_limit == 0 }">
-                              <li class="nav-item">                                             
-
-                                  <a class="nav-link" href="registerCreditCard">
-                                      <i class="bi-person me-2"></i>
-                                      Đăng Ký Thẻ Tín Dụng
-                                  </a>                          
-                              </li>
-                        </c:if>  
-                    </c:if>  
-                    <li class="nav-item">
-                        <a class="nav-link" href="notificationsList">
-                            <i class="bi-person me-2"></i>
-                            Thông báo 
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="CustomerInsuranceList">
-                            <i class="bi-gear me-2"></i>
-                            Bảo hiểm
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="changeInfor">
-                            <i class="bi-gear me-2"></i>
-                            Cài đặt
-
-                        </a>
-                    </li>
-                    <li class="nav-item border-top mt-auto pt-2">
-                        <a class="nav-link" href="logout">
                             <i class="bi-box-arrow-left me-2"></i>
                             Đăng xuất
                         </a>
                     </li>
                 </ul>
             </div>
-        </nav>
 
-        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
-            <div class="title-group mb-3">
-                <h1 class="h2 mb-0 text-danger">Settings</h1>
-            </div>
+        </header>
 
-            <div class="row my-4">
-
-                <div class="col-lg-7 col-12">
-                    <div class="custom-block bg-white">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changeInfor" id="profile-tab" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</a>
+        <div class="container-fluid">
+            <div class="row">
+                <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
+                    <div class="position-sticky py-4 px-3 sidebar-sticky">
+                        <ul class="nav flex-column h-100">
+                            <li class="nav-item">
+                                <a class="nav-link " aria-current="page" href="balanceCustomer">
+                                    <i class="bi-house-fill me-2"></i> Tổng quan
+                                </a>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="wallet">
+                                    <i class="bi-wallet me-2"></i> Ví của tôi
+                                </a>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" href="changenotification" id="notification-tab" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="insuranceWallet">
+                                    <i class="bi-shield-check me-2"></i> Lịch sử bảo hiểm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="transferAmount">
+                                    <i class="bi-arrow-left-right me-2"></i> Chuyển tiền
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="viewprofile">
+                                    <i class="bi-person me-2"></i> Hồ sơ
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="savingList">
+                                    <i class="bi-piggy-bank me-2"></i> Sổ tiết kiệm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="loanList">
+                                    <i class="bi-bank me-2"></i> Vay
+                                </a>
+                            </li>
+                            <c:if test="${sessionScope.account.role_id==6}">
+                                <c:if test="${sessionScope.account.card_type == 'credit' && sessionScope.account.credit_limit == 0 }">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="registerCreditCard">
+                                            <i class="bi-credit-card me-2"></i> Đăng Ký Thẻ Tín Dụng
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </c:if>
+                            <li class="nav-item">
+                                <a class="nav-link" href="notificationsList">
+                                    <i class="bi-bell me-2"></i> Thông báo
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="CustomerInsuranceList">
+                                    <i class="bi-shield-lock me-2"></i> Bảo hiểm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="changeInfor">
+                                    <i class="bi-gear me-2"></i> Cài đặt
+                                </a>
+                            </li>
+                            <li class="nav-item border-top mt-auto pt-2">
+                                <a class="nav-link" href="logout">
+                                    <i class="bi-box-arrow-left me-2"></i> Đăng xuất
+                                </a>
                             </li>
                         </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class=" show" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
-                                <h6 class="mb-4 text-danger">Password</h6>
-                                <form class="custom-form password-form" action="changepass" method="post" role="form">
-                                    <input type="password" name="opass" id="password" class="form-control" placeholder="Current Password" required="">
-                                    <input type="password" name="newpass" id="newpass" class="form-control" placeholder="New Password" required="">
-                                    <c:if test="${not empty error}">
-                                        <div class="text-danger">${error}</div>
-                                    </c:if>
+                    </div>
+                </nav>
 
-                                    <input type="password" name="confirmpass" id="confirmpass" class="form-control" placeholder="Confirm Password" required="">
-                                    <c:if test="${not empty error}">
-                                        <div class="text-danger">${error}</div>
-                                    </c:if>
+                <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+                    <div class="title-group mb-3">
+                        <h1 class="h2 mb-0 text-danger">Cài đặt</h1>
+                    </div>
 
-                                    <hr>
-                                    <div class="d-flex">
-                                        <button type="button" class="form-control me-3 text-bg-danger">Reset</button>
-                                        <button type="submit" class="form-control ms-2 text-bg-danger">Update Password</button>
+                    <div class="row my-4">
+
+                        <div class="col-lg-7 col-12">
+                            <div class="custom-block bg-white">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link " href="changeInfor" id="profile-tab" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Thông tin</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" href="changepass" id="password-tab" role="tab" aria-controls="password-tab-pane" aria-selected="false">Đổi mật khẩu</a>
+                                    </li>
+
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class=" show" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
+                                        <h6 class="mb-4 text-danger">Đổi mật khẩu</h6>
+                                        <form class="custom-form password-form" action="changepass" method="post" role="form">
+                                            <input type="password" name="opass" id="password" class="form-control" placeholder="Mật khẩu hiện tại" required="">
+                                            <input type="password" name="newpass" id="newpass" class="form-control" placeholder="Mật khẩu mới" required="">
+                                            <c:if test="${not empty error}">
+                                                <div class="text-danger">${error}</div>
+                                            </c:if>
+
+                                            <input type="password" name="confirmpass" id="confirmpass" class="form-control" placeholder="Nhập lại mật khẩu" required="">
+                                            <c:if test="${not empty error}">
+                                                <div class="text-danger">${error}</div>
+                                            </c:if>
+
+                                            <hr>
+                                            <div class="d-flex">
+                                                <button type="button" class="form-control me-3 text-bg-danger">Cài lại</button>
+                                                <button type="submit" class="form-control ms-2 text-bg-danger">Thay đổi</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                            <h6 class="mb-4 text-danger">Notification</h6>
+                    </div>
+                    <div class="col-lg-5 col-12">
+                        <div class="custom-block custom-block-contact">
+                            <h6 class="mb-4">Vẫn không tìm thấy những gì bạn đang tìm kiếm?</h6>
+                            <p>
+                                <strong>Gọi cho chúng tôi:</strong>
+                                <a href="tel: 305-240-9671" class="ms-2">
+                                    (60) 
+                                    305-240-9671
+                                </a>
+                            </p>
 
-                            <form class="custom-form notification-form" action="#" method="post" role="form">
-
-                                <div class="form-check form-switch d-flex mb-3 ps-0">
-                                    <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
-
-                                    <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                </div>
-
-                                <div class="form-check form-switch d-flex mb-3 ps-0">
-                                    <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
-
-                                    <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                </div>
-
-                                <div class="d-flex mt-4">
-                                    <button type="button" class="form-control me-3 text-bg-danger">
-                                        Reset
-                                    </button>
-
-                                    <button type="submit" class="form-control ms-2 text-bg-danger">
-                                        Update Password
-                                    </button>
-                                </div>
-                            </form>
+                            <a href="#" class="btn custom-btn custom-btn-bg-white mt-3">
+                                Chat with us
+                            </a>
                         </div>
                     </div>
-                </div>
             </div>
 
-            <div class="col-lg-5 col-12">
-                <div class="custom-block custom-block-contact">
-                    <h6 class="mb-4">Still can?t find what you looking for?</h6>
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row">
 
-                    <p>
-                        <strong>Call us:</strong>
-                        <a href="tel: 305-240-9671" class="ms-2">
-                            (60) 
-                            305-240-9671
-                        </a>
-                    </p>
+                        <div class="col-lg-12 col-12">
+                            <p class="copyright-text">Copyright © Mini Finance 2048 
+                                - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                        </div>
 
-                    <a href="#" class="btn custom-btn custom-btn-bg-white mt-3">
-                        Chat with us
-                    </a>
+                    </div>
                 </div>
-            </div>
+            </footer>
+        </main>
+
     </div>
-
-    <footer class="site-footer">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-lg-12 col-12">
-                    <p class="copyright-text">Copyright © Mini Finance 2048 
-                        - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                </div>
-
-            </div>
-        </div>
-    </footer>
-</main>
-
-</div>
 </div>
 
 <!-- JAVASCRIPT FILES -->

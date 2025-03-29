@@ -5,10 +5,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Thông tin về dịch vụ</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+        
         <style>
-            :root {
+              :root {
                 --primary-color: #dc3545;
             }
 
@@ -170,6 +173,7 @@
                             </c:choose>
                         </div>
                     </div>
+                            
 
                     <div class="row mt-4">
                         <div class="col-md-6">
@@ -178,6 +182,21 @@
 
                             <div class="detail-label">Tên dịch vụ</div>
                             <div class="detail-value">${service.service_name}</div>
+                            <div class="detail-label">Đánh giá</div>
+                             <div class="detail-value">
+                                    <c:if test="${star > 0}">
+                                    <c:forEach begin="1" end="${star}">
+                                        <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    </c:forEach>
+                                    </c:if>
+                                        <c:if test="${star == 0}">
+                                            <label>Chưa có đánh giá</label>
+                                        </c:if>
+                                            
+                                </div>
+                             <div class="detail-label">
+                                 <a href="customerViewFeedback?service_id=${service.service_id} "class="detail-label">Xem đánh giá</a>
+                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="detail-label">Loại dịch vụ</div>
@@ -198,10 +217,20 @@
                             ${service.description}
                         </div>
                     </div>
-
-                    <div class="text-center mt-4">
+  <div class="text-center mt-4">
                         <c:if test="${service.status == 'active'}">
+                            <c:if test="${sessionScope.account.role_id == 6}">
+                                        <c:forEach var="C" items="${listC}">
+                                            <c:if test="${C.customer_id == sessionScope.account.customer_id}">
+                                                <a href="feedback?service_id=${service.service_id}" class="btn btn-apply me-3">
+                                                    <i class="bi bi-check-circle"></i> Phản hồi 
+                                                </a>
+                                               
+                                            </c:if>
+                                        </c:forEach>
+                        </c:if>
                             <c:choose>
+                                 
                                 <c:when test="${service.service_type == 'saving'}">
                                     <a href="sendSavingsApplication" class="btn btn-apply me-3" onclick="showAlert(event)">
                                         <i class="bi bi-check-circle"></i> Sử dụng

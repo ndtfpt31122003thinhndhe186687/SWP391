@@ -187,73 +187,69 @@
                 <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
                     <div class="position-sticky py-4 px-3 sidebar-sticky">
                         <ul class="nav flex-column h-100">
+
                             <li class="nav-item">
                                 <a class="nav-link " aria-current="page" href="balanceCustomer">
-                                    <i class="bi-house-fill me-2"></i>
-                                    Tổng quan
+                                    <i class="bi-house-fill me-2"></i> Tổng quan
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a class="nav-link" href="wallet">
-                                    <i class="bi-wallet me-2"></i>
-                                    Ví của tôi
+                                    <i class="bi-wallet me-2"></i> Ví của tôi
                                 </a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link" href="viewprofile">
-                                    <i class="bi-person me-2"></i>
-                                    Hồ sơ
+                                <a class="nav-link" href="insuranceWallet">
+                                    <i class="bi-shield-check me-2"></i> Lịch sử bảo hiểm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="transferAmount">
+                                    <i class="bi-arrow-left-right me-2"></i> Chuyển tiền
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="viewprofile">
+                                    <i class="bi-person me-2"></i> Hồ sơ
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="savingList">
-                                    <i class="bi-person me-2"></i>
-                                    Sổ tiết kiệm 
+                                    <i class="bi-piggy-bank me-2"></i> Sổ tiết kiệm
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="loanList">
-                                    <i class="bi-person me-2"></i>
-                                    Vay 
+                                    <i class="bi-bank me-2"></i> Vay
                                 </a>
                             </li>
                             <c:if test="${sessionScope.account.role_id==6}">
-                                <c:if test="${sessionScope.account.card_type == 'credit' 
-                                              && sessionScope.account.credit_limit == 0 }">
-                                      <li class="nav-item">                                             
-
-                                          <a class="nav-link" href="registerCreditCard">
-                                              <i class="bi-person me-2"></i>
-                                              Đăng Ký Thẻ Tín Dụng
-                                          </a>                          
-                                      </li>
-                                </c:if>  
-                            </c:if>  
+                                <c:if test="${sessionScope.account.card_type == 'credit' && sessionScope.account.credit_limit == 0 }">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="registerCreditCard">
+                                            <i class="bi-credit-card me-2"></i> Đăng Ký Thẻ Tín Dụng
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </c:if>
                             <li class="nav-item">
                                 <a class="nav-link" href="notificationsList">
-                                    <i class="bi-person me-2"></i>
-                                    Thông báo 
+                                    <i class="bi-bell me-2"></i> Thông báo
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="CustomerInsuranceList">
-                                    <i class="bi-gear me-2"></i>
-                                    Bảo hiểm
+                                <a class="nav-link" href="CustomerInsuranceList">
+                                    <i class="bi-shield-lock me-2"></i> Bảo hiểm
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="changeInfor">
-                                    <i class="bi-gear me-2"></i>
-                                    Cài đặt
-
+                                <a class="nav-link" href="changeInfor">
+                                    <i class="bi-gear me-2"></i> Cài đặt
                                 </a>
                             </li>
                             <li class="nav-item border-top mt-auto pt-2">
                                 <a class="nav-link" href="logout">
-                                    <i class="bi-box-arrow-left me-2"></i>
-                                    Đăng xuất
+                                    <i class="bi-box-arrow-left me-2"></i> Đăng xuất
                                 </a>
                             </li>
                         </ul>
@@ -288,7 +284,20 @@
                                             <div class="row"><span class="label">Ngày kết thúc:</span>
                                                 <span class="value"><fmt:formatDate value="${loan.end_date}" pattern="dd-MM-yyyy" /></span>
                                             </div>
-                                            <div class="row"><span class="label">Ảnh:</span><span class="value"><img src="imageAsset/${loan.asset_image}" width="500px"/></span>
+                                            <div class="row"><span class="label">Ảnh:</span>
+                                                <c:choose>
+                                                    <c:when test="${loan.loan_type=='secured'}">
+                                                        <span class="value">
+                                                            <img src="imageAsset/${loan.asset_image}" width="500px"/>
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="value">
+                                                            <a href="uploads/${loan.asset_image}" target="_blank">${loan.asset_image}</a>
+                                                        </span>
+                                                    </c:otherwise>
+                                                </c:choose>
+
                                             </div>
                                             <div class="row"><span class="label">Giá trị tài sản:</span>
                                                 <span class="value"><fmt:formatNumber value="${loan.value_asset}" pattern="#,###" />VND</span>
@@ -313,8 +322,7 @@
                                         <c:if test ="${loan.status !='pending'}">
                                             <form action="loanList" method="post">
                                                 <input type="hidden" name="id" value="${loan.loan_id}" />
-                                                <input type="hidden" name="status" value="${loan.status}" />
-                                                <button class="btn btn-danger btn-sm">Trả nợ</button>
+                                                <button class="btn btn-danger btn-sm">Chi tiết</button>
                                             </form>
                                         </c:if>
                                     </div>

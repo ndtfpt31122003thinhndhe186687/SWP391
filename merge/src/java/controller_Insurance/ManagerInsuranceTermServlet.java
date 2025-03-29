@@ -64,6 +64,10 @@ public class ManagerInsuranceTermServlet extends HttpServlet {
         DAO_Insurance dao = new DAO_Insurance();
         HttpSession session = request.getSession();
         Insurance i = (Insurance) session.getAttribute("account");
+        if (i == null) {
+            response.sendRedirect("login.jsp"); // Nếu session bị mất, chuyển về trang đăng nhập
+            return;
+        }
         List<Insurance_term> list = dao.getInsuranceTermByInsuranceID(i.getInsurance_id());        
         request.setAttribute("listTerm", list);
         request.getRequestDispatcher("managerInsuranceTerm.jsp").forward(request, response);

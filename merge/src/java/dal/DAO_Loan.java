@@ -74,7 +74,7 @@ public class DAO_Loan extends DBContext {
                 s.setDuration(rs.getInt("duration"));
                 s.setEarly_payment_penalty(rs.getDouble("early_payment_penalty"));
                 s.setInterest_rate(rs.getDouble("interest_rate"));
-                s.setMin_deposit(rs.getDouble("min_payment"));
+                s.setMin_payment(rs.getDouble("min_payment"));
                 s.setStatus(rs.getString("status"));
                 s.setCreated_at(rs.getTimestamp("created_at"));
                 list.add(s);
@@ -119,7 +119,7 @@ public class DAO_Loan extends DBContext {
 
     public List<Loan> getListLoanByCustomerId(int id) {
         String sql = "select l.amount,l.start_date,l.end_date,l.image,l.value_asset,"
-                + "s.service_name,l.loan_id,l.status from loan l join service_terms st on"
+                + "s.service_name,l.loan_id,l.status,l.loan_type from loan l join service_terms st on"
                 + " l.serviceTerm_id=st.serviceTerm_id join services s on"
                 + " st.service_id = s.service_id where l.customer_id = ?";
         List<Loan> list = new ArrayList<>();
@@ -137,6 +137,7 @@ public class DAO_Loan extends DBContext {
                 l.setServiceName(rs.getString(6));
                 l.setLoan_id(rs.getInt(7));
                 l.setStatus(rs.getString(8));
+                l.setLoan_type(rs.getString(9));
                 list.add(l);
             }
         } catch (Exception e) {
@@ -191,7 +192,7 @@ public class DAO_Loan extends DBContext {
         List<Loan_payments> payments = new ArrayList<>();
         String sql = "select lp.loan_payments_id,lp.loan_id,lp.payment_date,lp.payment_amount,"
                 + "lp.principal_amount,lp.interest_amount,lp.remaining_balance,"
-                + "lp.payment_status \n"
+                + "lp.payment_status,lp.payDate,lp.penaltyfee "
                 + "from loan_payments lp join loan l on "
                 + "lp.loan_id=l.loan_id where l.loan_id = ? and l.customer_id = ?";
         try {
@@ -209,6 +210,40 @@ public class DAO_Loan extends DBContext {
                 lp.setInterest_amount(rs.getDouble(6));
                 lp.setRemaining_amount(rs.getDouble(7));
                 lp.setPayment_status(rs.getString(8));
+                lp.setPaydate(rs.getDate(9));
+                lp.setPenaltyfee(rs.getDouble(10));
+                payments.add(lp);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return payments;
+    }
+
+    public List<Loan_payments> getPaymentsByLoanIdandCustomerIdandStatus(int loanId, int CustomerId) {
+        List<Loan_payments> payments = new ArrayList<>();
+        String sql = "select lp.loan_payments_id,lp.loan_id,lp.payment_date,lp.payment_amount,"
+                + "lp.principal_amount,lp.interest_amount,lp.remaining_balance,"
+                + "lp.payment_status,lp.payDate,lp.penaltyfee "
+                + "from loan_payments lp join loan l on "
+                + "lp.loan_id=l.loan_id where l.loan_id = ? and l.customer_id = ? and lp.payment_status= 'pending'";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, loanId);
+            pre.setInt(2, CustomerId);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Loan_payments lp = new Loan_payments();
+                lp.setLoan_payments_id(rs.getInt(1));
+                lp.setLoan_id(rs.getInt(2));
+                lp.setPayment_date(rs.getDate(3));
+                lp.setPayment_amount(rs.getDouble(4));
+                lp.setPrincipal_amount(rs.getDouble(5));
+                lp.setInterest_amount(rs.getDouble(6));
+                lp.setRemaining_amount(rs.getDouble(7));
+                lp.setPayment_status(rs.getString(8));
+                lp.setPaydate(rs.getDate(9));
+                lp.setPenaltyfee(rs.getDouble(10));
                 payments.add(lp);
             }
         } catch (Exception e) {
@@ -243,6 +278,25 @@ public class DAO_Loan extends DBContext {
         return payments;
     }
 
+    public Loan_payments getLoanPaymentById(int id) {
+        String sql = "Select * from loan_payments where loan_payments_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                Loan_payments lp = new Loan_payments();
+                lp.setLoan_payments_id(rs.getInt(1));
+                lp.setLoan_id(rs.getInt(2));
+                lp.setPayment_date(rs.getDate(3));
+                return lp;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
     public void UpdateCustomerAmount(double amount, int id) {
         String sql = "update customer set amount =? where customer_id =?";
         try {
@@ -271,6 +325,49 @@ public class DAO_Loan extends DBContext {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    public boolean UpdateLoanPayment(int id, String status, Date paymentDate, double fee) {
+        String sql = "update loan_payments set payment_status = ?,payDate=?, penaltyfee=? where loan_payments_id =?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setString(1, status);
+            pre.setDate(2, new java.sql.Date(paymentDate.getTime()));
+            pre.setDouble(3, fee);
+            pre.setInt(4, id);
+            return pre.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public boolean UpdateLoanPaymentAll(int id, Date paymentDate, double fee) {
+        String sql = "update loan_payments set payment_status = 'complete',payDate=?, penaltyfee=? where loan_id=? and payment_status != 'complete'";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(3, id);
+            pre.setDate(1, new java.sql.Date(paymentDate.getTime()));
+            pre.setDouble(2, fee);
+            return pre.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public double getAmountPayment(int id) {
+        String sql = "select payment_amount from loan_payments where loan_payments_id=?";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
     }
 
     // son
@@ -316,6 +413,49 @@ public class DAO_Loan extends DBContext {
         return null;
     }
 
+    public List<Loan> getListLoanByCustomerIdAndNote(int id) {
+        String sql = "select l.amount,l.start_date,l.end_date,l.image,l.value_asset,"
+                + "s.service_name,l.loan_id,l.status,l.notes from loan l join service_terms st on"
+                + " l.serviceTerm_id=st.serviceTerm_id join services s on"
+                + " st.service_id = s.service_id where l.customer_id = ?";
+        List<Loan> list = new ArrayList<>();
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, id);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                Loan l = new Loan();
+                l.setAmount(rs.getDouble(1));
+                l.setStart_date(rs.getDate(2));
+                l.setEnd_date(rs.getDate(3));
+                l.setAsset_image(rs.getString(4));
+                l.setValue_asset(rs.getDouble(5));
+                l.setServiceName(rs.getString(6));
+                l.setLoan_id(rs.getInt(7));
+                l.setStatus(rs.getString(8));
+                l.setNotes(rs.getString(9));
+                list.add(l);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public void InsertTransaction(int cid, int sid, double amount, String type) {
+        String sql = "insert into transactions(customer_id,service_id,amount,transaction_type) values (?,?,?,?)";
+        try {
+            PreparedStatement pre = con.prepareStatement(sql);
+            pre.setInt(1, cid);
+            pre.setInt(2, sid);
+            pre.setDouble(3, amount);
+            pre.setString(4, type);
+            pre.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
     // Main method for testing
     public static void main(String[] args) {
         DAO_Loan d = new DAO_Loan();
@@ -347,9 +487,10 @@ public class DAO_Loan extends DBContext {
 //            System.out.println(loan_payments);
 //        }
 //        
-//          List<Loan_payments> l = d.getDuePayments();
-//          for (Loan_payments loan_payments : l) {
-//              System.out.println(loan_payments);
-//        }
+        List<Loan_payments> l = d.getPaymentsByLoanIdandCustomerId(8, 2);
+        for (Loan_payments loan_payments : l) {
+            System.out.println(loan_payments);
+        }
     }
+
 }

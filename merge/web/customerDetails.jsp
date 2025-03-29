@@ -51,7 +51,7 @@
         </style>
     </head>
     <body>
-        <h1>Customer Details</h1>
+        <h1>Thông tin khách hàng</h1>
         <%
             Customer customer = (Customer) request.getAttribute("customer");
             String debtStatus = (String) request.getAttribute("debtStatus");
@@ -63,51 +63,24 @@
         <div class="customer-info">
             <img src="<%= customer.getProfile_picture() %>" alt="Profile Picture" />
             <p><strong>ID:</strong> <%= customer.getCustomer_id() %></p>
-            <p><strong>Full Name:</strong> <%= customer.getFull_name() %></p>
+            <p><strong>Tên:</strong> <%= customer.getFull_name() %></p>
             <p><strong>Email:</strong> <%= customer.getEmail() %></p>
-            <p><strong>Username:</strong> <%= customer.getUsername() %></p>
-            <p><strong>Phone Number:</strong> <%= customer.getPhone_number() %></p>
-            <p><strong>Address:</strong> <%= customer.getAddress() %></p>
-            <p><strong>Card Type:</strong> <%= customer.getCard_type() %></p>
-            <p><strong>Status:</strong> <%= customer.getStatus() %></p>
-            <p><strong>Gender:</strong> <%= customer.getGender() %></p>
-            <p><strong>Amount:</strong> <%= customer.getAmount() %></p>
-            <p><strong>Credit Limit:</strong> <%= customer.getCredit_limit() %></p>
-            <p><strong>Date of Birth:</strong> <%= customer.getDate_of_birth() %></p>
-            <p><strong>Created At:</strong> <%= customer.getCreated_at() %></p>
-            <p><strong>Debt Status:</strong> <%= debtStatus != null ? debtStatus : "No debt information" %></p>
+            <p><strong>Tên đăng nhập:</strong> <%= customer.getUsername() %></p>
+            <p><strong>Số điện thoại:</strong> <%= customer.getPhone_number() %></p>
+            <p><strong>Địa chỉ:</strong> <%= customer.getAddress() %></p>
+            <p><strong>Loại thẻ:</strong> <%= customer.getCard_type() %></p>
+            <p><strong>Tình trạng:</strong> <%= customer.getStatus() %></p>
+            <p><strong>Giới tinh:</strong> <%= customer.getGender() %></p>
+            <p><strong>Số tiền:</strong> <%= customer.getAmount() %></p>
+            <p><strong>Giới hạn tín dụng:</strong> <%= customer.getCredit_limit() %></p>
+            <p><strong>Ngày sinh:</strong> <%= customer.getDate_of_birth() %></p>
+            <p><strong>Được tạo:</strong> <%= customer.getCreated_at() %></p>
+            <p><strong>Tình trạng nợ:</strong> <%= debtStatus != null ? debtStatus : "No debt information" %></p>
         </div>
 
-        <h2>Asset Statuses</h2>
-        <ul>
-            <%
-                if (assetStatuses.isEmpty()) {
-            %>
-            <li>No assets found.</li>
-                <%
-                    } else {
-                        for (String status : assetStatuses) {
-                %>
-            <li><%= status %></li>
-                <%
-                        }
-                    }
-                %>
-        </ul>
-        <h2>Edit Asset Status</h2>
-        <form action="updateAssetStatus" method="POST">
-            <input type="hidden" name="customer_id" value="<%= customer.getCustomer_id() %>" />
-            <label for="asset_id">Asset ID:</label>
-            <input type="text" id="asset_id" name="asset_id" required />
-            <label for="new_status">New Status:</label>
-            <select id="new_status" name="new_status" required>
-                <option value="verified">Verified</option>
-                <option value="unverified">Unverified</option>
-            </select>
-            <input type="submit" value="Update Status" />
-        </form>
+        
 
-        <h2>Services</h2>
+        <h2>Dịch vụ</h2>
         <ul>
             <%
                 if (serviceNames.isEmpty()) {

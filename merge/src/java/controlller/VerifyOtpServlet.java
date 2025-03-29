@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -22,6 +23,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import model.Customer;
 
 /**
@@ -131,7 +133,7 @@ public class VerifyOtpServlet extends HttpServlet {
         }
     }
 
-    private void sendConfirmationEmail(String recipientEmail) throws MessagingException {
+    private void sendConfirmationEmail(String recipientEmail) throws MessagingException, UnsupportedEncodingException {
         String senderEmail = "ducthinh20032003@gmail.com";
         String senderPassword = "fjuk kgua lvis rzkq"; // Cần thay bằng App Password
 
@@ -148,11 +150,20 @@ public class VerifyOtpServlet extends HttpServlet {
         });
 
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(senderEmail));
+        message.setFrom(new InternetAddress(senderEmail, "Hỗ trợ YourBank", "UTF-8"));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-        message.setSubject("Xác nhận cập nhật thông tin");
-        message.setHeader("Content-Type", "text/plain; charset=UTF-8");
-        message.setText("Chúc mừng! Bạn đã cập nhật thông tin thành công.\n\nCảm ơn bạn đã sử dụng dịch vụ của chúng tôi.");
+
+        message.setSubject(MimeUtility.encodeText("Xác nhận cập nhật thông tin", "UTF-8", "B"));
+
+        String emailContent = "<p><strong>Chúc mừng!</strong></p>"
+                + "<p>Bạn đã cập nhật thông tin tài khoản thành công.</p>"
+                + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>"
+                + "<hr>"
+                + "<p><strong>Trân trọng,</strong></p>"
+                + "<p>Đội ngũ hỗ trợ YourBank</p>"
+                + "<p>Email: support@yourbank.com | Điện thoại: +123 456 789</p>";
+
+        message.setContent(emailContent, "text/html; charset=UTF-8");
 
         Transport.send(message);
     }
